@@ -571,7 +571,7 @@ const latestProperties = ref([
     beds: 3,
     baths: 2,
     area: 1200,
-    price: 45000000
+    price: 150
   },
   {
     id: 2,
@@ -582,7 +582,7 @@ const latestProperties = ref([
     beds: 4,
     baths: 3,
     area: 2500,
-    price: 85000000
+    price: 250
   },
   {
     id: 3,
@@ -593,7 +593,7 @@ const latestProperties = ref([
     beds: 5,
     baths: 3,
     area: 1800,
-    price: 65000000
+    price: 200
   },
   {
     id: 4,
@@ -604,7 +604,7 @@ const latestProperties = ref([
     beds: 2,
     baths: 1,
     area: 900,
-    price: 25000000
+    price: 120
   }
 ])
 

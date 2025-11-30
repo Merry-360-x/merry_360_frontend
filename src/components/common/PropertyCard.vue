@@ -72,7 +72,7 @@
       <!-- Price -->
       <div class="flex items-center justify-between flex-wrap gap-2">
         <div>
-          <span class="text-sm sm:text-base font-bold text-primary">{{ formatPrice(property.price) }} RWF</span>
+          <span class="text-sm sm:text-base font-bold text-primary">${{ formatPrice(property.price) }}</span>
           <span class="text-text-secondary text-xs">/night</span>
         </div>
         <button 
