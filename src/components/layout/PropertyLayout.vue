@@ -43,12 +43,6 @@
               <span v-if="cartCount > 0" class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-white text-[10px] rounded-full flex items-center justify-center font-bold">{{ cartCount }}</span>
             </router-link>
 
-            <router-link 
-              to="/login"
-              class="px-4 py-1.5 border border-primary text-primary text-sm rounded hover:bg-primary hover:text-white transition-colors font-medium"
-            >
-              {{ t('nav.login') }}
-            </router-link>
           </div>
 
           <!-- Mobile Right -->
@@ -121,10 +115,6 @@
                   <option value="FR">Français</option>
                 </select>
               </div>
-
-              <router-link to="/login" @click="mobileMenuOpen = false" class="block mt-4 py-2.5 px-3 bg-primary text-white text-sm text-center rounded font-medium">
-                {{ t('nav.login') }}
-              </router-link>
             </nav>
           </div>
         </div>
