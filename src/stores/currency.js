@@ -5,12 +5,14 @@ export const useCurrencyStore = defineStore('currency', () => {
   // Exchange rate: 1 USD = 1300 RWF (approximate as of 2025)
   const exchangeRate = ref(1300)
   
-  // Current currency: 'USD' or 'RWF'
-  const currentCurrency = ref('USD')
+  // Current currency: 'USD' or 'RWF' - default to USD
+  const storedCurrency = localStorage.getItem('merry360_currency')
+  const currentCurrency = ref(storedCurrency && ['USD', 'RWF'].includes(storedCurrency) ? storedCurrency : 'USD')
   
   // Toggle between currencies
   const toggleCurrency = () => {
     currentCurrency.value = currentCurrency.value === 'USD' ? 'RWF' : 'USD'
+    localStorage.setItem('merry360_currency', currentCurrency.value)
   }
   
   // Convert price based on current currency
