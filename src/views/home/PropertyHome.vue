@@ -51,11 +51,6 @@
                 type="date" 
                 class="bg-transparent border-0 focus:outline-none text-xs text-gray-900 w-full"
               />
-              <input 
-                v-model="searchForm.checkOut" 
-                type="date" 
-                class="bg-transparent border-0 focus:outline-none text-xs text-gray-900 w-full"
-              />
             </div>
 
             <!-- Guests -->
