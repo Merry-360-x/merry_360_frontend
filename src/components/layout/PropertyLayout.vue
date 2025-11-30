@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between h-14">
           <!-- Logo -->
           <router-link to="/home" class="flex items-center">
-            <img src="/logo.png" alt="Merry360" class="h-10" />
+            <img src="/logo.png" alt="Merry360" class="h-12" />
           </router-link>
 
           <!-- Desktop Navigation -->
@@ -154,7 +154,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
           <!-- Logo & Description -->
           <div class="col-span-2 sm:col-span-1">
-            <img src="/logo.png" alt="Merry360" class="h-12 mb-2" />
+            <img src="/logo.png" alt="Merry360" class="h-16 mb-2" />
             <p class="text-text-secondary text-xs">
               © 2025 Merry360. All rights reserved
             </p>
