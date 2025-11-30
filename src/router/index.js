@@ -52,6 +52,11 @@ import VendorDashboard from '../views/vendor/VendorDashboard.vue'
 const routes = [
   {
     path: '/',
+    name: 'home',
+    component: PropertyHome
+  },
+  {
+    path: '/splash',
     name: 'splash',
     component: SplashScreen
   },
@@ -74,11 +79,6 @@ const routes = [
     path: '/forgot-password',
     name: 'forgot-password',
     component: ForgotPassword
-  },
-  {
-    path: '/home',
-    name: 'home',
-    component: PropertyHome
   },
   {
     path: '/home-old',
