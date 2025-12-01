@@ -83,34 +83,6 @@ const GuideIcon = () => h('svg', {
   })
 ])
 
-const InsuranceIcon = () => h('svg', {
-  fill: 'none',
-  stroke: 'currentColor',
-  viewBox: '0 0 24 24',
-  class: 'w-full h-full'
-}, [
-  h('path', {
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round',
-    'stroke-width': '2',
-    d: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'
-  })
-])
-
-const VisaIcon = () => h('svg', {
-  fill: 'none',
-  stroke: 'currentColor',
-  viewBox: '0 0 24 24',
-  class: 'w-full h-full'
-}, [
-  h('path', {
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round',
-    'stroke-width': '2',
-    d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
-  })
-])
-
 const ConciergeIcon = () => h('svg', {
   fill: 'none',
   stroke: 'currentColor',
@@ -172,36 +144,6 @@ const services = ref([
   },
   {
     id: 3,
-    title: 'Travel Insurance',
-    description: 'Comprehensive coverage for peace of mind',
-    icon: InsuranceIcon,
-    bgColor: 'bg-gray-100',
-    iconColor: 'text-gray-900',
-    features: [
-      'Medical coverage',
-      'Trip cancellation',
-      'Lost baggage protection',
-      '24/7 assistance'
-    ],
-    price: 25000
-  },
-  {
-    id: 4,
-    title: 'Visa Assistance',
-    description: 'Help with visa applications and documentation',
-    icon: VisaIcon,
-    bgColor: 'bg-gray-100',
-    iconColor: 'text-gray-900',
-    features: [
-      'Document preparation',
-      'Application support',
-      'Fast processing',
-      'Expert guidance'
-    ],
-    price: 15000
-  },
-  {
-    id: 5,
     title: '24/7 Concierge',
     description: 'Personal assistant for all your needs',
     icon: ConciergeIcon,
@@ -216,7 +158,7 @@ const services = ref([
     price: 40000
   },
   {
-    id: 6,
+    id: 4,
     title: 'Food & Dining',
     description: 'Restaurant reservations and food delivery',
     icon: FoodIcon,
