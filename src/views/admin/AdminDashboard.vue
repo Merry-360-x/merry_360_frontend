@@ -1,4 +1,5 @@
 <template>
+  <MainLayout>
   <div class="min-h-screen bg-gray-50">
     <!-- Admin Sidebar -->
     <div class="flex">
@@ -166,8 +167,10 @@
       </main>
     </div>
   </div>
+  </MainLayout>
 </template>
 
 <script setup>
+import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 </script>

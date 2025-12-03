@@ -1,4 +1,5 @@
 <template>
+  <MainLayout>
   <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
     <div class="max-w-md w-full">
       <!-- Logo -->
@@ -113,6 +114,7 @@
       </div>
     </div>
   </div>
+  </MainLayout>
 </template>
 
 <script setup>
@@ -212,5 +214,12 @@ const handleLogin = async () => {
     loading.value = false
     errors.value.password = 'Login failed. Please try again.'
   }
+}
+</script>
+
+<script>
+import MainLayout from '../../components/layout/MainLayout.vue'
+export default {
+  components: { MainLayout }
 }
 </script>
