@@ -33,6 +33,9 @@ import ToursPage from '../views/tours/ToursPage.vue'
 // Services
 import ServicesPage from '../views/services/ServicesPage.vue'
 
+// Host
+import BecomeHost from '../views/host/BecomeHost.vue'
+
 // Dashboard
 import UserDashboard from '../views/dashboard/UserDashboard.vue'
 import MyTrips from '../views/dashboard/MyTrips.vue'
@@ -151,6 +154,11 @@ const routes = [
     path: '/services',
     name: 'services',
     component: ServicesPage
+  },
+  {
+    path: '/become-host',
+    name: 'become-host',
+    component: BecomeHost
   },
   {
     path: '/dashboard',

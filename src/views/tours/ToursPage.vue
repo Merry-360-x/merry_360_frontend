@@ -93,7 +93,7 @@
           >
             <div class="relative overflow-hidden h-56">
               <img loading="lazy" :src="tour.image" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-              <span class="absolute top-4 left-4 px-3 py-1 bg-green-600 text-white text-sm font-semibold rounded-full shadow-lg">
+              <span class="absolute top-4 left-4 px-3 py-1 bg-green-600 text-white text-xs font-semibold rounded-full shadow-lg uppercase tracking-wide">
                 {{ tour.category }}
               </span>
               <button 
