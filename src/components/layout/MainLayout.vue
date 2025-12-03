@@ -3,17 +3,17 @@
     <!-- Header -->
     <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div class="flex items-center justify-between h-20 md:h-24">
+        <div class="flex items-center justify-between h-16 md:h-20">
           <!-- Logo -->
-          <router-link to="/" class="flex items-center">
-            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-12 md:h-16 w-auto" />
+          <router-link to="/" class="flex items-center flex-shrink-0">
+            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-10 md:h-12 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden lg:flex items-center gap-0.5">
+          <nav class="hidden lg:flex items-center gap-0.5 flex-1 justify-center max-w-2xl">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
               exact
             >
@@ -21,35 +21,35 @@
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               Accommodations
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 font-medium hover:text-green-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-green-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
               active-class="!border-green-500 !text-green-700 !bg-green-50"
             >
               Tours
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               Transport
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               Services
             </router-link>
             <router-link 
               to="/dashboard"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               My Trips
@@ -57,11 +57,11 @@
           </nav>
 
           <!-- Desktop Right -->
-          <div class="hidden lg:flex items-center gap-2">
+          <div class="hidden lg:flex items-center gap-1.5 flex-shrink-0">
             <!-- Become a Host -->
             <router-link 
               to="/become-host"
-              class="px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 rounded-[20px] transition-all"
+              class="px-3 py-1.5 text-xs xl:text-sm font-semibold text-gray-700 hover:bg-gray-100 rounded-[20px] transition-all whitespace-nowrap"
             >
               Become a Host
             </router-link>
@@ -69,7 +69,7 @@
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 hover:text-brand-600 transition-all bg-transparent flex items-center gap-2"
+              class="px-2.5 py-1.5 border border-brand-500 rounded-[20px] text-xs xl:text-sm font-medium text-gray-700 hover:text-brand-600 transition-all bg-transparent flex items-center gap-1.5"
               :title="'Switch to ' + (currencyStore.currentCurrency === 'USD' ? 'RWF' : 'USD')"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +78,7 @@
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1.5 border border-brand-500 rounded-[20px] text-xs xl:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
@@ -91,7 +91,7 @@
               </svg>
             </router-link>
 
-            <router-link to="/trip-cart" class="px-4 py-2 bg-brand-500 text-white rounded-[20px] text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md" title="Trip Cart">
+            <router-link to="/trip-cart" class="px-3 py-1.5 bg-brand-500 text-white rounded-[20px] text-xs xl:text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md whitespace-nowrap" title="Trip Cart">
               TripCart
             </router-link>
 
