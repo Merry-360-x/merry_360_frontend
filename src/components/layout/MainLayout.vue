@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-white font-sans">
     <!-- Header -->
     <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
-      <div class="px-4 sm:px-6 lg:px-8">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div class="flex items-center justify-between h-20 md:h-24">
           <!-- Logo -->
           <router-link to="/" class="flex items-center">
