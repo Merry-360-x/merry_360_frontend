@@ -1,5 +1,5 @@
 <template>
-  <PropertyLayout>
+  <MainLayout>
     <!-- Hero Section with Search -->
     <section class="relative bg-gradient-to-br from-brand-50 to-white py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -183,14 +183,14 @@
         </div>
       </div>
     </section>
-  </PropertyLayout>
+  </MainLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
-import PropertyLayout from '../../components/layout/PropertyLayout.vue'
+import MainLayout from '../../components/layout/MainLayout.vue'
 
 const router = useRouter()
 const userStore = useUserStore()

@@ -1,5 +1,5 @@
 <template>
-  <PropertyLayout>
+  <MainLayout>
     <!-- AI Concierge Modal -->
     <AIConcierge v-if="showAIConcierge" @close="showAIConcierge = false" />
     
@@ -379,7 +379,7 @@
         </div>
       </div>
     </section>
-  </PropertyLayout>
+  </MainLayout>
 </template>
 
 <script setup>
@@ -388,7 +388,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useTranslation } from '../../composables/useTranslation'
-import PropertyLayout from '../../components/layout/PropertyLayout.vue'
+import MainLayout from '../../components/layout/MainLayout.vue'
 import PropertyCard from '../../components/common/PropertyCard.vue'
 import AIConcierge from '../../components/ai/AIConcierge.vue'
 

@@ -1,5 +1,5 @@
 <template>
-  <PropertyLayout>
+  <MainLayout>
     <!-- Search Bar Section -->
     <div class="w-full py-12" style="margin-top: 80px;">
       <div class="container mx-auto px-4 max-w-4xl">
@@ -293,13 +293,13 @@
         </div>
       </div>
     </div>
-  </PropertyLayout>
+  </MainLayout>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import PropertyLayout from '../../components/layout/PropertyLayout.vue'
+import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import MapView from '../../components/common/MapView.vue'
 
