@@ -183,7 +183,7 @@
         </div>
       </div>
     </section>
-  </PropertyLayout>
+  </MainLayout>
 </template>
 
 <script setup>

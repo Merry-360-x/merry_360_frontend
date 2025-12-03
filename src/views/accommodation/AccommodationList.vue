@@ -293,7 +293,7 @@
         </div>
       </div>
     </div>
-  </PropertyLayout>
+  </MainLayout>
 </template>
 
 <script setup>
