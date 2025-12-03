@@ -1,19 +1,19 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white font-sans">
     <!-- Header -->
-    <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div class="flex items-center justify-between h-16 md:h-20">
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
+        <div class="flex items-center justify-between h-[72px]">
           <!-- Logo -->
           <router-link to="/" class="flex items-center flex-shrink-0">
-            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-10 md:h-12 w-auto" />
+            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-11 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden lg:flex items-center gap-0.5 flex-1 justify-center max-w-2xl">
+          <nav class="hidden lg:flex items-center gap-1 flex-1 justify-center mx-8">
             <router-link 
               to="/"
-              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
               exact
             >
@@ -21,35 +21,35 @@
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               Accommodations
             </router-link>
             <router-link 
               to="/tours"
-              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-green-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-green-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
               active-class="!border-green-500 !text-green-700 !bg-green-50"
             >
               Tours
             </router-link>
             <router-link 
               to="/transport"
-              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               Transport
             </router-link>
             <router-link 
               to="/services"
-              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               Services
             </router-link>
             <router-link 
               to="/dashboard"
-              class="text-xs xl:text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-2 xl:px-3 py-1.5 border border-transparent rounded-[25px] whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
               active-class="!border-brand-500 !text-brand-600"
             >
               My Trips
@@ -57,11 +57,11 @@
           </nav>
 
           <!-- Desktop Right -->
-          <div class="hidden lg:flex items-center gap-1.5 flex-shrink-0">
+          <div class="hidden lg:flex items-center gap-2 flex-shrink-0">
             <!-- Become a Host -->
             <router-link 
               to="/become-host"
-              class="px-3 py-1.5 text-xs xl:text-sm font-semibold text-gray-700 hover:bg-gray-100 rounded-[20px] transition-all whitespace-nowrap"
+              class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-full transition-all whitespace-nowrap"
             >
               Become a Host
             </router-link>
@@ -69,7 +69,7 @@
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-2.5 py-1.5 border border-brand-500 rounded-[20px] text-xs xl:text-sm font-medium text-gray-700 hover:text-brand-600 transition-all bg-transparent flex items-center gap-1.5"
+              class="px-3 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-all bg-white flex items-center gap-1.5"
               :title="'Switch to ' + (currencyStore.currentCurrency === 'USD' ? 'RWF' : 'USD')"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,20 +78,20 @@
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1.5 border border-brand-500 rounded-[20px] text-xs xl:text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-3 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 focus:outline-none focus:border-gray-400 bg-white cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
               <option value="ZH">中文</option>
             </select>
 
-            <router-link to="/dashboard/watchlist" class="relative p-1.5 hover:bg-transparent rounded" title="Wishlist">
-              <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-50 rounded-full transition-all" title="Wishlist">
+              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
 
-            <router-link to="/trip-cart" class="px-3 py-1.5 bg-brand-500 text-white rounded-[20px] text-xs xl:text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md whitespace-nowrap" title="Trip Cart">
+            <router-link to="/trip-cart" class="px-4 py-2 bg-brand-500 text-white rounded-full text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md whitespace-nowrap" title="Trip Cart">
               TripCart
             </router-link>
 
@@ -99,14 +99,14 @@
             <div v-if="userStore.isAuthenticated" class="relative" v-click-outside="closeUserMenu">
               <button 
                 @click.stop="showUserMenu = !showUserMenu"
-                class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
+                class="relative flex items-center gap-2 bg-white border border-gray-300 rounded-full px-2 py-2 hover:shadow-lg transition-all"
               >
-                <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
                   <rect x="2" y="5" width="20" height="2" rx="1"/>
                   <rect x="2" y="11" width="20" height="2" rx="1"/>
                   <rect x="2" y="17" width="20" height="2" rx="1"/>
                 </svg>
-                <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
+                <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center">
                   <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
                 </div>
               </button>
