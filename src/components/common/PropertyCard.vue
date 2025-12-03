@@ -43,43 +43,15 @@
         {{ property.badge }}
       </span>
 
-      <!-- Top Right Actions -->
-      <div class="absolute top-3 right-3 flex flex-col gap-2">
-        <!-- Favorite Icon -->
-        <button 
-          @click.stop="toggleFavorite"
-          class="w-8 h-8 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md hover:scale-110"
-          title="Add to Wishlist"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5" :class="isFavorite ? 'text-brand-500 fill-current' : 'text-gray-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-          </svg>
-        </button>
-        
-        <!-- 360° Tour Button -->
-        <button 
-          @click.stop="open360Tour"
-          class="w-8 h-8 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md hover:scale-110 opacity-0 group-hover:opacity-100"
-          title="360° Virtual Tour"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        </button>
-        
-        <!-- Map Button -->
-        <button 
-          @click.stop="openMap"
-          class="w-8 h-8 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md hover:scale-110 opacity-0 group-hover:opacity-100"
-          title="View on Map"
-        >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          </svg>
-        </button>
-      </div>
+      <!-- Favorite Icon -->
+      <button 
+        @click.stop="toggleFavorite"
+        class="absolute top-3 right-3 w-8 h-8 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md hover:scale-110"
+      >
+        <svg class="w-4 h-4 sm:w-5 sm:h-5" :class="isFavorite ? 'text-brand-500 fill-current' : 'text-gray-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+      </button>
 
       <!-- Image Navigation Arrows -->
       <button
@@ -239,25 +211,6 @@ const addToCart = () => {
   // TODO: Implement cart functionality
   console.log('Added to cart:', props.property.title)
   // You can emit an event or use a store here
-}
-
-const open360Tour = () => {
-  // Open 360° virtual tour
-  console.log('Opening 360° tour for:', props.property.title)
-  // Could open a modal or navigate to tour page
-  // window.open(props.property.virtualTourUrl, '_blank')
-  alert('360° Virtual Tour coming soon!')
-}
-
-const openMap = () => {
-  // Open map view
-  console.log('Opening map for:', props.property.title)
-  // Could open Google Maps or show in-app map modal
-  if (props.property.coordinates) {
-    window.open(`https://www.google.com/maps/search/?api=1&query=${props.property.location}`, '_blank')
-  } else {
-    alert('Map view coming soon!')
-  }
 }
 
 const viewDetails = () => {

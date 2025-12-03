@@ -5,7 +5,7 @@
     enter-from-class="opacity-0"
     leave-to-class="opacity-0"
   >
-    <div v-if="isOpen" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div v-if="isOpen" class="fixed inset-0 z-[999] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <!-- Backdrop -->
       <div @click="close" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
       
@@ -14,45 +14,94 @@
         <!-- Header -->
         <div class="bg-gradient-to-r from-brand-500 to-brand-600 text-white p-4 sm:p-6 rounded-t-3xl flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center relative">
               <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
+              <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
             </div>
             <div>
-              <h3 class="font-bold text-base sm:text-lg">Amani</h3>
-              <p class="text-white/80 text-xs sm:text-sm">Your AI Travel Concierge</p>
+              <h3 class="font-bold text-base sm:text-lg">Amani - AI Trip Advisor</h3>
+              <p class="text-white/80 text-xs sm:text-sm flex items-center gap-1">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                Online • Ready to help
+              </p>
             </div>
           </div>
-          <button @click="close" class="text-white hover:bg-white/20 p-2 rounded-full transition-colors">
-            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+          <div class="flex items-center gap-2">
+            <button @click="minimize" class="text-white hover:bg-white/20 p-2 rounded-full transition-colors" title="Minimize">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+              </svg>
+            </button>
+            <button @click="close" class="text-white hover:bg-white/20 p-2 rounded-full transition-colors" title="Close">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Messages Area -->
         <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gray-50">
           <!-- Welcome Message -->
-          <div v-if="messages.length === 0" class="text-center py-8">
-            <div class="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+          <div v-if="messages.length === 0" class="text-center py-4">
+            <div class="w-20 h-20 bg-gradient-to-br from-brand-50 to-brand-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-slow">
+              <svg class="w-10 h-10 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h4 class="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Hi, I'm Amani! How can I help you today?</h4>
-            <p class="text-gray-600 text-xs sm:text-sm mb-4">Ask me about accommodations, tours, or travel tips!</p>
+            <h4 class="font-bold text-gray-900 mb-2 text-base sm:text-lg">👋 Welcome! I'm Amani</h4>
+            <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">Your personal AI Trip Advisor for Rwanda. I'm here to help you plan the perfect adventure!</p>
             
-            <!-- Quick Suggestions -->
-            <div class="flex flex-wrap gap-2 justify-center mt-6">
-              <button 
-                v-for="suggestion in quickSuggestions" 
-                :key="suggestion"
-                @click="sendMessage(suggestion)"
-                class="px-3 py-2 bg-white text-gray-700 rounded-full text-xs hover:bg-brand-500 hover:text-white transition-colors shadow-sm"
-              >
-                {{ suggestion }}
-              </button>
+            <!-- Category Options -->
+            <div class="mb-6">
+              <p class="text-sm font-semibold text-gray-700 mb-3">What can I help you with today?</p>
+              <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
+                <button 
+                  @click="sendMessage('Tell me about accommodations in Kigali')"
+                  class="p-4 bg-white hover:bg-brand-50 border-2 border-gray-200 hover:border-brand-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                >
+                  <div class="text-2xl mb-2">🏨</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-brand-600">Accommodations</div>
+                </button>
+                <button 
+                  @click="sendMessage('Show me available tours')"
+                  class="p-4 bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                >
+                  <div class="text-2xl mb-2">🌿</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-green-600">Tours & Activities</div>
+                </button>
+                <button 
+                  @click="sendMessage('I need transportation options')"
+                  class="p-4 bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                >
+                  <div class="text-2xl mb-2">🚗</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-blue-600">Transportation</div>
+                </button>
+                <button 
+                  @click="sendMessage('What are popular destinations in Rwanda?')"
+                  class="p-4 bg-white hover:bg-purple-50 border-2 border-gray-200 hover:border-purple-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                >
+                  <div class="text-2xl mb-2">💡</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-purple-600">Travel Tips</div>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Quick Questions -->
+            <div class="border-t border-gray-200 pt-4 mt-4">
+              <p class="text-xs font-semibold text-gray-600 mb-3">Quick Questions:</p>
+              <div class="flex flex-wrap gap-2 justify-center">
+                <button 
+                  v-for="suggestion in quickSuggestions" 
+                  :key="suggestion"
+                  @click="sendMessage(suggestion)"
+                  class="px-3 py-1.5 bg-white text-gray-700 rounded-full text-xs hover:bg-brand-500 hover:text-white transition-colors shadow-sm border border-gray-200"
+                >
+                  {{ suggestion }}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -121,7 +170,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'minimize'])
 
 const messages = ref([])
 const inputMessage = ref('')
@@ -129,14 +178,18 @@ const isTyping = ref(false)
 const messagesContainer = ref(null)
 
 const quickSuggestions = [
-  'Find hotels in Kigali',
-  'Best tours in Rwanda',
-  'Airport transfer options',
-  'Eco-friendly stays'
+  'Budget hotels under $50',
+  'Gorilla trekking tours',
+  'Best time to visit',
+  'Eco-lodges near parks'
 ]
 
 const close = () => {
   emit('close')
+}
+
+const minimize = () => {
+  emit('minimize')
 }
 
 const sendUserMessage = () => {
@@ -259,5 +312,18 @@ watch(() => props.isOpen, (newVal) => {
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #e04545;
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite;
 }
 </style>

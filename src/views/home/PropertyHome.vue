@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <PropertyLayout>
     <!-- AI Concierge Modal -->
     <AIConcierge v-if="showAIConcierge" @close="showAIConcierge = false" />
     
@@ -17,7 +17,7 @@
           <div class="flex items-center gap-1">
             <!-- Location -->
             <div class="flex-1 flex items-center px-4 py-2 border-r border-gray-200 group hover:bg-gray-50 rounded-l-full transition-colors">
-              <svg class="w-5 h-5 text-brand-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
@@ -31,7 +31,7 @@
 
             <!-- Check-in -->
             <div class="flex items-center px-3 py-2 border-r border-gray-200 group hover:bg-gray-50 transition-colors min-w-[140px]">
-              <svg class="w-4 h-4 text-brand-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
               <input 
@@ -43,7 +43,7 @@
 
             <!-- Check-out -->
             <div class="flex items-center px-3 py-2 border-r border-gray-200 group hover:bg-gray-50 transition-colors min-w-[140px]">
-              <svg class="w-4 h-4 text-brand-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
               <input 
@@ -55,7 +55,7 @@
 
             <!-- Guests -->
             <div class="flex items-center px-3 py-2 group hover:bg-gray-50 transition-colors min-w-[100px]">
-              <svg class="w-4 h-4 text-brand-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-primary mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
               <input 
@@ -71,7 +71,7 @@
             <!-- Search Button -->
             <button 
               @click="handleSearch" 
-              class="px-6 py-3 bg-brand-500 hover:bg-red-600 text-white rounded-full font-semibold transition-all duration-300 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl hover:scale-105 ml-1"
+              class="px-6 py-3 bg-primary hover:bg-red-600 text-white rounded-full font-semibold transition-all duration-300 flex items-center gap-2 text-sm shadow-lg hover:shadow-xl hover:scale-105 ml-1"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -86,7 +86,7 @@
           <div class="space-y-3">
             <!-- Location -->
             <div class="flex items-center px-3 py-2.5 bg-gray-50 rounded-xl">
-              <svg class="w-5 h-5 text-brand-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
@@ -101,7 +101,7 @@
             <div class="grid grid-cols-2 gap-3">
               <!-- Check-in -->
               <div class="flex items-center px-3 py-2.5 bg-gray-50 rounded-xl">
-                <svg class="w-4 h-4 text-brand-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
                 <input 
@@ -113,7 +113,7 @@
 
               <!-- Check-out -->
               <div class="flex items-center px-3 py-2.5 bg-gray-50 rounded-xl">
-                <svg class="w-4 h-4 text-brand-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
                 <input 
@@ -126,7 +126,7 @@
 
             <!-- Guests -->
             <div class="flex items-center px-3 py-2.5 bg-gray-50 rounded-xl">
-              <svg class="w-4 h-4 text-brand-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-primary mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
               <input 
@@ -142,7 +142,7 @@
             <!-- Search Button -->
             <button 
               @click="handleSearch" 
-              class="w-full px-4 py-3 bg-brand-500 hover:bg-red-600 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl"
+              class="w-full px-4 py-3 bg-primary hover:bg-red-600 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 text-sm shadow-lg hover:shadow-xl"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -159,10 +159,10 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
           <div>
-            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-1">Recommended Stays</h2>
+            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary mb-1">Recommended Stays</h2>
             <p class="text-text-secondary text-xs sm:text-sm">Handpicked accommodations just for you</p>
           </div>
-          <button class="text-brand-600 hover:text-red-600 font-medium flex items-center transition-colors text-sm self-start sm:self-auto">
+          <button class="text-primary hover:text-red-600 font-medium flex items-center transition-colors text-sm self-start sm:self-auto">
             View all
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -184,10 +184,10 @@
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
         <div>
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-1">Featured Tours</h2>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary mb-1">Featured Tours</h2>
           <p class="text-text-secondary text-xs sm:text-sm">Unforgettable experiences across Rwanda</p>
         </div>
-        <button class="text-brand-600 hover:text-red-600 font-medium flex items-center transition-colors text-sm self-start sm:self-auto">
+        <button class="text-primary hover:text-red-600 font-medium flex items-center transition-colors text-sm self-start sm:self-auto">
           View all
           <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -198,11 +198,11 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
         <div v-for="tour in featuredTours" :key="tour.id" class="bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
           <div class="relative overflow-hidden h-48 sm:h-52 md:h-56">
-            <img loading="lazy" :src="tour.image" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-            <span class="absolute top-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm text-text-brand-600 text-xs font-semibold rounded-full">{{ tour.category }}</span>
+            <img :src="tour.image" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <span class="absolute top-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm text-text-primary text-xs font-semibold rounded-full">{{ tour.category }}</span>
           </div>
           <div class="p-4 sm:p-5">
-            <h3 class="font-bold text-base sm:text-lg text-text-brand-600 mb-1.5 sm:mb-2 line-clamp-2">{{ tour.title }}</h3>
+            <h3 class="font-bold text-base sm:text-lg text-text-primary mb-1.5 sm:mb-2 line-clamp-2">{{ tour.title }}</h3>
             <p class="text-text-secondary text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">{{ tour.description }}</p>
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-1 text-xs sm:text-sm text-text-secondary">
@@ -211,7 +211,7 @@
                 </svg>
                 <span>{{ tour.duration }}</span>
               </div>
-              <div class="text-base sm:text-lg font-bold text-brand-600">{{ currencyStore.formatPrice(tour.price) }}</div>
+              <div class="text-base sm:text-lg font-bold text-primary">{{ currencyStore.formatPrice(tour.price) }}</div>
             </div>
           </div>
         </div>
@@ -221,8 +221,8 @@
     <!-- Nearby Listed Properties -->
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-white">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600">Nearby Listed Properties</h2>
-        <button class="text-brand-600 hover:text-red-600 font-medium flex items-center text-sm transition-colors">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary">Nearby Listed Properties</h2>
+        <button class="text-primary hover:text-red-600 font-medium flex items-center text-sm transition-colors">
           View more
           <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -242,8 +242,8 @@
     <!-- Top Rated Properties -->
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600">Top Rated Properties</h2>
-        <button class="text-brand-600 hover:text-red-600 font-medium flex items-center text-sm transition-colors">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary">Top Rated Properties</h2>
+        <button class="text-primary hover:text-red-600 font-medium flex items-center text-sm transition-colors">
           View more
           <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -264,7 +264,7 @@
 
     <!-- Featured Properties -->
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-white">
-      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-6">Featured Properties on our Listing</h2>
+      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary mb-6">Featured Properties on our Listing</h2>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
         <PropertyCard
@@ -275,7 +275,7 @@
       </div>
 
       <div class="text-center">
-        <button class="px-6 sm:px-8 py-2.5 sm:py-3 bg-white border-2 border-brand-500 text-brand-600 rounded-lg hover:bg-brand-600 hover:text-white transition-all duration-200 font-medium transform hover:scale-105">
+        <button class="px-6 sm:px-8 py-2.5 sm:py-3 bg-white border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-all duration-200 font-medium transform hover:scale-105">
           Browse More Property
         </button>
       </div>
@@ -283,22 +283,22 @@
 
     <!-- Property Rental Guides -->
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-6">Property Rental Guides & Tips</h2>
+      <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-primary mb-6">Property Rental Guides & Tips</h2>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <div v-for="guide in guides" :key="guide.id" class="bg-white rounded-xl shadow-card overflow-hidden hover:shadow-card-hover transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
           <div class="relative overflow-hidden">
-            <img loading="lazy" :src="guide.image" :alt="guide.title" class="w-full h-48 sm:h-56 object-cover transform transition-transform duration-500 hover:scale-110" />
+            <img :src="guide.image" :alt="guide.title" class="w-full h-48 sm:h-56 object-cover transform transition-transform duration-500 hover:scale-110" />
           </div>
           <div class="p-4 sm:p-6">
-            <span class="inline-block px-3 py-1 bg-brand-500 text-white text-xs font-medium rounded-full mb-3">{{ guide.category }}</span>
-            <h3 class="font-semibold text-base sm:text-lg text-text-brand-600 mb-2">{{ guide.title }}</h3>
+            <span class="inline-block px-3 py-1 bg-primary text-white text-xs font-medium rounded-full mb-3">{{ guide.category }}</span>
+            <h3 class="font-semibold text-base sm:text-lg text-text-primary mb-2">{{ guide.title }}</h3>
           </div>
         </div>
       </div>
 
       <div class="text-center mt-6 sm:mt-8">
-        <button class="px-6 sm:px-8 py-2.5 sm:py-3 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium transform hover:scale-105">
+        <button class="px-6 sm:px-8 py-2.5 sm:py-3 bg-primary text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium transform hover:scale-105">
           View All
         </button>
       </div>
@@ -309,7 +309,7 @@
       <div class="bg-gray-100 rounded-xl md:rounded-2xl p-6 sm:p-8 md:p-12">
         <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
-            <h2 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-3 sm:mb-4">Download Our Mobile App</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-text-primary mb-3 sm:mb-4">Download Our Mobile App</h2>
             <p class="text-text-secondary mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
               Discover more about property buying, selling and renting with our mobile app. Available on iOS and Android.
             </p>
@@ -343,7 +343,7 @@
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
       <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div>
-          <h2 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-3 sm:mb-4">Your Partner in Business Growth</h2>
+          <h2 class="text-2xl sm:text-3xl font-bold text-text-primary mb-3 sm:mb-4">Your Partner in Business Growth</h2>
           <p class="text-text-secondary mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
             At Merry 360 Global, we specialize in providing management and marketing services tailored to the real estate and tourism industries. Our goal is to empower our clients with effective strategies that enhance operational efficiency, visibility, and customer loyalty.
           </p>
@@ -354,32 +354,32 @@
           <!-- Stats -->
           <div class="grid grid-cols-2 gap-4 mb-6">
             <div class="text-center p-4 bg-gray-50 rounded-lg">
-              <div class="text-3xl font-bold text-brand-600 mb-1">180+</div>
+              <div class="text-3xl font-bold text-primary mb-1">180+</div>
               <div class="text-xs text-text-secondary">Properties Managed</div>
             </div>
             <div class="text-center p-4 bg-gray-50 rounded-lg">
-              <div class="text-3xl font-bold text-brand-600 mb-1">3000+</div>
+              <div class="text-3xl font-bold text-primary mb-1">3000+</div>
               <div class="text-xs text-text-secondary">Customers Served</div>
             </div>
           </div>
           
-          <button @click="navigateTo('/about')" class="px-6 sm:px-8 py-2.5 sm:py-3 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium transform hover:scale-105">
+          <button @click="navigateTo('/about')" class="px-6 sm:px-8 py-2.5 sm:py-3 bg-primary text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium transform hover:scale-105">
             Learn More About Us
           </button>
         </div>
         <div class="order-first md:order-last">
           <div class="relative overflow-hidden rounded-xl shadow-xl">
-            <img loading="lazy" 
+            <img 
               src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80"
               alt="Property"
               class="w-full h-64 sm:h-80 md:h-96 object-cover transform transition-transform duration-500 hover:scale-105"
             />
-            <span class="absolute top-4 left-4 px-3 py-1 bg-brand-500 text-white text-xs sm:text-sm font-medium rounded-full shadow-lg">Featured</span>
+            <span class="absolute top-4 left-4 px-3 py-1 bg-primary text-white text-xs sm:text-sm font-medium rounded-full shadow-lg">Featured</span>
           </div>
         </div>
       </div>
     </section>
-  </MainLayout>
+  </PropertyLayout>
 </template>
 
 <script setup>

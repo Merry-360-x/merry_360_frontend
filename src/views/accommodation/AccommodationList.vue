@@ -1,5 +1,5 @@
 <template>
-  <MainLayout>
+  <PropertyLayout>
     <!-- Search Bar Section -->
     <div class="w-full py-12" style="margin-top: 80px;">
       <div class="container mx-auto px-4 max-w-4xl">
@@ -293,7 +293,7 @@
         </div>
       </div>
     </div>
-  </MainLayout>
+  </PropertyLayout>
 </template>
 
 <script setup>

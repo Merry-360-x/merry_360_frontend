@@ -37,8 +37,71 @@
           </button>
         </div>
 
-        <!-- Enhanced Search Box -->
-        <EnhancedSearchBar />
+        <!-- Search Box -->
+        <div class="w-full max-w-4xl bg-white rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+          <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
+            <!-- Location -->
+            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0" style="border-color: #DDDDDD;">
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Location</label>
+              <input 
+                type="text" 
+                placeholder="Which city do you prefer?"
+                v-model="searchQuery.location"
+                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
+                style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
+              />
+            </div>
+
+            <!-- Check In -->
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0" style="border-color: #DDDDDD;">
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Check In</label>
+              <input 
+                type="text" 
+                placeholder="Add Dates"
+                v-model="searchQuery.checkIn"
+                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
+                style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
+                @focus="showDatePicker = 'checkIn'"
+              />
+            </div>
+
+            <!-- Check Out -->
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0" style="border-color: #DDDDDD;">
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Check Out</label>
+              <input 
+                type="text" 
+                placeholder="Add Dates"
+                v-model="searchQuery.checkOut"
+                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
+                style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
+                @focus="showDatePicker = 'checkOut'"
+              />
+            </div>
+
+            <!-- Guests -->
+            <div class="md:pl-5">
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Guests</label>
+              <input 
+                type="text" 
+                placeholder="Add Guests"
+                v-model="searchQuery.guests"
+                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
+                style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
+              />
+            </div>
+          </div>
+
+          <!-- Search Button -->
+          <button 
+            @click="handleSearch"
+            class="w-full md:w-[54px] h-[54px] rounded-full flex items-center justify-center hover:scale-105 transition-all duration-200 flex-shrink-0 md:mr-2 shadow-lg"
+            style="background: #FE4F4F;"
+          >
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -249,12 +312,19 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
-import EnhancedSearchBar from '@/components/common/EnhancedSearchBar.vue'
 
 const router = useRouter()
 
 const categories = ['Houses', 'Hotels', 'Motels', 'Hostels']
 const selectedCategory = ref('Houses')
+const showDatePicker = ref(null)
+
+const searchQuery = ref({
+  location: '',
+  checkIn: '',
+  checkOut: '',
+  guests: ''
+})
 
 const latestProperties = ref([
   {

@@ -1,19 +1,19 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white font-sans">
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
-        <div class="flex items-center justify-between h-[72px]">
+    <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
+      <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20 md:h-24">
           <!-- Logo -->
-          <router-link to="/" class="flex items-center flex-shrink-0">
-            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-11 w-auto" />
+          <router-link to="/" class="flex items-center">
+            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-12 md:h-16 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden lg:flex items-center gap-1 flex-1 justify-center mx-8">
+          <nav class="hidden lg:flex items-center gap-0.5">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
               exact
             >
@@ -21,35 +21,35 @@
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
             >
               Accommodations
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 font-medium hover:text-green-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-green-500 !text-green-700 !bg-green-50"
             >
               Tours
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
             >
               Transport
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
             >
               Services
             </router-link>
             <router-link 
               to="/dashboard"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-full whitespace-nowrap"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
             >
               My Trips
@@ -57,19 +57,11 @@
           </nav>
 
           <!-- Desktop Right -->
-          <div class="hidden lg:flex items-center gap-2 flex-shrink-0">
-            <!-- Become a Host -->
-            <router-link 
-              to="/become-host"
-              class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-full transition-all whitespace-nowrap"
-            >
-              Become a Host
-            </router-link>
-            
+          <div class="hidden lg:flex items-center gap-2">
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-3 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:border-gray-400 transition-all bg-white flex items-center gap-1.5"
+              class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 hover:text-brand-600 transition-all bg-transparent flex items-center gap-2"
               :title="'Switch to ' + (currencyStore.currentCurrency === 'USD' ? 'RWF' : 'USD')"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,20 +70,20 @@
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-3 py-2 border border-gray-300 rounded-full text-sm font-medium text-gray-700 focus:outline-none focus:border-gray-400 bg-white cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
               <option value="ZH">中文</option>
             </select>
 
-            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-50 rounded-full transition-all" title="Wishlist">
-              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-1.5 hover:bg-transparent rounded" title="Wishlist">
+              <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
 
-            <router-link to="/trip-cart" class="px-4 py-2 bg-brand-500 text-white rounded-full text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md whitespace-nowrap" title="Trip Cart">
+            <router-link to="/trip-cart" class="px-4 py-2 bg-brand-500 text-white rounded-[20px] text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md" title="Trip Cart">
               TripCart
             </router-link>
 
@@ -99,14 +91,14 @@
             <div v-if="userStore.isAuthenticated" class="relative" v-click-outside="closeUserMenu">
               <button 
                 @click.stop="showUserMenu = !showUserMenu"
-                class="relative flex items-center gap-2 bg-white border border-gray-300 rounded-full px-2 py-2 hover:shadow-lg transition-all"
+                class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
               >
-                <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
                   <rect x="2" y="5" width="20" height="2" rx="1"/>
                   <rect x="2" y="11" width="20" height="2" rx="1"/>
                   <rect x="2" y="17" width="20" height="2" rx="1"/>
                 </svg>
-                <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center">
+                <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
                   <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
                 </div>
               </button>
@@ -298,11 +290,12 @@
               </router-link>
               <router-link 
                 to="/tours"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-green-50 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
+                active-class="!bg-green-50 !text-green-700"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 Tours
@@ -317,6 +310,17 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
                 Transport
+              </router-link>
+              <router-link 
+                to="/services"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                style="font-family: 'Montserrat', sans-serif;"
+                @click="mobileMenuOpen = false"
+              >
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                Services
               </router-link>
               <router-link 
                 to="/dashboard"
@@ -407,8 +411,60 @@
       <slot></slot>
     </main>
 
-    <!-- Enhanced AI Concierge Component -->
-    <AIConciergeEnhanced />
+    <!-- AI Trip Advisor Button - Fixed Position with Minimize -->
+    <transition name="slide-fade">
+      <div 
+        v-if="!aiMinimized"
+        class="fixed bottom-6 right-6 z-[1000]"
+      >
+        <button 
+          @click="showAIConcierge = !showAIConcierge"
+          class="relative bg-gradient-to-br from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center gap-3 px-5 py-4 group"
+          :class="showAIConcierge ? 'pr-12' : ''"
+        >
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+              <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+            </div>
+            <div class="text-left">
+              <div class="font-bold text-sm leading-tight">AI Trip Advisor</div>
+              <div class="text-xs text-white/80 leading-tight">Ask me anything!</div>
+            </div>
+          </div>
+          <button 
+            v-if="showAIConcierge"
+            @click.stop="aiMinimized = true"
+            class="absolute right-3 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-lg p-1 transition-colors"
+            title="Minimize"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+            </svg>
+          </button>
+        </button>
+      </div>
+    </transition>
+
+    <!-- Minimized AI Button -->
+    <transition name="scale-fade">
+      <button 
+        v-if="aiMinimized"
+        @click="aiMinimized = false; showAIConcierge = true"
+        class="fixed bottom-6 right-6 z-[1000] w-14 h-14 bg-gradient-to-br from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
+        title="Open AI Trip Advisor"
+      >
+        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        </svg>
+        <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+      </button>
+    </transition>
+
+    <!-- AI Concierge Component -->
+    <AIConcierge :isOpen="showAIConcierge" @close="showAIConcierge = false" @minimize="aiMinimized = true; showAIConcierge = false" />
 
     <!-- Footer -->
     <footer class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-t border-white/10 mt-20 relative overflow-hidden">
@@ -462,13 +518,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '../../stores/app'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useLanguageStore } from '../../stores/language'
-import AIConciergeEnhanced from '../ai/AIConciergeEnhanced.vue'
+import AIConcierge from '../ai/AIConcierge.vue'
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -477,7 +533,9 @@ const currencyStore = useCurrencyStore()
 const languageStore = useLanguageStore()
 
 const mobileMenuOpen = ref(false)
+const showAIConcierge = ref(false)
 const showUserMenu = ref(false)
+const aiMinimized = ref(false)
 
 const mobileNavigation = [
   { name: 'Home', to: '/home' },
@@ -557,5 +615,30 @@ const vClickOutside = {
 .mobile-menu-enter-to > div:last-child,
 .mobile-menu-leave-from > div:last-child {
   transform: translateX(0);
+}
+
+/* AI Button transitions */
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from {
+  transform: translateX(100px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translateX(100px);
+  opacity: 0;
+}
+
+.scale-fade-enter-active, .scale-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.scale-fade-enter-from {
+  transform: scale(0);
+  opacity: 0;
+}
+.scale-fade-leave-to {
+  transform: scale(0);
+  opacity: 0;
 }
 </style>
