@@ -1,16 +1,16 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white font-sans">
     <!-- Header -->
-    <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
-      <div class="px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20 md:h-24">
+    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
           <!-- Logo -->
-          <router-link to="/" class="flex items-center">
-            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-12 md:h-16 w-auto" />
+          <router-link to="/" class="flex items-center flex-shrink-0 mr-4">
+            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-10 md:h-12 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden lg:flex items-center gap-0.5">
+          <nav class="hidden lg:flex items-center gap-0">
             <router-link 
               to="/"
               class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
@@ -54,6 +54,13 @@
             >
               My Trips
             </router-link>
+            <router-link 
+              to="/become-host"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
+            >
+              Become a Host
+            </router-link>
           </nav>
 
           <!-- Desktop Right -->
@@ -61,29 +68,29 @@
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 hover:text-brand-600 transition-all bg-transparent flex items-center gap-2"
+              class="px-2.5 py-1 border border-gray-300 rounded-full text-xs font-semibold text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-all bg-white flex items-center gap-1"
               :title="'Switch to ' + (currencyStore.currentCurrency === 'USD' ? 'RWF' : 'USD')"
             >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 rounded-full text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
               <option value="ZH">中文</option>
             </select>
 
-            <router-link to="/dashboard/watchlist" class="relative p-1.5 hover:bg-transparent rounded" title="Wishlist">
-              <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors" title="Wishlist">
+              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
 
-            <router-link to="/trip-cart" class="px-4 py-2 bg-brand-500 text-white rounded-[20px] text-sm font-semibold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md" title="Trip Cart">
+            <router-link to="/trip-cart" class="px-5 py-2 bg-brand-500 text-white rounded-full text-sm font-bold hover:bg-brand-600 transition-all shadow-sm hover:shadow-md" title="Trip Cart">
               TripCart
             </router-link>
 
@@ -91,32 +98,30 @@
             <div v-if="userStore.isAuthenticated" class="relative" v-click-outside="closeUserMenu">
               <button 
                 @click.stop="showUserMenu = !showUserMenu"
-                class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
+                class="relative flex items-center gap-2 bg-white border border-gray-300 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
               >
-                <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="2" y="5" width="20" height="2" rx="1"/>
-                  <rect x="2" y="11" width="20" height="2" rx="1"/>
-                  <rect x="2" y="17" width="20" height="2" rx="1"/>
-                </svg>
                 <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
-                  <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
+                  <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'JO' }}</span>
                 </div>
+                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
               </button>
 
               <!-- Dropdown Menu -->
               <transition name="dropdown">
-                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-50">
+                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-1 z-50">
                   <div class="px-4 py-3 border-b border-gray-100">
                     <p class="font-semibold text-sm">{{ userStore.user?.name || 'User' }}</p>
-                    <p class="text-xs text-text-secondary">{{ userStore.user?.email || '' }}</p>
+                    <p class="text-xs text-gray-500">{{ userStore.user?.email || '' }}</p>
                   </div>
                   
                   <router-link 
                     to="/profile" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     <span class="text-sm">My Profile</span>
@@ -125,9 +130,9 @@
                   <router-link 
                     to="/dashboard" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                     <span class="text-sm">My Trips</span>
@@ -136,20 +141,20 @@
                   <router-link 
                     to="/dashboard/watchlist" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                     <span class="text-sm">Wishlist</span>
                   </router-link>
 
-                  <div class="border-t border-gray-100 mt-2 pt-2">
+                  <div class="border-t border-gray-100 mt-1 pt-1">
                     <button 
                       @click="handleLogout"
-                      class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors w-full text-left text-red-600"
+                      class="flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left text-red-600"
                     >
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                       </svg>
                       <span class="text-sm font-medium">Logout</span>
@@ -177,22 +182,22 @@
           </div>
 
           <!-- Mobile Right -->
-          <div class="flex lg:hidden items-center gap-1">
+          <div class="flex lg:hidden items-center gap-2">
             <!-- Currency Toggle Mobile -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-3 py-1.5 border border-brand-500 rounded-[15px] text-xs font-semibold text-gray-700 hover:text-brand-600 transition-all bg-transparent"
+              class="px-3 py-1.5 border border-gray-300 rounded-full text-xs font-semibold text-gray-700 hover:border-brand-500 transition-all bg-white"
             >
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <router-link to="/dashboard/watchlist" class="relative p-1.5">
-              <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
 
-            <router-link to="/trip-cart" class="px-3 py-1.5 bg-brand-500 text-white rounded-[15px] text-xs font-semibold hover:bg-brand-600 transition-all">
+            <router-link to="/trip-cart" class="px-4 py-1.5 bg-brand-500 text-white rounded-full text-xs font-bold hover:bg-brand-600 transition-all">
               TripCart
             </router-link>
 
@@ -333,6 +338,17 @@
                 </svg>
                 My Trips
               </router-link>
+              <router-link 
+                to="/become-host"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                style="font-family: 'Montserrat', sans-serif;"
+                @click="mobileMenuOpen = false"
+              >
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                Become a Host
+              </router-link>
               <button
                 class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold w-full text-left"
                 style="font-family: 'Montserrat', sans-serif;"
@@ -467,7 +483,7 @@
     <AIConcierge :isOpen="showAIConcierge" @close="showAIConcierge = false" @minimize="aiMinimized = true; showAIConcierge = false" />
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-t border-white/10 mt-20 relative overflow-hidden">
+    <footer class="bg-white border-t border-gray-200 mt-20 relative overflow-hidden">
       <div class="container mx-auto px-4 lg:px-8 py-16 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
@@ -475,41 +491,41 @@
               <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <span class="text-white font-bold text-2xl">M</span>
               </div>
-              <span class="text-xl font-bold text-white tracking-tight">Merry<span class="text-red-300">360X</span></span>
+              <span class="text-xl font-bold text-gray-900 tracking-tight">Merry<span class="text-red-500">360X</span></span>
             </div>
-            <p class="text-white/80 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
+            <p class="text-gray-600 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-red-400 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
-            <ul class="space-y-3 text-white/70 text-sm">
-              <li><router-link to="/accommodations" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">🏠 Accommodations</router-link></li>
-              <li><router-link to="/tours" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">🌍 Tours</router-link></li>
-              <li><router-link to="/transport" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">🚗 Transport</router-link></li>
+            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
+            <ul class="space-y-3 text-gray-600 text-sm">
+              <li><router-link to="/accommodations" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🏠 Accommodations</router-link></li>
+              <li><router-link to="/tours" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🌍 Tours</router-link></li>
+              <li><router-link to="/transport" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🚗 Transport</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-red-400 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
-            <ul class="space-y-3 text-white/70 text-sm">
-              <li><a href="#" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">About Us</a></li>
-              <li><a href="#" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">Contact</a></li>
-              <li><a href="#" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">Careers</a></li>
+            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
+            <ul class="space-y-3 text-gray-600 text-sm">
+              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">About Us</a></li>
+              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Contact</a></li>
+              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Careers</a></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-red-400 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
-            <ul class="space-y-3 text-white/70 text-sm">
-              <li><a href="#" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
-              <li><a href="#" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">Safety</a></li>
-              <li><a href="#" class="hover:text-red-400 transition-all hover:translate-x-1 inline-block">Terms</a></li>
+            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
+            <ul class="space-y-3 text-gray-600 text-sm">
+              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
+              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Safety</a></li>
+              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Terms</a></li>
             </ul>
           </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-white/60 text-sm">© 2025 Merry360X. All rights reserved.</p>
+        <div class="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-600 text-sm">© 2025 Merry360X. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-white/60 hover:text-red-400 text-sm transition-colors">Privacy</a>
-            <a href="#" class="text-white/60 hover:text-red-400 text-sm transition-colors">Terms</a>
-            <a href="#" class="text-white/60 hover:text-red-400 text-sm transition-colors">Cookies</a>
+            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Privacy</a>
+            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Terms</a>
+            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Cookies</a>
           </div>
         </div>
       </div>

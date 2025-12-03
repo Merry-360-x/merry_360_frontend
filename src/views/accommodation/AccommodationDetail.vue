@@ -34,6 +34,16 @@
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
                   <h1 class="text-2xl font-bold text-text-brand-600">{{ accommodation.name }}</h1>
+                  <button 
+                    @click="openDirections"
+                    class="inline-flex items-center px-2.5 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-full transition-colors shadow-sm"
+                    title="Get Directions"
+                  >
+                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                    </svg>
+                    Directions
+                  </button>
                   <span v-if="accommodation.eco" class="inline-flex items-center px-3 py-1 bg-success bg-opacity-10 text-success text-sm font-medium rounded-full">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
@@ -255,6 +265,13 @@ import CrossCategorySuggestions from '../../components/common/CrossCategorySugge
 const router = useRouter()
 const route = useRoute()
 const currencyStore = useCurrencyStore()
+
+const openDirections = () => {
+  // Get the property location and open in Google Maps
+  const location = encodeURIComponent(accommodation.value.location + ', ' + accommodation.value.name)
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${location}`
+  window.open(mapsUrl, '_blank')
+}
 
 const transportOptions = ref([
   {

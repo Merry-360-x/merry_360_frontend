@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <!-- Hero Section with Search -->
-    <section class="relative bg-gradient-to-br from-brand-50 to-white py-12 md:py-16">
+    <section class="relative bg-gradient-to-br from-green-50 to-white py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
           <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">Tours & Experiences</h1>
@@ -38,7 +38,7 @@
             <!-- Search Button -->
             <button 
               @click="applySearch"
-              class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+              class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -62,8 +62,8 @@
             :class="[
               'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
               selectedCategory === category 
-                ? 'bg-primary text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                ? 'bg-green-500 text-white' 
+                : 'bg-white text-gray-700 hover:bg-green-50 border border-gray-200'
             ]"
           >
             {{ category }}
@@ -80,7 +80,7 @@
           >
             <div class="relative overflow-hidden h-56">
               <img loading="lazy" :src="tour.image" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-              <span class="absolute top-4 left-4 px-3 py-1 bg-brand-500 text-white text-sm font-semibold rounded-full">
+              <span class="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-full">
                 {{ tour.category }}
               </span>
               <button 
@@ -120,12 +120,12 @@
               </div>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-lg font-bold text-brand-600">{{ tour.price }} RWF</span>
+                  <span class="text-lg font-bold text-green-600">{{ tour.price }} RWF</span>
                   <span class="text-text-muted text-xs">/person</span>
                 </div>
                 <button 
                   @click.stop="addToCart(tour)" 
-                  class="px-4 py-2 bg-brand-500 text-sm text-white rounded-lg font-semibold hover:bg-red-600 transition-colors"
+                  class="px-4 py-2 bg-green-500 text-sm text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
                 >
                   Book Now
                 </button>
