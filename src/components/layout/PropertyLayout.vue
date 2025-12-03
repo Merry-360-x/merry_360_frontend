@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-white font-sans">
     <!-- Header -->
     <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
-      <div class="px-4 sm:px-6 lg:px-8">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div class="flex items-center justify-between h-20 md:h-24">
           <!-- Logo -->
           <router-link to="/" class="flex items-center">
@@ -10,20 +10,62 @@
           </router-link>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden lg:flex items-center space-x-1">
+          <nav class="hidden lg:flex items-center gap-0.5">
             <router-link 
-              v-for="item in navigation"
-              :key="item.name"
-              :to="item.to" 
+              to="/"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
+              exact
+            >
+              Home
+            </router-link>
+            <router-link 
+              to="/accommodations"
               class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
             >
-              {{ item.name }}
+              Accommodations
+            </router-link>
+            <router-link 
+              to="/tours"
+              class="text-sm text-gray-700 font-medium hover:text-green-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-green-500 !text-green-700 !bg-green-50"
+            >
+              Tours
+            </router-link>
+            <router-link 
+              to="/transport"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
+            >
+              Transport
+            </router-link>
+            <router-link 
+              to="/services"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
+            >
+              Services
+            </router-link>
+            <router-link 
+              to="/dashboard"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
+            >
+              My Trips
             </router-link>
           </nav>
 
           <!-- Desktop Right -->
           <div class="hidden lg:flex items-center gap-2">
+            <!-- Become a Host -->
+            <router-link 
+              to="/become-host"
+              class="px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 rounded-[20px] transition-all"
+            >
+              Become a Host
+            </router-link>
+            
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
