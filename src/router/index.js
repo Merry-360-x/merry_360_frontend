@@ -30,6 +30,9 @@ import TourDetail from '../views/tours/TourDetail.vue'
 import TourBooking from '../views/tours/TourBooking.vue'
 import ToursPage from '../views/tours/ToursPage.vue'
 
+// Services
+import ServicesPage from '../views/services/ServicesPage.vue'
+
 // Dashboard
 import UserDashboard from '../views/dashboard/UserDashboard.vue'
 import MyTrips from '../views/dashboard/MyTrips.vue'
@@ -143,6 +146,11 @@ const routes = [
     path: '/tour/:id/booking',
     name: 'tour-booking',
     component: TourBooking
+  },
+  {
+    path: '/services',
+    name: 'services',
+    component: ServicesPage
   },
   {
     path: '/dashboard',
