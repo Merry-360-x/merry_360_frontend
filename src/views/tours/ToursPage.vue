@@ -1,7 +1,7 @@
 <template>
-  <PropertyLayout>
-    <!-- Hero Section with Search -->
-    <section class="relative bg-gradient-to-br from-brand-50 to-white py-12 md:py-16">
+  <MainLayout>
+    <!-- Hero Section with Search - Eco Green Theme -->
+    <section class="relative bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
           <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">Tours & Experiences</h1>
@@ -35,10 +35,10 @@
               <option value="multi">Multi Day</option>
             </select>
 
-            <!-- Search Button -->
+            <!-- Search Button - Eco Green -->
             <button 
               @click="applySearch"
-              class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+              class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-green-500/30"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -50,9 +50,22 @@
       </div>
     </section>
 
-    <!-- Tour Categories -->
-    <section class="py-12 md:py-16">
+    <!-- Tour Categories - Eco Green Theme -->
+    <section class="py-12 md:py-16 bg-gradient-to-b from-green-50 to-white">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Eco Message -->
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full mb-4">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-sm font-semibold">Eco-Friendly Tours in Rwanda 🌿</span>
+          </div>
+          <p class="text-gray-600 max-w-2xl mx-auto text-sm">
+            Experience sustainable tourism that protects our wildlife and supports local communities
+          </p>
+        </div>
+
         <!-- Category Filters -->
         <div class="flex flex-wrap gap-2 mb-6 justify-center">
           <button 
@@ -62,8 +75,8 @@
             :class="[
               'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
               selectedCategory === category 
-                ? 'bg-primary text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                ? 'bg-green-600 text-white shadow-lg' 
+                : 'bg-white text-gray-700 hover:bg-green-50 border border-green-200'
             ]"
           >
             {{ category }}
@@ -80,7 +93,7 @@
           >
             <div class="relative overflow-hidden h-56">
               <img loading="lazy" :src="tour.image" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-              <span class="absolute top-4 left-4 px-3 py-1 bg-brand-500 text-white text-sm font-semibold rounded-full">
+              <span class="absolute top-4 left-4 px-3 py-1 bg-green-600 text-white text-sm font-semibold rounded-full shadow-lg">
                 {{ tour.category }}
               </span>
               <button 
@@ -120,12 +133,12 @@
               </div>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-lg font-bold text-brand-600">{{ tour.price }} RWF</span>
+                  <span class="text-lg font-bold text-green-700">{{ tour.price }} RWF</span>
                   <span class="text-text-muted text-xs">/person</span>
                 </div>
                 <button 
                   @click.stop="addToCart(tour)" 
-                  class="px-4 py-2 bg-brand-500 text-sm text-white rounded-lg font-semibold hover:bg-red-600 transition-colors"
+                  class="px-4 py-2 bg-green-600 text-sm text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-md"
                 >
                   Book Now
                 </button>

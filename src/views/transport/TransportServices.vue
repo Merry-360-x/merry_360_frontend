@@ -1,5 +1,5 @@
 <template>
-  <PropertyLayout>
+  <MainLayout>
     <!-- Hero Section with Search -->
     <section class="relative bg-gradient-to-br from-brand-50 to-white py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">

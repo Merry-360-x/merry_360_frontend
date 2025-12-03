@@ -1,5 +1,5 @@
 <template>
-  <PropertyLayout>
+  <MainLayout>
     <!-- AI Concierge Modal -->
     <AIConcierge v-if="showAIConcierge" @close="showAIConcierge = false" />
     

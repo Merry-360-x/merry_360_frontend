@@ -1,5 +1,5 @@
 <template>
-  <PropertyLayout>
+  <MainLayout>
     <!-- Clean Header -->
     <section class="bg-white border-b border-gray-200 py-8">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
