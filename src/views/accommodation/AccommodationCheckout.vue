@@ -142,7 +142,7 @@
 
             <div class="flex justify-between pt-4 mb-6">
               <span class="font-bold text-lg">Total</span>
-              <span class="text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(bookingDetails.price * 3 + 40) }}</span>
+              <span class="text-xl font-bold text-brand-600">{{ currencyStore.formatPrice(bookingDetails.price * 3 + 40) }}</span>
             </div>
 
             <Button 

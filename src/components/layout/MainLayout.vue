@@ -48,6 +48,13 @@
               Services
             </router-link>
             <router-link 
+              to="/stories"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-purple-500 !text-purple-700 !bg-purple-50"
+            >
+              Stories
+            </router-link>
+            <router-link 
               to="/dashboard"
               class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
@@ -82,6 +89,7 @@
               <option value="RW">RW</option>
               <option value="FR">FR</option>
               <option value="ZH">中文</option>
+              <option value="SW">SW</option>
             </select>
 
             <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors" title="Wishlist">
@@ -328,6 +336,17 @@
                 Services
               </router-link>
               <router-link 
+                to="/stories"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-purple-50 rounded-lg transition-colors font-semibold"
+                style="font-family: 'Montserrat', sans-serif;"
+                @click="mobileMenuOpen = false"
+              >
+                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                Stories
+              </router-link>
+              <router-link 
                 to="/dashboard"
                 class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
@@ -393,6 +412,7 @@
                   <option value="RW">Kinyarwanda</option>
                   <option value="FR">Français</option>
                   <option value="ZH">中文 (Mandarin)</option>
+                  <option value="SW">Kiswahili</option>
                 </select>
               </div>
             </div>

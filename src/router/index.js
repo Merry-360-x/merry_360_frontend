@@ -47,7 +47,7 @@ import TripCart from '../views/cart/TripCart.vue'
 import Wishlist from '../views/wishlist/Wishlist.vue'
 
 // Stories
-import ShareStories from '../views/stories/ShareStories.vue'
+import Stories from '../views/stories/Stories.vue'
 
 // Admin
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
@@ -93,7 +93,7 @@ const routes = [
   {
     path: '/stories',
     name: 'stories',
-    component: ShareStories
+    component: Stories
   },
   {
     path: '/home-old',

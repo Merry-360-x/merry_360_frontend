@@ -5,11 +5,11 @@
       <div class="container mx-auto px-4 max-w-4xl">
         <div class="bg-white rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 px-2 md:px-6">
-            <label class="block text-xs font-bold mb-1.5" style="font-family: Montserrat, sans-serif; color: #484848; font-size: 12px;">Search Accommodations</label>
+            <label class="block text-xs font-bold mb-1.5" style="font-family: Montserrat, sans-serif; color: #484848; font-size: 12px;">{{ t('nav.accommodations') }}</label>
             <input 
               v-model="searchQuery"
               type="text" 
-              placeholder="Search by name, location, or type..."
+              :placeholder="t('home.search')"
               class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
               style="font-family: Montserrat, sans-serif; color: #484848; font-size: 14px;"
               @keyup.enter="performSearch"
@@ -262,17 +262,28 @@
                   <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-gray-100">
                     <div>
                       <div class="flex items-baseline gap-1 flex-wrap">
-                        <span class="text-2xl sm:text-3xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
+                        <span class="text-xl sm:text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
                         <span class="text-text-secondary text-sm sm:text-base whitespace-nowrap">/night</span>
                       </div>
                       <p class="text-xs text-text-secondary">Includes taxes and fees</p>
                     </div>
-                    <button 
-                      @click.stop="router.push(`/accommodation/${accommodation.id}`)"
-                      class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
-                    >
-                      View Details
-                    </button>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                      <button 
+                        @click.stop="addToCart(accommodation)"
+                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-2.5 border-2 border-brand-500 text-brand-600 rounded-lg hover:bg-brand-50 transition-all duration-200 font-medium text-sm sm:text-base flex items-center justify-center gap-1"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="hidden sm:inline">{{ t('accommodation.addToCart') }}</span>
+                      </button>
+                      <button 
+                        @click.stop="router.push(`/accommodation/${accommodation.id}`)"
+                        class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
+                      >
+                        {{ t('accommodation.details') }}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -300,12 +311,16 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
+import { useUserStore } from '../../stores/userStore'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import MapView from '../../components/common/MapView.vue'
 
 const router = useRouter()
 const currencyStore = useCurrencyStore()
+const userStore = useUserStore()
+const { t } = useTranslation()
 
 const viewMode = ref('list')
 const sortBy = ref('recommended')
@@ -457,5 +472,19 @@ const handlePropertySelect = (property) => {
 const handleLocationSearch = (location) => {
   console.log('Searching for location:', location)
   // Implement location-based search filtering here
+}
+
+const addToCart = (accommodation) => {
+  const cartItem = {
+    id: accommodation.id,
+    type: 'accommodation',
+    name: accommodation.name,
+    location: accommodation.location,
+    price: accommodation.price,
+    image: accommodation.image,
+    rating: accommodation.rating
+  }
+  userStore.addToCart(cartItem)
+  alert(`${accommodation.name} added to cart!`)
 }
 </script>

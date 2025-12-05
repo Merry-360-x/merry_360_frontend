@@ -137,6 +137,7 @@
 import { computed, ref, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '@/stores/currency'
+import { useUserStore } from '@/stores/userStore'
 
 const props = defineProps({
   property: {
@@ -147,6 +148,7 @@ const props = defineProps({
 
 const router = useRouter()
 const currencyStore = useCurrencyStore()
+const userStore = useUserStore()
 const isFavorite = ref(false)
 const currentImageIndex = ref(0)
 let autoScrollInterval = null
@@ -208,9 +210,18 @@ const toggleFavorite = () => {
 }
 
 const addToCart = () => {
-  // TODO: Implement cart functionality
-  console.log('Added to cart:', props.property.title)
-  // You can emit an event or use a store here
+  const cartItem = {
+    id: props.property.id,
+    type: 'accommodation',
+    name: props.property.title,
+    location: props.property.location,
+    price: props.property.price,
+    image: props.property.image,
+    beds: props.property.beds,
+    baths: props.property.baths
+  }
+  userStore.addToCart(cartItem)
+  alert(`${props.property.title} added to cart!`)
 }
 
 const viewDetails = () => {

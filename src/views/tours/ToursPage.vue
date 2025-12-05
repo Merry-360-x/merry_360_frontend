@@ -4,8 +4,8 @@
     <section class="relative bg-gradient-to-br from-green-50 to-white py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">Tours & Experiences</h1>
-          <p class="text-base md:text-lg text-gray-600">Discover the beauty of Rwanda</p>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">{{ t('tours.title') }}</h1>
+          <p class="text-base md:text-lg text-gray-600">{{ t('tours.subtitle') }}</p>
         </div>
 
         <!-- Search Bar -->
@@ -43,7 +43,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
-              Search
+              {{ t('home.search') }}
             </button>
           </div>
         </div>
@@ -143,14 +143,16 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 
-const categories = ref(['All', 'Nature', 'Adventure', 'Cultural', 'Wildlife', 'Historical'])
-const selectedCategory = ref('All')
+const categories = computed(() => [t('tours.all'), t('tours.nature'), t('tours.adventure'), t('tours.cultural'), t('tours.wildlife'), t('tours.historical')])
+const selectedCategory = ref(computed(() => t('tours.all')).value)
 const searchQuery = ref('')
 const durationFilter = ref('')
 

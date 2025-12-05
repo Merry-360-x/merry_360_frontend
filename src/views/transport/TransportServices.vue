@@ -4,8 +4,8 @@
     <section class="relative bg-gradient-to-br from-brand-50 to-white py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">Transportation Services</h1>
-          <p class="text-base md:text-lg text-gray-600">Get around Rwanda with ease</p>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">{{ t('transport.title') }}</h1>
+          <p class="text-base md:text-lg text-gray-600">{{ t('transport.subtitle') }}</p>
         </div>
 
         <!-- Search Bar -->
@@ -63,10 +63,10 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-text-brand-600 mb-2">Taxi Service</h3>
-              <p class="text-sm text-text-secondary mb-4">Quick rides around the city</p>
+              <h3 class="text-lg font-bold text-text-brand-600 mb-2">{{ t('transport.taxi') }}</h3>
+              <p class="text-sm text-text-secondary mb-4">{{ t('transport.taxiDesc') }}</p>
               <button @click="bookService('taxi')" class="w-full px-5 py-2.5 bg-brand-500 text-sm text-white rounded-xl font-semibold hover:bg-red-600 transition-colors">
-                Book Taxi
+                {{ t('transport.bookTaxi') }}
               </button>
             </div>
           </div>
@@ -79,10 +79,10 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-text-brand-600 mb-2">Shuttle Service</h3>
-              <p class="text-sm text-text-secondary mb-4">Shared rides to popular destinations</p>
+              <h3 class="text-lg font-bold text-text-brand-600 mb-2">{{ t('transport.shuttle') }}</h3>
+              <p class="text-sm text-text-secondary mb-4">{{ t('transport.shuttleDesc') }}</p>
               <button @click="bookService('shuttle')" class="w-full px-5 py-2.5 bg-gray-900 text-sm text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors">
-                Book Shuttle
+                {{ t('transport.bookShuttle') }}
               </button>
             </div>
           </div>
@@ -95,8 +95,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-text-brand-600 mb-2">Car Rental</h3>
-              <p class="text-sm text-text-secondary mb-4">Rent a vehicle for your journey</p>
+              <h3 class="text-lg font-bold text-text-brand-600 mb-2">{{ t('transport.carRental') }}</h3>
+              <p class="text-sm text-text-secondary mb-4">{{ t('transport.carRentalDesc') }}</p>
               <button @click="browseCars" class="w-full px-5 py-2.5 border-2 border-brand-500 text-sm text-brand-600 rounded-xl font-semibold hover:bg-brand-600 hover:text-white transition-colors">
                 Browse Cars
               </button>
@@ -191,11 +191,13 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 
 const searchQuery = ref('')
 const vehicleFilter = ref('')

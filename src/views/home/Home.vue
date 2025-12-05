@@ -2,25 +2,42 @@
   <MainLayout>
     <!-- Hero Section with Search -->
     <section class="relative min-h-screen overflow-hidden">
-      <!-- Background Video with Overlay -->
+      <!-- Background Video Carousel with Overlay -->
       <div class="absolute inset-0">
-        <video 
-          autoplay 
-          muted 
-          loop 
-          playsinline
-          class="w-full h-full object-cover"
-          poster="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1920&q=80"
-        >
-          <source src="https://cdn.coverr.co/videos/coverr-ocean-waves-at-sunset-4390/1080p.mp4" type="video/mp4">
-        </video>
+        <!-- Video Carousel -->
+        <transition name="fade" mode="out-in">
+          <video 
+            :key="currentVideoIndex"
+            autoplay 
+            muted 
+            playsinline
+            class="w-full h-full object-cover"
+            @ended="nextVideo"
+          >
+            <source :src="heroVideos[currentVideoIndex].url" type="video/mp4">
+          </video>
+        </transition>
         <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
+        
+        <!-- Video Navigation Indicators -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+          <button
+            v-for="(video, index) in heroVideos"
+            :key="index"
+            @click="currentVideoIndex = index"
+            :class="[
+              'w-2 h-2 rounded-full transition-all',
+              currentVideoIndex === index ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75'
+            ]"
+            :aria-label="`View ${video.category} video`"
+          ></button>
+        </div>
       </div>
 
       <!-- Content -->
       <div class="relative z-10 container mx-auto px-4 h-full min-h-screen flex flex-col items-center justify-center py-24">
         <h1 class="text-3xl md:text-[40px] font-bold text-white mb-8 md:mb-10 text-center tracking-wider" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.2; letter-spacing: 0.1em;">
-          FIND
+          {{ t('transport.bookNow').toUpperCase() }}
         </h1>
 
         <!-- Category Tabs -->
@@ -42,10 +59,10 @@
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
             <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0" style="border-color: #DDDDDD;">
-              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Location</label>
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('accommodation.location') }}</label>
               <input 
                 type="text" 
-                placeholder="Which city do you prefer?"
+                :placeholder="t('search.whereGoing')"
                 v-model="searchQuery.location"
                 class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
@@ -54,10 +71,10 @@
 
             <!-- Check In -->
             <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0" style="border-color: #DDDDDD;">
-              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Check In</label>
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('search.checkIn') }}</label>
               <input 
                 type="text" 
-                placeholder="Add Dates"
+                :placeholder="t('search.checkIn')"
                 v-model="searchQuery.checkIn"
                 class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
@@ -67,10 +84,10 @@
 
             <!-- Check Out -->
             <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0" style="border-color: #DDDDDD;">
-              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Check Out</label>
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('search.checkOut') }}</label>
               <input 
                 type="text" 
-                placeholder="Add Dates"
+                :placeholder="t('search.checkOut')"
                 v-model="searchQuery.checkOut"
                 class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
@@ -80,10 +97,10 @@
 
             <!-- Guests -->
             <div class="md:pl-5">
-              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">Guests</label>
+              <label class="block text-xs font-bold mb-1.5" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('accommodation.guests') }}</label>
               <input 
                 type="text" 
-                placeholder="Add Guests"
+                :placeholder="t('accommodation.guests')"
                 v-model="searchQuery.guests"
                 class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
@@ -120,14 +137,14 @@
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-12 max-w-7xl mx-auto">
         <div class="text-center md:text-left mb-4 md:mb-0">
-          <h2 class="text-2xl md:text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">Nearby Listed Properties</h2>
+          <h2 class="text-2xl md:text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">{{ t('home.nearbyProperties') }}</h2>
           <div class="w-24 md:w-36 h-1.5 rounded-full md:mx-0 mx-auto bg-brand-500"></div>
         </div>
         <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: #484848;">
           <svg class="w-5 h-5 md:w-6 md:h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
-          Show On Map
+          {{ t('accommodation.location') }}
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
@@ -138,7 +155,7 @@
     <!-- Top Rated Properties -->
     <section class="container mx-auto px-4 py-20">
       <div class="mb-12 text-center">
-        <h2 class="text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px; color: #484848;">Top Rated Properties</h2>
+        <h2 class="text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px; color: #484848;">{{ t('home.topRated') }}</h2>
         <div class="w-36 h-1.5 rounded-full mx-auto" style="background: #484848;"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
@@ -167,7 +184,7 @@
     <!-- Featured Properties -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">Featured Properties on our Listing</h2>
+        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">{{ t('home.featured') }}</h2>
         <div class="w-24 md:w-36 h-1.5 rounded-full mx-auto" style="background: #484848;"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
@@ -191,7 +208,7 @@
     <!-- Property Rental Guides & Tips -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">Property Rental Guides & Tips</h2>
+        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">{{ t('home.guides') }}</h2>
         <div class="w-24 md:w-36 h-1.5 rounded-full mx-auto" style="background: #484848;"></div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
@@ -308,15 +325,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
+import { useTranslation } from '@/composables/useTranslation'
 
 const router = useRouter()
+const { t } = useTranslation()
 
-const categories = ['Houses', 'Hotels', 'Motels', 'Hostels']
-const selectedCategory = ref('Houses')
+const categories = computed(() => [t('home.accommodations'), 'Hotels', 'Motels', 'Hostels'])
+const selectedCategory = ref(computed(() => t('home.accommodations')).value)
 const showDatePicker = ref(null)
 
 const searchQuery = ref({
@@ -429,4 +448,34 @@ const guides = ref([
 const handleSearch = () => {
   router.push('/accommodations')
 }
+
+// Hero Video Carousel
+const currentVideoIndex = ref(0)
+const heroVideos = ref([
+  {
+    category: 'accommodations',
+    url: 'https://cdn.coverr.co/videos/coverr-modern-hotel-room-with-city-view-9138/1080p.mp4'
+  },
+  {
+    category: 'tours',
+    url: 'https://cdn.coverr.co/videos/coverr-mountain-landscape-aerial-view-2754/1080p.mp4'
+  },
+  {
+    category: 'transport',
+    url: 'https://cdn.coverr.co/videos/coverr-driving-through-city-streets-3945/1080p.mp4'
+  }
+])
+
+const nextVideo = () => {
+  currentVideoIndex.value = (currentVideoIndex.value + 1) % heroVideos.value.length
+}
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.8s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
