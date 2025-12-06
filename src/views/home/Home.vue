@@ -4,35 +4,17 @@
     <section class="relative min-h-screen overflow-hidden">
       <!-- Background Video Carousel with Overlay -->
       <div class="absolute inset-0">
-        <!-- Video Carousel -->
-        <transition name="fade" mode="out-in">
-          <video 
-            :key="currentVideoIndex"
-            autoplay 
-            muted 
-            loop
-            playsinline
-            class="w-full h-full object-cover"
-            @ended="nextVideo"
-          >
-            <source :src="heroVideos[currentVideoIndex].url" type="video/mp4">
-          </video>
-        </transition>
+        <!-- Background Video -->
+        <video 
+          autoplay 
+          muted 
+          loop
+          playsinline
+          class="w-full h-full object-cover"
+        >
+          <source src="/public/videos/Merry.mp4" type="video/mp4">
+        </video>
         <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
-        
-        <!-- Video Navigation Indicators -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-          <button
-            v-for="(video, index) in heroVideos"
-            :key="index"
-            @click="currentVideoIndex = index"
-            :class="[
-              'w-2 h-2 rounded-full transition-all',
-              currentVideoIndex === index ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/75'
-            ]"
-            :aria-label="`View ${video.category} video`"
-          ></button>
-        </div>
       </div>
 
       <!-- Content -->
