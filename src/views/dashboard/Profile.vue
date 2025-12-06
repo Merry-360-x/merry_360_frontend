@@ -3,8 +3,8 @@
     <div class="container mx-auto px-4 lg:px-8 py-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2">My Profile</h1>
-        <p class="text-text-secondary">Manage your account information and preferences</p>
+        <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">My Profile</h1>
+        <p class="text-text-secondary dark:text-gray-400">Manage your account information and preferences</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -54,16 +54,16 @@
             <!-- Stats -->
             <div class="space-y-3">
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary">Trips Completed</span>
-                <span class="font-semibold">{{ userStore.pastBookings.length }}</span>
+                <span class="text-sm text-text-secondary dark:text-gray-400">Trips Completed</span>
+                <span class="font-semibold dark:text-gray-200">{{ userStore.pastBookings.length }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary">Saved Items</span>
-                <span class="font-semibold">{{ userStore.watchlistCount }}</span>
+                <span class="text-sm text-text-secondary dark:text-gray-400">Saved Items</span>
+                <span class="font-semibold dark:text-gray-200">{{ userStore.watchlistCount }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary">Member Since</span>
-                <span class="font-semibold">{{ memberSince }}</span>
+                <span class="text-sm text-text-secondary dark:text-gray-400">Member Since</span>
+                <span class="font-semibold dark:text-gray-200">{{ memberSince }}</span>
               </div>
             </div>
 
@@ -232,7 +232,7 @@
           <!-- Personal Information Tab -->
           <Card v-if="activeProfileTab === 'personal'" padding="lg">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xl font-bold">Personal Information</h3>
+              <h3 class="text-xl font-bold dark:text-gray-100">Personal Information</h3>
               <Button variant="outline" size="sm" @click="editingPersonal = !editingPersonal">
                 {{ editingPersonal ? 'Cancel' : 'Edit' }}
               </Button>
@@ -311,7 +311,7 @@
 
           <!-- Preferences Tab -->
           <Card v-if="activeProfileTab === 'preferences'" padding="lg">
-            <h3 class="text-xl font-bold mb-6">Preferences</h3>
+            <h3 class="text-xl font-bold mb-6 dark:text-gray-100">Preferences</h3>
 
             <div class="space-y-6">
               <!-- Language -->
@@ -375,7 +375,7 @@
 
           <!-- Security Tab -->
           <Card v-if="activeProfileTab === 'security'" padding="lg">
-            <h3 class="text-xl font-bold mb-6">Security</h3>
+            <h3 class="text-xl font-bold mb-6 dark:text-gray-100">Security</h3>
 
             <div class="space-y-4">
               <div class="p-4 border border-gray-200 rounded-lg">

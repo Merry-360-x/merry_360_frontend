@@ -26,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 const cardClasses = computed(() => {
-  const baseClasses = 'bg-white rounded-card transition-all duration-300 ease-out backdrop-blur-xl border border-gray-100'
+  const baseClasses = 'bg-white dark:bg-gray-800 rounded-card transition-all duration-300 ease-out backdrop-blur-xl border border-gray-100 dark:border-gray-700'
   
   const paddingClasses = {
     none: '',
@@ -35,7 +35,7 @@ const cardClasses = computed(() => {
     lg: 'p-8'
   }
   
-  const hoverClass = props.hover ? 'shadow-card hover:shadow-card-hover hover:border-brand-100 transform hover:-translate-y-1' : 'shadow-card'
+  const hoverClass = props.hover ? 'shadow-card hover:shadow-card-hover hover:border-brand-100 dark:hover:border-brand-700 transform hover:-translate-y-1' : 'shadow-card dark:shadow-gray-900/50'
   const clickableClass = props.clickable ? 'cursor-pointer' : ''
   
   return [baseClasses, paddingClasses[props.padding], hoverClass, clickableClass].join(' ')

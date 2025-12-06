@@ -125,7 +125,7 @@
     <!-- Latest on the Property Listing -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">Latest on the Property Listing</h2>
+        <h2 class="text-2xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">Latest on the Property Listing</h2>
         <div class="w-24 md:w-36 h-1.5 rounded-full mx-auto bg-brand-500"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
@@ -137,10 +137,10 @@
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-12 max-w-7xl mx-auto">
         <div class="text-center md:text-left mb-4 md:mb-0">
-          <h2 class="text-2xl md:text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: #484848;">{{ t('home.nearbyProperties') }}</h2>
+          <h2 class="text-2xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
           <div class="w-24 md:w-36 h-1.5 rounded-full md:mx-0 mx-auto bg-brand-500"></div>
         </div>
-        <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: #484848;">
+        <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200 text-gray-800 dark:text-gray-200" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;">
           <svg class="w-5 h-5 md:w-6 md:h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>

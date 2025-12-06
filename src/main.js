@@ -4,6 +4,14 @@ import './style.css'
 import App from './App.vue'
 import router from './router'
 
+// Initialize dark mode from localStorage before app mounts
+const isDarkMode = localStorage.getItem('darkMode') === 'true'
+if (isDarkMode) {
+  document.documentElement.classList.add('dark')
+} else {
+  document.documentElement.classList.remove('dark')
+}
+
 const app = createApp(App)
 const pinia = createPinia()
 

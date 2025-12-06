@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white font-sans">
+  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans transition-colors duration-200">
     <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+    <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
           <!-- Logo -->
@@ -13,44 +13,44 @@
           <nav class="hidden lg:flex items-center gap-0">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
               exact
             >
               Home
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Accommodations
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 font-medium transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-green-500 !text-green-700 !bg-green-50"
+              class="text-sm text-gray-700 dark:text-gray-200 font-medium transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-green-500 !text-green-700 !bg-green-50 dark:!bg-green-900 dark:!text-green-300"
             >
               Tours
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Transport
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Services
             </router-link>
             <router-link 
               to="/stories"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-purple-500 !text-purple-700 !bg-purple-50"
+              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-purple-500 !text-purple-700 !bg-purple-50 dark:!bg-purple-900 dark:!text-purple-300"
             >
               Stories
             </router-link>
@@ -64,6 +64,22 @@
 
           <!-- Desktop Right -->
           <div class="hidden lg:flex items-center gap-2">
+            <!-- Dark Mode Toggle -->
+            <button
+              @click="appStore.toggleDarkMode()"
+              class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              :title="appStore.isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+            >
+              <!-- Sun icon for light mode -->
+              <svg v-if="!appStore.isDarkMode" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+              <!-- Moon icon for dark mode -->
+              <svg v-else class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+              </svg>
+            </button>
+
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
@@ -226,9 +242,9 @@
         ></div>
         
         <!-- Menu Panel -->
-        <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white shadow-2xl overflow-y-auto">
+        <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto transition-colors duration-200">
           <!-- Header -->
-          <div class="sticky top-0 bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 flex items-center justify-between shadow-md">
+          <div class="sticky top-0 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-700 dark:to-red-800 px-6 py-4 flex items-center justify-between shadow-md">
             <h3 class="text-white font-bold text-lg" style="font-family: 'Montserrat', sans-serif;">Menu</h3>
             <button @click="mobileMenuOpen = false" class="text-white p-1 hover:bg-white/20 rounded-lg transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,12 +377,30 @@
             </nav>
 
             <!-- Divider -->
-            <div class="border-t border-gray-200 my-6"></div>
+            <div class="border-t border-gray-200 dark:border-gray-700 my-6"></div>
 
             <!-- Settings Section -->
             <div class="space-y-4 mb-6">
+              <!-- Dark Mode Toggle -->
               <div>
-                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Currency</label>
+                <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Appearance</label>
+                <button
+                  @click="appStore.toggleDarkMode()"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-semibold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 flex items-center justify-between"
+                  style="font-family: 'Montserrat', sans-serif;"
+                >
+                  <span>{{ appStore.isDarkMode ? 'Dark Mode' : 'Light Mode' }}</span>
+                  <svg v-if="!appStore.isDarkMode" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                  </svg>
+                  <svg v-else class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Currency</label>
                 <select 
                   v-model="currencyStore.currentCurrency"
                   @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
@@ -382,7 +416,7 @@
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-gray-600 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Language</label>
+                <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Language</label>
                 <select 
                   v-model="languageStore.currentLanguage" 
                   @change="languageStore.setLanguage(languageStore.currentLanguage)" 
@@ -484,7 +518,7 @@
     <AIConcierge :isOpen="showAIConcierge" @close="showAIConcierge = false" @minimize="aiMinimized = true; showAIConcierge = false" />
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-20 relative overflow-hidden">
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20 relative overflow-hidden transition-colors duration-200">
       <div class="container mx-auto px-4 lg:px-8 py-16 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
@@ -494,39 +528,39 @@
               </div>
               <span class="text-xl font-bold text-gray-900 tracking-tight">Merry<span class="text-red-500">360X</span></span>
             </div>
-            <p class="text-gray-600 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
-            <ul class="space-y-3 text-gray-600 text-sm">
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
               <li><router-link to="/accommodations" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🏠 Accommodations</router-link></li>
               <li><router-link to="/tours" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🌍 Tours</router-link></li>
               <li><router-link to="/transport" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🚗 Transport</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
-            <ul class="space-y-3 text-gray-600 text-sm">
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">About Us</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Contact</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Careers</a></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
-            <ul class="space-y-3 text-gray-600 text-sm">
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Safety</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Terms</a></li>
             </ul>
           </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-600 text-sm">© 2025 Merry360X. All rights reserved.</p>
+        <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-600 dark:text-gray-400 text-sm">© 2025 Merry360X. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Privacy</a>
-            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Terms</a>
-            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Cookies</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Privacy</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Terms</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Cookies</a>
           </div>
         </div>
       </div>
