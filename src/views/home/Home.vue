@@ -10,6 +10,7 @@
             :key="currentVideoIndex"
             autoplay 
             muted 
+            loop
             playsinline
             class="w-full h-full object-cover"
             @ended="nextVideo"
