@@ -188,8 +188,8 @@ const handleLogin = async () => {
     userStore.loyaltyPoints = 2450
     userStore.addToWatchlist({ id: 1, type: 'accommodation', name: 'Sample Property' })
     
-    // Navigate to dashboard
-    router.push('/dashboard')
+    // Navigate to profile
+    router.push('/profile')
   } catch (error) {
     console.error('Login error:', error)
     setError('email', 'Invalid email or password')

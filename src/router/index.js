@@ -162,13 +162,16 @@ const routes = [
   },
   {
     path: '/dashboard',
-    name: 'dashboard',
-    component: MyTrips
+    redirect: '/profile'
   },
   {
     path: '/profile',
     name: 'profile',
     component: () => import('../views/dashboard/Profile.vue')
+  },
+  {
+    path: '/my-trips',
+    redirect: '/profile'
   },
   {
     path: '/dashboard/watchlist',

@@ -110,11 +110,18 @@
             <h2 class="text-xl font-bold mb-4">Transportation Options</h2>
             <p class="text-sm text-text-secondary mb-4">Get to and from this property with ease</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div v-for="transport in transportOptions" :key="transport.id" class="border border-gray-200 rounded-lg p-3 hover:border-red-500 hover:shadow-md transition-all cursor-pointer group">
+              <div v-for="transport in transportOptions" :key="transport.id" 
+                :class="[
+                  'border border-gray-200 rounded-lg p-3 hover:border-red-500 hover:shadow-md transition-all cursor-pointer group relative',
+                  { 'animate-pulse-once bg-green-50': transport.justAdded }
+                ]">
                 <div class="flex items-start gap-3">
                   <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-red-100 transition-colors">
-                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-if="!transport.justAdded" class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                    <svg v-else class="w-5 h-5 text-green-500 animate-bounce-once" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </div>
                   <div class="flex-1">
@@ -122,7 +129,23 @@
                     <p class="text-xs text-text-secondary mb-2">{{ transport.description }}</p>
                     <div class="flex items-center justify-between">
                       <span class="text-base font-bold text-red-500">{{ formatPrice(transport.price) }}</span>
-                      <button class="text-xs text-red-500 hover:text-red-600 font-semibold">Book Now →</button>
+                      <button 
+                        @click="addTransportToCart(transport)" 
+                        :disabled="transport.justAdded"
+                        :class="[
+                          'text-xs font-semibold transition-all',
+                          transport.justAdded 
+                            ? 'text-green-500 cursor-not-allowed' 
+                            : 'text-red-500 hover:text-red-600 hover:scale-105'
+                        ]">
+                        <span v-if="!transport.justAdded">Add to Trip Cart</span>
+                        <span v-else class="flex items-center gap-1">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                          </svg>
+                          Added!
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -306,6 +329,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
+import { useUserStore } from '../../stores/userStore'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast.js'
 import MainLayout from '../../components/layout/MainLayout.vue'
@@ -317,6 +341,7 @@ const router = useRouter()
 const { success } = useToast()
 const route = useRoute()
 const currencyStore = useCurrencyStore()
+const userStore = useUserStore()
 const { t } = useTranslation()
 
 const openDirections = () => {
@@ -336,8 +361,27 @@ const addToCart = () => {
     price: accommodation.value.price,
     image: accommodation.value.mainImage
   }
-  // You can integrate with userStore here
+  userStore.addToCart(cartItem)
   success(`${accommodation.value.name} added to cart!`)
+}
+
+const addTransportToCart = (transport) => {
+  const cartItem = {
+    id: Date.now(),
+    type: 'transport',
+    name: transport.name,
+    description: transport.description,
+    price: transport.price,
+    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400'
+  }
+  userStore.addToCart(cartItem)
+  success(`${transport.name} added to trip cart!`)
+  
+  // Trigger animation
+  transport.justAdded = true
+  setTimeout(() => {
+    transport.justAdded = false
+  }, 2000)
 }
 
 const transportOptions = ref([
@@ -419,3 +463,37 @@ const accommodation = ref({
   ]
 })
 </script>
+
+<style scoped>
+@keyframes pulse-once {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes bounce-once {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-pulse-once {
+  animation: pulse-once 0.6s ease-in-out;
+}
+
+.animate-bounce-once {
+  animation: bounce-once 0.6s ease-in-out;
+}
+</style>

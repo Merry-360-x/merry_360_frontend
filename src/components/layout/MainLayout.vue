@@ -55,13 +55,6 @@
               Stories
             </router-link>
             <router-link 
-              to="/dashboard"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
-            >
-              My Trips
-            </router-link>
-            <router-link 
               to="/become-host"
               class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px]"
             >
@@ -135,14 +128,14 @@
                   </router-link>
 
                   <router-link 
-                    to="/dashboard" 
+                    to="/profile" 
                     @click="showUserMenu = false"
                     class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span class="text-sm">My Trips</span>
+                    <span class="text-sm">Profile</span>
                   </router-link>
 
                   <router-link 
@@ -344,17 +337,6 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
                 Stories
-              </router-link>
-              <router-link 
-                to="/dashboard"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
-                @click="mobileMenuOpen = false"
-              >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                My Trips
               </router-link>
               <router-link 
                 to="/become-host"
@@ -577,7 +559,7 @@ const mobileNavigation = [
   { name: 'Accommodations', to: '/accommodations' },
   { name: 'Tours', to: '/tours' },
   { name: 'Transport', to: '/transport' },
-  { name: 'My Trips', to: '/dashboard' }
+  { name: 'My Trips', to: '/profile' }
 ]
 
 const toggleMobileMenu = () => {

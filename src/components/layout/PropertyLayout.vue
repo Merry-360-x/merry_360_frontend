@@ -250,7 +250,7 @@ const navigation = computed(() => [
   { name: t('nav.accommodations'), to: '/accommodations' },
   { name: t('nav.tours'), to: '/tours' },
   { name: t('nav.transport'), to: '/transport' },
-  { name: t('nav.myTrips'), to: '/dashboard' },
+  { name: t('nav.myTrips'), to: '/profile' },
 ])
 
 // Theme toggle
