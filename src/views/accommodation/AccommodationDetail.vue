@@ -286,10 +286,10 @@
             </div>
 
             <div class="grid grid-cols-2 gap-2 mb-3">
-              <Button variant="outline" size="md" @click="addToCart">
+              <Button variant="outline" size="sm" @click="addToCart">
                 Add to Trip Cart
               </Button>
-              <Button variant="primary" size="md" @click="router.push(`/accommodation/${accommodation.id}/checkout`)">
+              <Button variant="primary" size="sm" @click="router.push(`/accommodation/${accommodation.id}/checkout`)">
                 Reserve Now
               </Button>
             </div>
