@@ -58,14 +58,6 @@
                 </svg>
                 <span class="font-medium">Mobile Money</span>
               </label>
-
-              <label class="flex items-center p-4 border-2 border-gray-200 rounded-button hover:border-brand-500 transition-colors cursor-pointer">
-                <input type="radio" name="payment" value="crypto" v-model="paymentMethod" class="mr-3" />
-                <svg class="w-8 h-8 mr-3 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="font-medium">Cryptocurrency (Blockchain)</span>
-              </label>
             </div>
 
             <div v-if="paymentMethod === 'card'" class="mt-6 space-y-4">
@@ -103,15 +95,15 @@
               </div>
             </div>
 
-            <div v-if="paymentMethod === 'crypto'" class="mt-6">
-              <div class="bg-accent-blue bg-opacity-10 p-4 rounded-button">
+            <div v-if="paymentMethod === 'mobile'" class="mt-6">
+              <div class="bg-success bg-opacity-10 p-4 rounded-button">
                 <div class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-accent-blue mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 text-success mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                   </svg>
                   <div>
-                    <p class="font-medium text-accent-blue mb-1">Smart Contract Payment</p>
-                    <p class="text-sm text-text-secondary">Connect your wallet to complete the transaction securely on the blockchain</p>
+                    <p class="font-medium text-success mb-1">Mobile Money Payment</p>
+                    <p class="text-sm text-text-secondary">You will receive a prompt on your phone to complete the payment</p>
                   </div>
                 </div>
               </div>
