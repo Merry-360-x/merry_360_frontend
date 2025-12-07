@@ -27,12 +27,20 @@
         <div class="p-4">
           <h4 class="font-bold text-base text-text-primary mb-2 line-clamp-1">{{ suggestion.title }}</h4>
           <p class="text-text-secondary text-sm mb-3 line-clamp-2">{{ suggestion.description }}</p>
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between mb-2">
             <span class="text-brand-600 font-bold">{{ formatPrice(suggestion.price) }}</span>
             <Button size="sm" variant="primary" class="bg-gradient-to-r from-brand-500 to-brand-600">
               View
             </Button>
           </div>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            full-width
+            @click.stop="addToCart(suggestion)"
+          >
+            Add to Trip Cart
+          </Button>
         </div>
       </Card>
     </div>
@@ -43,6 +51,8 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '@/stores/currency'
+import { useUserStore } from '@/stores/userStore'
+import { useToast } from '@/composables/useToast'
 import Card from './Card.vue'
 import Button from './Button.vue'
 
@@ -59,6 +69,8 @@ const props = defineProps({
 
 const router = useRouter()
 const currencyStore = useCurrencyStore()
+const userStore = useUserStore()
+const { success } = useToast()
 
 // Mock suggestions based on category
 const suggestions = computed(() => {
@@ -169,5 +181,19 @@ const navigateToSuggestion = (suggestion) => {
   } else if (suggestion.type === 'service') {
     router.push('/services')
   }
+}
+
+const addToCart = (suggestion) => {
+  const cartItem = {
+    id: suggestion.id,
+    type: suggestion.type,
+    name: suggestion.title,
+    price: suggestion.price,
+    image: suggestion.image,
+    addedAt: new Date()
+  }
+  
+  userStore.addToCart(cartItem)
+  success(`${suggestion.title} added to trip cart!`)
 }
 </script>
