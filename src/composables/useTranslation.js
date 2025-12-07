@@ -144,6 +144,8 @@ const translations = {
     'accommodation.addToCart': 'Add to Trip Cart',
     'accommodation.reserveNow': 'Reserve Now',
     'accommodation.perNight': 'per night',
+    'accommodation.checkIn': 'Add dates',
+    'accommodation.checkOut': 'Add dates',
     'accommodation.guests': 'Guests',
     'accommodation.bedrooms': 'Bedrooms',
     'accommodation.bathrooms': 'Bathrooms',
