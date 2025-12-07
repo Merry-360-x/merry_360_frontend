@@ -4,10 +4,10 @@
     <section class="relative bg-gradient-to-br from-brand-50 via-orange-50 to-white py-16 md:py-24">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+          <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
             Become a Host on Merry360
           </h1>
-          <p class="text-lg md:text-xl text-gray-600 mb-8">
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
             Share your unique space, experiences, or services with travelers from around the world and earn extra income.
           </p>
           <button 
@@ -24,8 +24,8 @@
     <section class="py-16 md:py-20 bg-white">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Host with Merry360?</h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Why Host with Merry360?</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Join thousands of hosts who are earning income while sharing Rwanda's beauty with the world.
           </p>
         </div>
@@ -38,8 +38,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Earn Extra Income</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Earn Extra Income</h3>
+            <p class="text-gray-600 dark:text-gray-300">
               Set your own prices and availability. Earn money from your property, tours, or transport services on your schedule.
             </p>
           </div>
@@ -51,8 +51,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Secure & Protected</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Secure & Protected</h3>
+            <p class="text-gray-600 dark:text-gray-300">
               Benefit from secure payment processing, insurance coverage, and 24/7 host support for peace of mind.
             </p>
           </div>
@@ -64,8 +64,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Global Reach</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Global Reach</h3>
+            <p class="text-gray-600 dark:text-gray-300">
               Connect with travelers worldwide and showcase Rwanda's unique offerings to an international audience.
             </p>
           </div>
@@ -77,8 +77,8 @@
     <section class="py-16 md:py-20 bg-gray-50">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Can You Host?</h2>
-          <p class="text-lg text-gray-600">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">What Can You Host?</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-300">
             We welcome a variety of hosting opportunities
           </p>
         </div>
@@ -91,8 +91,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Accommodations</h3>
-            <p class="text-sm text-gray-600">Hotels, guesthouses, apartments, or unique stays</p>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Accommodations</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Hotels, guesthouses, apartments, or unique stays</p>
           </div>
 
           <!-- Tours -->
@@ -102,8 +102,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Tours & Experiences</h3>
-            <p class="text-sm text-gray-600">Guided tours, activities, and unique experiences</p>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Tours & Experiences</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Guided tours, activities, and unique experiences</p>
           </div>
 
           <!-- Transport -->
@@ -113,8 +113,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Transport Services</h3>
-            <p class="text-sm text-gray-600">Car rentals, airport transfers, or private drivers</p>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Transport Services</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Car rentals, airport transfers, or private drivers</p>
           </div>
 
           <!-- Services -->
@@ -124,8 +124,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Other Services</h3>
-            <p class="text-sm text-gray-600">Photography, guides, consultations, and more</p>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Other Services</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Photography, guides, consultations, and more</p>
           </div>
         </div>
       </div>
@@ -135,8 +135,8 @@
     <section class="py-16 md:py-20 bg-white">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
-          <p class="text-lg text-gray-600">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">How It Works</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-300">
             Getting started is easy - just follow these simple steps
           </p>
         </div>
@@ -149,8 +149,8 @@
                 1
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Create Your Host Account</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Create Your Host Account</h3>
+                <p class="text-gray-600 dark:text-gray-300">
                   Fill out our simple registration form with your basic information and what you'd like to host.
                 </p>
               </div>
@@ -162,8 +162,8 @@
                 2
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Set Up Your Listing</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Set Up Your Listing</h3>
+                <p class="text-gray-600 dark:text-gray-300">
                   Add photos, descriptions, pricing, and availability. Our team will help you create an attractive listing.
                 </p>
               </div>
@@ -175,8 +175,8 @@
                 3
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Get Verified</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Get Verified</h3>
+                <p class="text-gray-600 dark:text-gray-300">
                   Complete a quick verification process to ensure safety and quality for all our users.
                 </p>
               </div>
@@ -188,8 +188,8 @@
                 4
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Start Hosting & Earning</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Start Hosting & Earning</h3>
+                <p class="text-gray-600 dark:text-gray-300">
                   Once approved, your listing goes live! Manage bookings, communicate with guests, and start earning.
                 </p>
               </div>
@@ -204,8 +204,8 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
           <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Start Your Hosting Journey</h2>
-            <p class="text-lg text-gray-600">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Start Your Hosting Journey</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300">
               Fill out the form below and our team will get in touch with you within 24 hours.
             </p>
           </div>
@@ -213,10 +213,10 @@
           <form @submit.prevent="submitForm" class="bg-white rounded-2xl shadow-xl p-8">
             <!-- Personal Information -->
             <div class="mb-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-4">Personal Information</h3>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Personal Information</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Full Name *</label>
                   <input 
                     v-model="formData.fullName"
                     type="text" 
@@ -226,7 +226,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Email Address *</label>
                   <input 
                     v-model="formData.email"
                     type="email" 
@@ -236,7 +236,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Phone Number *</label>
                   <input 
                     v-model="formData.phone"
                     type="tel" 
@@ -246,7 +246,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Location *</label>
                   <input 
                     v-model="formData.location"
                     type="text" 
@@ -260,10 +260,10 @@
 
             <!-- Hosting Details -->
             <div class="mb-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-4">Hosting Details</h3>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Hosting Details</h3>
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">What would you like to host? *</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">What would you like to host? *</label>
                   <select 
                     v-model="formData.hostingType"
                     required
@@ -277,7 +277,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Tell us more about what you're offering *</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Tell us more about what you're offering *</label>
                   <textarea 
                     v-model="formData.description"
                     required
@@ -287,7 +287,7 @@
                   ></textarea>
                 </div>
                 <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Previous hosting experience (optional)</label>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-white mb-2">Previous hosting experience (optional)</label>
                   <select 
                     v-model="formData.experience"
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
@@ -310,7 +310,7 @@
                   required
                   class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
                 />
-                <span class="text-sm text-gray-600">
+                <span class="text-sm text-gray-600 dark:text-gray-300">
                   I agree to Merry360's Terms of Service and Privacy Policy, and I understand that my application will be reviewed before approval. *
                 </span>
               </label>
@@ -333,7 +333,7 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
           <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Frequently Asked Questions</h2>
           </div>
 
           <div class="space-y-4">
@@ -342,7 +342,7 @@
                 @click="toggleFaq(index)"
                 class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
-                <span class="font-semibold text-gray-900">{{ faq.question }}</span>
+                <span class="font-semibold text-gray-900 dark:text-white">{{ faq.question }}</span>
                 <svg 
                   class="w-5 h-5 text-gray-500 transition-transform"
                   :class="{ 'rotate-180': faq.open }"
@@ -354,7 +354,7 @@
                 </svg>
               </button>
               <div v-if="faq.open" class="px-6 pb-4">
-                <p class="text-gray-600">{{ faq.answer }}</p>
+                <p class="text-gray-600 dark:text-gray-300">{{ faq.answer }}</p>
               </div>
             </div>
           </div>
