@@ -1,6 +1,6 @@
 <template>
   <MainLayout>
-    <div class="container mx-auto px-4 lg:px-8 py-8">
+    <div class="container mx-auto px-4 lg:px-8 py-8 bg-white dark:bg-gray-900 min-h-screen">
       <!-- Back Button -->
       <button @click="router.back()" class="flex items-center text-sm text-text-secondary dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 mb-6 transition-colors">
         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -16,7 +16,7 @@
           <div class="grid grid-cols-4 gap-2 rounded-card overflow-hidden">
             <div class="col-span-4 row-span-2 h-96 relative">
               <img loading="lazy" :src="accommodation.mainImage" :alt="accommodation.name" class="w-full h-full object-cover" />
-              <button class="absolute bottom-4 right-4 bg-white dark:bg-gray-100 dark:text-gray-900 px-3 py-1.5 rounded-button shadow-lg flex items-center gap-1.5 hover:bg-gray-50 dark:hover:bg-gray-200 transition-colors text-sm">
+              <button class="absolute bottom-4 right-4 bg-white dark:bg-gray-800 dark:text-gray-200 px-3 py-1.5 rounded-button shadow-lg flex items-center gap-1.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>

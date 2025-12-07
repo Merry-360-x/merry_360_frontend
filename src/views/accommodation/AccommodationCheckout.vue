@@ -1,14 +1,14 @@
 <template>
   <MainLayout>
-    <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl">
-      <h1 class="text-3xl font-bold text-text-brand-600 mb-8">Complete Your Booking</h1>
+    <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl bg-white dark:bg-gray-900 min-h-screen">
+      <h1 class="text-3xl font-bold text-text-brand-600 dark:text-white mb-8">Complete Your Booking</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form -->
         <div class="lg:col-span-2 space-y-6">
           <!-- General Error Message -->
-          <div v-if="errors.general" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <div class="flex items-center gap-2 text-red-800">
+          <div v-if="errors.general" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <div class="flex items-center gap-2 text-red-800 dark:text-red-300">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
               </svg>
@@ -18,7 +18,7 @@
 
           <!-- Guest Information -->
           <Card padding="lg">
-            <h2 class="text-2xl font-bold mb-6">Guest Information</h2>
+            <h2 class="text-2xl font-bold mb-6 dark:text-white">Guest Information</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Input v-model="guestInfo.firstName" placeholder="First Name" :class="errors.firstName ? 'border-red-500' : ''" />
@@ -41,9 +41,9 @@
 
           <!-- Payment Method -->
           <Card padding="lg">
-            <h2 class="text-2xl font-bold mb-6">Payment Method</h2>
+            <h2 class="text-2xl font-bold mb-6 dark:text-white">Payment Method</h2>
             <div class="space-y-4">
-              <label class="flex items-center p-4 border-2 border-gray-200 rounded-button hover:border-brand-500 transition-colors cursor-pointer">
+              <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-600 rounded-button hover:border-brand-500 dark:hover:border-brand-400 transition-colors cursor-pointer">
                 <input type="radio" name="payment" value="card" v-model="paymentMethod" class="mr-3" checked />
                 <svg class="w-8 h-8 mr-3 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
