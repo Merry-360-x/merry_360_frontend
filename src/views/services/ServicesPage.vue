@@ -51,22 +51,22 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-gray-900">Accommodation Booking</h3>
-              <p class="text-gray-600 text-sm mb-4">From luxury hotels to cozy guesthouses, find your perfect stay</p>
+              <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Accommodation Booking</h3>
+              <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">From luxury hotels to cozy guesthouses, find your perfect stay</p>
               <ul class="space-y-2 mb-6">
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
                   <span>Curated selection of properties</span>
                 </li>
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
                   <span>Best price guarantee</span>
                 </li>
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
@@ -97,22 +97,22 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-gray-900">Tours & Experiences</h3>
-              <p class="text-gray-600 text-sm mb-4">Discover Rwanda's natural wonders and rich culture</p>
+              <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Tours & Experiences</h3>
+              <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Discover Rwanda's natural wonders and rich culture</p>
               <ul class="space-y-2 mb-6">
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
                   <span>Gorilla trekking permits</span>
                 </li>
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
                   <span>Expert local guides</span>
                 </li>
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
@@ -143,22 +143,22 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-gray-900">Transportation Services</h3>
-              <p class="text-gray-600 text-sm mb-4">Safe and comfortable travel across Rwanda</p>
+              <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Transportation Services</h3>
+              <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Safe and comfortable travel across Rwanda</p>
               <ul class="space-y-2 mb-6">
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
                   <span>Airport transfers</span>
                 </li>
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
                   <span>Car rentals with drivers</span>
                 </li>
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
@@ -189,10 +189,10 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-gray-900">Custom Trip Planning</h3>
-              <p class="text-gray-600 text-sm mb-4">Personalized itineraries tailored to your preferences</p>
+              <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Custom Trip Planning</h3>
+              <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">Personalized itineraries tailored to your preferences</p>
               <ul class="space-y-2 mb-6">
-                <li class="flex items-start text-sm text-gray-700">
+                <li class="flex items-start text-sm text-gray-700 dark:text-gray-200">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
