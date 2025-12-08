@@ -6,8 +6,8 @@ export const useAppStore = defineStore('app', () => {
   const isAuthenticated = ref(false)
   const user = ref(null)
   
-  // Dark mode state
-  const isDarkMode = ref(localStorage.getItem('darkMode') === 'true' || false)
+  // Dark mode state - Default to light mode
+  const isDarkMode = ref(localStorage.getItem('darkMode') === 'true' ? true : false)
 
   function setLanguage(lang) {
     currentLanguage.value = lang
