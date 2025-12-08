@@ -1,9 +1,9 @@
 <template>
-  <div v-if="suggestions.length > 0" class="mt-12 p-6 bg-gradient-to-br from-brand-50 to-red-50 rounded-2xl">
+  <div v-if="suggestions.length > 0" class="mt-12 p-6 bg-gradient-to-br from-brand-50 to-red-50 dark:from-gray-800 dark:to-gray-800 rounded-2xl">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-xl font-bold text-text-primary mb-1">You might also like</h3>
-        <p class="text-text-secondary text-sm">Enhance your trip with these suggestions</p>
+        <h3 class="text-xl font-bold text-text-primary dark:text-white mb-1">You might also like</h3>
+        <p class="text-text-secondary dark:text-gray-300 text-sm">Enhance your trip with these suggestions</p>
       </div>
     </div>
     
@@ -25,10 +25,10 @@
           </div>
         </div>
         <div class="p-4">
-          <h4 class="font-bold text-base text-text-primary mb-2 line-clamp-1">{{ suggestion.title }}</h4>
-          <p class="text-text-secondary text-sm mb-3 line-clamp-2">{{ suggestion.description }}</p>
+          <h4 class="font-bold text-base text-text-primary dark:text-white mb-2 line-clamp-1">{{ suggestion.title }}</h4>
+          <p class="text-text-secondary dark:text-gray-300 text-sm mb-3 line-clamp-2">{{ suggestion.description }}</p>
           <div class="flex items-center justify-between mb-2">
-            <span class="text-brand-600 font-bold">{{ formatPrice(suggestion.price) }}</span>
+            <span class="text-brand-600 dark:text-brand-400 font-bold">{{ formatPrice(suggestion.price) }}</span>
             <Button size="sm" variant="primary" class="bg-gradient-to-r from-brand-500 to-brand-600">
               View
             </Button>
