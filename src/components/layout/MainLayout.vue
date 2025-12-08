@@ -110,61 +110,61 @@
             <div v-if="userStore.isAuthenticated" class="relative" v-click-outside="closeUserMenu">
               <button 
                 @click.stop="showUserMenu = !showUserMenu"
-                class="relative flex items-center gap-2 bg-white border border-gray-300 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
+                class="relative flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
               >
                 <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
                   <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'JO' }}</span>
                 </div>
-                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-gray-600 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
 
               <!-- Dropdown Menu -->
               <transition name="dropdown">
-                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-1 z-50">
-                  <div class="px-4 py-3 border-b border-gray-100">
-                    <p class="font-semibold text-sm">{{ userStore.user?.name || 'User' }}</p>
-                    <p class="text-xs text-gray-500">{{ userStore.user?.email || '' }}</p>
+                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50">
+                  <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                    <p class="font-semibold text-sm dark:text-white">{{ userStore.user?.name || 'User' }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ userStore.user?.email || '' }}</p>
                   </div>
                   
                   <router-link 
                     to="/profile" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span class="text-sm">My Profile</span>
+                    <span class="text-sm dark:text-white">My Profile</span>
                   </router-link>
 
                   <router-link 
                     to="/profile" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span class="text-sm">Profile</span>
+                    <span class="text-sm dark:text-white">Profile</span>
                   </router-link>
 
                   <router-link 
                     to="/dashboard/watchlist" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    <span class="text-sm">Wishlist</span>
+                    <span class="text-sm dark:text-white">Wishlist</span>
                   </router-link>
 
-                  <div class="border-t border-gray-100 mt-1 pt-1">
+                  <div class="border-t border-gray-100 dark:border-gray-700 mt-1 pt-1">
                     <button 
                       @click="handleLogout"
-                      class="flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left text-red-600"
+                      class="flex items-center gap-3 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full text-left text-red-600 dark:text-red-400"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
