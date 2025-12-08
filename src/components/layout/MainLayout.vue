@@ -281,7 +281,7 @@
             <nav class="space-y-2 mb-6">
               <router-link 
                 to="/"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
                 @click="mobileMenuOpen = false"
               >
@@ -292,7 +292,7 @@
               </router-link>
               <router-link 
                 to="/accommodations"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
                 @click="mobileMenuOpen = false"
               >
@@ -303,7 +303,7 @@
               </router-link>
               <router-link 
                 to="/tours"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-green-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-green-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
                 active-class="!bg-green-50 !text-green-700"
                 @click="mobileMenuOpen = false"
@@ -315,7 +315,7 @@
               </router-link>
               <router-link 
                 to="/transport"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
                 @click="mobileMenuOpen = false"
               >
@@ -326,7 +326,7 @@
               </router-link>
               <router-link 
                 to="/services"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
                 @click="mobileMenuOpen = false"
               >
@@ -337,7 +337,7 @@
               </router-link>
               <router-link 
                 to="/stories"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-purple-50 rounded-lg transition-colors font-semibold"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-purple-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
                 style="font-family: 'Montserrat', sans-serif;"
                 @click="mobileMenuOpen = false"
               >
@@ -358,7 +358,7 @@
                 Become a Host
               </router-link>
               <button
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 hover:bg-red-50 rounded-lg transition-colors font-semibold w-full text-left"
+                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold w-full text-left"
                 style="font-family: 'Montserrat', sans-serif;"
               >
                 <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -396,7 +396,7 @@
                 <select 
                   v-model="currencyStore.currentCurrency"
                   @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-semibold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700"
                   style="font-family: 'Montserrat', sans-serif;"
                 >
                   <option value="USD">$ USD</option>
@@ -412,7 +412,7 @@
                 <select 
                   v-model="languageStore.currentLanguage" 
                   @change="languageStore.setLanguage(languageStore.currentLanguage)" 
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-semibold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700"
                   style="font-family: 'Montserrat', sans-serif;"
                 >
                   <option value="EN">English</option>
