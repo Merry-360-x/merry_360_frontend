@@ -27,7 +27,10 @@ export async function renderGoogleButton({ clientId, element, callback, type = '
   google.accounts.id.renderButton(element, {
     theme: 'outline',
     size: 'large',
-    type
+    type,
+    text: 'signin_with',
+    locale: 'en',
+    width: element.offsetWidth || 200
   })
 
   // Optionally show One Tap
