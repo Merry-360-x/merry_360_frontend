@@ -220,11 +220,6 @@
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <router-link to="/trip-cart" class="relative px-3 py-1.5 border-2 border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-gray-700 dark:text-white hover:border-brand-500 transition-all">
-              Cart
-              <span v-if="userStore.cartCount > 0" class="ml-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 inline-flex items-center justify-center">{{ userStore.cartCount }}</span>
-            </router-link>
-
             <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
               <svg class="w-5 h-5 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
