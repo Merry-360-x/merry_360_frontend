@@ -94,6 +94,32 @@ npm run preview
 
 For detailed documentation, see [MVP_DOCUMENTATION.md](./MVP_DOCUMENTATION.md)
 
+## 🔌 Integrations & Environment Variables
+
+This project supports multiple backend options for production-ready services. Choose one:
+
+### Option 1: Supabase (Recommended)
+Supabase provides a fully managed PostgreSQL backend with real-time, authentication, and storage.
+
+Set in `.env`:
+- `VITE_USE_SUPABASE=true`
+- `VITE_SUPABASE_URL=` (your Supabase project URL)
+- `VITE_SUPABASE_ANON_KEY=` (your public anon key)
+
+### Option 2: Firebase
+For Firebase Auth/Firestore/Storage integration:
+- `VITE_USE_FIREBASE=true`
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+
+### Option 3: Mock API (Default)
+For local development without external dependencies:
+- `VITE_USE_MOCK_API=true` (runs in-memory mock backend)
+
 ## 🤝 Contributing
 
 1. Fork the repository

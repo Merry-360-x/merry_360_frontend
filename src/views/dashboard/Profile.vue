@@ -17,12 +17,13 @@
                 <div class="w-32 h-32 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span class="text-white text-4xl font-bold">{{ userInitials }}</span>
                 </div>
-                <button class="absolute bottom-2 right-2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <button @click.prevent="selectAvatar" class="absolute bottom-2 right-2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
                   <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
                 </button>
+                <input ref="avatarInput" type="file" accept="image/*" class="hidden" @change="onAvatarChange" />
               </div>
               <h2 class="text-xl font-bold mb-1">{{ userStore.user?.name || 'Guest User' }}</h2>
               <p class="text-text-secondary text-sm">{{ userStore.user?.email || 'guest@example.com' }}</p>
@@ -459,7 +460,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import { useCurrencyStore } from '@/stores/currency'
@@ -467,6 +468,9 @@ import MainLayout from '@/components/layout/MainLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Input from '@/components/common/Input.vue'
 import Button from '@/components/common/Button.vue'
+import { uploadToCloudinary } from '@/services/cloudinary'
+import { initFirebase, uploadFileToStorage, setUserProfile } from '@/services/firebase'
+import { signOut as signOutAuth } from '@/services/auth'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -476,6 +480,10 @@ const activeProfileTab = ref('trips')
 const activeTripTab = ref('upcoming')
 const editingPersonal = ref(false)
 const showChangePassword = ref(false)
+
+// Avatar upload refs
+const avatarInput = ref(null)
+const uploadingAvatar = ref(false)
 
 const profileTabs = ref([
   { id: 'trips', name: 'My Trips' },
@@ -589,10 +597,63 @@ const changePassword = () => {
   alert('Password changed successfully!')
 }
 
-const handleLogout = () => {
+const handleLogout = async () => {
   if (confirm('Are you sure you want to logout?')) {
+    try {
+      await signOutAuth()
+    } catch (err) {
+      console.warn('Error signing out from provider:', err.message)
+    }
     userStore.logout()
     router.push('/login')
+  }
+}
+
+const selectAvatar = () => {
+  if (avatarInput.value) avatarInput.value.click()
+}
+
+const onAvatarChange = async (e) => {
+  const file = e.target.files && e.target.files[0]
+  if (!file) return
+  uploadingAvatar.value = true
+  try {
+    if (import.meta.env.VITE_USE_FIREBASE === 'true') {
+      initFirebase()
+      const uid = JSON.parse(localStorage.getItem('user'))?.id || 'anonymous'
+      const path = `avatars/${uid}/${Date.now()}_${file.name}`
+      const url = await uploadFileToStorage(path, file)
+      await setUserProfile(uid, { avatar: url })
+      const user = JSON.parse(localStorage.getItem('user')) || {}
+      user.avatar = url
+      localStorage.setItem('user', JSON.stringify(user))
+      userStore.login(user)
+    } else if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
+      const result = await uploadToCloudinary(file, { folder: 'merry360x/avatars' })
+      const url = result.secure_url
+      const api = (await import('@/services/api')).default
+      if (api && api.user && api.user.updateProfile) {
+        await api.user.updateProfile({ avatar: url })
+      }
+      const user = JSON.parse(localStorage.getItem('user')) || {}
+      user.avatar = url
+      localStorage.setItem('user', JSON.stringify(user))
+      userStore.login(user)
+    } else {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const url = reader.result
+        const user = JSON.parse(localStorage.getItem('user')) || {}
+        user.avatar = url
+        localStorage.setItem('user', JSON.stringify(user))
+        userStore.login(user)
+      }
+      reader.readAsDataURL(file)
+    }
+  } catch (err) {
+    console.error('Failed to upload avatar', err)
+  } finally {
+    uploadingAvatar.value = false
   }
 }
 </script>

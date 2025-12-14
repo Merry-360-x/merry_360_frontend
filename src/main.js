@@ -20,4 +20,30 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
+
+// Initialize Firebase auth listener if configured
+import { onAuthChanged } from './services/auth'
+import { useUserStore } from './stores/userStore'
+
+if (import.meta.env.VITE_USE_FIREBASE === 'true') {
+  const store = useUserStore()
+  onAuthChanged((user) => {
+    if (user) {
+      // If a firebase user object, create normalized structure
+      const normalized = {
+        id: user.uid || user.id,
+        email: user.email,
+        firstName: user.displayName || user.firstName || '',
+        lastName: user.lastName || '',
+        phone: user.phone || ''
+      }
+      store.login(normalized)
+      localStorage.setItem('user', JSON.stringify(normalized))
+    } else {
+      // not signed in
+      store.logout()
+    }
+  })
+}
+
 app.mount('#app')

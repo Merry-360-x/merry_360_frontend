@@ -39,6 +39,7 @@ import BecomeHost from '../views/host/BecomeHost.vue'
 // Dashboard
 import UserDashboard from '../views/dashboard/UserDashboard.vue'
 import MyTrips from '../views/dashboard/MyTrips.vue'
+import Messages from '../views/dashboard/Messages.vue'
 
 // Cart
 import TripCart from '../views/cart/TripCart.vue'
@@ -168,6 +169,16 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: () => import('../views/dashboard/Profile.vue')
+  },
+  {
+    path: '/messages',
+    name: 'messages',
+    component: Messages
+  },
+  {
+    path: '/messages/:id',
+    name: 'message-thread',
+    component: Messages
   },
   {
     path: '/my-trips',

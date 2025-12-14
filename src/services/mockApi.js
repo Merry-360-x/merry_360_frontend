@@ -439,7 +439,65 @@ export const mockApiService = {
     signup: (userData) => mockAPI.signup(userData),
     logout: () => mockAPI.logout(),
     forgotPassword: (email) => mockAPI.forgotPassword(email),
-    resetPassword: (token, password) => mockAPI.resetPassword(token, password)
+    resetPassword: (token, password) => mockAPI.resetPassword(token, password),
+    // Social login (Google) - finds or creates a user based on email
+    socialSignIn: async (profile) => {
+      await delay()
+      const user = mockUsers.find(u => u.email === profile.email)
+      if (user) {
+        const token = `mock_token_${user.id}_${Date.now()}`
+        localStorage.setItem('auth_token', token)
+        mockAPI.authToken = token
+        mockAPI.currentUser = user
+        return {
+          success: true,
+          token,
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone,
+            role: user.role,
+            avatar: user.avatar,
+            verified: user.verified
+          }
+        }
+      }
+
+      // Create a new user
+      const newUser = {
+        id: generateId(),
+        email: profile.email,
+        firstName: profile.firstName || profile.given_name || '',
+        lastName: profile.lastName || profile.family_name || '',
+        phone: profile.phone || null,
+        role: 'user',
+        avatar: profile.picture || null,
+        verified: true
+      }
+
+      mockUsers.push(newUser)
+      const token = `mock_token_${newUser.id}_${Date.now()}`
+      localStorage.setItem('auth_token', token)
+      mockAPI.authToken = token
+      mockAPI.currentUser = newUser
+
+      return {
+        success: true,
+        token,
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          phone: newUser.phone,
+          role: newUser.role,
+          avatar: newUser.avatar,
+          verified: newUser.verified
+        }
+      }
+    }
   },
   accommodations: {
     getAll: (params) => mockAPI.getAccommodations(params),

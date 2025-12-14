@@ -420,41 +420,10 @@ export const mockServices = [
   }
 ]
 
-export const mockUsers = [
-  {
-    id: 1,
-    email: 'demo@merry360.com',
-    password: 'password123',
-    firstName: 'Demo',
-    lastName: 'User',
-    phone: '+250 788 123 456',
-    role: 'user',
-    avatar: null,
-    verified: true
-  },
-  {
-    id: 2,
-    email: 'admin@merry360.com',
-    password: 'admin123',
-    firstName: 'Admin',
-    lastName: 'User',
-    phone: '+250 788 999 888',
-    role: 'admin',
-    avatar: null,
-    verified: true
-  },
-  {
-    id: 3,
-    email: 'vendor@merry360.com',
-    password: 'vendor123',
-    firstName: 'Vendor',
-    lastName: 'Partner',
-    phone: '+250 788 777 666',
-    role: 'vendor',
-    avatar: null,
-    verified: true
-  }
-]
+// Mock users removed - All users are now real accounts created through Supabase authentication
+// Users register via /signup and login via /login
+// Real user data is stored in Supabase profiles table
+export const mockUsers = []
 
 export const mockBookings = []
 

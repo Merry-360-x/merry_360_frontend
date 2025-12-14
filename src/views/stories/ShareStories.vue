@@ -220,6 +220,7 @@ import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
+import { uploadToCloudinary } from '@/services/cloudinary'
 
 const router = useRouter()
 const showShareForm = ref(false)
@@ -309,14 +310,29 @@ const filteredStories = computed(() => {
   return stories.value.filter(story => story.category === filterCategory.value)
 })
 
-const handlePhotoUpload = (event) => {
+const handlePhotoUpload = async (event) => {
   const files = event.target.files
   for (let i = 0; i < files.length; i++) {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      storyForm.value.photos.push(e.target.result)
+    const file = files[i]
+    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
+      try {
+        const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
+        storyForm.value.photos.push(result.secure_url)
+      } catch (err) {
+        console.warn('Cloudinary upload failed, falling back to base64', err.message)
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          storyForm.value.photos.push(e.target.result)
+        }
+        reader.readAsDataURL(file)
+      }
+    } else {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        storyForm.value.photos.push(e.target.result)
+      }
+      reader.readAsDataURL(file)
     }
-    reader.readAsDataURL(files[i])
   }
 }
 
