@@ -53,41 +53,132 @@
             </div>
 
             <!-- Check In -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400" style="border-color: #DDDDDD;">
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400 relative" style="border-color: #DDDDDD;">
               <label class="block text-xs font-bold mb-1.5 dark:text-gray-900" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('search.checkIn') }}</label>
               <input 
-                type="text" 
-                :placeholder="t('accommodation.checkIn')"
+                type="date" 
                 v-model="searchQuery.checkIn"
-                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent dark:text-gray-900"
+                :min="minCheckInDate"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent dark:text-gray-900 cursor-pointer"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
-                @focus="showDatePicker = 'checkIn'"
               />
             </div>
 
             <!-- Check Out -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400" style="border-color: #DDDDDD;">
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400 relative" style="border-color: #DDDDDD;">
               <label class="block text-xs font-bold mb-1.5 dark:text-gray-900" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('search.checkOut') }}</label>
               <input 
-                type="text" 
-                :placeholder="t('search.checkOut')"
+                type="date" 
                 v-model="searchQuery.checkOut"
-                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent dark:text-gray-900"
+                :min="minCheckOutDate"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent dark:text-gray-900 cursor-pointer"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
-                @focus="showDatePicker = 'checkOut'"
               />
             </div>
 
             <!-- Guests -->
-            <div class="md:pl-5">
+            <div class="md:pl-5 relative">
               <label class="block text-xs font-bold mb-1.5 dark:text-gray-900" style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 12px;">{{ t('accommodation.guests') }}</label>
-              <input 
-                type="text" 
-                :placeholder="t('accommodation.guests')"
-                v-model="searchQuery.guests"
-                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent dark:text-gray-900"
+              <button 
+                type="button"
+                @click="showGuestSelector = !showGuestSelector"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent dark:text-gray-900 text-left cursor-pointer flex items-center justify-between"
                 style="font-family: 'Montserrat', sans-serif; color: #484848; font-size: 14px;"
-              />
+              >
+                <span>{{ guestSummary }}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              
+              <!-- Guest Selector Dropdown -->
+              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 w-72 z-50 border border-gray-200 dark:border-gray-700">
+                <div class="space-y-4">
+                  <!-- Adults -->
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-semibold text-gray-900 dark:text-white">Adults</div>
+                      <div class="text-xs text-gray-500">Ages 13+</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <button 
+                        @click="decrementGuests('adults')"
+                        :disabled="guestCounts.adults <= 1"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                        </svg>
+                      </button>
+                      <span class="w-8 text-center font-semibold">{{ guestCounts.adults }}</span>
+                      <button 
+                        @click="incrementGuests('adults')"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Children -->
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-semibold text-gray-900 dark:text-white">Children</div>
+                      <div class="text-xs text-gray-500">Ages 2-12</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <button 
+                        @click="decrementGuests('children')"
+                        :disabled="guestCounts.children <= 0"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                        </svg>
+                      </button>
+                      <span class="w-8 text-center font-semibold">{{ guestCounts.children }}</span>
+                      <button 
+                        @click="incrementGuests('children')"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Infants -->
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-semibold text-gray-900 dark:text-white">Infants</div>
+                      <div class="text-xs text-gray-500">Under 2</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <button 
+                        @click="decrementGuests('infants')"
+                        :disabled="guestCounts.infants <= 0"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                        </svg>
+                      </button>
+                      <span class="w-8 text-center font-semibold">{{ guestCounts.infants }}</span>
+                      <button 
+                        @click="incrementGuests('infants')"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -319,7 +410,7 @@ const { t } = useTranslation()
 
 const categories = computed(() => [t('home.accommodations'), 'Hotels', 'Motels', 'Hostels'])
 const selectedCategory = ref(computed(() => t('home.accommodations')).value)
-const showDatePicker = ref(null)
+const showGuestSelector = ref(false)
 
 const searchQuery = ref({
   location: '',
@@ -327,6 +418,47 @@ const searchQuery = ref({
   checkOut: '',
   guests: ''
 })
+
+const guestCounts = ref({
+  adults: 1,
+  children: 0,
+  infants: 0
+})
+
+const minCheckInDate = computed(() => {
+  const today = new Date()
+  return today.toISOString().split('T')[0]
+})
+
+const minCheckOutDate = computed(() => {
+  if (searchQuery.value.checkIn) {
+    const checkIn = new Date(searchQuery.value.checkIn)
+    checkIn.setDate(checkIn.getDate() + 1)
+    return checkIn.toISOString().split('T')[0]
+  }
+  return minCheckInDate.value
+})
+
+const guestSummary = computed(() => {
+  const total = guestCounts.value.adults + guestCounts.value.children + guestCounts.value.infants
+  if (total === 0) return t('accommodation.guests')
+  const parts = []
+  if (guestCounts.value.adults > 0) parts.push(`${guestCounts.value.adults} adult${guestCounts.value.adults > 1 ? 's' : ''}`)
+  if (guestCounts.value.children > 0) parts.push(`${guestCounts.value.children} child${guestCounts.value.children > 1 ? 'ren' : ''}`)
+  if (guestCounts.value.infants > 0) parts.push(`${guestCounts.value.infants} infant${guestCounts.value.infants > 1 ? 's' : ''}`)
+  return parts.join(', ')
+})
+
+const incrementGuests = (type) => {
+  guestCounts.value[type]++
+}
+
+const decrementGuests = (type) => {
+  if (guestCounts.value[type] > 0) {
+    if (type === 'adults' && guestCounts.value[type] === 1) return
+    guestCounts.value[type]--
+  }
+}
 
 const latestProperties = ref([
   {
