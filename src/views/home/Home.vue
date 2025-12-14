@@ -38,7 +38,7 @@
         </div>
 
         <!-- Search Box -->
-        <div class="w-full max-w-4xl bg-white rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+        <div class="w-full max-w-4xl bg-white rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
             <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400" style="border-color: #DDDDDD;">
@@ -92,7 +92,7 @@
               </button>
               
               <!-- Guest Selector Dropdown -->
-              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 w-72 z-50 border border-gray-200 dark:border-gray-700">
+              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded p-4 w-72 z-50 border border-gray-200 dark:border-gray-700">
                 <div class="space-y-4">
                   <!-- Adults -->
                   <div class="flex items-center justify-between">
@@ -199,8 +199,7 @@
     <!-- Latest on the Property Listing -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">Latest on the Property Listing</h2>
-        <div class="w-24 md:w-36 h-1.5 rounded-full mx-auto bg-brand-500"></div>
+        <h2 class="text-2xl md:text-4xl font-bold text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">Latest on the Property Listing</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
@@ -211,8 +210,7 @@
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-12 max-w-7xl mx-auto">
         <div class="text-center md:text-left mb-4 md:mb-0">
-          <h2 class="text-2xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
-          <div class="w-24 md:w-36 h-1.5 rounded-full md:mx-0 mx-auto bg-brand-500"></div>
+          <h2 class="text-2xl md:text-4xl font-bold text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
         </div>
         <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200 text-gray-800 dark:text-gray-200" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;">
           <svg class="w-5 h-5 md:w-6 md:h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -229,8 +227,7 @@
     <!-- Top Rated Properties -->
     <section class="container mx-auto px-4 py-20">
       <div class="mb-12 text-center">
-        <h2 class="text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px; color: white;">{{ t('home.topRated') }}</h2>
-        <div class="w-36 h-1.5 rounded-full mx-auto" style="background: white;"></div>
+        <h2 class="text-4xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px; color: white;">{{ t('home.topRated') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in topRatedProperties" :key="property.id" :property="property" />
@@ -239,7 +236,7 @@
 
     <!-- Try Hosting Banner -->
     <section class="container mx-auto px-4 py-12 md:py-20">
-      <div class="relative rounded-[30px] md:rounded-[50px] overflow-hidden max-w-7xl mx-auto shadow-2xl" style="min-height: 300px; height: auto;">
+      <div class="relative rounded-lg overflow-hidden max-w-7xl mx-auto" style="min-height: 300px; height: auto;">
         <img loading="lazy" 
           src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80" 
           alt="Try Hosting" 
@@ -258,8 +255,7 @@
     <!-- Featured Properties -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.featured') }}</h2>
-        <div class="w-24 md:w-36 h-1.5 rounded-full mx-auto" style="background: white;"></div>
+        <h2 class="text-2xl md:text-4xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.featured') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in featuredProperties" :key="property.id" :property="property" />
@@ -272,7 +268,7 @@
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
           <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">Browse For More Properties</h2>
           <p class="text-sm md:text-base mb-8 md:mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5; color: #9A9A9A;">Explore properties by their categories/types...</p>
-          <button class="px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; min-width: 180px; height: 48px;">
+          <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
             Find A Property
           </button>
         </div>
@@ -282,11 +278,10 @@
     <!-- Property Rental Guides & Tips -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.guides') }}</h2>
-        <div class="w-24 md:w-36 h-1.5 rounded-full mx-auto" style="background: white;"></div>
+        <h2 class="text-2xl md:text-4xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.guides') }}</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
-        <div v-for="guide in guides" :key="guide.id" class="rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300" style="background: #E0E2E6;">
+        <div v-for="guide in guides" :key="guide.id" class="rounded-lg overflow-hidden transition-opacity hover:opacity-90" style="background: #E0E2E6;">
           <div class="relative">
             <img loading="lazy" :src="guide.image" :alt="guide.title" class="w-full object-cover h-48 md:h-64 lg:h-80" />
           </div>
@@ -299,7 +294,7 @@
         </div>
       </div>
       <div class="text-center mt-8 md:mt-12">
-        <button class="px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; min-width: 180px; height: 48px;">
+        <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
           View All Blogs
         </button>
       </div>
@@ -313,13 +308,13 @@
             <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">Download Our Mobile App</h2>
             <p class="text-sm md:text-base mb-6 md:mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5; color: #9A9A9A;">Available for free on these platforms</p>
             <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start">
-              <button class="px-4 md:px-6 py-3 rounded-md flex items-center justify-center gap-2 md:gap-3 hover:scale-105 transition-all duration-200 shadow-md w-full sm:w-auto" style="background: #E0E2E6; min-width: 150px; height: 52px;">
+              <button class="px-4 md:px-6 py-3 rounded flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition-opacity w-full sm:w-auto" style="background: #E0E2E6;">
                 <svg class="w-5 h-5" fill="#484848" viewBox="0 0 24 24">
                   <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
                 </svg>
                 <span style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 15px; color: #484848;">PlayStore</span>
               </button>
-              <button class="px-6 py-3 rounded-md flex items-center gap-3 hover:scale-105 transition-all duration-200 shadow-md" style="background: #E0E2E6; width: 172px; height: 52px;">
+              <button class="px-6 py-3 rounded flex items-center gap-3 hover:opacity-90 transition-opacity" style="background: #E0E2E6;">
                 <svg class="w-5 h-5" fill="#484848" viewBox="0 0 24 24">
                   <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                 </svg>
@@ -342,16 +337,15 @@
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center max-w-7xl mx-auto">
         <div>
-          <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">Discover More About Property Rental</h2>
-          <div class="w-24 md:w-36 h-1.5 rounded-full mb-6 md:mb-8" style="background: white;"></div>
+          <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-8" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">Discover More About Property Rental</h2>
           <p class="mb-6 md:mb-8 text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 400; line-height: 1.6; color: #9A9A9A;">
             Discover more about our exceptional property rentals, where comfort meets modern living for every kind of traveler. Explore thoughtfully designed spaces that feel like home, and enjoy a seamless booking experience from start to finish.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 md:gap-8 mb-6 md:mb-10">
-            <button class="font-bold hover:scale-105 transition-all duration-200 text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: white;">
+            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: white;">
               Ask A Question
             </button>
-            <button class="font-bold hover:scale-105 transition-all duration-200 text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: white;">
+            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: white;">
               Find A Property
             </button>
           </div>
@@ -383,10 +377,10 @@
             <input 
               type="email" 
               placeholder="Your Email..." 
-              class="flex-1 px-4 md:px-6 py-3 rounded-full focus:outline-none focus:ring-2 focus:ring-red-400 transition-all text-sm md:text-base"
-              style="background: #FFFFFF; border: 1px solid #E8EAEC; font-family: 'Montserrat', sans-serif; font-weight: 500; color: #484848; height: 48px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);"
+              class="flex-1 px-4 md:px-6 py-3 rounded focus:outline-none text-sm md:text-base"
+              style="background: #FFFFFF; border: 1px solid #E8EAEC; font-family: 'Montserrat', sans-serif; font-weight: 500; color: #484848;"
             />
-            <button class="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-200 flex-shrink-0 shadow-lg" style="background: #FF3B3B;">
+            <button class="w-12 h-12 md:w-14 md:h-14 rounded flex items-center justify-center hover:opacity-90 transition-opacity flex-shrink-0" style="background: #FF3B3B;">
               <svg class="w-5 h-5 md:w-7 md:h-7 text-white transform rotate-90" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
               </svg>
