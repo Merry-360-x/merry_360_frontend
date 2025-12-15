@@ -55,6 +55,7 @@ import AdminDashboard from '../views/admin/AdminDashboard.vue'
 
 // Vendor
 import VendorDashboard from '../views/vendor/VendorDashboard.vue'
+import CreateProperty from '../views/vendor/CreateProperty.vue'
 
 const routes = [
   {
@@ -208,6 +209,11 @@ const routes = [
     path: '/vendor',
     name: 'vendor',
     component: VendorDashboard
+  },
+  {
+    path: '/vendor/create-property',
+    name: 'create-property',
+    component: CreateProperty
   },
   {
     path: '/about',

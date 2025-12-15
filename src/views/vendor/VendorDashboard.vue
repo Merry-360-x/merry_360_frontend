@@ -54,7 +54,7 @@
             <h1 class="text-3xl font-bold mb-2">Vendor Dashboard</h1>
             <p class="text-text-secondary">Manage your properties and bookings</p>
           </div>
-          <Button variant="primary">
+          <Button variant="primary" @click="$router.push('/vendor/create-property')">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
