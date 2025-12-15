@@ -66,8 +66,8 @@
           <Button variant="primary" size="md" full-width @click="router.push('/login')">
             {{ t('auth.backToLogin') }}
           </Button>
-          <button @click="resendEmail" class="text-sm text-brand-600 hover:text-opacity-80">
-            Didn't receive the email? Click to resend
+          <button @click="resendEmail" class="text-sm text-brand-600 hover:text-opacity-80 dark:text-brand-400">
+            {{ t('auth.resendEmail') }}
           </button>
         </div>
       </Card>

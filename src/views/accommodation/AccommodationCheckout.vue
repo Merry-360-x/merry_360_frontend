@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl bg-white dark:bg-gray-900 min-h-screen">
-      <h1 class="text-3xl font-bold text-text-brand-600 dark:text-white mb-8">Complete Your Booking</h1>
+      <h1 class="text-3xl font-bold text-text-brand-600 dark:text-white mb-8">{{ t('checkout.title') }}</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form -->
@@ -18,45 +18,45 @@
 
           <!-- Guest Information -->
           <Card padding="lg">
-            <h2 class="text-2xl font-bold mb-6 dark:text-white">Guest Information</h2>
+            <h2 class="text-2xl font-bold mb-6 dark:text-white">{{ t('checkout.guestInfo') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Input v-model="guestInfo.firstName" placeholder="First Name" :class="errors.firstName ? 'border-red-500' : ''" />
-                <p v-if="errors.firstName" class="mt-1 text-sm text-red-600">{{ errors.firstName }}</p>
+                <Input v-model="guestInfo.firstName" :placeholder="t('checkout.firstName')" :class="errors.firstName ? 'border-red-500' : ''" />
+                <p v-if="errors.firstName" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.firstName }}</p>
               </div>
               <div>
-                <Input v-model="guestInfo.lastName" placeholder="Last Name" :class="errors.lastName ? 'border-red-500' : ''" />
-                <p v-if="errors.lastName" class="mt-1 text-sm text-red-600">{{ errors.lastName }}</p>
+                <Input v-model="guestInfo.lastName" :placeholder="t('checkout.lastName')" :class="errors.lastName ? 'border-red-500' : ''" />
+                <p v-if="errors.lastName" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.lastName }}</p>
               </div>
               <div>
-                <Input v-model="guestInfo.email" type="email" placeholder="Email" :class="errors.email ? 'border-red-500' : ''" />
-                <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+                <Input v-model="guestInfo.email" type="email" :placeholder="t('checkout.email')" :class="errors.email ? 'border-red-500' : ''" />
+                <p v-if="errors.email" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.email }}</p>
               </div>
               <div>
-                <Input v-model="guestInfo.phone" type="tel" placeholder="Phone Number (e.g., +250 7XX XXX XXX)" :class="errors.phone ? 'border-red-500' : ''" />
-                <p v-if="errors.phone" class="mt-1 text-sm text-red-600">{{ errors.phone }}</p>
+                <Input v-model="guestInfo.phone" type="tel" :placeholder="t('checkout.phone')" :class="errors.phone ? 'border-red-500' : ''" />
+                <p v-if="errors.phone" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.phone }}</p>
               </div>
             </div>
           </Card>
 
           <!-- Payment Method -->
           <Card padding="lg">
-            <h2 class="text-2xl font-bold mb-6 dark:text-white">Payment Method</h2>
+            <h2 class="text-2xl font-bold mb-6 dark:text-white">{{ t('checkout.paymentMethod') }}</h2>
             <div class="space-y-4">
               <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-600 rounded-button hover:border-brand-500 dark:hover:border-brand-400 transition-colors cursor-pointer">
                 <input type="radio" name="payment" value="card" v-model="paymentMethod" class="mr-3" checked />
                 <svg class="w-8 h-8 mr-3 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                 </svg>
-                <span class="font-medium">Credit / Debit Card</span>
+                <span class="font-medium dark:text-white">{{ t('checkout.creditCard') }}</span>
               </label>
 
-              <label class="flex items-center p-4 border-2 border-gray-200 rounded-button hover:border-brand-500 transition-colors cursor-pointer">
+              <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-600 rounded-button hover:border-brand-500 dark:hover:border-brand-400 transition-colors cursor-pointer">
                 <input type="radio" name="payment" value="mobile" v-model="paymentMethod" class="mr-3" />
                 <svg class="w-8 h-8 mr-3 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
-                <span class="font-medium">Mobile Money</span>
+                <span class="font-medium dark:text-white">{{ t('checkout.mobileMoney') }}</span>
               </label>
             </div>
 
@@ -219,11 +219,13 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
 
+const { t } = useTranslation()
 const router = useRouter()
 const route = useRoute()
 const currencyStore = useCurrencyStore()
