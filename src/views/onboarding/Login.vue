@@ -7,10 +7,10 @@
           <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center">
             <span class="text-white font-bold text-2xl">M</span>
           </div>
-          <span class="text-2xl font-bold text-text-brand-600 dark:text-white">Merry360X</span>
+          <span class="text-2xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.brandName') }}</span>
         </router-link>
-        <h2 class="mt-6 text-3xl font-bold text-text-brand-600 dark:text-white">Welcome Back</h2>
-        <p class="mt-2 text-text-secondary dark:text-gray-300">Sign in to continue your journey</p>
+        <h2 class="mt-6 text-3xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.welcomeBack') }}</h2>
+        <p class="mt-2 text-text-secondary dark:text-gray-300">{{ t('auth.loginSubtitle') }}</p>
       </div>
 
       <!-- Login Form -->
@@ -18,7 +18,7 @@
         <form @submit.prevent="handleLogin" class="space-y-6">
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">Email Address</label>
+            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.emailAddress') }}</label>
             <Input
               v-model="formData.email"
               type="email"
@@ -29,7 +29,7 @@
 
           <!-- Password -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">Password</label>
+            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.password') }}</label>
             <Input
               v-model="formData.password"
               type="password"
@@ -42,10 +42,10 @@
           <div class="flex items-center justify-between">
             <label class="flex items-center">
               <input type="checkbox" v-model="formData.remember" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
-              <span class="ml-2 text-sm text-text-secondary dark:text-gray-300">Remember me</span>
+              <span class="ml-2 text-sm text-text-secondary dark:text-gray-300">{{ t('auth.rememberMe') }}</span>
             </label>
             <router-link to="/forgot-password" class="text-sm text-brand-600 hover:text-opacity-80">
-              Forgot password?
+              {{ t('auth.forgotPassword') }}
             </router-link>
           </div>
 
@@ -57,7 +57,7 @@
             full-width
             :loading="loading"
           >
-            Sign In
+            {{ t('auth.login') }}
           </Button>
 
           <!-- Social Login -->
@@ -66,7 +66,7 @@
               <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-              <span class="px-4 bg-white dark:bg-gray-800 text-text-secondary dark:text-gray-300">Or continue with</span>
+              <span class="px-4 bg-white dark:bg-gray-800 text-text-secondary dark:text-gray-300">{{ t('auth.orSignInWith') }}</span>
             </div>
           </div>
 
@@ -79,7 +79,7 @@
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                <span class="text-sm font-medium dark:text-white">Google</span>
+                <span class="text-sm font-medium dark:text-white">{{ t('auth.google') }}</span>
               </button>
             </div>
             <div v-else>
@@ -89,7 +89,7 @@
               <svg class="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              <span class="text-sm font-medium dark:text-white">Facebook</span>
+              <span class="text-sm font-medium dark:text-white">{{ t('auth.facebook') }}</span>
             </button>
           </div>
 
@@ -108,9 +108,9 @@
       <!-- Sign Up Link -->
       <div class="mt-6 text-center">
         <p class="text-text-secondary dark:text-gray-300">
-          Don't have an account? 
+          {{ t('auth.dontHaveAccount') }}
           <router-link to="/signup" class="text-brand-600 font-medium hover:text-opacity-80 ml-1">
-            Sign up for free
+            {{ t('auth.signup') }}
           </router-link>
         </p>
       </div>
@@ -124,6 +124,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useAppStore } from '../../stores/app'
 import { useFormValidation } from '../../composables/useFormValidation'
+import { useTranslation } from '../../composables/useTranslation'
 import { validators } from '../../utils/validation'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -136,6 +137,7 @@ const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore()
 const { errors, validateAll, setError, clearErrors } = useFormValidation()
+const { t } = useTranslation()
 
 const gsiButton = ref(null)
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
