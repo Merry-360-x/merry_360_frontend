@@ -8,10 +8,10 @@
           <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center">
             <span class="text-white font-bold text-2xl">M</span>
           </div>
-          <span class="text-2xl font-bold text-text-brand-600">Merry360X</span>
+          <span class="text-2xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.brandName') }}</span>
         </router-link>
-        <h2 class="mt-6 text-3xl font-bold text-text-brand-600">Forgot Password?</h2>
-        <p class="mt-2 text-text-secondary">No worries, we'll send you reset instructions</p>
+        <h2 class="mt-6 text-3xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.forgotPasswordTitle') }}</h2>
+        <p class="mt-2 text-text-secondary dark:text-gray-300">{{ t('auth.forgotPasswordSubtitle') }}</p>
       </div>
 
       <!-- Form -->
@@ -19,7 +19,7 @@
         <form v-if="!emailSent" @submit.prevent="handleSubmit" class="space-y-5">
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 mb-2">Email Address</label>
+            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.emailAddress') }}</label>
             <Input
               v-model="email"
               type="email"
@@ -37,16 +37,16 @@
             full-width
             :loading="loading"
           >
-            Send Reset Link
+            {{ t('auth.resetPassword') }}
           </Button>
 
           <!-- Back to Login -->
           <div class="text-center">
-            <router-link to="/login" class="text-sm text-text-secondary hover:text-brand-600 inline-flex items-center">
+            <router-link to="/login" class="text-sm text-text-secondary dark:text-gray-400 hover:text-brand-600 inline-flex items-center">
               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
               </svg>
-              Back to login
+              {{ t('auth.backToLogin') }}
             </router-link>
           </div>
         </form>
@@ -58,13 +58,13 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-text-brand-600">Check your email</h3>
-          <p class="text-text-secondary">
-            We've sent a password reset link to<br>
-            <span class="font-medium text-text-brand-600">{{ email }}</span>
+          <h3 class="text-xl font-semibold text-text-brand-600 dark:text-white">{{ t('auth.checkEmail') }}</h3>
+          <p class="text-text-secondary dark:text-gray-300">
+            {{ t('auth.checkEmailDesc') }}<br>
+            <span class="font-medium text-text-brand-600 dark:text-white">{{ email }}</span>
           </p>
           <Button variant="primary" size="md" full-width @click="router.push('/login')">
-            Back to Login
+            {{ t('auth.backToLogin') }}
           </Button>
           <button @click="resendEmail" class="text-sm text-brand-600 hover:text-opacity-80">
             Didn't receive the email? Click to resend
@@ -79,6 +79,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useTranslation } from '../../composables/useTranslation'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
