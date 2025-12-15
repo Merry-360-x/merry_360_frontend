@@ -116,33 +116,33 @@
 
             <!-- AI Message -->
             <div v-else class="flex justify-start">
-              <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%] shadow-sm border border-gray-100">
-                <p class="text-sm text-gray-900">{{ message.text }}</p>
+              <div class="bg-white dark:bg-gray-700 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%] shadow-sm border border-gray-100 dark:border-gray-600">
+                <p class="text-sm text-gray-900 dark:text-white">{{ message.text }}</p>
               </div>
             </div>
           </div>
 
           <!-- Typing Indicator -->
           <div v-if="isTyping" class="flex justify-start">
-            <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100">
+            <div class="bg-white dark:bg-gray-700 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100 dark:border-gray-600">
               <div class="flex gap-1">
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                <div class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                <div class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                <div class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Input Area -->
-        <div class="p-4 bg-white border-t border-gray-200 rounded-b-3xl">
+        <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-3xl">
           <div class="flex gap-2">
             <input 
               v-model="inputMessage"
               @keypress.enter="sendUserMessage"
               type="text" 
               placeholder="Ask me anything..."
-              class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm"
+              class="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
             />
             <button 
               @click="sendUserMessage"

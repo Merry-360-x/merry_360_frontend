@@ -38,7 +38,7 @@
         </div>
 
         <!-- Search Box -->
-        <div class="w-full max-w-4xl bg-white rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+        <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
             <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400" style="border-color: #DDDDDD;">

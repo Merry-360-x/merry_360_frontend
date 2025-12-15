@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white font-sans">
+  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans">
     <!-- Header -->
-    <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
+    <header class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20 dark:border-gray-700/20">
       <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20 md:h-24">
           <!-- Logo -->
@@ -105,7 +105,7 @@
         leave-from-class="translate-x-0"
         leave-to-class="translate-x-full"
       >
-        <div v-if="mobileMenuOpen" class="fixed inset-y-0 right-0 w-64 bg-white shadow-2xl lg:hidden z-50">
+        <div v-if="mobileMenuOpen" class="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800 shadow-2xl lg:hidden z-50">
           <div class="h-full flex flex-col">
             <!-- Menu Header -->
             <div class="flex items-center justify-between p-4 border-b">

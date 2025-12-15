@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-xl shadow-card overflow-hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card overflow-hidden">
     <div class="p-4 bg-gradient-to-r from-teal-500 to-cyan-600">
       <h3 class="text-white font-bold text-lg flex items-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +41,7 @@
             
             <!-- Tooltip -->
             <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <div class="bg-white rounded-lg shadow-xl p-3 min-w-[200px]">
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-3 min-w-[200px]">
                 <p class="font-bold text-sm text-gray-900 mb-1">{{ property.title }}</p>
                 <p class="text-xs text-gray-600 mb-2">{{ property.location }}</p>
                 <p class="text-teal-600 font-bold text-sm">{{ formatPrice(property.price) }}/night</p>
@@ -52,12 +52,12 @@
 
         <!-- Map Controls -->
         <div class="absolute top-4 right-4 flex flex-col gap-2">
-          <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
-            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          <button class="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+            <svg class="w-5 h-5 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
           </button>
-          <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
+          <button class="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
             <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
             </svg>

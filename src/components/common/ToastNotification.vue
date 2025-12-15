@@ -4,7 +4,7 @@
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="pointer-events-auto bg-white rounded-lg shadow-lg overflow-hidden min-w-[300px] max-w-md transform transition-all duration-300"
+        class="pointer-events-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden min-w-[300px] max-w-md transform transition-all duration-300"
         :class="toastClass(toast.type)"
       >
         <div class="flex items-center gap-3 p-4">

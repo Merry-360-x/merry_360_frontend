@@ -6,8 +6,32 @@ export const useAppStore = defineStore('app', () => {
   const isAuthenticated = ref(false)
   const user = ref(null)
   
-  // Dark mode state - Default to light mode
-  const isDarkMode = ref(localStorage.getItem('darkMode') === 'true' ? true : false)
+  // Detect system preference for dark mode
+  const detectSystemPreference = () => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return true
+    }
+    return false
+  }
+  
+  // Dark mode state - Auto-detect from system or use stored preference
+  const storedDarkMode = localStorage.getItem('darkMode')
+  const isDarkMode = ref(
+    storedDarkMode !== null 
+      ? storedDarkMode === 'true' 
+      : detectSystemPreference()
+  )
+
+  // Listen for system theme changes
+  if (window.matchMedia) {
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    darkModeQuery.addEventListener('change', (e) => {
+      // Only auto-update if user hasn't manually set a preference
+      if (localStorage.getItem('darkMode') === null) {
+        isDarkMode.value = e.matches
+      }
+    })
+  }
 
   function setLanguage(lang) {
     currentLanguage.value = lang
