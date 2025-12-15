@@ -227,7 +227,7 @@
     <!-- Top Rated Properties -->
     <section class="container mx-auto px-4 py-20">
       <div class="mb-12 text-center">
-        <h2 class="text-4xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px; color: white;">{{ t('home.topRated') }}</h2>
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px;">{{ t('home.topRated') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in topRatedProperties" :key="property.id" :property="property" />
@@ -255,7 +255,7 @@
     <!-- Featured Properties -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.featured') }}</h2>
+        <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.featured') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in featuredProperties" :key="property.id" :property="property" />
@@ -266,7 +266,7 @@
     <section class="py-12 md:py-20" style="background: #EFF0F2;">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
-          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.browseMore') }}</h2>
+          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
           <p class="text-sm md:text-base mb-8 md:mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5; color: #9A9A9A;">{{ t('home.browseDesc') }}</p>
           <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
             {{ t('home.findProperty') }}
@@ -278,7 +278,7 @@
     <!-- Property Rental Guides & Tips -->
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="mb-8 md:mb-12 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.guides') }}</h2>
+        <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.guides') }}</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
         <div v-for="guide in guides" :key="guide.id" class="rounded-lg overflow-hidden transition-opacity hover:opacity-90" style="background: #E0E2E6;">
@@ -286,7 +286,7 @@
             <img loading="lazy" :src="guide.image" :alt="guide.title" class="w-full object-cover h-48 md:h-64 lg:h-80" />
           </div>
           <div class="p-4 md:p-6">
-            <h3 class="text-base md:text-lg font-bold mb-2" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ guide.title }}</h3>
+            <h3 class="text-base md:text-lg font-bold mb-2 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ guide.title }}</h3>
             <span class="inline-block text-xs md:text-sm font-semibold" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: #9A9A9A;">
               {{ guide.category }}
             </span>
@@ -305,7 +305,7 @@
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 max-w-7xl mx-auto">
           <div class="flex-1 text-center md:text-left">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.downloadApp') }}</h2>
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.downloadApp') }}</h2>
             <p class="text-sm md:text-base mb-6 md:mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5; color: #9A9A9A;">{{ t('home.downloadDesc') }}</p>
             <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start">
               <button class="px-4 md:px-6 py-3 rounded flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition-opacity w-full sm:w-auto" style="background: #E0E2E6;">
@@ -337,15 +337,15 @@
     <section class="container mx-auto px-4 py-12 md:py-20">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center max-w-7xl mx-auto">
         <div>
-          <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-8" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3; color: white;">{{ t('home.discoverMore') }}</h2>
+          <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.discoverMore') }}</h2>
           <p class="mb-6 md:mb-8 text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 400; line-height: 1.6; color: #9A9A9A;">
             {{ t('home.discoverDesc') }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 md:gap-8 mb-6 md:mb-10">
-            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: white;">
+            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
               {{ t('home.askQuestion') }}
             </button>
-            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: white;">
+            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
               {{ t('home.findProperty') }}
             </button>
           </div>
@@ -370,8 +370,8 @@
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-6xl mx-auto">
           <div class="text-center md:text-left md:w-48 mb-2 md:mb-0">
-            <h2 class="font-bold mb-1 text-base md:text-lg" style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: white;">{{ t('home.newsletter') }}</h2>
-            <p class="text-xs md:text-sm" style="font-family: 'Montserrat', sans-serif; font-weight: 500; color: white;">{{ t('home.newsletterDesc') }}</p>
+            <h2 class="font-bold mb-1 text-base md:text-lg text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">{{ t('home.newsletter') }}</h2>
+            <p class="text-xs md:text-sm text-gray-700 dark:text-gray-300" style="font-family: 'Montserrat', sans-serif; font-weight: 500;">{{ t('home.newsletterDesc') }}</p>
           </div>
           <div class="flex items-center gap-3 md:gap-4 flex-1 max-w-3xl w-full">
             <input 

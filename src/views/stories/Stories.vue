@@ -69,12 +69,12 @@
 
         <!-- Empty State -->
         <div v-if="stories.length === 0" class="text-center py-20">
-          <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+            <svg class="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ t('stories.noStories') }}</h3>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ t('stories.noStories') }}</h3>
           <p class="text-gray-600">{{ t('stories.subtitle') }}</p>
         </div>
       </div>

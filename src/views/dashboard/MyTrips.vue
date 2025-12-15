@@ -47,7 +47,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-muted text-sm mb-1">Cart Items</p>
-                <p class="text-3xl font-bold text-gray-900">{{ cartCount }}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ cartCount }}</p>
               </div>
               <div class="px-3 py-1.5 bg-brand-500 text-white rounded-lg flex items-center justify-center">
                 <span class="text-sm font-bold">TripCart</span>

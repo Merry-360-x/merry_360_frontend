@@ -236,8 +236,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
                 <div class="flex-1">
-                  <p class="font-semibold text-gray-900 mb-1">{{ accommodation.location }}</p>
-                  <p class="text-sm text-gray-600">Rwanda</p>
+                  <p class="font-semibold text-gray-900 dark:text-white mb-1">{{ accommodation.location }}</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">Rwanda</p>
                 </div>
                 <button
                   @click="openDirections"

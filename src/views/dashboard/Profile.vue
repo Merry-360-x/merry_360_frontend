@@ -120,7 +120,7 @@
                 <div class="flex items-center justify-between">
                   <div>
                     <p class="text-text-muted text-xs mb-1">Cart Items</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ userStore.cartCount }}</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ userStore.cartCount }}</p>
                   </div>
                   <div class="px-2 py-1 bg-brand-500 text-white rounded-lg flex items-center justify-center">
                     <span class="text-xs font-bold">TripCart</span>
