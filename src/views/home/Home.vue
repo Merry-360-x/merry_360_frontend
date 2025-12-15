@@ -41,52 +41,52 @@
         <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
-            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400" style="border-color: #DDDDDD;">
-              <label class="block text-xs font-bold mb-1.5 text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: white;">{{ t('accommodation.location') }}</label>
+            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-400">
+              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.location') }}</label>
               <input 
                 type="text" 
                 :placeholder="t('search.whereGoing')"
                 v-model="searchQuery.location"
-                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent text-white"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: white;"
+                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent text-gray-900 dark:text-white"
+                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               />
             </div>
 
             <!-- Check In -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400 relative" style="border-color: #DDDDDD;">
-              <label class="block text-xs font-bold mb-1.5 text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: white;">{{ t('search.checkIn') }}</label>
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-400 relative">
+              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkIn') }}</label>
               <input 
                 type="date" 
                 v-model="searchQuery.checkIn"
                 :min="minCheckInDate"
-                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-white cursor-pointer"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: white;"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 dark:text-white cursor-pointer"
+                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               />
             </div>
 
             <!-- Check Out -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 dark:border-gray-400 relative" style="border-color: #DDDDDD;">
-              <label class="block text-xs font-bold mb-1.5 text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: white;">{{ t('search.checkOut') }}</label>
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-400 relative">
+              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkOut') }}</label>
               <input 
                 type="date" 
                 v-model="searchQuery.checkOut"
                 :min="minCheckOutDate"
-                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-white cursor-pointer"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: white;"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 dark:text-white cursor-pointer"
+                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               />
             </div>
 
             <!-- Guests -->
             <div class="md:pl-5 relative">
-              <label class="block text-xs font-bold mb-1.5 text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px; color: white;">{{ t('accommodation.guests') }}</label>
+              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.guests') }}</label>
               <button 
                 type="button"
                 @click="showGuestSelector = !showGuestSelector"
-                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-white text-left cursor-pointer flex items-center justify-between"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px; color: white;"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 dark:text-white text-left cursor-pointer flex items-center justify-between"
+                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               >
                 <span>{{ guestSummary }}</span>
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
