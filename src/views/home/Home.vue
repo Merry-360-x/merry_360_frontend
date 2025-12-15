@@ -97,8 +97,8 @@
                   <!-- Adults -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Adults</div>
-                      <div class="text-xs text-gray-500">Ages 13+</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.adults') }}</div>
+                      <div class="text-xs text-gray-500">{{ t('accommodation.adultsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
@@ -125,8 +125,8 @@
                   <!-- Children -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Children</div>
-                      <div class="text-xs text-gray-500">Ages 2-12</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.children') }}</div>
+                      <div class="text-xs text-gray-500">{{ t('accommodation.childrenDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
@@ -153,8 +153,8 @@
                   <!-- Infants -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Infants</div>
-                      <div class="text-xs text-gray-500">Under 2</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.infants') }}</div>
+                      <div class="text-xs text-gray-500">{{ t('accommodation.infantsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
@@ -243,10 +243,10 @@
           class="w-full h-full object-cover absolute inset-0" style="min-height: 300px;"
         />
         <div class="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent flex flex-col items-start justify-center px-6 md:px-20 py-12 md:py-16">
-          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800; line-height: 1.3; color: #000000;">Try Hosting With Us</h2>
-          <p class="text-sm md:text-base mb-6 md:mb-8" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.5; color: #000000; max-width: 400px;">Earn extra just by renting your property...</p>
+          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800; line-height: 1.3; color: #000000;">{{ t('home.tryHosting') }}</h2>
+          <p class="text-sm md:text-base mb-6 md:mb-8" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.5; color: #000000; max-width: 400px;">{{ t('home.tryHostingDesc') }}</p>
           <button class="px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg" style="background: #ef4444; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; min-width: 180px; height: 48px;">
-            Become A Host
+            {{ t('nav.login') }}
           </button>
         </div>
       </div>
@@ -350,7 +350,7 @@
             </button>
           </div>
           <button class="px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg w-full sm:w-auto" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; min-width: 180px; height: 48px;">
-            Discover More
+            {{ t('home.learnMore') }}
           </button>
         </div>
         <div class="mt-8 md:mt-0">
