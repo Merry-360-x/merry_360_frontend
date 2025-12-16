@@ -366,7 +366,7 @@
     </section>
 
     <!-- Newsletter -->
-    <section class="py-12 md:py-20" style="background: #E8EAEC;">
+    <section class="py-12 md:py-20 bg-gray-200 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-6xl mx-auto">
           <div class="text-center md:text-left md:w-48 mb-2 md:mb-0">
@@ -377,10 +377,10 @@
             <input 
               type="email" 
               :placeholder="t('home.emailPlaceholder')" 
-              class="flex-1 px-4 md:px-6 py-3 rounded focus:outline-none text-sm md:text-base"
-              style="background: #FFFFFF; border: 1px solid #E8EAEC; font-family: 'Montserrat', sans-serif; font-weight: 500; color: #484848;"
+              class="flex-1 px-4 md:px-6 py-3 rounded focus:outline-none text-sm md:text-base bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+              style="font-family: 'Montserrat', sans-serif; font-weight: 500;"
             />
-            <button class="w-12 h-12 md:w-14 md:h-14 rounded flex items-center justify-center hover:opacity-90 transition-opacity flex-shrink-0" style="background: #FF3B3B;">
+            <button class="w-12 h-12 md:w-14 md:h-14 rounded flex items-center justify-center hover:opacity-90 transition-opacity flex-shrink-0 bg-brand-500" style="background: #FF3B3B;">
               <svg class="w-5 h-5 md:w-7 md:h-7 text-white transform rotate-90" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
               </svg>
