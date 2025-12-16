@@ -197,8 +197,8 @@
     </section>
 
     <!-- Latest on the Property Listing -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
-      <div class="mb-8 md:mb-12 text-center">
+    <section class="container mx-auto px-4 py-8 md:py-12">
+      <div class="mb-6 md:mb-8 text-center">
         <h2 class="text-2xl md:text-4xl font-bold text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.latestProperties') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
@@ -207,8 +207,8 @@
     </section>
 
     <!-- Nearby Listed Properties -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
-      <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-12 max-w-7xl mx-auto">
+    <section class="container mx-auto px-4 py-8 md:py-12">
+      <div class="flex flex-col md:flex-row items-center justify-between mb-6 md:mb-8 max-w-7xl mx-auto">
         <div class="text-center md:text-left mb-4 md:mb-0">
           <h2 class="text-2xl md:text-4xl font-bold text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
         </div>
@@ -235,7 +235,7 @@
     </section>
 
     <!-- Try Hosting Banner -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
+    <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="relative rounded-lg overflow-hidden max-w-7xl mx-auto" style="min-height: 300px; height: auto;">
         <img loading="lazy" 
           src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80" 
@@ -253,8 +253,8 @@
     </section>
 
     <!-- Featured Properties -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
-      <div class="mb-8 md:mb-12 text-center">
+    <section class="container mx-auto px-4 py-8 md:py-12">
+      <div class="mb-6 md:mb-8 text-center">
         <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.featured') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
@@ -263,7 +263,7 @@
     </section>
 
     <!-- Browse For More -->
-    <section class="py-12 md:py-20 bg-gray-100 dark:bg-gray-800">
+    <section class="py-8 md:py-12 bg-gray-100 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
           <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
@@ -276,8 +276,8 @@
     </section>
 
     <!-- Property Rental Guides & Tips -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
-      <div class="mb-8 md:mb-12 text-center">
+    <section class="container mx-auto px-4 py-8 md:py-12">
+      <div class="mb-6 md:mb-8 text-center">
         <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.guides') }}</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
@@ -301,7 +301,7 @@
     </section>
 
     <!-- Download Mobile App -->
-    <section class="py-12 md:py-20 bg-gray-100 dark:bg-gray-800">
+    <section class="py-8 md:py-12 bg-gray-100 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 max-w-7xl mx-auto">
           <div class="flex-1 text-center md:text-left">
@@ -334,7 +334,7 @@
     </section>
 
     <!-- Discover More -->
-    <section class="container mx-auto px-4 py-12 md:py-20">
+    <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center max-w-7xl mx-auto">
         <div>
           <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.discoverMore') }}</h2>
@@ -366,7 +366,7 @@
     </section>
 
     <!-- Newsletter -->
-    <section class="py-12 md:py-20 bg-gray-200 dark:bg-gray-800">
+    <section class="py-8 md:py-12 bg-gray-200 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-6xl mx-auto">
           <div class="text-center md:text-left md:w-48 mb-2 md:mb-0">
