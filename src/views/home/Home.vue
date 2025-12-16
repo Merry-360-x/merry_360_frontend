@@ -263,11 +263,11 @@
     </section>
 
     <!-- Browse For More -->
-    <section class="py-12 md:py-20" style="background: #EFF0F2;">
+    <section class="py-12 md:py-20 bg-gray-100 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
           <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
-          <p class="text-sm md:text-base mb-8 md:mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5; color: #9A9A9A;">{{ t('home.browseDesc') }}</p>
+          <p class="text-sm md:text-base mb-8 md:mb-10 text-gray-600 dark:text-gray-400" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.browseDesc') }}</p>
           <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
             {{ t('home.findProperty') }}
           </button>
@@ -301,12 +301,12 @@
     </section>
 
     <!-- Download Mobile App -->
-    <section class="py-12 md:py-20" style="background: #EFF0F2;">
+    <section class="py-12 md:py-20 bg-gray-100 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 max-w-7xl mx-auto">
           <div class="flex-1 text-center md:text-left">
             <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.downloadApp') }}</h2>
-            <p class="text-sm md:text-base mb-6 md:mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5; color: #9A9A9A;">{{ t('home.downloadDesc') }}</p>
+            <p class="text-sm md:text-base mb-6 md:mb-10 text-gray-600 dark:text-gray-400" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.downloadDesc') }}</p>
             <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start">
               <button class="px-4 md:px-6 py-3 rounded flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition-opacity w-full sm:w-auto" style="background: #E0E2E6;">
                 <svg class="w-5 h-5" fill="#484848" viewBox="0 0 24 24">
