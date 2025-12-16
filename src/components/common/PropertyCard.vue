@@ -28,7 +28,7 @@
         <button
           v-if="propertyImages.length > 5"
           @click.stop="showAllImages"
-          class="px-2 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-semibold text-gray-800 hover:bg-white transition-all"
+          class="px-2 py-0.5 bg-white/90 dark:bg-gray-700/90 backdrop-blur-sm rounded-full text-[10px] font-semibold text-gray-800 dark:text-white hover:bg-white dark:hover:bg-gray-700 transition-all"
         >
           +{{ propertyImages.length - 5 }}
         </button>
@@ -59,7 +59,7 @@
         @click.stop="previousImage"
         class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md opacity-0 group-hover:opacity-100"
       >
-        <svg class="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-gray-800 dark:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
       </button>
@@ -68,7 +68,7 @@
         @click.stop="nextImage"
         class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md opacity-0 group-hover:opacity-100"
       >
-        <svg class="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-gray-800 dark:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
         </svg>
       </button>

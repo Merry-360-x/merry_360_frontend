@@ -25,7 +25,7 @@
           </div>
           
           <!-- Message -->
-          <div class="flex-1 text-sm font-medium text-gray-800">
+          <div class="flex-1 text-sm font-medium text-gray-800 dark:text-white">
             {{ toast.message }}
           </div>
           

@@ -199,7 +199,7 @@
               to="/login"
               class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
             >
-              <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-800 dark:text-white" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="2" y="5" width="20" height="2" rx="1"/>
                 <rect x="2" y="11" width="20" height="2" rx="1"/>
                 <rect x="2" y="17" width="20" height="2" rx="1"/>
