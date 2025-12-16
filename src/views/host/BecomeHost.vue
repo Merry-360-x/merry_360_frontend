@@ -344,7 +344,7 @@
               >
                 <span class="font-semibold text-gray-900 dark:text-white">{{ faq.question }}</span>
                 <svg 
-                  class="w-5 h-5 text-gray-500 transition-transform"
+                  class="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform"
                   :class="{ 'rotate-180': faq.open }"
                   fill="none" 
                   stroke="currentColor" 

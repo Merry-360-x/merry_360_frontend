@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!useStripe">
-      <p class="text-sm text-gray-600 mb-4">Stripe not configured - using mock payment flow for demo.</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Stripe not configured - using mock payment flow for demo.</p>
       <input v-model="cardNumber" placeholder="Card number (mock)" class="w-full p-3 border rounded mb-2" />
       <div class="grid grid-cols-2 gap-2">
         <input v-model="expiry" placeholder="MM/YY" class="p-3 border rounded" />
@@ -11,7 +11,7 @@
     </div>
 
     <div v-else>
-      <p class="text-sm text-gray-600 mb-4">Enter card details to complete payment</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Enter card details to complete payment</p>
       <div id="card-element" class="p-3 border rounded"></div>
       <button @click="handlePay" class="mt-3 px-4 py-2 bg-brand-500 text-white rounded">Pay</button>
     </div>

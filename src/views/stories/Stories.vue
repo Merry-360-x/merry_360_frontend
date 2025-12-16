@@ -75,7 +75,7 @@
             </svg>
           </div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ t('stories.noStories') }}</h3>
-          <p class="text-gray-600">{{ t('stories.subtitle') }}</p>
+          <p class="text-gray-600 dark:text-gray-400">{{ t('stories.subtitle') }}</p>
         </div>
       </div>
     </section>

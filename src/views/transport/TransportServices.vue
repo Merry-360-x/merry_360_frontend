@@ -13,7 +13,7 @@
           <div class="bg-white rounded-2xl shadow-xl p-4 flex flex-col md:flex-row gap-3">
             <!-- Route Search -->
             <div class="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
@@ -108,10 +108,10 @@
         <div class="mt-12">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-6 text-center">Popular Routes</h2>
           <div v-if="filteredRoutes.length === 0" class="text-center py-12">
-            <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-gray-600">No routes found matching your search</p>
+            <p class="text-gray-600 dark:text-gray-400">No routes found matching your search</p>
           </div>
           <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <div v-for="route in filteredRoutes" :key="route.id" class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">

@@ -319,7 +319,7 @@
           <h2 class="text-3xl md:text-4xl font-bold mb-4" style="font-family: 'Montserrat', sans-serif; color: #484848;">
             Why Choose Merry360?
           </h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">
+          <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             We're committed to making your Rwanda experience unforgettable
           </p>
         </div>
@@ -332,7 +332,7 @@
               </svg>
             </div>
             <h3 class="font-bold text-lg mb-2">Trusted & Secure</h3>
-            <p class="text-sm text-gray-600">Your safety and security are our top priorities</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Your safety and security are our top priorities</p>
           </div>
 
           <div class="text-center">
@@ -342,7 +342,7 @@
               </svg>
             </div>
             <h3 class="font-bold text-lg mb-2">Best Price Guarantee</h3>
-            <p class="text-sm text-gray-600">Get the best deals with no hidden fees</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Get the best deals with no hidden fees</p>
           </div>
 
           <div class="text-center">
@@ -352,7 +352,7 @@
               </svg>
             </div>
             <h3 class="font-bold text-lg mb-2">24/7 Support</h3>
-            <p class="text-sm text-gray-600">Round-the-clock assistance whenever you need</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Round-the-clock assistance whenever you need</p>
           </div>
 
           <div class="text-center">
@@ -362,7 +362,7 @@
               </svg>
             </div>
             <h3 class="font-bold text-lg mb-2">Local Expertise</h3>
-            <p class="text-sm text-gray-600">Deep knowledge of Rwanda's hidden gems</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Deep knowledge of Rwanda's hidden gems</p>
           </div>
         </div>
       </div>

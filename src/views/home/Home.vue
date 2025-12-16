@@ -98,7 +98,7 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.adults') }}</div>
-                      <div class="text-xs text-gray-500">{{ t('accommodation.adultsDesc') }}</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">{{ t('accommodation.adultsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
@@ -126,7 +126,7 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.children') }}</div>
-                      <div class="text-xs text-gray-500">{{ t('accommodation.childrenDesc') }}</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">{{ t('accommodation.childrenDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
@@ -154,7 +154,7 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.infants') }}</div>
-                      <div class="text-xs text-gray-500">{{ t('accommodation.infantsDesc') }}</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">{{ t('accommodation.infantsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 

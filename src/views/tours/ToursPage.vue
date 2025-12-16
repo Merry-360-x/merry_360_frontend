@@ -13,7 +13,7 @@
           <div class="bg-white rounded-2xl shadow-xl p-4 flex flex-col md:flex-row gap-3">
             <!-- Location Search -->
             <div class="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
               <input 
@@ -89,7 +89,7 @@
               >
                 <svg 
                   class="w-6 h-6 transition-colors" 
-                  :class="isInWatchlist(tour) ? 'text-brand-600 fill-current' : 'text-gray-400'"
+                  :class="isInWatchlist(tour) ? 'text-brand-600 fill-current' : 'text-gray-400 dark:text-gray-500'"
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"

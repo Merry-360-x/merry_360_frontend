@@ -12,7 +12,7 @@
                 <div class="text-sm font-medium">{{ conv.with }}</div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">{{ conv.lastMessage }}</div>
               </div>
-              <div class="text-xs text-gray-400">{{ conv.updatedAt }}</div>
+              <div class="text-xs text-gray-400 dark:text-gray-500">{{ conv.updatedAt }}</div>
             </div>
           </div>
         </div>
@@ -20,10 +20,10 @@
         <!-- Messages -->
         <div class="col-span-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col">
           <div class="flex-1 overflow-y-auto p-4 space-y-3" ref="messagesContainer">
-            <div v-if="selectedConversation === null" class="text-center text-gray-400">Select a conversation to start</div>
+            <div v-if="selectedConversation === null" class="text-center text-gray-400 dark:text-gray-500">Select a conversation to start</div>
             <div v-else>
               <div v-for="(msg, index) in messages" :key="msg.id || index" class="mb-2">
-                <div class="text-xs text-gray-500">{{ msg.from }} · {{ formatDate(msg.createdAt) }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">{{ msg.from }} · {{ formatDate(msg.createdAt) }}</div>
                 <div class="mt-2 bg-gray-100 dark:bg-gray-800 p-3 rounded-md max-w-xl">{{ msg.text }}</div>
               </div>
             </div>

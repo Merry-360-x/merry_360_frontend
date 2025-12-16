@@ -199,7 +199,7 @@
                   >
                     <svg 
                       class="w-6 h-6" 
-                      :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400'"
+                      :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400 dark:text-gray-500'"
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
