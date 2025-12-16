@@ -253,212 +253,164 @@
         <!-- Menu Panel -->
         <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto transition-colors duration-200">
           <!-- Header -->
-          <div class="sticky top-0 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-700 dark:to-red-800 px-6 py-4 flex items-center justify-between shadow-md">
-            <h3 class="text-white font-bold text-lg" style="font-family: 'Montserrat', sans-serif;">Menu</h3>
-            <button @click="mobileMenuOpen = false" class="text-white p-1 hover:bg-white/20 rounded-lg transition-colors">
+          <div class="sticky top-0 bg-white dark:bg-gray-900 px-6 py-4 flex items-center justify-end border-b border-gray-100 dark:border-gray-800">
+            <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
 
-          <div class="p-5">
+          <div class="p-6">
             <!-- User Profile Section (when authenticated) -->
-            <div v-if="userStore.isAuthenticated" class="mb-6 p-4 bg-gradient-to-r from-red-50 to-orange-50 dark:from-gray-700 dark:to-gray-600 rounded-xl">
-              <div class="flex items-center gap-3 mb-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span class="text-white text-sm font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
+            <div v-if="userStore.isAuthenticated" class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-gray-600 dark:text-gray-300 text-sm font-medium">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-bold text-sm text-gray-900 dark:text-white truncate">{{ userStore.user?.name || 'User' }}</p>
-                  <p class="text-xs text-gray-600 dark:text-gray-300 truncate">{{ userStore.user?.email || '' }}</p>
+                  <p class="font-medium text-sm text-gray-900 dark:text-white truncate">{{ userStore.user?.name || 'User' }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ userStore.user?.email || '' }}</p>
                 </div>
               </div>
-              <router-link 
-                to="/profile" 
-                @click="mobileMenuOpen = false"
-                class="block w-full py-2 px-4 bg-brand-500 text-white text-center rounded-lg text-sm font-semibold hover:bg-brand-600 transition-colors"
-              >
-                View Profile
-              </router-link>
             </div>
 
             <!-- Login Button (when not authenticated) -->
-            <div v-else class="mb-6">
+            <div v-else class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
               <router-link 
                 to="/login" 
                 @click="mobileMenuOpen = false"
-                class="block w-full py-3 px-4 bg-brand-500 text-white text-center rounded-lg text-sm font-bold hover:bg-brand-600 transition-colors"
+                class="block w-full py-2.5 px-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-center rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
               >
-                Sign In / Sign Up
+                Sign In
               </router-link>
             </div>
 
             <!-- Navigation Links -->
-            <nav class="space-y-2 mb-6">
+            <nav class="space-y-1 mb-6">
               <router-link 
                 to="/"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 Home
               </router-link>
               <router-link 
                 to="/accommodations"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
                 Accommodations
               </router-link>
               <router-link 
                 to="/tours"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-green-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
-                active-class="!bg-green-50 !text-green-700"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 Tours
               </router-link>
               <router-link 
                 to="/transport"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
                 Transport
               </router-link>
               <router-link 
                 to="/services"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
                 Services
               </router-link>
               <router-link 
                 to="/stories"
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-purple-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
                 Stories
               </router-link>
               <router-link 
                 to="/become-host"
-                class="flex items-center gap-3 py-3 px-4 text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors font-semibold"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 Become a Host
               </router-link>
-              <button
-                class="flex items-center gap-3 py-3 px-4 text-gray-800 dark:text-white hover:bg-red-50 dark:hover:bg-gray-700 rounded-lg transition-colors font-semibold w-full text-left"
-                style="font-family: 'Montserrat', sans-serif;"
-              >
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
-                Download Mobile App
-              </button>
             </nav>
 
             <!-- Divider -->
-            <div class="border-t border-gray-200 dark:border-gray-700 my-6"></div>
+            <div class="border-t border-gray-100 dark:border-gray-800 my-6"></div>
 
             <!-- Settings Section -->
-            <div class="space-y-4 mb-6">
+            <div class="space-y-3">
               <!-- Dark Mode Toggle -->
-              <div>
-                <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Appearance</label>
-                <button
-                  @click="appStore.toggleDarkMode()"
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-semibold text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 flex items-center justify-between"
-                  style="font-family: 'Montserrat', sans-serif;"
-                >
-                  <span>{{ appStore.isDarkMode ? 'Dark Mode' : 'Light Mode' }}</span>
-                  <svg v-if="!appStore.isDarkMode" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                  </svg>
-                  <svg v-else class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                  </svg>
-                </button>
-              </div>
+              <button
+                @click="appStore.toggleDarkMode()"
+                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              >
+                <span>{{ appStore.isDarkMode ? 'Dark Mode' : 'Light Mode' }}</span>
+                <svg v-if="!appStore.isDarkMode" class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <svg v-else class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+              </button>
 
-              <div>
-                <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Currency</label>
-                <select 
-                  v-model="currencyStore.currentCurrency"
-                  @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-semibold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700"
-                  style="font-family: 'Montserrat', sans-serif;"
-                >
-                  <option value="USD">$ USD</option>
-                  <option value="EUR">€ EUR</option>
-                  <option value="GBP">£ GBP</option>
-                  <option value="CNY">¥ CNY</option>
-                  <option value="RWF">RWF</option>
-                </select>
-              </div>
+              <select 
+                v-model="currencyStore.currentCurrency"
+                @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
+                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600"
+              >
+                <option value="USD">$ USD</option>
+                <option value="EUR">€ EUR</option>
+                <option value="GBP">£ GBP</option>
+                <option value="CNY">¥ CNY</option>
+                <option value="RWF">RWF</option>
+              </select>
 
-              <div>
-                <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase" style="font-family: 'Montserrat', sans-serif;">Language</label>
-                <select 
-                  v-model="languageStore.currentLanguage" 
-                  @change="languageStore.setLanguage(languageStore.currentLanguage)" 
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-semibold text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700"
-                  style="font-family: 'Montserrat', sans-serif;"
-                >
-                  <option value="EN">English</option>
-                  <option value="RW">Kinyarwanda</option>
-                  <option value="FR">Français</option>
-                  <option value="ZH">中文 (Mandarin)</option>
-                  <option value="SW">Kiswahili</option>
-                </select>
-              </div>
+              <select 
+                v-model="languageStore.currentLanguage" 
+                @change="languageStore.setLanguage(languageStore.currentLanguage)" 
+                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600"
+              >
+                <option value="EN">English</option>
+                <option value="RW">Kinyarwanda</option>
+                <option value="FR">Français</option>
+                <option value="ZH">中文</option>
+                <option value="SW">Kiswahili</option>
+              </select>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="space-y-3">
-              <router-link 
-                v-if="!userStore.isAuthenticated"
-                to="/login"
-                class="block w-full py-3 px-4 text-center bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-md"
-                style="font-family: 'Montserrat', sans-serif;"
-                @click="mobileMenuOpen = false"
-              >
-                Sign In
-              </router-link>
-              <button
-                v-if="userStore.isAuthenticated"
+            <!-- Logout Button -->
+            <div v-if="userStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+              <button 
                 @click="handleLogout"
-                class="block w-full py-3 px-4 text-center border-2 border-red-500 text-red-600 font-bold rounded-lg hover:bg-red-50 transition-all"
-                style="font-family: 'Montserrat', sans-serif;"
+                class="w-full px-3 py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors text-center"
               >
-                Logout
+                Sign Out
               </button>
             </div>
           </div>
