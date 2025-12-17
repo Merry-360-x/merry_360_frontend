@@ -18,8 +18,8 @@ const EMAIL_CONFIG = {
   port: 587,
   secure: false,
   auth: {
-    user: 'your-brevo-login-email@example.com',  // Your Brevo account email
-    pass: 'your-brevo-smtp-key'                   // Your Brevo SMTP key (NOT your password!)
+    user: 'admin@merry360x.com',  // Your Brevo account email
+    pass: 'xsmtpsib-3d6d7acaedc3c50f96edd4c34baadee7a7137bca4fc9a2455976f73717c5ac7a-4QL7muXw3hnjWVFF'  // Your Brevo SMTP key
   }
 }
 

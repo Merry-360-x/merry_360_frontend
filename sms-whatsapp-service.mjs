@@ -14,22 +14,21 @@ const adminClient = createClient(supabaseUrl, serviceRoleKey)
 // CHEAPEST OPTION: Single provider for both SMS & WhatsApp!
 // Get credentials from: https://console.twilio.com/
 const TWILIO_CONFIG = {
-  accountSid: 'your-twilio-account-sid',        // From Twilio Console
-  authToken: 'your-twilio-auth-token',          // From Twilio Console
+  accountSid: 'AC0cbb76d7bff822ddef701585c7438b84',  // From Twilio Console
+  authToken: 'YOUR_AUTH_TOKEN_HERE',               // ⚠️ ADD YOUR AUTH TOKEN HERE!
   
   // SMS Configuration
-  smsFrom: '+1234567890',                        // Your Twilio phone number
+  smsFrom: '+14155238886',                         // Twilio phone number
   
   // WhatsApp Configuration
-  whatsappFrom: 'whatsapp:+14155238886',        // Twilio Sandbox (free testing)
-                                                 // OR your approved WhatsApp Business number
+  whatsappFrom: 'whatsapp:+14155238886',          // Twilio Sandbox (free testing)
   
   // API URL
   apiUrl: 'https://api.twilio.com/2010-04-01/Accounts'
 }
 
 // Admin contact (receives booking notifications)
-const ADMIN_PHONE = '+1234567890'     // Your phone number (SMS & WhatsApp)
+const ADMIN_PHONE = '+250792527083'     // Your phone number (SMS & WhatsApp)
 const ADMIN_EMAIL = 'admin@merry360x.com'
 
 // ============================================
