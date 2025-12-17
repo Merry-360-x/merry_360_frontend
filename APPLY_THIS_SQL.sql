@@ -14,6 +14,8 @@ create table if not exists public.profiles (
   phone text,
   avatar_url text,
   bio text,
+  loyalty_points integer default 0,
+  loyalty_tier text default 'bronze',
   created_at timestamp with time zone default timezone('utc'::text, now()),
   updated_at timestamp with time zone default timezone('utc'::text, now())
 );

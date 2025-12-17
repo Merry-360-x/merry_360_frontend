@@ -439,10 +439,7 @@ onMounted(() => {
     })
   }
   
-  // Add some loyalty points
-  if (userStore.loyaltyPoints === 0) {
-    userStore.addLoyaltyPoints(2500) // Silver tier
-  }
+  // NO FAKE LOYALTY POINTS - Users start with 0 points in real life!
 })
 
 const searchForm = ref({

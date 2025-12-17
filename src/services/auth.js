@@ -47,11 +47,13 @@ export async function signUp(data) {
     const { data: authData, error } = await supabaseService.signUpWithEmail(data.email, data.password)
     if (error) throw error
     
-    // Store additional profile data
+    // Store additional profile data WITH 0 LOYALTY POINTS FOR NEW ACCOUNTS
     await supabaseService.setUserProfile(authData.user.id, {
-      firstName: data.firstName,
-      lastName: data.lastName,
+      first_name: data.firstName,
+      last_name: data.lastName,
       phone: data.phone,
+      loyalty_points: 0,
+      loyalty_tier: 'bronze',
       updated_at: new Date().toISOString()
     })
 

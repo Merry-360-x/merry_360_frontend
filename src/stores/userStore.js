@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { supabase } from '../services/supabase'
 
 export const useUserStore = defineStore('user', () => {
   // Load initial state from localStorage
@@ -13,7 +14,7 @@ export const useUserStore = defineStore('user', () => {
   // Watchlist / Saved Items
   const watchlist = ref([])
   
-  // Loyalty Points
+  // Loyalty Points - START WITH 0 FOR NEW ACCOUNTS
   const loyaltyPoints = ref(0)
   const loyaltyTier = ref('bronze') // bronze, silver, gold, platinum
   
@@ -55,12 +56,43 @@ export const useUserStore = defineStore('user', () => {
   })
   
   // Actions
-  const login = (userData) => {
+  const login = async (userData) => {
     user.value = userData
     isAuthenticated.value = true
     // Persist to localStorage
     localStorage.setItem('user', JSON.stringify(userData))
     localStorage.setItem('isAuthenticated', 'true')
+    
+    // Load loyalty points from Supabase
+    if (userData.id) {
+      await loadLoyaltyPoints(userData.id)
+    }
+  }
+  
+  const loadLoyaltyPoints = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('loyalty_points, loyalty_tier')
+        .eq('id', userId)
+        .single()
+      
+      if (data) {
+        loyaltyPoints.value = data.loyalty_points || 0
+        loyaltyTier.value = data.loyalty_tier || 'bronze'
+      } else if (error && error.code === 'PGRST116') {
+        // Profile doesn't exist, create it with 0 points
+        await supabase
+          .from('profiles')
+          .insert([{ id: userId, loyalty_points: 0, loyalty_tier: 'bronze' }])
+        loyaltyPoints.value = 0
+        loyaltyTier.value = 'bronze'
+      }
+    } catch (error) {
+      console.error('Error loading loyalty points:', error)
+      loyaltyPoints.value = 0
+      loyaltyTier.value = 'bronze'
+    }
   }
   
   const logout = () => {
@@ -68,6 +100,8 @@ export const useUserStore = defineStore('user', () => {
     isAuthenticated.value = false
     watchlist.value = []
     tripCart.value = []
+    loyaltyPoints.value = 0
+    loyaltyTier.value = 'bronze'
     // Clear localStorage
     localStorage.removeItem('user')
     localStorage.removeItem('isAuthenticated')
@@ -109,15 +143,45 @@ export const useUserStore = defineStore('user', () => {
     tripCart.value = []
   }
   
-  const addLoyaltyPoints = (points) => {
+  const addLoyaltyPoints = async (points) => {
     loyaltyPoints.value += points
     updateLoyaltyTier()
+    
+    // Save to Supabase
+    if (user.value?.id) {
+      try {
+        await supabase
+          .from('profiles')
+          .update({ 
+            loyalty_points: loyaltyPoints.value,
+            loyalty_tier: loyaltyTier.value 
+          })
+          .eq('id', user.value.id)
+      } catch (error) {
+        console.error('Error saving loyalty points:', error)
+      }
+    }
   }
   
-  const redeemPoints = (points) => {
+  const redeemPoints = async (points) => {
     if (loyaltyPoints.value >= points) {
       loyaltyPoints.value -= points
       updateLoyaltyTier()
+      
+      // Save to Supabase
+      if (user.value?.id) {
+        try {
+          await supabase
+            .from('profiles')
+            .update({ 
+              loyalty_points: loyaltyPoints.value,
+              loyalty_tier: loyaltyTier.value 
+            })
+            .eq('id', user.value.id)
+        } catch (error) {
+          console.error('Error redeeming loyalty points:', error)
+        }
+      }
       return true
     }
     return false
