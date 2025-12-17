@@ -52,6 +52,7 @@ import Stories from '../views/stories/Stories.vue'
 
 // Admin
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
+import ManageProperties from '../views/admin/ManageProperties.vue'
 
 // Vendor
 import VendorDashboard from '../views/vendor/VendorDashboard.vue'
@@ -204,6 +205,11 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: AdminDashboard
+  },
+  {
+    path: '/admin/properties',
+    name: 'admin-properties',
+    component: ManageProperties
   },
   {
     path: '/vendor',

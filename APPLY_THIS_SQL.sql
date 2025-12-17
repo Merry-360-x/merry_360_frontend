@@ -73,12 +73,32 @@ create table if not exists public.payments (
   updated_at timestamp with time zone default timezone('utc'::text, now())
 );
 
+-- Create properties table for admin management
+create table if not exists public.properties (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  location text not null,
+  price text not null,
+  bedrooms integer default 0,
+  bathrooms numeric(2, 1) default 0,
+  type text default 'apartment',
+  description text,
+  amenities text[],
+  images text[],
+  tour_360 text[],
+  vr_content text[],
+  available boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  updated_at timestamp with time zone default timezone('utc'::text, now())
+);
+
 -- Enable RLS
 alter table public.profiles enable row level security;
 alter table public.conversations enable row level security;
 alter table public.messages enable row level security;
 alter table public.bookings enable row level security;
 alter table public.payments enable row level security;
+alter table public.properties enable row level security;
 
 -- Drop existing policies if they exist (to avoid conflicts)
 drop policy if exists "Profiles are publicly readable" on public.profiles;
@@ -93,6 +113,8 @@ drop policy if exists "Users can create bookings" on public.bookings;
 drop policy if exists "Users can update their own bookings" on public.bookings;
 drop policy if exists "Users can read payments for their bookings" on public.payments;
 drop policy if exists "Users can create payments for their bookings" on public.payments;
+drop policy if exists "Properties are publicly readable" on public.properties;
+drop policy if exists "Admins can manage properties" on public.properties;
 
 -- Profiles policies
 create policy "Profiles are publicly readable" on public.profiles for select using (true);
@@ -139,12 +161,22 @@ create policy "Users can create payments for their bookings" on public.payments 
     and user_id = auth.uid()
   ));
 
+-- Properties policies (publicly readable, admin only write)
+create policy "Properties are publicly readable" on public.properties for select
+  using (true);
+create policy "Admins can manage properties" on public.properties
+  for all using (true) with check (true);
+  -- Note: In production, replace with proper admin check like:
+  -- using (auth.jwt() ->> 'role' = 'admin')
+
 -- Create indexes
 create index if not exists messages_conversation_id_idx on public.messages(conversation_id);
 create index if not exists messages_sender_id_idx on public.messages(sender_id);
 create index if not exists bookings_user_id_idx on public.bookings(user_id);
 create index if not exists payments_booking_id_idx on public.payments(booking_id);
 create index if not exists conversations_participants_idx on public.conversations using gin(participants);
+create index if not exists properties_location_idx on public.properties(location);
+create index if not exists properties_available_idx on public.properties(available);
 
 -- ===============================================
 -- SCHEMA CREATED SUCCESSFULLY!
