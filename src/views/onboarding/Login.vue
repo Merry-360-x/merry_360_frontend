@@ -258,7 +258,10 @@ const handleLogin = async () => {
 const handleGoogleSignIn = async () => {
   loading.value = true
   try {
+    console.log('Starting Google Sign-In...')
     const response = await signInWithGoogle()
+    console.log('Google Sign-In response:', response)
+    
     userStore.login({
       id: response.user.id,
       name: `${response.user.firstName || ''} ${response.user.lastName || ''}`.trim() || response.user.email,
@@ -272,7 +275,8 @@ const handleGoogleSignIn = async () => {
     if (response.token) localStorage.setItem('auth_token', response.token)
     router.push('/profile')
   } catch (error) {
-    console.error('Google sign-in error', error)
+    console.error('Google sign-in error:', error)
+    setError('email', error.message || 'Failed to sign in with Google. Please try again.')
   } finally {
     loading.value = false
   }
