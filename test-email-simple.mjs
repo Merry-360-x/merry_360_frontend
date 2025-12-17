@@ -7,7 +7,7 @@ const EMAIL_CONFIG = {
   port: 587,
   secure: false,
   auth: {
-    user: 'admin@merry360x.com',
+    user: '88e59b001@smtp-brevo.com',
     pass: 'xsmtpsib-3d6d7acaedc3c50f96edd4c34baadee7a7137bca4fc9a2455976f73717c5ac7a-4QL7muXw3hnjWVFF'
   }
 }
@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport(EMAIL_CONFIG)
 console.log('\n1️⃣ Sending test email to admin@merry360x.com...')
 try {
   const adminInfo = await transporter.sendMail({
-    from: '"Merry360x Test" <admin@merry360x.com>',
+    from: '"Merry360x Test" <bebisdavy@gmail.com>',
     to: 'admin@merry360x.com',
     subject: '🎉 Test: New Booking Notification',
     html: `
@@ -56,7 +56,7 @@ try {
 console.log('\n2️⃣ Sending test confirmation to bebisdavy@gmail.com...')
 try {
   const guestInfo = await transporter.sendMail({
-    from: '"Merry360x" <admin@merry360x.com>',
+    from: '"Merry360x" <bebisdavy@gmail.com>',
     to: 'bebisdavy@gmail.com',
     subject: '✅ Booking Confirmed - Sunset Beach Villa',
     html: `
