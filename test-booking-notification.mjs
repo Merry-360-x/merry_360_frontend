@@ -133,7 +133,7 @@ try {
       property_name: selectedProperty.name,
       guest_name: 'Test Booking User',
       guest_email: testUserEmail,
-      guest_phone: '+1234567890',
+      guest_phone: '+1234567890', // ⚠️ Replace with real WhatsApp number for testing
       special_requests: 'Testing notification system - please confirm ASAP!'
     }
   }
@@ -266,6 +266,16 @@ console.log('   1. Update EMAIL_CONFIG in email-notification-service.mjs')
 console.log('   2. Add your SMTP credentials (Gmail, SendGrid, etc.)')
 console.log('   3. Run: node email-notification-service.mjs monitor')
 
+console.log('\n📱 WhatsApp Notification Setup:')
+console.log('   Admin WhatsApp: Set in whatsapp-notification-service.mjs')
+console.log('   Guest WhatsApp: Provided during booking')
+console.log('   To enable WhatsApp:')
+console.log('   1. Choose provider (Twilio/Meta/UltraMsg/WAAPI)')
+console.log('   2. Update WHATSAPP_CONFIG in whatsapp-notification-service.mjs')
+console.log('   3. Set ADMIN_WHATSAPP number')
+console.log('   4. Run: node whatsapp-notification-service.mjs monitor')
+console.log('   See WHATSAPP_SETUP.md for detailed instructions')
+
 console.log('\n🌐 Live Testing:')
 console.log('   1. Visit: www.merry360x.com')
 console.log('   2. Browse properties')
@@ -277,6 +287,12 @@ console.log('   • Real-time booking alerts')
 console.log('   • View all bookings')
 console.log('   • Confirm/reject bookings')
 console.log('   • Contact guests directly')
+
+console.log('\n🔔 Notification Channels:')
+console.log('   ✉️  Email → admin@merry360x.com')
+console.log('   📱 WhatsApp → Admin & Guest')
+console.log('   💾 Database → Stored forever')
+console.log('   🖥️  Dashboard → Real-time updates')
 
 console.log('\n' + '='.repeat(60))
 console.log('✨ READY FOR PRODUCTION USE!')
