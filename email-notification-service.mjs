@@ -11,16 +11,41 @@ const adminClient = createClient(supabaseUrl, serviceRoleKey)
 // ============================================
 // EMAIL CONFIGURATION
 // ============================================
-// Replace these with your actual SMTP credentials
+// BREVO (Sendinblue) - RECOMMENDED FOR PRODUCTION
+// Get your SMTP credentials from: https://app.brevo.com/settings/keys/smtp
 const EMAIL_CONFIG = {
-  host: 'smtp.gmail.com', // or your SMTP host
+  host: 'smtp-relay.brevo.com',
   port: 587,
-  secure: false, // true for 465, false for other ports
+  secure: false,
   auth: {
-    user: 'your-email@gmail.com', // Your email
-    pass: 'your-app-password' // Your app password (not your regular password!)
+    user: 'your-brevo-login-email@example.com',  // Your Brevo account email
+    pass: 'your-brevo-smtp-key'                   // Your Brevo SMTP key (NOT your password!)
   }
 }
+
+// ALTERNATIVE CONFIGURATIONS:
+// 
+// Gmail (requires App Password):
+// const EMAIL_CONFIG = {
+//   host: 'smtp.gmail.com',
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: 'your-email@gmail.com',
+//     pass: 'your-16-char-app-password'
+//   }
+// }
+//
+// SendGrid:
+// const EMAIL_CONFIG = {
+//   host: 'smtp.sendgrid.net',
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: 'apikey',
+//     pass: 'your-sendgrid-api-key'
+//   }
+// }
 
 // Admin email to receive notifications
 const ADMIN_EMAIL = 'admin@merry360x.com'
