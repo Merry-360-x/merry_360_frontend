@@ -280,11 +280,118 @@ function getGuestConfirmationEmailHTML(booking, property) {
   `
 }
 
+function getHostNotificationEmailHTML(booking, property) {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+    .booking-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .detail-row { padding: 10px 0; border-bottom: 1px solid #eee; }
+    .detail-label { font-weight: bold; color: #f59e0b; }
+    .detail-value { color: #555; }
+    .highlight { background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b; }
+    .button { display: inline-block; padding: 12px 30px; background: #f59e0b; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 New Booking for Your Property!</h1>
+      <p>You have a new reservation</p>
+    </div>
+    
+    <div class="content">
+      <p>Great news! Your property <strong>${property.name}</strong> has been booked.</p>
+      
+      <div class="highlight">
+        <h3 style="margin: 0 0 10px 0;">💰 Booking Summary</h3>
+        <p style="margin: 5px 0;"><strong>Booking ID:</strong> ${booking.id}</p>
+        <p style="margin: 5px 0; font-size: 20px; color: #f59e0b;"><strong>Total: $${booking.total_price.toLocaleString()} ${booking.currency}</strong></p>
+      </div>
+      
+      <div class="booking-details">
+        <h2>Guest Information</h2>
+        
+        <div class="detail-row">
+          <span class="detail-label">Guest Name:</span>
+          <span class="detail-value">${booking.booking_details.guest_name}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">${booking.booking_details.guest_email}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Phone:</span>
+          <span class="detail-value">${booking.booking_details.guest_phone || 'Not provided'}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Check-in Date:</span>
+          <span class="detail-value">${booking.start_date}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Check-out Date:</span>
+          <span class="detail-value">${booking.end_date}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Number of Guests:</span>
+          <span class="detail-value">${booking.guests}</span>
+        </div>
+        
+        ${booking.booking_details.special_requests ? `
+        <div class="detail-row">
+          <span class="detail-label">Special Requests:</span>
+          <span class="detail-value">${booking.booking_details.special_requests}</span>
+        </div>
+        ` : ''}
+      </div>
+      
+      <div class="highlight">
+        <h3 style="margin: 0 0 10px 0;">✅ Next Steps</h3>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>Prepare your property for the guest arrival</li>
+          <li>Send check-in instructions 24 hours before arrival</li>
+          <li>Ensure the property is clean and ready</li>
+          <li>Contact the guest if you need additional information</li>
+        </ul>
+      </div>
+      
+      <center>
+        <a href="https://www.merry360x.com/host/bookings" class="button">
+          View Booking Details
+        </a>
+      </center>
+      
+      <p style="margin-top: 30px;">
+        <strong>Questions?</strong> Contact our support team at admin@merry360x.com
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>This booking notification is from Merry360x</p>
+      <p>© 2025 Merry360x. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `
+}
+
 // ============================================
 // NOTIFICATION FUNCTIONS
 // ============================================
 
-async function sendBookingNotification(booking, property) {
+async function sendBookingNotification(booking, property, hostEmail) {
   const guestEmail = booking.booking_details?.guest_email
   
   // Send admin notification
@@ -354,6 +461,21 @@ View in dashboard: https://www.merry360x.com/admin/bookings
       console.log(`✅ Guest confirmation sent to ${guestEmail}: ${guestInfo.messageId}`)
     }
     
+    // Send host notification
+    if (hostEmail && hostEmail !== ADMIN_EMAIL) {
+      const hostSubject = `🎉 New Booking for ${property.name}`
+      const hostHtml = getHostNotificationEmailHTML(booking, property)
+      
+      const hostInfo = await transporter.sendMail({
+        from: `"Merry360x" <${EMAIL_CONFIG.auth.user}>`,
+        to: hostEmail,
+        subject: hostSubject,
+        html: hostHtml
+      })
+      
+      console.log(`✅ Host notification sent to ${hostEmail}: ${hostInfo.messageId}`)
+    }
+    
     return { success: true, messageId: adminInfo.messageId }
   } catch (error) {
     console.error('❌ Email send failed:', error.message)
@@ -405,13 +527,30 @@ async function startBookingMonitor() {
         }
         
         console.log(`Property: ${property.name}`)
+        
+        // Get host/owner details
+        let hostEmail = null
+        if (property.host_id || property.owner_id || property.user_id) {
+          const hostId = property.host_id || property.owner_id || property.user_id
+          const { data: host } = await adminClient
+            .from('profiles')
+            .select('email')
+            .eq('id', hostId)
+            .single()
+          
+          if (host && host.email) {
+            hostEmail = host.email
+            console.log(`Host: ${hostEmail}`)
+          }
+        }
+        
         console.log('─'.repeat(60))
         
-        // Send email notification
-        const result = await sendBookingNotification(booking, property)
+        // Send email notifications
+        const result = await sendBookingNotification(booking, property, hostEmail)
         
         if (result.success) {
-          console.log('✅ Admin notification sent successfully!')
+          console.log('✅ All notifications sent successfully!')
         } else {
           console.log('⚠️  Notification logged (email not configured)')
         }

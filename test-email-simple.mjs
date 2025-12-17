@@ -105,9 +105,65 @@ try {
   console.error(`❌ Failed to send guest email: ${error.message}`)
 }
 
+// Test 3: Send to host/vendor
+console.log('\n3️⃣ Sending host notification to bebisdavy@gmail.com...')
+try {
+  const hostInfo = await transporter.sendMail({
+    from: '"Merry360x" <bebisdavy@gmail.com>',
+    to: 'bebisdavy@gmail.com',
+    subject: '🎉 New Booking for Sunset Beach Villa',
+    html: `
+      <div style="font-family: Arial; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1>🎉 New Booking for Your Property!</h1>
+          <p>You have a new reservation</p>
+        </div>
+        <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+          <p>Great news! Your property <strong>Sunset Beach Villa</strong> has been booked.</p>
+          
+          <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b;">
+            <h3 style="margin: 0 0 10px 0;">💰 Booking Summary</h3>
+            <p style="margin: 5px 0;"><strong>Booking ID:</strong> TEST-123456</p>
+            <p style="margin: 5px 0; font-size: 20px; color: #f59e0b;"><strong>Total: $2,400 USD</strong></p>
+          </div>
+          
+          <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>Guest Information</h2>
+            <p><strong>Name:</strong> Davy Bebis</p>
+            <p><strong>Email:</strong> bebisdavy@gmail.com</p>
+            <p><strong>Phone:</strong> +250792527083</p>
+            <p><strong>Check-in:</strong> December 25, 2025</p>
+            <p><strong>Check-out:</strong> December 28, 2025</p>
+            <p><strong>Guests:</strong> 2 people</p>
+          </div>
+          
+          <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b;">
+            <h3 style="margin: 0 0 10px 0;">✅ Next Steps</h3>
+            <ul>
+              <li>Prepare your property for the guest arrival</li>
+              <li>Send check-in instructions 24 hours before arrival</li>
+              <li>Ensure the property is clean and ready</li>
+              <li>Contact the guest if you need additional information</li>
+            </ul>
+          </div>
+          
+          <p><strong>Questions?</strong> Contact support at admin@merry360x.com</p>
+        </div>
+      </div>
+    `
+  })
+  
+  console.log(`✅ Host notification sent successfully!`)
+  console.log(`   Message ID: ${hostInfo.messageId}`)
+} catch (error) {
+  console.error(`❌ Failed to send host email: ${error.message}`)
+}
+
 console.log('\n' + '═'.repeat(60))
 console.log('✅ EMAIL TEST COMPLETE!')
 console.log('\n📬 Check these inboxes:')
 console.log('   • admin@merry360x.com (admin notification)')
 console.log('   • bebisdavy@gmail.com (guest confirmation)')
+console.log('   • bebisdavy@gmail.com (host notification)')
+console.log('\n💡 Total: 3 emails sent per booking')
 console.log('═'.repeat(60) + '\n')
