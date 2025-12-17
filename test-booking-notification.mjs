@@ -131,9 +131,9 @@ try {
     payment_status: 'pending',
     booking_details: {
       property_name: selectedProperty.name,
-      guest_name: 'Test Booking User',
-      guest_email: testUserEmail,
-      guest_phone: '+1234567890', // ⚠️ Replace with real WhatsApp number for testing
+      guest_name: 'Davy Bebis',
+      guest_email: 'bebisdavy@gmail.com',
+      guest_phone: '+250792527083',
       special_requests: 'Testing notification system - please confirm ASAP!'
     }
   }

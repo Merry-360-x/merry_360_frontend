@@ -178,13 +178,118 @@ function getNewBookingEmailHTML(booking, property) {
   `
 }
 
+function getGuestConfirmationEmailHTML(booking, property) {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+    .booking-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .detail-row { padding: 10px 0; border-bottom: 1px solid #eee; }
+    .detail-label { font-weight: bold; color: #10b981; }
+    .detail-value { color: #555; }
+    .highlight { background: #d1fae5; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10b981; }
+    .button { display: inline-block; padding: 12px 30px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✅ Booking Confirmed!</h1>
+      <p>Thank you for choosing Merry360x</p>
+    </div>
+    
+    <div class="content">
+      <p>Dear ${booking.booking_details.guest_name},</p>
+      
+      <p>Your reservation has been successfully confirmed! We're excited to host you at <strong>${property.name}</strong>.</p>
+      
+      <div class="highlight">
+        <h3 style="margin: 0 0 10px 0;">📋 Your Reservation</h3>
+        <strong>Booking ID:</strong> ${booking.id}
+      </div>
+      
+      <div class="booking-details">
+        <h2>Booking Details</h2>
+        
+        <div class="detail-row">
+          <span class="detail-label">Property:</span>
+          <span class="detail-value">${property.name}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">${property.location}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Check-in Date:</span>
+          <span class="detail-value">${booking.start_date}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Check-out Date:</span>
+          <span class="detail-value">${booking.end_date}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Number of Guests:</span>
+          <span class="detail-value">${booking.guests}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Total Amount:</span>
+          <span class="detail-value" style="font-size: 18px; font-weight: bold; color: #10b981;">
+            $${booking.total_price.toLocaleString()} ${booking.currency}
+          </span>
+        </div>
+      </div>
+      
+      <div class="highlight">
+        <h3 style="margin: 0 0 10px 0;">📍 What's Next?</h3>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>You'll receive check-in instructions 24 hours before arrival</li>
+          <li>Our team will contact you shortly to confirm details</li>
+          <li>Save this confirmation email for your records</li>
+        </ul>
+      </div>
+      
+      <center>
+        <a href="https://www.merry360x.com" class="button">
+          Visit Website
+        </a>
+      </center>
+      
+      <p style="margin-top: 30px;">
+        <strong>Questions?</strong> Feel free to reply to this email or contact us at admin@merry360x.com
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>Thank you for choosing Merry360x!</p>
+      <p>© 2025 Merry360x. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `
+}
+
 // ============================================
 // NOTIFICATION FUNCTIONS
 // ============================================
 
 async function sendBookingNotification(booking, property) {
-  const subject = `🎉 New Booking: ${property.name} - ${booking.booking_details.guest_name}`
-  const html = getNewBookingEmailHTML(booking, property)
+  const guestEmail = booking.booking_details?.guest_email
+  
+  // Send admin notification
+  const adminSubject = `🎉 New Booking: ${property.name} - ${booking.booking_details.guest_name}`
+  const adminHtml = getNewBookingEmailHTML(booking, property)
   
   const plainText = `
 NEW BOOKING RECEIVED
@@ -215,7 +320,7 @@ View in dashboard: https://www.merry360x.com/admin/bookings
     console.log('\n📧 EMAIL NOTIFICATION (Email not configured - displaying only):')
     console.log('─'.repeat(60))
     console.log(`To: ${ADMIN_EMAIL}`)
-    console.log(`Subject: ${subject}`)
+    console.log(`Subject: ${adminSubject}`)
     console.log('─'.repeat(60))
     console.log(plainText)
     console.log('─'.repeat(60))
@@ -223,16 +328,33 @@ View in dashboard: https://www.merry360x.com/admin/bookings
   }
   
   try {
-    const info = await transporter.sendMail({
+    // Send to admin
+    const adminInfo = await transporter.sendMail({
       from: `"Merry360x Notifications" <${EMAIL_CONFIG.auth.user}>`,
       to: ADMIN_EMAIL,
-      subject: subject,
+      subject: adminSubject,
       text: plainText,
-      html: html
+      html: adminHtml
     })
     
-    console.log(`✅ Email sent: ${info.messageId}`)
-    return { success: true, messageId: info.messageId }
+    console.log(`✅ Admin email sent: ${adminInfo.messageId}`)
+    
+    // Send guest confirmation
+    if (guestEmail) {
+      const guestSubject = `✅ Booking Confirmed - ${property.name}`
+      const guestHtml = getGuestConfirmationEmailHTML(booking, property)
+      
+      const guestInfo = await transporter.sendMail({
+        from: `"Merry360x" <${EMAIL_CONFIG.auth.user}>`,
+        to: guestEmail,
+        subject: guestSubject,
+        html: guestHtml
+      })
+      
+      console.log(`✅ Guest confirmation sent to ${guestEmail}: ${guestInfo.messageId}`)
+    }
+    
+    return { success: true, messageId: adminInfo.messageId }
   } catch (error) {
     console.error('❌ Email send failed:', error.message)
     return { success: false, message: error.message }
