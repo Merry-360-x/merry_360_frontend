@@ -68,8 +68,8 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">Total Bookings</p>
-                <p class="text-3xl font-bold">48</p>
-                <p class="text-success text-sm mt-1">This month</p>
+                <p class="text-3xl font-bold">0</p>
+                <p class="text-text-secondary text-sm mt-1">No bookings yet</p>
               </div>
               <div class="w-12 h-12 bg-brand-500 bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,8 +83,8 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">Revenue</p>
-                <p class="text-3xl font-bold">$12.4K</p>
-                <p class="text-success text-sm mt-1">This month</p>
+                <p class="text-3xl font-bold">$0</p>
+                <p class="text-text-secondary text-sm mt-1">This month</p>
               </div>
               <div class="w-12 h-12 bg-accent-blue bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,8 +98,8 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">Avg. Rating</p>
-                <p class="text-3xl font-bold">4.8</p>
-                <p class="text-success text-sm mt-1">⭐ Excellent</p>
+                <p class="text-3xl font-bold">N/A</p>
+                <p class="text-text-secondary text-sm mt-1">No reviews yet</p>
               </div>
               <div class="w-12 h-12 bg-success bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,8 +113,8 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">Properties</p>
-                <p class="text-3xl font-bold">5</p>
-                <p class="text-text-secondary text-sm mt-1">Active listings</p>
+                <p class="text-3xl font-bold">0</p>
+                <p class="text-text-secondary text-sm mt-1">No active listings</p>
               </div>
               <div class="w-12 h-12 bg-warning bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,28 +128,18 @@
         <!-- My Listings -->
         <Card padding="lg">
           <h2 class="text-2xl font-bold mb-6">My Listings</h2>
-          <div class="space-y-4">
-            <div class="flex gap-4 p-4 border border-gray-200 rounded-button hover:border-brand-500 transition-colors">
-              <img loading="lazy" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200" alt="Property" class="w-32 h-24 rounded-button object-cover" />
-              <div class="flex-1">
-                <div class="flex items-start justify-between mb-2">
-                  <div>
-                    <h3 class="font-semibold text-lg">Kigali Serena Hotel</h3>
-                    <p class="text-text-secondary text-sm">Kigali, Rwanda</p>
-                  </div>
-                  <span class="px-3 py-1 bg-success bg-opacity-10 text-success text-xs font-medium rounded-full">Active</span>
-                </div>
-                <div class="flex items-center gap-6 text-sm">
-                  <span class="text-text-secondary">48 bookings</span>
-                  <span class="text-text-secondary">4.8 ⭐</span>
-                  <span class="font-semibold text-brand-600">$150/night</span>
-                </div>
-              </div>
-              <div class="flex flex-col gap-2">
-                <Button variant="outline" size="sm">Edit</Button>
-                <Button variant="text" size="sm">View</Button>
-              </div>
-            </div>
+          <div class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-text-brand-600 mb-2">No listings yet</h3>
+            <p class="text-text-secondary mb-4">Create your first property listing to start earning.</p>
+            <Button variant="primary" @click="$router.push('/vendor/create-property')">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Create First Listing
+            </Button>
           </div>
         </Card>
       </main>

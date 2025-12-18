@@ -3,16 +3,26 @@
     <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl">
       <h1 class="text-2xl font-bold mb-4">Messages</h1>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Conversations list (static for now) -->
+        <!-- Conversations list -->
         <div class="col-span-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
           <div class="font-semibold mb-3">Conversations</div>
-          <div v-for="conv in conversations" :key="conv.id" class="py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md px-2" @click="selectConversation(conv)">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="text-sm font-medium">{{ conv.with }}</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400">{{ conv.lastMessage }}</div>
+          <div v-if="conversations.length === 0" class="text-sm text-gray-500 dark:text-gray-400 py-4">
+            You don't have any conversations yet. Messages from hosts and vendors will appear here.
+          </div>
+          <div v-else>
+            <div
+              v-for="conv in conversations"
+              :key="conv.id"
+              class="py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md px-2"
+              @click="selectConversation(conv)"
+            >
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm font-medium">{{ conv.with }}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">{{ conv.lastMessage }}</div>
+                </div>
+                <div class="text-xs text-gray-400 dark:text-gray-500">{{ conv.updatedAt }}</div>
               </div>
-              <div class="text-xs text-gray-400 dark:text-gray-500">{{ conv.updatedAt }}</div>
             </div>
           </div>
         </div>
@@ -53,10 +63,7 @@ import { initFirebase, createMessage as createFirestoreMessage, listenToMessages
 const userStore = useUserStore()
 const useSupabase = import.meta.env.VITE_USE_SUPABASE === 'true'
 
-const conversations = ref([
-  { id: 'conv_1', with: 'Host - Serena Hotels', lastMessage: 'Thanks, see you soon', updatedAt: '1h' },
-  { id: 'conv_2', with: 'Vendor - Mountain Lodges', lastMessage: 'Can we change the pick-up time?', updatedAt: 'Yesterday' }
-])
+const conversations = ref([])
 
 const selectedConversation = ref(null)
 const messages = ref([])
@@ -103,7 +110,7 @@ const selectConversation = async (conv) => {
       scrollToBottom()
     } catch (err) {
       console.error('Supabase messaging error:', err)
-      showLocalMessages(conv)
+      showLocalMessages()
     }
   } else {
     // Fallback to Firebase or local
@@ -115,16 +122,13 @@ const selectConversation = async (conv) => {
       conv.unsubscribe = unsubscribe
     } catch (err) {
       console.warn('Firestore not configured; showing local messages')
-      showLocalMessages(conv)
+      showLocalMessages()
     }
   }
 }
 
-function showLocalMessages(conv) {
-  messages.value = [
-    { id: 'm1', from: conv.with, text: conv.lastMessage, createdAt: new Date().toISOString() },
-    { id: 'm2', from: userStore.user?.name || 'You', text: 'Looking forward to it!', createdAt: new Date().toISOString() }
-  ]
+function showLocalMessages() {
+  messages.value = []
 }
 
 function scrollToBottom() {

@@ -12,7 +12,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-text-secondary text-sm mb-1">Upcoming Trips</p>
-              <p class="text-3xl font-bold text-brand-600">3</p>
+              <p class="text-3xl font-bold text-brand-600">{{ upcomingBookings.length }}</p>
             </div>
             <div class="w-12 h-12 bg-brand-500 bg-opacity-10 rounded-full flex items-center justify-center">
               <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +26,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-text-secondary text-sm mb-1">Loyalty Points</p>
-              <p class="text-3xl font-bold text-accent-blue">2,450</p>
+              <p class="text-3xl font-bold text-accent-blue">{{ loyaltyPoints }}</p>
             </div>
             <div class="w-12 h-12 bg-accent-blue bg-opacity-10 rounded-full flex items-center justify-center">
               <svg class="w-6 h-6 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-text-secondary text-sm mb-1">Saved Items</p>
-              <p class="text-3xl font-bold text-success">12</p>
+              <p class="text-3xl font-bold text-success">{{ watchlistCount }}</p>
             </div>
             <div class="w-12 h-12 bg-success bg-opacity-10 rounded-full flex items-center justify-center">
               <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-text-secondary text-sm mb-1">Total Spent</p>
-              <p class="text-3xl font-bold text-text-brand-600">$5,280</p>
+              <p class="text-3xl font-bold text-text-brand-600">{{ currencyStore.formatPrice(totalSpent) }}</p>
             </div>
             <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
               <svg class="w-6 h-6 text-text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,22 +70,16 @@
         <div class="lg:col-span-2 space-y-6">
           <div>
             <h2 class="text-2xl font-bold mb-4">Upcoming Trips</h2>
-            <div class="space-y-4">
-              <Card padding="md" hover>
-                <div class="flex gap-4">
-                  <img loading="lazy" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200" alt="Booking" class="w-24 h-24 rounded-button object-cover" />
-                  <div class="flex-1">
-                    <h3 class="font-semibold text-lg mb-1">Kigali Serena Hotel</h3>
-                    <p class="text-text-secondary text-sm mb-2">Dec 15 - 18, 2025</p>
-                    <div class="flex items-center gap-4">
-                      <span class="px-3 py-1 bg-success bg-opacity-10 text-success text-xs font-medium rounded-full">Confirmed</span>
-                      <Button variant="outline" size="sm">View Details</Button>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <p class="text-2xl font-bold text-brand-600">$490</p>
-                  </div>
-                </div>
+            <div v-if="upcomingBookings.length === 0" class="text-center text-text-secondary py-8">
+              <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <h3 class="text-xl font-semibold text-text-brand-600 mb-2">No upcoming trips</h3>
+              <p class="text-text-secondary mb-4">Start planning your next adventure from the home page.</p>
+            </div>
+            <div v-else class="space-y-4">
+              <Card padding="md">
+                <p class="text-text-secondary text-sm">You have {{ upcomingBookings.length }} upcoming trip<span v-if="upcomingBookings.length > 1">s</span>. View and manage full details from your profile.</p>
               </Card>
             </div>
           </div>
@@ -104,15 +98,15 @@
           <Card padding="lg" class="bg-gradient-to-br from-brand-500 to-accent-blue text-white">
             <div class="mb-4">
               <span class="text-sm opacity-90">Membership Tier</span>
-              <h3 class="text-2xl font-bold">Silver Member</h3>
+              <h3 class="text-2xl font-bold">{{ membershipLabel }}</h3>
             </div>
             <div class="mb-4">
               <div class="flex justify-between text-sm mb-2">
-                <span>Progress to Gold</span>
-                <span>65%</span>
+                <span>Progress to next tier</span>
+                <span>{{ progressToNext }}%</span>
               </div>
               <div class="w-full bg-white bg-opacity-30 rounded-full h-2">
-                <div class="bg-white rounded-full h-2" style="width: 65%"></div>
+                <div class="bg-white rounded-full h-2" :style="{ width: progressToNext + '%' }"></div>
               </div>
             </div>
             <Button variant="secondary" size="sm" full-width>
@@ -153,11 +147,40 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useAppStore } from '../../stores/app'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
+import { useUserStore } from '../../stores/userStore'
+import { useCurrencyStore } from '../../stores/currency'
 
-const appStore = useAppStore()
-const userName = computed(() => appStore.user?.name || 'User')
+const userStore = useUserStore()
+const currencyStore = useCurrencyStore()
+
+const userName = computed(() => userStore.user?.name || 'User')
+const upcomingBookings = computed(() => userStore.upcomingBookings || [])
+const watchlistCount = computed(() => userStore.watchlistCount)
+const loyaltyPoints = computed(() => userStore.loyaltyPoints)
+const loyaltyTier = computed(() => userStore.loyaltyTier)
+const nextTierPoints = computed(() => userStore.nextTierPoints)
+
+const totalSpent = computed(() => {
+  const past = userStore.pastBookings || []
+  return past.reduce((sum, booking) => {
+    const amount = booking.totalAmount ?? booking.total ?? 0
+    return sum + (typeof amount === 'number' ? amount : 0)
+  }, 0)
+})
+
+const membershipLabel = computed(() => {
+  const tier = loyaltyTier.value || 'bronze'
+  return `${tier.charAt(0).toUpperCase()}${tier.slice(1)} Member`
+})
+
+const progressToNext = computed(() => {
+  const current = loyaltyPoints.value || 0
+  const remaining = nextTierPoints.value || 0
+  const total = current + remaining
+  if (!total) return 0
+  return Math.round((current / total) * 100)
+})
 </script>

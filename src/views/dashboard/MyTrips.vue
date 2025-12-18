@@ -181,18 +181,7 @@ const tabs = ref([
 
 const activeTab = ref('upcoming')
 
-const upcomingBookings = ref([
-  {
-    id: 1,
-    name: 'Luxury Villa in Musanze',
-    location: 'Musanze, Rwanda',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
-    checkIn: 'Dec 15, 2025',
-    checkOut: 'Dec 18, 2025',
-    price: '850,000',
-    status: 'confirmed'
-  }
-])
+const upcomingBookings = computed(() => userStore.upcomingBookings || [])
 
 const watchlistCount = computed(() => userStore.watchlistCount)
 const cartCount = computed(() => userStore.cartCount)

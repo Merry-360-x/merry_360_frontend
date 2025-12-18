@@ -101,8 +101,8 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">Active Users</p>
-                <p class="text-3xl font-bold">8,492</p>
-                <p class="text-success text-sm mt-1">↑ 24% from last month</p>
+                <p class="text-3xl font-bold">0</p>
+                <p class="text-text-secondary text-sm mt-1">Live metrics will appear as users join.</p>
               </div>
               <div class="w-12 h-12 bg-success bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,8 +116,8 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">Properties</p>
-                <p class="text-3xl font-bold">342</p>
-                <p class="text-success text-sm mt-1">↑ 5 new this week</p>
+                <p class="text-3xl font-bold">0</p>
+                <p class="text-text-secondary text-sm mt-1">Real counts will show as hosts add listings.</p>
               </div>
               <div class="w-12 h-12 bg-warning bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,21 +144,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="border-b border-gray-100">
-                  <td class="py-4 font-medium">#BK-1234</td>
-                  <td class="py-4">John Doe</td>
-                  <td class="py-4">Kigali Serena Hotel</td>
-                  <td class="py-4">Dec 15, 2025</td>
-                  <td class="py-4 font-semibold">$490</td>
-                  <td class="py-4"><span class="px-3 py-1 bg-success bg-opacity-10 text-success text-xs font-medium rounded-full">Confirmed</span></td>
-                </tr>
-                <tr class="border-b border-gray-100">
-                  <td class="py-4 font-medium">#BK-1235</td>
-                  <td class="py-4">Jane Smith</td>
-                  <td class="py-4">Lake Kivu Resort</td>
-                  <td class="py-4">Dec 20, 2025</td>
-                  <td class="py-4 font-semibold">$360</td>
-                  <td class="py-4"><span class="px-3 py-1 bg-warning bg-opacity-10 text-warning text-xs font-medium rounded-full">Pending</span></td>
+                <tr>
+                  <td colspan="6" class="py-6 text-center text-text-secondary text-sm">
+                    No bookings yet. New bookings will appear here as guests check out.
+                  </td>
                 </tr>
               </tbody>
             </table>

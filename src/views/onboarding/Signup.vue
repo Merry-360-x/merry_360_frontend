@@ -303,26 +303,31 @@ const handleSignup = async () => {
       password: formData.value.password
     })
     
-    // Register user
+    // Determine role (treat specific emails as admins)
+    const isAdmin = response.user?.email === 'admin@merry360x.com' || response.user?.email === 'bebisdavy@gmail.com'
+
+    // Register user in store
     userStore.login({
       id: response.user.id,
       name: `${response.user.firstName} ${response.user.lastName}`,
       email: response.user.email,
       firstName: response.user.firstName,
       lastName: response.user.lastName,
-      phone: response.user.phone,
-      role: response.user.role,
-      verified: response.user.verified,
-      dateOfBirth: '',
-      bio: '',
-      memberSince: 'Dec 2025'
+      phone: response.user.phone || formData.value.phone || '',
+      role: isAdmin ? 'admin' : (response.user.role || 'user'),
+      verified: response.user.verified ?? false,
+      createdAt: new Date().toISOString()
     })
     
     // Store auth token
     localStorage.setItem('auth_token', response.token)
     
-    // Navigate to home
-    router.push('/')
+    // Navigate based on role
+    if (isAdmin) {
+      router.push('/admin')
+    } else {
+      router.push('/profile')
+    }
   } catch (error) {
     console.error('Signup error:', error)
     setError('email', error.message || 'Registration failed. Email may already be in use.')
