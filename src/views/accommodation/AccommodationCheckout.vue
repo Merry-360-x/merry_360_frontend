@@ -43,8 +43,20 @@
           <Card padding="lg">
             <h2 class="text-2xl font-bold mb-6 dark:text-white">{{ t('checkout.paymentMethod') }}</h2>
             <div class="space-y-4">
+              <!-- Free Payment Option -->
+              <label class="flex items-center p-4 border-2 border-green-200 dark:border-green-600 bg-green-50 dark:bg-green-900/20 rounded-button hover:border-green-500 dark:hover:border-green-400 transition-colors cursor-pointer">
+                <input type="radio" name="payment" value="free" v-model="paymentMethod" class="mr-3" checked />
+                <svg class="w-8 h-8 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="flex-1">
+                  <span class="font-semibold text-green-700 dark:text-green-400">Free Booking</span>
+                  <p class="text-sm text-green-600 dark:text-green-500">No payment required - Book now, pay later at property</p>
+                </div>
+              </label>
+
               <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-600 rounded-button hover:border-brand-500 dark:hover:border-brand-400 transition-colors cursor-pointer">
-                <input type="radio" name="payment" value="card" v-model="paymentMethod" class="mr-3" checked />
+                <input type="radio" name="payment" value="card" v-model="paymentMethod" class="mr-3" />
                 <svg class="w-8 h-8 mr-3 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                 </svg>
@@ -58,6 +70,20 @@
                 </svg>
                 <span class="font-medium dark:text-white">{{ t('checkout.mobileMoney') }}</span>
               </label>
+            </div>
+
+            <div v-if="paymentMethod === 'free'" class="mt-6">
+              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <p class="font-medium text-blue-900 dark:text-blue-300 mb-1">Pay Later at Property</p>
+                    <p class="text-sm text-blue-800 dark:text-blue-400">Your booking is secured. Payment will be collected when you check in at the property.</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div v-if="paymentMethod === 'card'" class="mt-6 space-y-4">
@@ -95,24 +121,40 @@
               </div>
             </div>
 
-            <div v-if="paymentMethod === 'mobile'" class="mt-6">
-              <div class="bg-success bg-opacity-10 p-4 rounded-button">
+            <div v-if="paymentMethod === 'mobile'" class="mt-6 space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Provider</label>
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="mobileMoneyInfo.provider === 'mtn' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'">
+                    <input type="radio" name="provider" value="mtn" v-model="mobileMoneyInfo.provider" class="sr-only" />
+                    <span class="font-semibold" :class="mobileMoneyInfo.provider === 'mtn' ? 'text-yellow-600' : 'text-gray-600 dark:text-gray-400'">MTN MoMo</span>
+                  </label>
+                  <label class="flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="mobileMoneyInfo.provider === 'airtel' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'">
+                    <input type="radio" name="provider" value="airtel" v-model="mobileMoneyInfo.provider" class="sr-only" />
+                    <span class="font-semibold" :class="mobileMoneyInfo.provider === 'airtel' ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'">Airtel Money</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <Input 
+                  v-model="mobileMoneyInfo.phoneNumber" 
+                  type="tel" 
+                  placeholder="Phone Number (250 7XX XXX XXX)"
+                  :class="errors.mobilePhone ? 'border-red-500' : ''" 
+                />
+                <p v-if="errors.mobilePhone" class="mt-1 text-sm text-red-600">{{ errors.mobilePhone }}</p>
+              </div>
+              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                 <div class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-success mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                   </svg>
                   <div>
-                    <p class="font-medium text-success mb-1">Mobile Money Payment</p>
-                    <p class="text-sm text-text-secondary">You will receive a prompt on your phone to complete the payment</p>
+                    <p class="font-medium text-blue-900 dark:text-blue-300 mb-1">Payment Prompt</p>
+                    <p class="text-sm text-blue-800 dark:text-blue-400">You will receive a USSD prompt on your phone to authorize the payment.</p>
                   </div>
                 </div>
               </div>
-              <Button variant="success" full-width class="mt-4">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                Connect Wallet
-              </Button>
             </div>
           </Card>
 
@@ -143,47 +185,47 @@
         <!-- Booking Summary -->
         <div class="lg:col-span-1">
           <Card padding="lg" class="sticky top-24">
-            <h3 class="font-bold text-xl mb-4">Booking Summary</h3>
+            <h3 class="font-bold text-xl mb-4 dark:text-white">Booking Summary</h3>
             
-            <div class="mb-4">
-              <img loading="lazy" :src="bookingDetails.image" alt="Property" class="w-full h-32 object-cover rounded-button mb-3" />
-              <h4 class="font-semibold text-lg">{{ bookingDetails.name }}</h4>
+            <div v-if="bookingDetails.image" class="mb-4">
+              <img loading="lazy" :src="bookingDetails.image" :alt="bookingDetails.name" class="w-full h-32 object-cover rounded-button mb-3" />
+              <h4 class="font-semibold text-lg dark:text-white">{{ bookingDetails.name }}</h4>
               <p class="text-sm text-text-secondary">{{ bookingDetails.location }}</p>
             </div>
 
-            <div class="space-y-2 py-4 border-t border-b border-gray-200 text-sm">
+            <div class="space-y-2 py-4 border-t border-b border-gray-200 dark:border-gray-700 text-sm">
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-in</span>
-                <span class="font-medium">Dec 15, 2025</span>
+                <span class="font-medium dark:text-white">{{ formatDate(bookingDetails.checkIn) }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-out</span>
-                <span class="font-medium">Dec 18, 2025</span>
+                <span class="font-medium dark:text-white">{{ formatDate(bookingDetails.checkOut) }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Guests</span>
-                <span class="font-medium">2 Adults</span>
+                <span class="font-medium dark:text-white">{{ bookingDetails.guests }} {{ bookingDetails.guests === 1 ? 'Guest' : 'Guests' }}</span>
               </div>
             </div>
 
-            <div class="space-y-3 py-4 border-b border-gray-200">
+            <div class="space-y-3 py-4 border-b border-gray-200 dark:border-gray-700">
               <div class="flex justify-between text-sm">
-                <span class="text-text-secondary">{{ currencyStore.formatPrice(bookingDetails.price) }} × 3 nights</span>
-                <span class="font-semibold">{{ currencyStore.formatPrice(bookingDetails.price * 3) }}</span>
+                <span class="text-text-secondary">{{ currencyStore.formatPrice(bookingDetails.price) }} × {{ nights }} {{ nights === 1 ? 'night' : 'nights' }}</span>
+                <span class="font-semibold dark:text-white">{{ currencyStore.formatPrice(subtotal) }}</span>
               </div>
               <div class="flex justify-between text-sm">
-                <span class="text-text-secondary">Service fee</span>
-                <span class="font-semibold">{{ currencyStore.formatPrice(25) }}</span>
+                <span class="text-text-secondary">Service fee (5%)</span>
+                <span class="font-semibold dark:text-white">{{ currencyStore.formatPrice(serviceFee) }}</span>
               </div>
               <div class="flex justify-between text-sm">
-                <span class="text-text-secondary">Taxes</span>
-                <span class="font-semibold">{{ currencyStore.formatPrice(15) }}</span>
+                <span class="text-text-secondary">Taxes (3%)</span>
+                <span class="font-semibold dark:text-white">{{ currencyStore.formatPrice(taxes) }}</span>
               </div>
             </div>
 
             <div class="flex justify-between pt-4 mb-6">
-              <span class="font-bold text-lg">Total</span>
-              <span class="text-xl font-bold text-brand-600">{{ currencyStore.formatPrice(bookingDetails.price * 3 + 40) }}</span>
+              <span class="font-bold text-lg dark:text-white">Total</span>
+              <span class="text-xl font-bold text-brand-600 dark:text-brand-400">{{ currencyStore.formatPrice(total) }}</span>
             </div>
 
             <Button 
@@ -216,10 +258,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
+import { useUserStore } from '../../stores/userStore'
 import { useTranslation } from '../../composables/useTranslation'
+import { createBooking } from '../../services/supabase'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -229,31 +273,68 @@ const { t } = useTranslation()
 const router = useRouter()
 const route = useRoute()
 const currencyStore = useCurrencyStore()
+const userStore = useUserStore()
 
+// Initialize guest info from logged-in user if available
 const guestInfo = ref({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: ''
+  firstName: userStore.user?.firstName || '',
+  lastName: userStore.user?.lastName || '',
+  email: userStore.user?.email || '',
+  phone: userStore.user?.phone || ''
 })
 
-const paymentMethod = ref('card')
+// Redirect to login if not authenticated
+onMounted(() => {
+  if (!userStore.isAuthenticated) {
+    router.push('/login')
+  }
+  if (!bookingDetails.value.id || !bookingDetails.value.name) {
+    router.push('/accommodation')
+  }
+})
+
+const paymentMethod = ref('free')
 const cardInfo = ref({
   number: '',
   expiry: '',
   cvv: ''
+})
+const mobileMoneyInfo = ref({
+  provider: 'mtn', // mtn, airtel
+  phoneNumber: ''
 })
 
 const specialRequests = ref('')
 const acceptTerms = ref(false)
 const processing = ref(false)
 
+// Get booking details from route params
 const bookingDetails = ref({
-  name: 'Kigali Serena Hotel',
-  location: 'Kigali, Rwanda',
-  price: 150,
-  image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400'
+  id: route.query.id || null,
+  name: route.query.name || '',
+  location: route.query.location || '',
+  price: parseFloat(route.query.price) || 0,
+  image: route.query.image || '',
+  checkIn: route.query.checkIn || '',
+  checkOut: route.query.checkOut || '',
+  guests: parseInt(route.query.guests) || 2
 })
+
+// Calculate nights between check-in and check-out
+const nights = computed(() => {
+  if (!bookingDetails.value.checkIn || !bookingDetails.value.checkOut) return 1
+  const checkIn = new Date(bookingDetails.value.checkIn)
+  const checkOut = new Date(bookingDetails.value.checkOut)
+  const diffTime = Math.abs(checkOut - checkIn)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays || 1
+})
+
+// Calculate totals
+const subtotal = computed(() => bookingDetails.value.price * nights.value)
+const serviceFee = computed(() => Math.round(subtotal.value * 0.05)) // 5% service fee
+const taxes = computed(() => Math.round(subtotal.value * 0.03)) // 3% taxes
+const total = computed(() => subtotal.value + serviceFee.value + taxes.value)
 
 const errors = ref({})
 
@@ -282,7 +363,7 @@ const validateBooking = () => {
     isValid = false
   }
 
-  // Validate payment info if card payment
+  // Validate payment info based on selected method
   if (paymentMethod.value === 'card') {
     if (!cardInfo.value.number) {
       errors.value.cardNumber = 'Card number is required'
@@ -307,7 +388,16 @@ const validateBooking = () => {
       errors.value.cardCvv = 'Invalid CVV'
       isValid = false
     }
+  } else if (paymentMethod.value === 'mobile') {
+    if (!mobileMoneyInfo.value.phoneNumber) {
+      errors.value.mobilePhone = 'Phone number is required'
+      isValid = false
+    } else if (!/^(\+?250|0)?[7][0-9]{8}$/.test(mobileMoneyInfo.value.phoneNumber.replace(/\s/g, ''))) {
+      errors.value.mobilePhone = 'Invalid Rwandan phone number'
+      isValid = false
+    }
   }
+  // No additional validation needed for 'free' payment method
 
   // Validate terms acceptance
   if (!acceptTerms.value) {
@@ -322,7 +412,7 @@ const confirmBooking = async () => {
   // Validate all fields
   if (!validateBooking()) {
     // Scroll to first error
-    const firstError = document.querySelector('.text-red-600')
+    const firstError = document.querySelector('.text-red-600, .border-red-500')
     if (firstError) {
       firstError.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
@@ -330,48 +420,62 @@ const confirmBooking = async () => {
   }
 
   processing.value = true
+  errors.value = {}
   
   try {
-    // Import API service
-    const api = (await import('../../services/api')).default
-    
-    // Create payment intent first
-    const totalAmount = bookingDetails.value.price * 3 + 75 // 3 nights + fees
-    const paymentIntent = await api.payments.createIntent(
-      totalAmount,
-      currencyStore.selectedCurrency
-    )
-    
-    // Confirm payment
-    await api.payments.confirm(paymentIntent.data.intentId)
-    
-    // Create booking
+    // Create booking data
     const bookingData = {
-      accommodationId: route.params.id,
-      accommodationName: bookingDetails.value.name,
-      guestInfo: guestInfo.value,
-      paymentMethod: paymentMethod.value,
-      specialRequests: specialRequests.value,
-      totalAmount,
+      user_id: userStore.user.id,
+      accommodation_id: bookingDetails.value.id,
+      accommodation_name: bookingDetails.value.name,
+      accommodation_location: bookingDetails.value.location,
+      accommodation_image: bookingDetails.value.image,
+      check_in: bookingDetails.value.checkIn,
+      check_out: bookingDetails.value.checkOut,
+      guests: bookingDetails.value.guests,
+      nights: nights.value,
+      price_per_night: bookingDetails.value.price,
+      subtotal: subtotal.value,
+      service_fee: serviceFee.value,
+      taxes: taxes.value,
+      total_amount: total.value,
       currency: currencyStore.selectedCurrency,
-      nights: 3,
-      checkIn: new Date().toISOString(),
-      checkOut: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
+      guest_first_name: guestInfo.value.firstName,
+      guest_last_name: guestInfo.value.lastName,
+      guest_email: guestInfo.value.email,
+      guest_phone: guestInfo.value.phone,
+      payment_method: paymentMethod.value,
+      payment_status: paymentMethod.value === 'free' ? 'completed' : 'pending',
+      booking_status: 'confirmed',
+      special_requests: specialRequests.value,
+      booking_number: `MRY${Date.now().toString().slice(-8)}`,
+      created_at: new Date().toISOString()
     }
     
-    const response = await api.bookings.create(bookingData)
+    // Save to Supabase
+    const booking = await createBooking(bookingData)
     
-    // Booking successful
+    if (!booking) {
+      throw new Error('Failed to create booking')
+    }
+    
+    // Update user store with booking
+    if (userStore.upcomingBookings) {
+      userStore.upcomingBookings.push(booking)
+    }
+    
+    // Booking successful - redirect to success page
     router.push({
-      path: '/profile/trips',
+      path: '/profile',
       query: { 
         bookingSuccess: 'true',
-        bookingNumber: response.data.bookingNumber
+        bookingNumber: bookingData.booking_number,
+        tab: 'trips'
       }
     })
   } catch (error) {
     console.error('Booking error:', error)
-    errors.value.general = error.message || 'Booking failed. Please try again.'
+    errors.value.general = error.message || 'Failed to create booking. Please try again.'
   } finally {
     processing.value = false
   }
@@ -391,5 +495,12 @@ const formatExpiry = (event) => {
     value = value.slice(0, 2) + '/' + value.slice(2, 4)
   }
   cardInfo.value.expiry = value
+}
+
+// Format date for display
+const formatDate = (dateString) => {
+  if (!dateString) return 'Not set'
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 </script>
