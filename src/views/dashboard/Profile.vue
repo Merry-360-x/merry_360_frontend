@@ -573,8 +573,8 @@ const tripTabs = ref([
 const upcomingBookings = ref([])
 
 const personalInfo = ref({
-  firstName: userStore.user?.name?.split(' ')[0] || '',
-  lastName: userStore.user?.name?.split(' ')[1] || '',
+  firstName: userStore.user?.firstName || userStore.user?.name?.split(' ')[0] || '',
+  lastName: userStore.user?.lastName || userStore.user?.name?.split(' ').slice(1).join(' ') || '',
   email: userStore.user?.email || '',
   phone: userStore.user?.phone || '',
   dateOfBirth: userStore.user?.dateOfBirth || '',
@@ -589,16 +589,17 @@ const passwordForm = ref({
 
 const userInitials = computed(() => {
   const name = userStore.user?.name || 'Guest User'
-  const parts = name.split(' ')
-  return parts.length > 1 
-    ? `${parts[0][0]}${parts[1][0]}` 
-    : name.substring(0, 2)
+  const parts = name.trim().split(/\s+/).filter(p => p.length > 0)
+  if (parts.length > 1) {
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
+  }
+  return name.substring(0, 2).toUpperCase()
 })
 
 const loyaltyProgress = computed(() => {
   const tiers = { bronze: 1000, silver: 5000, gold: 15000, platinum: 50000 }
-  const current = userStore.loyaltyPoints
-  const currentTier = userStore.loyaltyTier
+  const current = userStore.loyaltyPoints || 0
+  const currentTier = userStore.loyaltyTier || 'bronze'
   const nextTier = Object.entries(tiers).find(([tier, points]) => current < points)
   
   if (!nextTier) return 100
@@ -608,11 +609,15 @@ const loyaltyProgress = computed(() => {
   const currentTierPoints = currentIndex > 0 ? tierEntries[currentIndex][1] : 0
   const nextTierPoints = nextTier[1]
   
-  return Math.min(100, ((current - currentTierPoints) / (nextTierPoints - currentTierPoints)) * 100)
+  const progress = ((current - currentTierPoints) / (nextTierPoints - currentTierPoints)) * 100
+  return Math.max(0, Math.min(100, progress))
 })
 
 const memberSince = computed(() => {
-  return 'Jan 2024'
+  if (userStore.user?.createdAt) {
+    return new Date(userStore.user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+  }
+  return new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 })
 
 // Profile completion check
