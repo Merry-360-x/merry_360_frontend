@@ -454,105 +454,12 @@ const decrementGuests = (type) => {
   }
 }
 
-const latestProperties = ref([
-  {
-    id: 1,
-    title: 'Modern Apartment',
-    location: 'Kigali, Rwanda',
-    price: 120,
-    beds: 3,
-    baths: 2,
-    area: 1200,
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
-    badge: 'For Sale',
-    images: [
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80&sat=-100',
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80&crop=left',
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80&crop=right',
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80&crop=top'
-    ]
-  },
-  {
-    id: 2,
-    title: 'Luxury Villa',
-    location: 'Rubavu, Rwanda',
-    price: 250,
-    beds: 5,
-    baths: 4,
-    area: 2500,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
-    badge: 'Featured',
-    images: [
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&sat=-100',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&crop=left',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&crop=right',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&crop=top'
-    ]
-  },
-  {
-    id: 3,
-    title: 'Cozy House',
-    location: 'Musanze, Rwanda',
-    price: 85,
-    beds: 4,
-    baths: 3,
-    area: 1800,
-    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
-    badge: 'New',
-    images: [
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80',
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&sat=-100',
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&crop=left',
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&crop=right',
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&crop=top'
-    ]
-  },
-  {
-    id: 4,
-    title: 'Lake View Property',
-    location: 'Kivu, Rwanda',
-    price: 180,
-    beds: 3,
-    baths: 2,
-    area: 1500,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80',
-    badge: 'Hot Offer',
-    images: [
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80',
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80&sat=-100',
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80&crop=left',
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80&crop=right',
-      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80&crop=top'
-    ]
-  }
-])
+const latestProperties = ref([])
+const nearbyProperties = ref([])
+const topRatedProperties = ref([])
+const featuredProperties = ref([])
 
-const nearbyProperties = ref(latestProperties.value)
-const topRatedProperties = ref(latestProperties.value)
-const featuredProperties = ref([...latestProperties.value, ...latestProperties.value].slice(0, 6))
-
-const guides = ref([
-  {
-    id: 1,
-    title: 'Choose the right apartment',
-    category: 'Apartment',
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&q=80'
-  },
-  {
-    id: 2,
-    title: 'Best environment for rental',
-    category: 'Environment',
-    image: 'https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=400&q=80'
-  },
-  {
-    id: 3,
-    title: 'Things About Apartment',
-    category: 'Tips',
-    image: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=400&q=80'
-  }
-])
+const guides = ref([])
 
 const handleSearch = () => {
   router.push('/accommodations')

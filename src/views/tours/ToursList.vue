@@ -78,33 +78,5 @@ const performSearch = () => {
   }
 }
 
-const tours = ref([
-  {
-    id: 1,
-    name: 'Gorilla Trekking',
-    category: 'Adventure',
-    duration: '1 Day',
-    price: 450,
-    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600',
-    description: 'Experience mountain gorillas up close'
-  },
-  {
-    id: 2,
-    name: 'Kigali City Tour',
-    category: 'Cultural',
-    duration: '4 Hours',
-    price: 45,
-    image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600',
-    description: 'Explore Rwanda\'s vibrant capital'
-  },
-  {
-    id: 3,
-    name: 'Lake Kivu Adventure',
-    category: 'Nature',
-    duration: '1 Day',
-    price: 75,
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600',
-    description: 'Island hopping and water activities'
-  }
-])
+const tours = ref([])
 </script>

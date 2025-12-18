@@ -158,74 +158,7 @@ const selectedCategory = ref(computed(() => t('tours.all')).value)
 const searchQuery = ref('')
 const durationFilter = ref('')
 
-const tours = ref([
-  {
-    id: 1,
-    category: 'NATURE',
-    title: 'Gorilla Trekking Experience',
-    description: 'Get up close with mountain gorillas in Volcanoes National Park',
-    image: 'https://images.unsplash.com/photo-1571752239935-74f3d4d23816?w=600&q=80',
-    duration: '3 days',
-    price: '450,000',
-    rating: 4.9,
-    reviews: 234
-  },
-  {
-    id: 2,
-    category: 'ADVENTURE',
-    title: 'Lake Kivu Beach Escape',
-    description: 'Relax on the shores of one of Africa\'s Great Lakes',
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80',
-    duration: '2 days',
-    price: '120,000',
-    rating: 4.7,
-    reviews: 189
-  },
-  {
-    id: 3,
-    category: 'WILDLIFE',
-    title: 'Akagera Safari Adventure',
-    description: 'Experience Rwanda\'s Big Five in their natural habitat',
-    image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80',
-    duration: '2 days',
-    price: '280,000',
-    rating: 4.8,
-    reviews: 156
-  },
-  {
-    id: 4,
-    category: 'CULTURAL',
-    title: 'Kigali City Cultural Tour',
-    description: 'Explore the vibrant capital with local guides',
-    image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=80',
-    duration: '1 day',
-    price: '45,000',
-    rating: 4.6,
-    reviews: 312
-  },
-  {
-    id: 5,
-    category: 'NATURE',
-    title: 'Nyungwe Forest Canopy Walk',
-    description: 'Walk among the treetops in ancient rainforest',
-    image: 'https://images.unsplash.com/photo-1511497584788-876760111969?w=600&q=80',
-    duration: '1 day',
-    price: '85,000',
-    rating: 4.8,
-    reviews: 203
-  },
-  {
-    id: 6,
-    category: 'HISTORICAL',
-    title: 'Genocide Memorial & History',
-    description: 'Learn about Rwanda\'s journey of healing and reconciliation',
-    image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=600&q=80',
-    duration: '4 hours',
-    price: '25,000',
-    rating: 4.9,
-    reviews: 428
-  }
-])
+const tours = ref([])
 
 const filteredTours = computed(() => {
   let filtered = tours.value
