@@ -118,7 +118,7 @@ const appStore = useAppStore()
 const { errors, validateAll, setError, clearErrors } = useFormValidation()
 const { t } = useTranslation()
 
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+const googleClientId = '270563800148-mafsbml3i6h01gjeo7qdlruc75a1s63i.apps.googleusercontent.com'
 
 onMounted(async () => {
   if (!googleClientId) return
