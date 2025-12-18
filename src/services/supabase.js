@@ -32,6 +32,12 @@ export async function googleSignIn() {
     }
   })
   if (error) throw error
+  
+  // Redirect to Google OAuth URL
+  if (data?.url) {
+    window.location.href = data.url
+  }
+  
   return data
 }
 

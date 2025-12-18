@@ -6,6 +6,7 @@ import WelcomeSlider from '../views/onboarding/WelcomeSlider.vue'
 import Login from '../views/onboarding/Login.vue'
 import Signup from '../views/onboarding/Signup.vue'
 import ForgotPassword from '../views/onboarding/ForgotPassword.vue'
+import AuthCallback from '../views/onboarding/AuthCallback.vue'
 
 // Home
 import Home from '../views/home/Home.vue'
@@ -92,6 +93,11 @@ const routes = [
     path: '/forgot-password',
     name: 'forgot-password',
     component: ForgotPassword
+  },
+  {
+    path: '/auth/callback',
+    name: 'auth-callback',
+    component: AuthCallback
   },
   {
     path: '/stories',
