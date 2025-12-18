@@ -256,29 +256,15 @@ const handleLogin = async () => {
 }
 
 const handleGoogleSignIn = async () => {
-  loading.value = true
   try {
     console.log('Starting Google Sign-In...')
-    const response = await signInWithGoogle()
-    console.log('Google Sign-In response:', response)
-    
-    userStore.login({
-      id: response.user.id,
-      name: `${response.user.firstName || ''} ${response.user.lastName || ''}`.trim() || response.user.email,
-      email: response.user.email,
-      firstName: response.user.firstName || response.user.displayName || '',
-      lastName: response.user.lastName || '',
-      phone: response.user.phone || '',
-      role: 'user',
-      verified: true
-    })
-    if (response.token) localStorage.setItem('auth_token', response.token)
-    router.push('/profile')
+    // Supabase OAuth will redirect the browser to Google
+    // No need to set loading state as we're leaving the page
+    await signInWithGoogle()
+    // If we reach here, redirect didn't happen (shouldn't occur with Supabase OAuth)
   } catch (error) {
     console.error('Google sign-in error:', error)
     setError('email', error.message || 'Failed to sign in with Google. Please try again.')
-  } finally {
-    loading.value = false
   }
 }
 </script>

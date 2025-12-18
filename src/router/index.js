@@ -85,6 +85,11 @@ const routes = [
     component: Login
   },
   {
+    path: '/auth/callback',
+    name: 'auth-callback',
+    component: AuthCallback
+  },
+  {
     path: '/signup',
     name: 'signup',
     component: Signup
@@ -93,11 +98,6 @@ const routes = [
     path: '/forgot-password',
     name: 'forgot-password',
     component: ForgotPassword
-  },
-  {
-    path: '/auth/callback',
-    name: 'auth-callback',
-    component: AuthCallback
   },
   {
     path: '/stories',
