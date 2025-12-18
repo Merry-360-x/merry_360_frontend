@@ -32,6 +32,12 @@ export async function googleSignIn() {
     }
   })
   if (error) throw error
+  
+  // Supabase OAuth returns a URL to redirect to
+  if (data?.url) {
+    window.location.href = data.url
+  }
+  
   return data
 }
 
