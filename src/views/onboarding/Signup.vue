@@ -97,10 +97,6 @@
           <Button 
             type="submit" 
             variant="primary" 
-          <!-- Submit Button -->
-          <Button 
-            type="submit" 
-            variant="primary" 
             size="lg" 
             full-width
             :loading="loading"
