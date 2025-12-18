@@ -172,74 +172,7 @@ const { t } = useTranslation()
 const activeStory = ref(null)
 const currentStoryIndex = ref(0)
 
-const stories = ref([
-  {
-    id: 1,
-    userName: 'Sarah Johnson',
-    userAvatar: 'https://i.pravatar.cc/150?img=1',
-    thumbnail: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
-    location: 'Kigali, Rwanda',
-    caption: 'Amazing stay at this beautiful hotel! The view is breathtaking 🌅',
-    timeAgo: '2h ago',
-    viewed: false
-  },
-  {
-    id: 2,
-    userName: 'Michael Chen',
-    userAvatar: 'https://i.pravatar.cc/150?img=12',
-    thumbnail: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&q=80',
-    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80',
-    location: 'Musanze, Rwanda',
-    caption: 'Gorilla trekking adventure of a lifetime! 🦍',
-    timeAgo: '5h ago',
-    viewed: false
-  },
-  {
-    id: 3,
-    userName: 'Emma Wilson',
-    userAvatar: 'https://i.pravatar.cc/150?img=5',
-    thumbnail: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=80',
-    image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80',
-    location: 'Lake Kivu, Rwanda',
-    caption: 'Sunset by the lake is pure magic ✨',
-    timeAgo: '8h ago',
-    viewed: false
-  },
-  {
-    id: 4,
-    userName: 'James Miller',
-    userAvatar: 'https://i.pravatar.cc/150?img=8',
-    thumbnail: 'https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?w=400&q=80',
-    image: 'https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?w=800&q=80',
-    location: 'Akagera National Park',
-    caption: 'Safari experience was incredible! Saw the Big 5 🦁',
-    timeAgo: '12h ago',
-    viewed: false
-  },
-  {
-    id: 5,
-    userName: 'Sophie Anderson',
-    userAvatar: 'https://i.pravatar.cc/150?img=9',
-    thumbnail: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&q=80',
-    image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&q=80',
-    location: 'Kigali, Rwanda',
-    caption: 'Trying local Rwandan cuisine - absolutely delicious! 🍽️',
-    timeAgo: '1d ago',
-    viewed: false
-  },
-  {
-    id: 6,
-    userName: 'David Brown',
-    userAvatar: 'https://i.pravatar.cc/150?img=13',
-    thumbnail: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80&crop=bottom',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&crop=bottom',
-    location: 'Nyungwe Forest',
-    caption: 'Canopy walk through the rainforest 🌳',
-    timeAgo: '1d ago',
-    viewed: true
-  }
-])
+const stories = ref([])
 
 const openStory = (story) => {
   activeStory.value = story

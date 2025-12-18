@@ -234,70 +234,7 @@ const storyForm = ref({
   photos: []
 })
 
-const stories = ref([
-  {
-    id: 1,
-    title: 'Unforgettable Gorilla Trekking in Volcanoes National Park',
-    excerpt: 'The moment I locked eyes with a silverback gorilla was one of the most profound experiences of my life. The trek was challenging, but absolutely worth it.',
-    location: 'Volcanoes National Park, Rwanda',
-    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600',
-    category: 'wildlife',
-    author: 'Sarah Mitchell',
-    date: 'Nov 15, 2025',
-    views: 1234
-  },
-  {
-    id: 2,
-    title: 'Discovering Kigali: A City of Hope and Innovation',
-    excerpt: 'From the bustling markets to the poignant memorial sites, Kigali surprised me at every turn. The resilience and warmth of the people is truly inspiring.',
-    location: 'Kigali, Rwanda',
-    image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600',
-    category: 'culture',
-    author: 'James Chen',
-    date: 'Nov 10, 2025',
-    views: 2341
-  },
-  {
-    id: 3,
-    title: 'Sunrise Safari at Akagera National Park',
-    excerpt: 'Watching the sun rise over the savanna while elephants walked past our vehicle was magical. Akagera exceeded all my expectations for an African safari.',
-    location: 'Akagera National Park',
-    image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600',
-    category: 'adventure',
-    author: 'Emma Rodriguez',
-    date: 'Nov 5, 2025',
-    views: 1876
-  },
-  {
-    id: 4,
-    title: 'Relaxing by the Shores of Lake Kivu',
-    excerpt: 'Three days of pure relaxation at Lake Kivu was exactly what I needed. Swimming, kayaking, and watching the most beautiful sunsets.',
-    location: 'Lake Kivu, Rwanda',
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600',
-    category: 'relaxation',
-    author: 'David Thompson',
-    date: 'Oct 28, 2025',
-    views: 1523
-  },
-  {
-    id: 5,
-    title: 'Traditional Dance and Culture in Musanze',
-    excerpt: 'Experiencing traditional Intore dance performances and learning about Rwandan culture from local communities was deeply moving and educational.',
-    location: 'Musanze, Rwanda',
-    image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-    category: 'culture',
-    author: 'Lisa Anderson',
-    date: 'Oct 20, 2025',
-    views: 987
-  },
-  {
-    id: 6,
-    title: 'Hiking the Congo Nile Trail',
-    excerpt: 'The 227km trail along Lake Kivu offered stunning views, challenging terrain, and warm hospitality from every village we passed through.',
-    location: 'Congo Nile Trail, Rwanda',
-    image: 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600',
-    category: 'adventure',
-    author: 'Michael Brown',
+const stories = ref([])
     date: 'Oct 15, 2025',
     views: 2103
   }

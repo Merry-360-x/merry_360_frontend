@@ -196,30 +196,5 @@
 import { ref } from 'vue'
 import PropertyLayout from '../../components/layout/PropertyLayout.vue'
 
-const team = ref([
-  {
-    id: 1,
-    name: 'John Doe',
-    role: 'CEO & Founder',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80'
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    role: 'Head of Operations',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80'
-  },
-  {
-    id: 3,
-    name: 'Mike Johnson',
-    role: 'Property Manager',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80'
-  },
-  {
-    id: 4,
-    name: 'Sarah Williams',
-    role: 'Customer Success',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80'
-  }
-])
+const team = ref([])
 </script>
