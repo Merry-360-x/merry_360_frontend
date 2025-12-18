@@ -143,6 +143,7 @@ import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
 import { signUp, signInWithGoogle } from '../../services/auth'
+import { setUserProfile } from '../../services/supabase'
 import googleService from '../../services/google'
 import mockApiService from '../../services/mockApi'
 
@@ -194,7 +195,7 @@ const handleGoogleCredentialResponse = async (response) => {
     // Check if this is the admin email
     const isAdmin = profile.email === 'admin@merry360x.com' || profile.email === 'bebisdavy@gmail.com'
     
-    userStore.login({
+    const userData = {
       id: profile.sub,
       name: profile.name || profile.email,
       email: profile.email,
@@ -203,9 +204,30 @@ const handleGoogleCredentialResponse = async (response) => {
       phone: '',
       role: isAdmin ? 'admin' : 'user',
       verified: true
-    })
+    }
     
+    // Save to local store
+    userStore.login(userData)
     localStorage.setItem('auth_token', idToken)
+    
+    // Save profile to Supabase
+    try {
+      await setUserProfile(profile.sub, {
+        email: profile.email,
+        first_name: profile.given_name || '',
+        last_name: profile.family_name || '',
+        full_name: profile.name || '',
+        avatar_url: profile.picture || '',
+        role: isAdmin ? 'admin' : 'user',
+        loyalty_points: 0,
+        loyalty_tier: 'bronze',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+    } catch (dbError) {
+      console.warn('Failed to save profile to Supabase:', dbError)
+      // Continue anyway - user is logged in locally
+    }
     
     // Redirect based on role
     if (isAdmin) {
