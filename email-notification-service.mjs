@@ -50,6 +50,10 @@ const EMAIL_CONFIG = {
 // Admin email to receive notifications
 const ADMIN_EMAIL = 'admin@merry360x.com'
 
+// ============================================
+// EMAIL TEMPLATES - BOOKINGS
+// ============================================
+
 // Create email transporter
 let transporter = null
 try {
@@ -60,7 +64,7 @@ try {
 }
 
 // ============================================
-// EMAIL TEMPLATES
+// EMAIL TEMPLATES - BOOKINGS
 // ============================================
 
 function getNewBookingEmailHTML(booking, property) {
@@ -388,6 +392,242 @@ function getHostNotificationEmailHTML(booking, property) {
 }
 
 // ============================================
+// EMAIL TEMPLATES - HOST APPLICATIONS
+// ============================================
+
+function getHostApplicationAdminEmailHTML(application) {
+  const hostingTypeLabels = {
+    'accommodation': 'Accommodation',
+    'tour': 'Tours & Experiences',
+    'transport': 'Transport Services',
+    'service': 'Other Services'
+  }
+  
+  const experienceLabels = {
+    'none': 'No previous experience',
+    'some': 'Some experience',
+    'extensive': 'Extensive experience'
+  }
+  
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+    .application-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .detail-row { padding: 10px 0; border-bottom: 1px solid #eee; }
+    .detail-label { font-weight: bold; color: #f59e0b; }
+    .detail-value { color: #555; }
+    .description-box { background: #fef3c7; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f59e0b; }
+    .button { display: inline-block; padding: 12px 30px; background: #f59e0b; color: white; text-decoration: none; border-radius: 5px; margin: 10px 5px; }
+    .button.approve { background: #10b981; }
+    .button.reject { background: #ef4444; }
+    .footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏠 New Host Application</h1>
+      <p>Someone wants to join Merry360x as a host!</p>
+    </div>
+    
+    <div class="content">
+      <h2>Application Details</h2>
+      
+      <div class="application-details">
+        <div class="detail-row">
+          <span class="detail-label">Application ID:</span>
+          <span class="detail-value">${application.id}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Applicant Name:</span>
+          <span class="detail-value">${application.full_name}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">${application.email}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Phone:</span>
+          <span class="detail-value">${application.phone}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">${application.location}</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">Hosting Type:</span>
+          <span class="detail-value" style="font-weight: bold; color: #f59e0b;">
+            ${hostingTypeLabels[application.hosting_type]}
+          </span>
+        </div>
+        
+        ${application.experience ? `
+        <div class="detail-row">
+          <span class="detail-label">Experience Level:</span>
+          <span class="detail-value">${experienceLabels[application.experience] || application.experience}</span>
+        </div>
+        ` : ''}
+        
+        <div class="detail-row">
+          <span class="detail-label">Submitted:</span>
+          <span class="detail-value">${new Date(application.created_at).toLocaleString()}</span>
+        </div>
+      </div>
+      
+      <div class="description-box">
+        <strong>What they're offering:</strong>
+        <p style="margin-top: 10px;">${application.description}</p>
+      </div>
+      
+      <center>
+        <a href="https://www.merry360x.com/admin" class="button">
+          View in Admin Dashboard
+        </a>
+      </center>
+      
+      <p style="margin-top: 30px; padding: 15px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 4px;">
+        <strong>⚡ Action Required:</strong> Please review this application and contact the applicant within 24 hours.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>This is an automated notification from Merry360x</p>
+      <p>© 2025 Merry360x. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `
+}
+
+function getHostApplicationConfirmationEmailHTML(application) {
+  const hostingTypeLabels = {
+    'accommodation': 'Accommodation',
+    'tour': 'Tours & Experiences',
+    'transport': 'Transport Services',
+    'service': 'Other Services'
+  }
+  
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+    .highlight { background: #d1fae5; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10b981; }
+    .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #e5e7eb; }
+    .detail-row { padding: 8px 0; }
+    .detail-label { font-weight: bold; color: #10b981; }
+    .button { display: inline-block; padding: 12px 30px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    .footer { text-align: center; padding: 20px; color: #888; font-size: 12px; }
+    .checklist { background: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .checklist ul { margin: 10px 0; padding-left: 20px; }
+    .checklist li { margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✅ Application Received!</h1>
+      <p>Thank you for applying to become a host on Merry360x</p>
+    </div>
+    
+    <div class="content">
+      <div class="highlight">
+        <h2 style="margin-top: 0; color: #059669;">Dear ${application.full_name},</h2>
+        <p>
+          We've successfully received your application to become a host on Merry360x. 
+          We're excited that you want to share your ${hostingTypeLabels[application.hosting_type].toLowerCase()} with travelers!
+        </p>
+      </div>
+      
+      <h3>What Happens Next?</h3>
+      
+      <div class="info-box">
+        <div class="detail-row">
+          <span class="detail-label">📋 Step 1:</span>
+          <span class="detail-value">Our team reviews your application (typically within 24 hours)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">📧 Step 2:</span>
+          <span class="detail-value">We'll contact you via email or phone to discuss next steps</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">✏️ Step 3:</span>
+          <span class="detail-value">If approved, we'll help you set up your first listing</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">🚀 Step 4:</span>
+          <span class="detail-value">Your listing goes live and you start welcoming guests!</span>
+        </div>
+      </div>
+      
+      <div class="checklist">
+        <h3 style="margin-top: 0; color: #92400e;">📝 Prepare These Documents:</h3>
+        <p>To speed up the approval process, please have these ready:</p>
+        <ul>
+          <li>Government-issued ID or Business License</li>
+          <li>High-quality photos of your property/service</li>
+          <li>Property/business address and details</li>
+          <li>Bank account information for payments</li>
+          <li>Any relevant certifications or permits</li>
+        </ul>
+      </div>
+      
+      <h3>Your Application Summary:</h3>
+      <div class="info-box">
+        <div class="detail-row">
+          <span class="detail-label">Hosting Type:</span>
+          <span class="detail-value">${hostingTypeLabels[application.hosting_type]}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">${application.location}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Application ID:</span>
+          <span class="detail-value">${application.id}</span>
+        </div>
+      </div>
+      
+      <center>
+        <p style="font-size: 16px; color: #059669; font-weight: bold;">
+          We'll be in touch soon!
+        </p>
+      </center>
+      
+      <p style="margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 8px; font-size: 14px;">
+        <strong>Questions?</strong> Feel free to reply to this email or contact us at:<br>
+        📧 admin@merry360x.com<br>
+        📱 +250 788 123 456
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>Welcome to the Merry360x family!</p>
+      <p>© 2025 Merry360x. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `
+}
+
+// ============================================
 // NOTIFICATION FUNCTIONS
 // ============================================
 
@@ -486,6 +726,174 @@ View in dashboard: https://www.merry360x.com/admin/bookings
 // ============================================
 // REAL-TIME BOOKING MONITOR
 // ============================================
+
+async function startHostApplicationMonitor() {
+  console.log('\n🏠 HOST APPLICATION MONITOR')
+  console.log('══════════════════════════════════════\n')
+  console.log('Monitoring for new host applications...')
+  console.log(`Admin email: ${ADMIN_EMAIL}`)
+  console.log(`Email configured: ${transporter ? '✅ Yes' : '⚠️  No (will log only)'}`)
+  console.log('\n')
+  
+  const subscription = adminClient
+    .channel('host-applications-notifications')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'host_applications'
+      },
+      async (payload) => {
+        const application = payload.new
+        
+        console.log('\n📩 NEW HOST APPLICATION!')
+        console.log('─'.repeat(60))
+        console.log(`Applicant: ${application.full_name}`)
+        console.log(`Email: ${application.email}`)
+        console.log(`Hosting Type: ${application.hosting_type}`)
+        console.log(`Location: ${application.location}`)
+        console.log(`Application ID: ${application.id}`)
+        console.log('─'.repeat(60))
+        console.log('Sending notifications...\n')
+        
+        const result = await sendHostApplicationNotification(application)
+        
+        if (result.success) {
+          console.log('✅ All notifications sent successfully!')
+        } else {
+          console.log('⚠️  Notification logged (email not configured)')
+        }
+        
+        console.log('─'.repeat(60))
+      }
+    )
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        console.log('✅ Real-time subscription active!')
+        console.log('   Waiting for host applications...\n')
+      } else if (status === 'CLOSED') {
+        console.log('⚠️  Connection closed')
+      } else if (status === 'CHANNEL_ERROR') {
+        console.log('❌ Subscription error')
+      }
+    })
+  
+  // Keep the process running
+  process.on('SIGINT', () => {
+    console.log('\n\n🛑 Shutting down host application monitor...')
+    subscription.unsubscribe()
+    process.exit(0)
+  })
+}
+
+async function startAllMonitors() {
+  console.log('\n📧 MERRY360X NOTIFICATION SERVICE')
+  console.log('═══════════════════════════════════════════\n')
+  console.log('Starting all monitors...\n')
+  console.log(`Admin email: ${ADMIN_EMAIL}`)
+  console.log(`Email configured: ${transporter ? '✅ Yes' : '⚠️  No (will log only)'}`)
+  console.log('\n')
+  
+  // Create channels for both subscriptions
+  const bookingChannel = adminClient.channel('booking-notifications')
+  const hostChannel = adminClient.channel('host-applications-notifications')
+  
+  // Set up booking monitor
+  bookingChannel.on(
+    'postgres_changes',
+    {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'bookings'
+    },
+    async (payload) => {
+      const booking = payload.new
+      
+      console.log('\n📩 NEW BOOKING!')
+      console.log('─'.repeat(60))
+      console.log(`Booking ID: ${booking.id}`)
+      console.log(`Guest: ${booking.booking_details?.guest_name}`)
+      console.log(`Total: $${booking.total_price}`)
+      console.log('─'.repeat(60))
+      
+      // Get property details
+      const { data: property } = await adminClient
+        .from('accommodations')
+        .select('*')
+        .eq('id', booking.accommodation_id)
+        .single()
+      
+      if (!property) {
+        console.log('⚠️  Property not found')
+        return
+      }
+      
+      const result = await sendBookingNotification(booking, property, property.contact_email)
+      
+      if (result.success) {
+        console.log('✅ Booking notifications sent!')
+      } else {
+        console.log('⚠️  Booking notification logged')
+      }
+      
+      console.log('─'.repeat(60))
+    }
+  )
+  
+  // Set up host application monitor
+  hostChannel.on(
+    'postgres_changes',
+    {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'host_applications'
+    },
+    async (payload) => {
+      const application = payload.new
+      
+      console.log('\n🏠 NEW HOST APPLICATION!')
+      console.log('─'.repeat(60))
+      console.log(`Applicant: ${application.full_name}`)
+      console.log(`Email: ${application.email}`)
+      console.log(`Hosting Type: ${application.hosting_type}`)
+      console.log('─'.repeat(60))
+      
+      const result = await sendHostApplicationNotification(application)
+      
+      if (result.success) {
+        console.log('✅ Host application notifications sent!')
+      } else {
+        console.log('⚠️  Host application notification logged')
+      }
+      
+      console.log('─'.repeat(60))
+    }
+  )
+  
+  // Subscribe both channels
+  bookingChannel.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      console.log('✅ Booking monitor: Active')
+    }
+  })
+  
+  hostChannel.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      console.log('✅ Host application monitor: Active')
+      console.log('\n🎉 ALL MONITORS RUNNING!')
+      console.log('   Press Ctrl+C to stop...\n')
+    }
+  })
+  
+  // Keep the process running
+  process.on('SIGINT', () => {
+    console.log('\n\n🛑 Shutting down all monitors...')
+    bookingChannel.unsubscribe()
+    hostChannel.unsubscribe()
+    process.exit(0)
+  })
+}
 
 async function startBookingMonitor() {
   console.log('\n🔔 BOOKING NOTIFICATION SERVICE')
@@ -620,15 +1028,23 @@ const command = args[0]
 
 if (command === 'check') {
   checkPendingNotifications().then(() => process.exit(0))
-} else if (command === 'monitor' || !command) {
+} else if (command === 'bookings') {
+  console.log('Starting booking monitor only...\n')
   startBookingMonitor()
+} else if (command === 'hosts') {
+  console.log('Starting host application monitor only...\n')
+  startHostApplicationMonitor()
+} else if (command === 'monitor' || !command) {
+  startAllMonitors()
 } else {
-  console.log('\n📧 BOOKING NOTIFICATION SERVICE')
-  console.log('═══════════════════════════════\n')
+  console.log('\n📧 MERRY360X NOTIFICATION SERVICE')
+  console.log('═══════════════════════════════════════\n')
   console.log('Usage:')
-  console.log('  node email-notification-service.mjs          - Start real-time monitor')
-  console.log('  node email-notification-service.mjs monitor  - Start real-time monitor')
-  console.log('  node email-notification-service.mjs check    - Check pending notifications')
+  console.log('  node email-notification-service.mjs             - Monitor all notifications')
+  console.log('  node email-notification-service.mjs monitor     - Monitor all notifications')
+  console.log('  node email-notification-service.mjs bookings    - Monitor bookings only')
+  console.log('  node email-notification-service.mjs hosts       - Monitor host applications only')
+  console.log('  node email-notification-service.mjs check       - Check pending notifications')
   console.log('\n')
   process.exit(0)
 }

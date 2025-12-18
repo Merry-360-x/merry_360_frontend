@@ -368,10 +368,13 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
+import { supabase } from '../../services/supabase'
+import { useToast } from '../../composables/useToast'
 
 const router = useRouter()
 const formSection = ref(null)
 const isSubmitting = ref(false)
+const { showToast } = useToast()
 
 const formData = reactive({
   fullName: '',
@@ -428,9 +431,30 @@ const toggleFaq = (index) => {
 const submitForm = async () => {
   isSubmitting.value = true
   
-  // Simulate API call
-  setTimeout(() => {
-    alert('Thank you for your application! Our team will review it and get back to you within 24 hours.')
+  try {
+    // Save to Supabase
+    const { data, error } = await supabase
+      .from('host_applications')
+      .insert([{
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        location: formData.location,
+        hosting_type: formData.hostingType,
+        description: formData.description,
+        experience: formData.experience || null,
+        status: 'pending',
+        created_at: new Date().toISOString()
+      }])
+      .select()
+      .single()
+    
+    if (error) {
+      throw error
+    }
+    
+    // Show success message
+    showToast('Application submitted successfully! We will contact you within 24 hours.', 'success')
     
     // Reset form
     Object.keys(formData).forEach(key => {
@@ -441,7 +465,13 @@ const submitForm = async () => {
       }
     })
     
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  } catch (error) {
+    console.error('Host application error:', error)
+    showToast('Failed to submit application. Please try again.', 'error')
+  } finally {
     isSubmitting.value = false
-  }, 1500)
+  }
 }
 </script>
