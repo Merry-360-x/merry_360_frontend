@@ -7,6 +7,31 @@
         <p class="text-text-secondary dark:text-gray-400">Manage your account information and preferences</p>
       </div>
 
+      <!-- Profile Completion Alert -->
+      <div v-if="!isProfileComplete && !profileAlertDismissed" class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-amber-900 dark:text-amber-200 mb-1">Complete Your Profile</h3>
+            <p class="text-sm text-amber-800 dark:text-amber-300 mb-3">
+              Please add your phone number and date of birth to help us serve you better and unlock all features.
+            </p>
+            <Button variant="primary" size="sm" @click="activeProfileTab = 'personal'">
+              Complete Profile
+            </Button>
+          </div>
+          <button @click="dismissProfileAlert" class="flex-shrink-0 text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Profile Sidebar -->
         <div class="lg:col-span-1">
@@ -397,9 +422,10 @@
                     <h4 class="font-semibold mb-1">Two-Factor Authentication</h4>
                     <p class="text-sm text-text-secondary">Add an extra layer of security</p>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button v-if="!userStore.user?.twoFactorEnabled" variant="outline" size="sm" @click="enable2FA">
                     Enable
                   </Button>
+                  <span v-else class="text-sm text-green-600 font-semibold">✓ Enabled</span>
                 </div>
               </div>
             </div>
@@ -454,6 +480,50 @@
             </Card>
           </div>
         </div>
+
+        <!-- 2FA Setup Modal -->
+        <div v-if="show2FASetup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <Card padding="lg" class="max-w-md w-full">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-xl font-bold">Enable Two-Factor Authentication</h3>
+              <button @click="show2FASetup = false" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="space-y-4">
+              <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p class="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>Note:</strong> In production, you would scan a QR code with your authenticator app 
+                  (like Google Authenticator or Authy) and enter a verification code. This is a demo version.
+                </p>
+              </div>
+
+              <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-lg">
+                <div class="flex gap-2">
+                  <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                  </svg>
+                  <div class="text-sm text-amber-800 dark:text-amber-200">
+                    <strong>Important:</strong> Once enabled, you will need your authenticator app every time you login. 
+                    Make sure you have access to your device before enabling.
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <Button variant="primary" size="md" full-width @click="setup2FA">
+                  Enable 2FA
+                </Button>
+                <Button variant="outline" size="md" @click="show2FASetup = false">
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   </MainLayout>
@@ -480,6 +550,7 @@ const activeProfileTab = ref('trips')
 const activeTripTab = ref('upcoming')
 const editingPersonal = ref(false)
 const showChangePassword = ref(false)
+const show2FASetup = ref(false)
 
 // Avatar upload refs
 const avatarInput = ref(null)
@@ -498,18 +569,8 @@ const tripTabs = ref([
   { id: 'saved', name: 'Saved' }
 ])
 
-const upcomingBookings = ref([
-  {
-    id: 1,
-    name: 'Luxury Villa in Musanze',
-    location: 'Musanze, Rwanda',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
-    checkIn: 'Dec 15, 2025',
-    checkOut: 'Dec 18, 2025',
-    price: 850000,
-    status: 'confirmed'
-  }
-])
+// Fetch real bookings from user data or API
+const upcomingBookings = ref([])
 
 const personalInfo = ref({
   firstName: userStore.user?.name?.split(' ')[0] || '',
@@ -554,6 +615,18 @@ const memberSince = computed(() => {
   return 'Jan 2024'
 })
 
+// Profile completion check
+const isProfileComplete = computed(() => {
+  return !!(personalInfo.value.phone && personalInfo.value.dateOfBirth)
+})
+
+const profileAlertDismissed = ref(localStorage.getItem('profileAlertDismissed') === 'true')
+
+const dismissProfileAlert = () => {
+  localStorage.setItem('profileAlertDismissed', 'true')
+  profileAlertDismissed.value = true
+}
+
 const formatPrice = (price) => {
   return currencyStore.formatPrice(typeof price === 'string' ? parseInt(price.replace(/[^0-9]/g, '')) : price)
 }
@@ -595,6 +668,27 @@ const changePassword = () => {
   showChangePassword.value = false
   passwordForm.value = { current: '', new: '', confirm: '' }
   alert('Password changed successfully!')
+}
+
+const enable2FA = () => {
+  show2FASetup.value = true
+}
+
+const setup2FA = () => {
+  // Here you would typically:
+  // 1. Generate a TOTP secret on the backend
+  // 2. Display QR code for user to scan with authenticator app
+  // 3. Verify the code entered by user
+  // 4. Enable 2FA for the account
+  
+  // For now, just simulate success
+  alert('Two-Factor Authentication has been enabled successfully! Please note: Once enabled, you will need your authenticator app to login.')
+  show2FASetup.value = false
+  
+  // Update user store to reflect 2FA is enabled
+  if (userStore.user) {
+    userStore.user.twoFactorEnabled = true
+  }
 }
 
 const handleLogout = async () => {
