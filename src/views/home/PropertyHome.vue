@@ -397,49 +397,9 @@ const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
 
-// Add sample data on first load
+// No sample data - users start with empty watchlist and cart
 onMounted(() => {
-  // Only add if empty (first time)
-  if (userStore.watchlistCount === 0) {
-    // Add sample properties to watchlist
-    userStore.addToWatchlist({
-      id: 101,
-      type: 'property',
-      name: 'Lake Kivu Resort',
-      location: 'Rubavu, Rwanda',
-      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80',
-      price: '750,000',
-      beds: 3,
-      baths: 2
-    })
-    
-    userStore.addToWatchlist({
-      id: 102,
-      type: 'tour',
-      title: 'Akagera Safari Experience',
-      category: 'WILDLIFE',
-      description: 'Two-day safari adventure',
-      image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400&q=80',
-      price: '280,000',
-      duration: '2 days'
-    })
-  }
-  
-  if (userStore.cartCount === 0) {
-    // Add sample item to cart
-    userStore.addToCart({
-      id: 201,
-      type: 'property',
-      name: 'Kigali City Apartment',
-      location: 'Kigali, Rwanda',
-      image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&q=80',
-      price: '450,000',
-      beds: 2,
-      baths: 1
-    })
-  }
-  
-  // NO FAKE LOYALTY POINTS - Users start with 0 points in real life!
+  // Real data will come from Supabase database
 })
 
 const searchForm = ref({
@@ -461,105 +421,11 @@ const navigateTo = (path) => {
   router.push(path)
 }
 
-const featuredTours = ref([
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1571752239935-74f3d4d23816?w=600&q=80',
-    category: 'NATURE',
-    title: 'Gorilla Trekking Experience',
-    description: 'Get up close with mountain gorillas in Volcanoes National Park',
-    duration: '3 days',
-    price: 1500
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=600&q=80',
-    category: 'CULTURE',
-    title: 'Kigali City Tour',
-    description: 'Explore the vibrant capital city and its rich history',
-    duration: '1 day',
-    price: 80
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1516826435551-36a8a09e4526?w=600&q=80',
-    category: 'ADVENTURE',
-    title: 'Lake Kivu Island Hopping',
-    description: 'Discover beautiful islands and pristine beaches',
-    duration: '2 days',
-    price: 250
-  }
-])
+const featuredTours = ref([])
 
-const latestProperties = ref([
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=80',
-    badge: 'Featured',
-    title: 'Modern Apartment',
-    location: 'Kigali, Rwanda',
-    beds: 3,
-    baths: 2,
-    area: 1200,
-    price: 150
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
-    badge: 'Hot Offer',
-    title: 'Luxury Villa',
-    location: 'Musanze, Rwanda',
-    beds: 4,
-    baths: 3,
-    area: 2500,
-    price: 250
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80',
-    badge: 'New Listing',
-    title: 'Family House',
-    location: 'Gisenyi, Rwanda',
-    beds: 5,
-    baths: 3,
-    area: 1800,
-    price: 200
-  },
-  {
-    id: 4,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
-    badge: 'Featured',
-    title: 'Cozy Cottage',
-    location: 'Rubavu, Rwanda',
-    beds: 2,
-    baths: 1,
-    area: 900,
-    price: 120
-  }
-])
-
-const nearbyProperties = ref([...latestProperties.value])
-const topRatedProperties = ref([...latestProperties.value])
-const featuredProperties = ref([...latestProperties.value, ...latestProperties.value.slice(0, 2)])
-
-const guides = ref([
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&q=80',
-    category: 'Tips',
-    title: 'Choose the right apartment'
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400&q=80',
-    category: 'Guide',
-    title: 'Best and convenient for rental'
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80',
-    category: 'Tips',
-    title: 'Steps house Apartment'
-  }
-])
+const latestProperties = ref([])
+const nearbyProperties = ref([])
+const topRatedProperties = ref([])
+const featuredProperties = ref([])
+const guides = ref([])
 </script>
