@@ -157,6 +157,9 @@ const handleGoogleCredentialResponse = async (response) => {
     const idToken = response.credential
     const profile = JSON.parse(atob(idToken.split('.')[1]))
     
+    // Check if this is the admin email
+    const isAdmin = profile.email === 'admin@merry360x.com' || profile.email === 'bebisdavy@gmail.com'
+    
     userStore.login({
       id: profile.sub,
       name: profile.name || profile.email,
@@ -164,12 +167,18 @@ const handleGoogleCredentialResponse = async (response) => {
       firstName: profile.given_name || '',
       lastName: profile.family_name || '',
       phone: '',
-      role: 'user',
+      role: isAdmin ? 'admin' : 'user',
       verified: true
     })
     
     localStorage.setItem('auth_token', idToken)
-    router.push('/profile')
+    
+    // Redirect based on role
+    if (isAdmin) {
+      router.push('/admin')
+    } else {
+      router.push('/profile')
+    }
   } catch (err) {
     console.error('Google sign-in error', err)
     setError('email', 'Failed to sign in with Google')

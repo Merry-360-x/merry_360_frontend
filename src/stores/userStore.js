@@ -48,6 +48,8 @@ export const useUserStore = defineStore('user', () => {
   // Computed properties
   const watchlistCount = computed(() => watchlist.value.length)
   const cartCount = computed(() => tripCart.value.length)
+  const isAdmin = computed(() => user.value?.role === 'admin')
+  const isVendor = computed(() => user.value?.role === 'vendor')
   const nextTierPoints = computed(() => {
     const tiers = { bronze: 1000, silver: 5000, gold: 15000, platinum: 50000 }
     const current = loyaltyPoints.value
@@ -227,6 +229,8 @@ export const useUserStore = defineStore('user', () => {
     // Computed
     watchlistCount,
     cartCount,
+    isAdmin,
+    isVendor,
     nextTierPoints,
     
     // Actions

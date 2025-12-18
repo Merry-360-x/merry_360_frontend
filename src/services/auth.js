@@ -9,11 +9,23 @@ const USE_FIREBASE = import.meta.env.VITE_USE_FIREBASE === 'true'
 const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true'
 
 export async function signIn(credentials) {
+  // Check if admin email
+  const isAdmin = credentials.email === 'admin@merry360x.com' || credentials.email === 'bebisdavy@gmail.com'
+  
   if (USE_FIREBASE) {
     const res = await signInWithEmail(credentials.email, credentials.password)
     const user = res.user
     const token = await user.getIdToken()
-    return { user: { id: user.uid, email: user.email, firstName: user.displayName || '', lastName: '' }, token }
+    return { 
+      user: { 
+        id: user.uid, 
+        email: user.email, 
+        firstName: user.displayName || '', 
+        lastName: '',
+        role: isAdmin ? 'admin' : 'user'
+      }, 
+      token 
+    }
   }
 
   if (USE_SUPABASE) {
@@ -25,14 +37,20 @@ export async function signIn(credentials) {
         id: data.user.id,
         email: data.user.email,
         firstName: data.user.user_metadata?.firstName || '',
-        lastName: data.user.user_metadata?.lastName || ''
+        lastName: data.user.user_metadata?.lastName || '',
+        role: isAdmin ? 'admin' : (data.user.user_metadata?.role || 'user')
       },
       token
     }
   }
 
   // Fallback to API
-  return await api.auth.login(credentials)
+  const response = await api.auth.login(credentials)
+  // Override role for admin emails
+  if (isAdmin && response.user) {
+    response.user.role = 'admin'
+  }
+  return response
 }
 
 export async function signUp(data) {
