@@ -391,6 +391,7 @@ import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import PropertyCard from '../../components/common/PropertyCard.vue'
 import AIConcierge from '../../components/ai/AIConcierge.vue'
+import { supabase } from '@/services/supabase'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -428,4 +429,75 @@ const nearbyProperties = ref([])
 const topRatedProperties = ref([])
 const featuredProperties = ref([])
 const guides = ref([])
+
+// Load featured tours
+const loadFeaturedTours = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('tours')
+      .select('*')
+      .eq('available', true)
+      .order('rating', { ascending: false })
+      .limit(6)
+    
+    if (error) throw error
+    
+    featuredTours.value = (data || []).map(t => ({
+      id: t.id,
+      title: t.name,
+      destination: t.destination,
+      days: t.duration_days,
+      price: t.price,
+      rating: t.rating || 4.5,
+      reviews: t.reviews_count || 0,
+      image: t.main_image
+    }))
+  } catch (err) {
+    console.error('Error loading tours:', err)
+  }
+}
+
+// Load featured properties
+const loadFeaturedProperties = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('properties')
+      .select(`
+        *,
+        profiles:host_id(first_name, last_name)
+      `)
+      .eq('available', true)
+      .order('rating', { ascending: false })
+      .limit(8)
+    
+    if (error) throw error
+    
+    featuredProperties.value = (data || []).map(p => ({
+      id: p.id,
+      name: p.name,
+      host: p.profiles ? `${p.profiles.first_name} ${p.profiles.last_name}` : 'Host',
+      location: p.city || p.location,
+      price: p.price_per_night,
+      rating: p.rating || 4.5,
+      reviews: p.reviews_count || 0,
+      amenities: p.amenities || [],
+      image: p.main_image,
+      bedrooms: p.bedrooms,
+      bathrooms: p.bathrooms,
+      maxGuests: p.max_guests
+    }))
+    
+    // Also populate other property lists
+    latestProperties.value = featuredProperties.value.slice(0, 4)
+    topRatedProperties.value = featuredProperties.value.slice(0, 4)
+    nearbyProperties.value = featuredProperties.value.slice(0, 4)
+  } catch (err) {
+    console.error('Error loading properties:', err)
+  }
+}
+
+onMounted(() => {
+  loadFeaturedTours()
+  loadFeaturedProperties()
+})
 </script>

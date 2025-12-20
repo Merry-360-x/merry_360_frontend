@@ -79,63 +79,54 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
+import { supabase } from '@/services/supabase'
+import { useToast } from '@/composables/useToast'
 
-const vehicles = ref([
-  {
-    id: 1,
-    name: 'Toyota Land Cruiser',
-    plateNumber: 'KCA 123A',
-    driver: 'John Kamau',
-    type: 'SUV',
-    capacity: 7,
-    ratePerDay: 150,
-    status: 'available'
-  },
-  {
-    id: 2,
-    name: 'Toyota Hiace',
-    plateNumber: 'KCB 456B',
-    driver: 'Peter Omondi',
-    type: 'Van',
-    capacity: 14,
-    ratePerDay: 120,
-    status: 'in-use'
-  },
-  {
-    id: 3,
-    name: 'Nissan X-Trail',
-    plateNumber: 'KCC 789C',
-    driver: 'Mary Wanjiku',
-    type: 'SUV',
-    capacity: 5,
-    ratePerDay: 100,
-    status: 'available'
-  },
-  {
-    id: 4,
-    name: 'Mercedes Sprinter',
-    plateNumber: 'KCD 321D',
-    driver: 'James Mwangi',
-    type: 'Van',
-    capacity: 20,
-    ratePerDay: 200,
-    status: 'in-use'
-  },
-  {
-    id: 5,
-    name: 'Toyota Prado',
-    plateNumber: 'KCE 654E',
-    driver: 'Sarah Akinyi',
-    type: 'SUV',
-    capacity: 7,
-    ratePerDay: 140,
-    status: 'maintenance'
+const { showToast } = useToast()
+const vehicles = ref([])
+const loading = ref(true)
+
+const loadVehicles = async () => {
+  try {
+    loading.value = true
+    console.log('Loading vehicles from Supabase...')
+    
+    const { data, error } = await supabase
+      .from('vehicles')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Loaded vehicles:', data?.length || 0)
+    vehicles.value = (data || []).map(v => ({
+      id: v.id,
+      name: v.name,
+      plateNumber: v.license_plate || 'N/A',
+      driver: v.driver_included ? 'With Driver' : 'Self Drive',
+      type: v.type,
+      capacity: v.capacity,
+      ratePerDay: v.price_per_day,
+      status: v.available ? 'available' : 'in-use'
+    }))
+    
+    if (vehicles.value.length === 0) {
+      showToast('No vehicles found in database', 'warning')
+    }
+  } catch (err) {
+    console.error('Error loading vehicles:', err)
+    showToast('Failed to load vehicles: ' + err.message, 'error')
+  } finally {
+    loading.value = false
   }
-])
+}
 
 const stats = computed(() => ({
   total: vehicles.value.length,

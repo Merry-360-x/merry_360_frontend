@@ -61,11 +61,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
+import { supabase } from '@/services/supabase'
 
 const router = useRouter()
 const currencyStore = useCurrencyStore()
@@ -79,4 +80,39 @@ const performSearch = () => {
 }
 
 const tours = ref([])
+const loading = ref(true)
+
+const loadTours = async () => {
+  try {
+    loading.value = true
+    const { data, error } = await supabase
+      .from('tours')
+      .select('*')
+      .eq('available', true)
+      .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    
+    tours.value = (data || []).map(t => ({
+      id: t.id,
+      title: t.name,
+      destination: t.destination,
+      days: t.duration_days,
+      price: t.price,
+      rating: t.rating || 4.5,
+      reviews: t.reviews_count || 0,
+      category: t.category || 'Tour',
+      image: t.main_image,
+      description: t.description
+    }))
+  } catch (err) {
+    console.error('Error loading tours:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  loadTours()
+})
 </script>

@@ -80,77 +80,82 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
+import { supabase } from '@/services/supabase'
+import { useToast } from '@/composables/useToast'
 
-const tours = ref([
-  {
-    id: 1,
-    name: 'Nairobi City Tour',
-    category: 'City Tour',
-    location: 'Nairobi',
-    duration: '4 hours',
-    price: 50,
-    bookings: 45,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=100&h=100&fit=crop'
-  },
-  {
-    id: 2,
-    name: 'Masai Mara Safari',
-    category: 'Wildlife Safari',
-    location: 'Masai Mara',
-    duration: '3 days',
-    price: 450,
-    bookings: 78,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=100&h=100&fit=crop'
-  },
-  {
-    id: 3,
-    name: 'Mount Kenya Hike',
-    category: 'Adventure',
-    location: 'Mount Kenya',
-    duration: '2 days',
-    price: 200,
-    bookings: 32,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=100&fit=crop'
-  },
-  {
-    id: 4,
-    name: 'Diani Beach Excursion',
-    category: 'Beach Tour',
-    location: 'Diani',
-    duration: '1 day',
-    price: 80,
-    bookings: 56,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=100&h=100&fit=crop'
-  },
-  {
-    id: 5,
-    name: 'Lake Nakuru Tour',
-    category: 'Wildlife Safari',
-    location: 'Lake Nakuru',
-    duration: '1 day',
-    price: 120,
-    bookings: 0,
-    status: 'inactive',
-    image: 'https://images.unsplash.com/photo-1535083783855-76ae62b2914e?w=100&h=100&fit=crop'
+const { showToast } = useToast()
+const tours = ref([])
+const loading = ref(true)
+
+const loadTours = async () => {
+  try {
+    loading.value = true
+    console.log('Loading tours from Supabase...')
+    
+    const { data, error } = await supabase
+      .from('tours')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+    
+    console.log('Loaded tours:', data?.length || 0)
+    tours.value = (data || []).map(t => ({
+      id: t.id,
+      name: t.name,
+      category: t.category || 'Tour',
+      location: t.destination,
+      duration: `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}`,
+      price: t.price,
+      bookings: 0, // TODO: count from bookings table
+      status: t.available ? 'active' : 'inactive',
+      image: t.main_image || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=100&h=100&fit=crop'
+    }))
+    
+    if (tours.value.length === 0) {
+      showToast('No tours found. Please add tours in the database.', 'warning')
+    }
+  } catch (err) {
+    console.error('Error loading tours:', err)
+    showToast('Failed to load tours: ' + err.message, 'error')
+  } finally {
+    loading.value = false
   }
-])
+}
 
 const stats = computed(() => ({
   total: tours.value.length,
   active: tours.value.filter(t => t.status === 'active').length,
   bookings: tours.value.reduce((sum, t) => sum + t.bookings, 0),
-  avgRating: '4.8'
+  avgRating: tours.value.length > 0 ? (tours.value.reduce((sum, t) => sum + (parseFloat(t.rating) || 0), 0) / tours.value.length).toFixed(1) : '0.0'
 }))
 
-const toggleStatus = (tour) => {
-  tour.status = tour.status === 'active' ? 'inactive' : 'active'
+const toggleStatus = async (tour) => {
+  try {
+    const newStatus = tour.status === 'active' ? false : true
+    const { error } = await supabase
+      .from('tours')
+      .update({ available: newStatus })
+      .eq('id', tour.id)
+    
+    if (error) throw error
+    
+    tour.status = newStatus ? 'active' : 'inactive'
+    showToast(`Tour ${newStatus ? 'activated' : 'deactivated'} successfully`, 'success')
+  } catch (err) {
+    console.error('Error updating tour:', err)
+    showToast('Failed to update tour: ' + err.message, 'error')
+  }
 }
+
+onMounted(() => {
+  loadTours()
+})
 </script>
