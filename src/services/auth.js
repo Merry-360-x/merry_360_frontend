@@ -1,9 +1,7 @@
 import api from './api'
 import { initFirebase, signInWithEmail, signUpWithEmail, googleSignIn, signOutUser, onAuthChange } from './firebase'
 import * as supabaseService from './supabase'
-import googleService from './google'
 import mockApiService from './mockApi'
-import jwtDecode from 'jwt-decode'
 
 const USE_FIREBASE = import.meta.env.VITE_USE_FIREBASE === 'true'
 const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true'
@@ -121,44 +119,8 @@ export async function signInWithGoogle() {
     return
   }
 
-  // Non-Firebase, Non-Supabase flow: use Google Identity Services (GSI)
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
-  if (!clientId) {
-    throw new Error('Social login not configured (VITE_GOOGLE_CLIENT_ID missing)')
-  }
-
-  return new Promise(async (resolve, reject) => {
-    try {
-      const container = document.createElement('div')
-      container.style.position = 'fixed'
-      container.style.left = '-9999px'
-      document.body.appendChild(container)
-
-      const callback = async (response) => {
-        try {
-          const idToken = response.credential
-          const profile = jwtDecode(idToken)
-
-          const backendRes = await mockApiService.auth.socialSignIn({
-            email: profile.email,
-            firstName: profile.given_name,
-            lastName: profile.family_name,
-            picture: profile.picture
-          })
-
-          document.body.removeChild(container)
-          resolve(backendRes)
-        } catch (err) {
-          document.body.removeChild(container)
-          reject(err)
-        }
-      }
-
-      await googleService.renderGoogleButton({ clientId, element: container, callback })
-    } catch (err) {
-      reject(err)
-    }
-  })
+  // No OAuth configured
+  throw new Error('Google sign-in not configured. Please enable Firebase or Supabase.')
 }
 
 export async function signOut() {
