@@ -121,8 +121,6 @@ import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
 import { signIn, signInWithGoogle } from '../../services/auth'
-import { setUserProfile } from '../../services/supabase'
-import googleService from '../../services/google'
 
 const router = useRouter()
 const userStore = useUserStore()
