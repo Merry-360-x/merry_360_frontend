@@ -68,7 +68,22 @@
           </div>
         </div>
 
-        <div id="googleSignInButton" class="flex justify-center"></div>
+        <Button 
+          type="button"
+          variant="outline" 
+          size="lg" 
+          full-width
+          @click="handleGoogleSignIn"
+          class="flex items-center justify-center gap-3"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          {{ t('auth.continueWithGoogle') }}
+        </Button>
 
         <!-- Language Selection -->
         <div class="pt-4">
@@ -115,91 +130,16 @@ const appStore = useAppStore()
 const { errors, validateAll, setError, clearErrors } = useFormValidation()
 const { t } = useTranslation()
 
-const googleClientId = '270563800148-mafsbml3i6h01gjeo7qdlruc75a1s63i.apps.googleusercontent.com'
-
-onMounted(async () => {
-  if (!googleClientId) return
-  
+const handleGoogleSignIn = async () => {
   try {
-    // Load Google Identity Services library
-    const script = document.createElement('script')
-    script.src = 'https://accounts.google.com/gsi/client'
-    script.async = true
-    script.defer = true
-    document.head.appendChild(script)
-    
-    script.onload = () => {
-      window.google.accounts.id.initialize({
-        client_id: googleClientId,
-        callback: handleGoogleCredentialResponse
-      })
-      
-      window.google.accounts.id.renderButton(
-        document.getElementById('googleSignInButton'),
-        { 
-          theme: 'outline', 
-          size: 'large',
-          width: 300,
-          text: 'signin_with'
-        }
-      )
-    }
-  } catch (err) {
-    console.error('Failed to load Google Sign-In', err)
-  }
-})
-
-const handleGoogleCredentialResponse = async (response) => {
-  try {
-    const idToken = response.credential
-    const profile = JSON.parse(atob(idToken.split('.')[1]))
-    
-    // Check if this is the admin email
-    const isAdmin = profile.email === 'admin@merry360x.com' || profile.email === 'bebisdavy@gmail.com'
-    
-    const userData = {
-      id: profile.sub,
-      name: profile.name || profile.email,
-      email: profile.email,
-      firstName: profile.given_name || '',
-      lastName: profile.family_name || '',
-      phone: '',
-      role: isAdmin ? 'admin' : 'user',
-      verified: true
-    }
-    
-    // Save to local store
-    userStore.login(userData)
-    localStorage.setItem('auth_token', idToken)
-    
-    // Save profile to Supabase
-    try {
-      await setUserProfile(profile.sub, {
-        email: profile.email,
-        first_name: profile.given_name || '',
-        last_name: profile.family_name || '',
-        full_name: profile.name || '',
-        avatar_url: profile.picture || '',
-        role: isAdmin ? 'admin' : 'user',
-        loyalty_points: 0,
-        loyalty_tier: 'bronze',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
-    } catch (dbError) {
-      console.warn('Failed to save profile to Supabase:', dbError)
-      // Continue anyway - user is logged in locally
-    }
-    
-    // Redirect based on role
-    if (isAdmin) {
-      router.push('/admin')
-    } else {
-      router.push('/profile')
-    }
+    loading.value = true
+    // Use Supabase OAuth for Google authentication
+    await signInWithGoogle()
+    // The signInWithGoogle function will redirect to Google and then back to /auth/callback
   } catch (err) {
     console.error('Google sign-in error', err)
     setError('email', 'Failed to sign in with Google')
+    loading.value = false
   }
 }
 
