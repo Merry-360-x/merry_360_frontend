@@ -92,98 +92,111 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
-import { supabase } from '../../services/supabase'
+import { useAppStore } from '../../stores/app'
+import { useFormValidation } from '../../composables/useFormValidation'
+import { useTranslation } from '../../composables/useTranslation'
+import { validators } from '../../utils/validation'
+import Card from '../../components/common/Card.vue'
+import Input from '../../components/common/Input.vue'
+import Button from '../../components/common/Button.vue'
+import { signIn, signInWithGoogle } from '../../services/auth'
 
 const router = useRouter()
 const userStore = useUserStore()
+const appStore = useAppStore()
+const { errors, validateAll, setError, clearErrors } = useFormValidation()
+const { t } = useTranslation()
 
-const email = ref('')
-const password = ref('')
+const formData = reactive({
+  email: '',
+  password: '',
+  remember: false
+})
+
 const loading = ref(false)
 const googleLoading = ref(false)
-const errorMessage = ref('')
+
+const handleGoogleSignIn = async () => {
+  try {
+    console.log('🔵 Google sign-in button clicked')
+    googleLoading.value = true
+    
+    console.log('🔵 Calling signInWithGoogle...')
+    await signInWithGoogle()
+    
+    // Note: If redirect works, code below won't execute
+    console.log('🔵 signInWithGoogle completed')
+  } catch (err) {
+    console.error('❌ Google sign-in error:', err)
+    alert(`Google sign-in failed: ${err.message}`)
+    googleLoading.value = false
+  }
+}
+const selectedLanguage = ref('en')
+
+watch(selectedLanguage, (newLang) => {
+  appStore.setLanguage(newLang)
+})
+
+const validationRules = {
+  email: validators.email,
+  password: (value) => validators.required(value, 'Password')
+}
 
 const handleLogin = async () => {
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Please enter email and password'
+  // Clear previous errors
+  clearErrors()
+  
+  // Validate form
+  const isValid = validateAll(formData, validationRules)
+  
+  if (!isValid) {
     return
   }
 
   loading.value = true
-  errorMessage.value = ''
-
+  
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value
-    })
+    // Use the unified auth service
+    const response = await signIn({ email: formData.email, password: formData.password })
 
-    if (error) throw error
-
-    // Get user profile from database
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', data.user.id)
-      .single()
-
-    // Update user store
+    // Login the user in local store
     userStore.login({
-      id: data.user.id,
-      email: data.user.email,
-      name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
-      firstName: profile?.first_name || '',
-      lastName: profile?.last_name || '',
-      phone: profile?.phone || '',
-      role: profile?.role || 'user',
-      verified: true
+      id: response.user.id,
+      name: `${response.user.firstName || ''} ${response.user.lastName || ''}`.trim() || response.user.email,
+      email: response.user.email,
+      firstName: response.user.firstName || '',
+      lastName: response.user.lastName || '',
+      phone: response.user.phone || '',
+      role: response.user.role || 'user',
+      verified: response.user.verified || false,
+      dateOfBirth: '',
+      bio: 'Travel enthusiast exploring Rwanda and beyond',
+      memberSince: 'Dec 2025'
     })
 
     // Store auth token
-    if (data.session?.access_token) {
-      localStorage.setItem('auth_token', data.session.access_token)
+    if (response.token) {
+      localStorage.setItem('auth_token', response.token)
     }
 
     // Navigate based on role
-    const isAdmin = data.user.email === 'admin@merry360x.com' || data.user.email === 'bebisdavy@gmail.com'
-    if (isAdmin) {
+    if (response.user.role === 'admin') {
       router.push('/admin')
+    } else if (response.user.role === 'vendor') {
+      router.push('/vendor')
     } else {
       router.push('/profile')
     }
   } catch (error) {
     console.error('Login error:', error)
-    errorMessage.value = error.message || 'Invalid email or password. Please try again.'
+    setError('email', error.message || 'Invalid email or password')
+    setError('password', ' ')
   } finally {
     loading.value = false
-  }
-}
-
-const handleGoogleSignIn = async () => {
-  googleLoading.value = true
-  errorMessage.value = ''
-
-  try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`
-      }
-    })
-
-    if (error) throw error
-
-    // Redirect to Google
-    if (data?.url) {
-      window.location.href = data.url
-    }
-  } catch (error) {
-    console.error('Google sign-in error:', error)
-    errorMessage.value = 'Failed to sign in with Google. Please try again.'
-    googleLoading.value = false
   }
 }
 </script>
