@@ -81,7 +81,9 @@ import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
+import { useToast } from '@/composables/useToast'
 
+const { showToast } = useToast()
 const users = ref([])
 const loading = ref(true)
 
@@ -102,16 +104,27 @@ const formatDate = (date) => {
 
 const loadUsers = async () => {
   try {
+    loading.value = true
+    console.log('Loading users from Supabase...')
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .order('created_at', { ascending: false })
     
-    if (error) throw error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
     
-    users.value = data
+    console.log('Loaded users:', data?.length || 0)
+    users.value = data || []
+    
+    if (users.value.length === 0) {
+      showToast('No users found in database', 'warning')
+    }
   } catch (err) {
     console.error('Error loading users:', err)
+    showToast('Failed to load users: ' + err.message, 'error')
   } finally {
     loading.value = false
   }
@@ -126,9 +139,10 @@ const updateUserRole = async (user) => {
     
     if (error) throw error
     
-    console.log(`Updated ${user.first_name}'s role to ${user.role}`)
+    showToast(`Updated ${user.first_name}'s role to ${user.role}`, 'success')
   } catch (err) {
     console.error('Error updating user role:', err)
+    showToast('Failed to update role: ' + err.message, 'error')
   }
 }
 

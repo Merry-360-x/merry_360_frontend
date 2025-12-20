@@ -78,7 +78,9 @@ import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
+import { useToast } from '@/composables/useToast'
 
+const { showToast } = useToast()
 const properties = ref([])
 const loading = ref(true)
 
@@ -99,25 +101,40 @@ const statusClass = (status) => {
 
 const loadProperties = async () => {
   try {
+    loading.value = true
+    console.log('Loading properties from Supabase...')
+    
     const { data, error } = await supabase
       .from('properties')
-      .select('*')
+      .select(`
+        *,
+        profiles:host_id(first_name, last_name)
+      `)
       .order('created_at', { ascending: false })
     
-    if (error) throw error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
     
-    properties.value = data.map(p => ({
+    console.log('Loaded properties:', data?.length || 0)
+    properties.value = (data || []).map(p => ({
       id: p.id,
       name: p.name,
       type: p.property_type || 'Property',
-      host: 'Host Name',
-      location: p.city || p.location,
-      price: p.price_per_night,
+      host: p.profiles ? `${p.profiles.first_name} ${p.profiles.last_name}` : 'Unknown Host',
+      location: p.city || p.location || 'Unknown',
+      price: p.price_per_night || 0,
       status: p.available ? 'active' : 'inactive',
-      image: p.main_image || '/placeholder-property.jpg'
+      image: p.main_image || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=100&h=100&fit=crop'
     }))
+    
+    if (properties.value.length === 0) {
+      showToast('No properties found in database', 'warning')
+    }
   } catch (err) {
     console.error('Error loading properties:', err)
+    showToast('Failed to load properties: ' + err.message, 'error')
   } finally {
     loading.value = false
   }
@@ -126,14 +143,18 @@ const loadProperties = async () => {
 const toggleStatus = async (property) => {
   try {
     const newStatus = property.status === 'active' ? false : true
-    await supabase
+    const { error } = await supabase
       .from('properties')
       .update({ available: newStatus })
       .eq('id', property.id)
     
+    if (error) throw error
+    
     property.status = newStatus ? 'active' : 'inactive'
+    showToast(`Property ${newStatus ? 'activated' : 'deactivated'} successfully`, 'success')
   } catch (err) {
     console.error('Error updating property:', err)
+    showToast('Failed to update property: ' + err.message, 'error')
   }
 }
 
