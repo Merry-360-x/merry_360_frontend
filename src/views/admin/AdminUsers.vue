@@ -217,20 +217,36 @@ const markUserAsChanged = (user) => {
 
 const saveUserRole = async (user) => {
   try {
-    const { error } = await supabase
+    console.log('🔄 Saving role change to database:', {
+      userId: user.id,
+      email: user.email,
+      newRole: user.role,
+      oldRole: originalRoles.value.get(user.id)
+    })
+    
+    const { data, error } = await supabase
       .from('profiles')
       .update({ role: user.role })
       .eq('id', user.id)
+      .select()
     
-    if (error) throw error
+    if (error) {
+      console.error('❌ Supabase error:', error)
+      throw error
+    }
+    
+    console.log('✅ Role updated successfully in database:', data)
     
     // Update original role and remove from changed
     originalRoles.value.set(user.id, user.role)
     changedUsers.value.delete(user.id)
     
-    showToast(`Updated ${user.first_name}'s role to ${user.role}`, 'success')
+    showToast(`✅ Updated ${user.first_name}'s role to ${user.role}. Saved to database!`, 'success')
+    
+    // Reload users from database to ensure consistency
+    await loadUsers()
   } catch (err) {
-    console.error('Error updating user role:', err)
+    console.error('❌ Error updating user role:', err)
     showToast('Failed to update role: ' + err.message, 'error')
     // Revert to original role
     user.role = originalRoles.value.get(user.id)
