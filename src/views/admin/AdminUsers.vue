@@ -65,7 +65,7 @@
               </td>
               <td class="py-4 px-4">{{ formatDate(user.created_at) }}</td>
               <td class="py-4 px-4">
-                <Button variant="outline" size="sm">View Profile</Button>
+                <Button variant="outline" size="sm" @click="viewProfile(user)">View Profile</Button>
               </td>
             </tr>
           </tbody>
@@ -77,12 +77,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
 
+const router = useRouter()
 const { showToast } = useToast()
 const users = ref([])
 const loading = ref(true)
@@ -144,6 +146,16 @@ const updateUserRole = async (user) => {
     console.error('Error updating user role:', err)
     showToast('Failed to update role: ' + err.message, 'error')
   }
+}
+
+const viewProfile = (user) => {
+  // Store the user ID and navigate to a profile view
+  // For now, we can create a simple alert with user info
+  // Or navigate to the user's actual profile page
+  router.push({ 
+    name: 'profile',
+    query: { userId: user.id }
+  })
 }
 
 onMounted(() => {
