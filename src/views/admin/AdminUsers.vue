@@ -1,5 +1,66 @@
 <template>
   <AdminLayout>
+    <!-- User Profile Modal -->
+    <div v-if="selectedUser" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="selectedUser = null">
+      <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-2xl font-bold">User Profile</h2>
+          <button @click="selectedUser = null" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="space-y-6">
+          <!-- Avatar and Basic Info -->
+          <div class="flex items-center space-x-4">
+            <img 
+              :src="selectedUser.avatar_url || 'https://ui-avatars.com/api/?name=' + selectedUser.first_name" 
+              class="w-24 h-24 rounded-full" 
+            />
+            <div>
+              <h3 class="text-xl font-bold">{{ selectedUser.first_name }} {{ selectedUser.last_name }}</h3>
+              <p class="text-gray-600">{{ selectedUser.email }}</p>
+              <span :class="{
+                'px-3 py-1 rounded-full text-sm font-medium inline-block mt-2': true,
+                'bg-red-100 text-red-800': selectedUser.role === 'admin',
+                'bg-blue-100 text-blue-800': selectedUser.role === 'host',
+                'bg-gray-100 text-gray-800': selectedUser.role === 'user'
+              }">
+                {{ selectedUser.role }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Details -->
+          <div class="grid grid-cols-2 gap-4 border-t pt-4">
+            <div>
+              <p class="text-sm text-gray-500">Phone</p>
+              <p class="font-medium">{{ selectedUser.phone_number || 'Not provided' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Date of Birth</p>
+              <p class="font-medium">{{ selectedUser.date_of_birth || 'Not provided' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">City</p>
+              <p class="font-medium">{{ selectedUser.city || 'Not provided' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Joined</p>
+              <p class="font-medium">{{ formatDate(selectedUser.created_at) }}</p>
+            </div>
+          </div>
+          
+          <div v-if="selectedUser.bio" class="border-t pt-4">
+            <p class="text-sm text-gray-500 mb-2">Bio</p>
+            <p class="text-gray-700">{{ selectedUser.bio }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mb-8">
       <h1 class="text-3xl font-bold mb-2">User Management</h1>
       <p class="text-text-secondary">Manage users and assign roles</p>
@@ -53,15 +114,25 @@
               </td>
               <td class="py-4 px-4">{{ user.email }}</td>
               <td class="py-4 px-4">
-                <select 
-                  v-model="user.role" 
-                  @change="updateUserRole(user)"
-                  class="px-3 py-1 border border-gray-300 rounded-lg text-sm"
-                >
-                  <option value="user">User</option>
-                  <option value="host">Host</option>
-                  <option value="admin">Admin</option>
-                </select>
+                <div class="flex items-center gap-2">
+                  <select 
+                    v-model="user.role" 
+                    @change="markUserAsChanged(user)"
+                    class="px-3 py-1 border border-gray-300 rounded-lg text-sm"
+                  >
+                    <option value="user">User</option>
+                    <option value="host">Host</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                  <Button 
+                    v-if="changedUsers.has(user.id)"
+                    variant="primary" 
+                    size="sm"
+                    @click="saveUserRole(user)"
+                  >
+                    Save
+                  </Button>
+                </div>
               </td>
               <td class="py-4 px-4">{{ formatDate(user.created_at) }}</td>
               <td class="py-4 px-4">
@@ -88,6 +159,9 @@ const router = useRouter()
 const { showToast } = useToast()
 const users = ref([])
 const loading = ref(true)
+const selectedUser = ref(null)
+const changedUsers = ref(new Set())
+const originalRoles = ref(new Map())
 
 const stats = computed(() => ({
   total: users.value.length,
@@ -121,6 +195,11 @@ const loadUsers = async () => {
     console.log('Loaded users:', data?.length || 0)
     users.value = data || []
     
+    // Store original roles
+    users.value.forEach(user => {
+      originalRoles.value.set(user.id, user.role)
+    })
+    
     if (users.value.length === 0) {
       showToast('No users found in database', 'warning')
     }
@@ -132,7 +211,11 @@ const loadUsers = async () => {
   }
 }
 
-const updateUserRole = async (user) => {
+const markUserAsChanged = (user) => {
+  changedUsers.value.add(user.id)
+}
+
+const saveUserRole = async (user) => {
   try {
     const { error } = await supabase
       .from('profiles')
@@ -141,21 +224,22 @@ const updateUserRole = async (user) => {
     
     if (error) throw error
     
+    // Update original role and remove from changed
+    originalRoles.value.set(user.id, user.role)
+    changedUsers.value.delete(user.id)
+    
     showToast(`Updated ${user.first_name}'s role to ${user.role}`, 'success')
   } catch (err) {
     console.error('Error updating user role:', err)
     showToast('Failed to update role: ' + err.message, 'error')
+    // Revert to original role
+    user.role = originalRoles.value.get(user.id)
+    changedUsers.value.delete(user.id)
   }
 }
 
 const viewProfile = (user) => {
-  // Store the user ID and navigate to a profile view
-  // For now, we can create a simple alert with user info
-  // Or navigate to the user's actual profile page
-  router.push({ 
-    name: 'profile',
-    query: { userId: user.id }
-  })
+  selectedUser.value = user
 }
 
 onMounted(() => {
