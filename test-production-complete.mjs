@@ -8,9 +8,9 @@
 import { createClient } from '@supabase/supabase-js'
 import readline from 'readline'
 
-const PRODUCTION_URL = 'https://merry-360-frontend-r8jjz3owh-das-48ca2629.vercel.app'
+const PRODUCTION_URL = 'https://merry-360-frontend-9uymli2v7-das-48ca2629.vercel.app'
 const SUPABASE_URL = 'https://gzmxelgcdpaeklmabszo.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bXhlbGdjZHBhZWtsbWFic3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQyMDQzNzAsImV4cCI6MjA0OTc4MDM3MH0.Oi3xCmPCYEjykOrLEp2AxBE8kzewy0nDNlbcGkuKL1w'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bXhlbGdjZHBhZWtsbWFic3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMjIxOTEsImV4cCI6MjA4MTc5ODE5MX0.nPNTqN3O6eWouM_dPafFpa93YDn8iZDWBdDnS1ZJBb8'
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
