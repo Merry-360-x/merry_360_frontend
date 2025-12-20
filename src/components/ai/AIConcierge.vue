@@ -15,20 +15,32 @@
         <div class="bg-gradient-to-r from-brand-500 to-brand-600 text-white p-4 sm:p-6 rounded-t-3xl flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center relative">
-              <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="!adminMode" class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+              <svg v-else class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
               </svg>
               <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
             </div>
             <div>
-              <h3 class="font-bold text-base sm:text-lg">Amani - AI Trip Advisor</h3>
+              <h3 class="font-bold text-base sm:text-lg">{{ adminMode ? adminName : 'Amani - AI Advisor' }}</h3>
               <p class="text-white/80 text-xs sm:text-sm flex items-center gap-1">
                 <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                Online • Ready to help
+                {{ adminMode ? `${adminRole} • Live Support` : 'AI • Ready to help' }}
               </p>
             </div>
           </div>
           <div class="flex items-center gap-2">
+            <!-- Request Human Support Button -->
+            <button 
+              v-if="!adminMode"
+              @click="requestHumanSupport"
+              class="text-white hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors text-xs font-medium"
+              title="Talk to a real person"
+            >
+              Talk to Support
+            </button>
             <button @click="minimize" class="text-white hover:bg-white/20 p-2 rounded-full transition-colors" title="Minimize">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -114,10 +126,16 @@
               </div>
             </div>
 
-            <!-- AI Message -->
+            <!-- AI/Admin Message -->
             <div v-else class="flex justify-start">
               <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%] shadow-sm border border-gray-100">
-                <p class="text-sm text-gray-900">{{ message.text }}</p>
+                <div v-if="message.isAdmin" class="flex items-center gap-2 mb-1">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {{ message.adminRole }}
+                  </span>
+                  <span class="text-xs text-gray-500">{{ message.adminName }}</span>
+                </div>
+                <p class="text-sm text-gray-900 whitespace-pre-line">{{ message.text }}</p>
               </div>
             </div>
           </div>
@@ -176,16 +194,23 @@ const messages = ref([])
 const inputMessage = ref('')
 const isTyping = ref(false)
 const messagesContainer = ref(null)
+const adminMode = ref(false)
+const adminName = ref('')
+const adminRole = ref('')
 
 const quickSuggestions = [
-  'Budget hotels under $50',
-  'Gorilla trekking tours',
-  'Best time to visit',
-  'Airport transfer options',
-  'Is Rwanda safe?',
-  'Visa requirements',
-  'Eco-friendly lodges'
+  'Show me hotels',
+  'Gorilla trekking',
+  'Airport transfer',
+  'Best time to visit'
 ]
+
+// Admin clearance levels
+const CLEARANCE_LEVELS = {
+  SUPPORT: 'Support Agent',
+  MANAGER: 'Support Manager', 
+  ADMIN: 'Administrator'
+}
 
 const close = () => {
   emit('close')
@@ -193,6 +218,31 @@ const close = () => {
 
 const minimize = () => {
   emit('minimize')
+}
+
+const requestHumanSupport = () => {
+  // In production, this would create a support ticket in backend
+  messages.value.push({
+    type: 'system',
+    text: 'Connecting you to a live support agent...',
+    isAdmin: false
+  })
+  
+  // Simulate admin taking over (in production, this would be real-time via WebSocket/Supabase realtime)
+  setTimeout(() => {
+    adminMode.value = true
+    adminName.value = 'Sarah'
+    adminRole.value = CLEARANCE_LEVELS.SUPPORT
+    
+    messages.value.push({
+      type: 'ai',
+      text: "Hi! I'm Sarah from the support team. How can I help you today?",
+      isAdmin: true,
+      adminName: 'Sarah',
+      adminRole: CLEARANCE_LEVELS.SUPPORT
+    })
+    scrollToBottom()
+  }, 2000)
 }
 
 const sendUserMessage = () => {
@@ -215,83 +265,81 @@ const sendMessage = async (text) => {
   // Show typing indicator
   isTyping.value = true
   
-  // Simulate AI response
+  // Simulate AI or Admin response
   setTimeout(() => {
-    const response = getAIResponse(text)
+    const response = adminMode.value ? getAdminResponse(text) : getAIResponse(text)
     messages.value.push({
       type: 'ai',
-      text: response
+      text: response,
+      isAdmin: adminMode.value,
+      adminName: adminMode.value ? adminName.value : null,
+      adminRole: adminMode.value ? adminRole.value : null
     })
     isTyping.value = false
     scrollToBottom()
   }, 1000 + Math.random() * 1000)
 }
 
+const getAdminResponse = (userMessage) => {
+  // In production, this would be handled by real admin via backend
+  return "I understand your question. Let me check that for you and get back with the exact details. Is there anything specific you'd like to know?"
+}
+
 const getAIResponse = (userMessage) => {
   const msg = userMessage.toLowerCase()
   
   // Accommodation queries
-  if (msg.includes('hotel') || msg.includes('accommodation') || msg.includes('stay') || msg.includes('kigali')) {
-    return "I can help you find the perfect place to stay in Rwanda!\n\nWe offer a wide range of accommodations:\n\n**Luxury Options** (from $150/night)\n• Premium hotels in Kigali\n• Safari lodges near national parks\n• Lakeside resorts\n\n**Mid-Range** ($50-150/night)\n• Comfortable hotels with modern amenities\n• Boutique guesthouses\n• City center locations\n\n**Budget-Friendly** ($20-50/night)\n• Clean hostels and guesthouses\n• Local homestays for authentic experiences\n\nBrowse our Accommodations section to see available properties, check real-time availability, and book instantly with secure payment options."
+  if (msg.includes('hotel') || msg.includes('accommodation') || msg.includes('stay')) {
+    return "We have hotels ranging from $20-500/night:\n\n• Budget: Clean guesthouses ($20-50)\n• Mid-range: Comfortable hotels ($50-150)\n• Luxury: Premium lodges ($150+)\n\nVisit Accommodations to browse and book!"
   }
   
   // Tour queries
-  if (msg.includes('tour') || msg.includes('activity') || msg.includes('gorilla') || msg.includes('safari')) {
-    return "Rwanda offers incredible tour experiences!\n\n**Gorilla Trekking** - from $1500\n• Volcanoes National Park\n• Once-in-a-lifetime wildlife experience\n• Permits and guides included\n\n**Safari Adventures** - $200-500\n• Akagera National Park\n• Big 5 game viewing opportunities\n• Day trips or multi-day packages\n\n**Cultural Experiences** - $50-150\n• Kigali city historical tours\n• Traditional village visits\n• Genocide memorial and museums\n\n**Adventure Activities** - $30-200\n• Mountain hiking and trekking\n• Kayaking on Lake Kivu\n• Forest canopy walks\n\nVisit our Tours section to browse all experiences and book your adventure with instant confirmation!"
+  if (msg.includes('tour') || msg.includes('gorilla') || msg.includes('safari')) {
+    return "Popular tours:\n\n• Gorilla Trekking - $1500\n• Safari in Akagera - $200-500\n• City tours - $50-100\n• Cultural experiences - $50-150\n\nCheck out our Tours section!"
   }
   
   // Transport queries
-  if (msg.includes('transport') || msg.includes('airport') || msg.includes('transfer') || msg.includes('taxi') || msg.includes('car')) {
-    return " Transportation made easy in Rwanda:\n\n **Airport Transfers**\n• Private: $25-40 (Kigali)\n• Shared shuttle: $10-15\n\n **Car Rentals**\n• With driver: $80-150/day\n• Self-drive: $50-100/day\n• 4x4 available for safaris\n\n **City Transport**\n• Ride apps (Yego, Move, Uber)\n• Taxi services\n• Motorcycle taxis (moto)\n\n **Inter-City**\n• Comfortable bus services\n• Scheduled routes\n\nCheck our 'Transport' section to book your ride!"
-  }
-  
-  // Eco-friendly queries
-  if (msg.includes('eco') || msg.includes('sustainable') || msg.includes('green') || msg.includes('environment')) {
-    return " Sustainable travel in Rwanda:\n\n **Eco-Certified Lodges**\n• Solar-powered properties\n• Rainwater harvesting\n• Local community support\n\n **Sustainable Activities**\n• Community-based tourism\n• Conservation projects\n• Wildlife protection programs\n\n **Rwanda is a leader in eco-tourism**\n• Plastic bag ban since 2008\n• Monthly community clean-up\n• Protected national parks\n\nWould you like to see our eco-certified properties?"
+  if (msg.includes('transport') || msg.includes('airport') || msg.includes('car')) {
+    return "Transportation options:\n\n• Airport transfer: $10-40\n• Car rental: $50-150/day\n• City transport available\n\nBook in our Transport section!"
   }
   
   // Pricing queries
-  if (msg.includes('price') || msg.includes('cost') || msg.includes('budget') || msg.includes('cheap') || msg.includes('expensive') || msg.includes('$')) {
-    return " Budget planning for Rwanda:\n\n**Accommodation:**\n• Budget: $20-50/night\n• Mid-range: $50-150/night\n• Luxury: $150-500/night\n\n**Tours:**\n• City tours: $50-100\n• Day trips: $100-300\n• Gorilla trekking: $1500\n• Safari packages: $200-500/day\n\n**Transport:**\n• Airport transfer: $10-40\n• Car rental: $50-150/day\n• Local taxis: $5-20\n\n**Daily Budget:**\n• Backpacker: $30-50\n• Mid-range: $100-200\n• Luxury: $300+\n\nAll prices in USD. What's your budget range?"
+  if (msg.includes('price') || msg.includes('cost') || msg.includes('budget')) {
+    return "Daily budget guide:\n\n• Backpacker: $30-50\n• Mid-range: $100-200\n• Luxury: $300+\n\nWhat's your budget?"
   }
   
-  // Booking queries
-  if (msg.includes('book') || msg.includes('reserve') || msg.includes('availability') || msg.includes('how to')) {
-    return " Easy booking process:\n\n**Step 1:** Browse\n• Explore accommodations, tours, or transport\n• Filter by price, location, ratings\n\n**Step 2:** Select\n• Choose your dates\n• Review details & amenities\n• Check availability\n\n**Step 3:** Book\n• Add to Trip Cart\n• Secure checkout\n• Instant confirmation\n\n **Benefits:**\n• Best price guarantee\n• Instant confirmation\n• 24/7 customer support\n• Flexible cancellation\n\nReady to start exploring?"
+  // Weather/timing
+  if (msg.includes('when') || msg.includes('weather') || msg.includes('season')) {
+    return "Best time to visit:\n\n• Dry season (Jun-Sep, Dec-Feb) - Best for trekking\n• Wet season (Mar-May, Oct-Nov) - Lower prices\n\nYear-round spring weather (15-27°C)!"
   }
   
-  // Best time to visit
-  if (msg.includes('when') || msg.includes('best time') || msg.includes('season') || msg.includes('weather')) {
-    return " Best time to visit Rwanda:\n\n **Dry Season (Jun-Sep, Dec-Feb)**\n• Best for gorilla trekking\n• Clear skies, great views\n• Peak safari season\n• Higher prices\n\n **Wet Season (Mar-May, Oct-Nov)**\n• Lush green landscapes\n• Fewer tourists\n• Lower prices\n• Some roads challenging\n\n **Climate:**\n• Year-round spring-like weather\n• 15-27°C (59-81°F)\n• Pleasant temperatures\n\n **Gorilla Trekking:** Year-round (book 6+ months ahead)\n\nWhen are you planning to visit?"
+  // Safety
+  if (msg.includes('safe') || msg.includes('security')) {
+    return "Rwanda is very safe! It's one of Africa's safest countries with low crime rates. English is widely spoken and infrastructure is tourist-friendly."
   }
   
-  // Safety queries
-  if (msg.includes('safe') || msg.includes('security') || msg.includes('danger')) {
-    return " Safety in Rwanda:\n\n **Rwanda is very safe!**\n• One of Africa's safest countries\n• Low crime rate\n• Clean & organized\n• Friendly locals\n\n **Safety Tips:**\n• Keep valuables secure\n• Use registered taxis/rides\n• Follow park ranger guidance\n• Respect local customs\n\n **Tourist Police:**\n• Available in major areas\n• English-speaking\n• Very helpful\n\n **Cultural Note:**\n• Rwandans are welcoming\n• English widely spoken\n• Tourist-friendly infrastructure\n\nFeel confident exploring Rwanda!"
-  }
-  
-  // Visa & entry
-  if (msg.includes('visa') || msg.includes('passport') || msg.includes('entry') || msg.includes('requirements')) {
-    return " Visa & Entry Requirements:\n\n **Visa on Arrival**\n• Available for most nationalities\n• $50 for 30 days\n• Apply online before travel\n\n **Visa-Free:**\n• African Union members\n• Some Commonwealth countries\n\n **E-Visa:**\n• Apply online: irembo.gov.rw\n• 3-7 days processing\n• Easier than arrival visa\n\n **Requirements:**\n• Valid passport (6+ months)\n• Return ticket\n• Proof of accommodation\n• Yellow fever certificate (if from endemic area)\n\n Check specific requirements for your nationality!"
-  }
-  
-  // Food queries
-  if (msg.includes('food') || msg.includes('restaurant') || msg.includes('eat') || msg.includes('cuisine')) {
-    return " Rwandan Cuisine & Dining:\n\n **Traditional Dishes:**\n• Isombe - cassava leaves\n• Brochettes - grilled meat skewers\n• Ugali - maize porridge\n• Matoke - cooked plantains\n\n **International Options:**\n• Indian, Chinese, Italian\n• French fine dining\n• American fast food\n• Fusion restaurants\n\n **Must-Try:**\n• Rwandan coffee (world-class!)\n• Local tea\n• Fresh tropical fruits\n\n **Prices:**\n• Street food: $2-5\n• Local restaurants: $5-15\n• Mid-range: $15-30\n• Fine dining: $30-60\n\nKigali has excellent dining scene!"
+  // Visa
+  if (msg.includes('visa') || msg.includes('passport')) {
+    return "Visa info:\n\n• E-visa available online\n• $50 for 30 days\n• Valid passport required (6+ months)\n\nCheck irembo.gov.rw"
   }
   
   // Greetings
-  if (msg.includes('hello') || msg.includes('hi') || msg === 'hey' || msg.includes('good morning') || msg.includes('good afternoon')) {
-    return " Hello! Welcome to Merry360X - your gateway to Rwanda!\n\nI'm Amani, your AI travel advisor. I'm here to help you discover:\n\n Perfect accommodations\n Unforgettable tours\n Easy transportation\n Insider travel tips\n\nHow can I help you plan your Rwandan adventure today?"
+  if (msg.includes('hello') || msg.includes('hi') || msg === 'hey') {
+    return "Hello! I'm Amani, your AI travel advisor. I can help with accommodations, tours, transport, and travel info. What would you like to know?"
   }
   
-  // Thank you
-  if (msg.includes('thank') || msg.includes('thanks')) {
-    return "You're very welcome! \n\nI'm always here to help you plan the perfect trip to Rwanda. If you have any more questions about accommodations, tours, transportation, or anything else, just ask!\n\nHappy travels! "
+  // Thanks
+  if (msg.includes('thank')) {
+    return "You're welcome! Feel free to ask if you need anything else. Happy travels!"
   }
   
-  // Default helpful response
-  return "I'm Amani, your AI travel advisor for Rwanda! \n\nI can help you with:\n\n **Accommodations** - Hotels, lodges, guesthouses\n **Tours & Activities** - Gorilla trekking, safaris, cultural tours\n **Transportation** - Airport transfers, car rentals, taxis\n **Budget Planning** - Price ranges and tips\n **Travel Info** - Best time to visit, visas, safety\n **Dining** - Restaurants and local cuisine\n\nWhat would you like to know? Just type your question!"
+  // Need human help
+  if (msg.includes('human') || msg.includes('person') || msg.includes('agent')) {
+    return "Would you like to speak with a live support agent? Click the 'Talk to Support' button at the top!"
+  }
+  
+  // Default
+  return "I can help you with:\n\n• Accommodations\n• Tours & Activities\n• Transportation\n• Travel Information\n\nWhat would you like to know?"
 }
 
 const scrollToBottom = () => {
