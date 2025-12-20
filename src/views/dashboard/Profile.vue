@@ -39,13 +39,24 @@
             <!-- Avatar -->
             <div class="text-center mb-6">
               <div class="relative inline-block">
-                <div class="w-32 h-32 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div v-if="userStore.user?.avatar_url" class="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4 border-4 border-white shadow-lg">
+                  <img :src="userStore.user.avatar_url" :alt="userStore.user.name" class="w-full h-full object-cover" />
+                </div>
+                <div v-else class="w-32 h-32 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span class="text-white text-4xl font-bold">{{ userInitials }}</span>
                 </div>
-                <button @click.prevent="selectAvatar" class="absolute bottom-2 right-2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
-                  <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button 
+                  @click.prevent="selectAvatar" 
+                  :disabled="uploadingAvatar"
+                  class="absolute bottom-2 right-2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <svg v-if="!uploadingAvatar" class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <svg v-else class="w-5 h-5 text-gray-600 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 </button>
                 <input ref="avatarInput" type="file" accept="image/*" class="hidden" @change="onAvatarChange" />
@@ -324,6 +335,18 @@
                 ></textarea>
               </div>
 
+              <div>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">Education / Studies</label>
+                <textarea
+                  v-model="personalInfo.studies"
+                  :disabled="!editingPersonal"
+                  rows="4"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 bg-white text-gray-900"
+                  placeholder="e.g., Bachelor of Science in Computer Science, University of Rwanda (2018-2022)&#10;Master of Business Administration, Kigali Institute (2023-2025)"
+                ></textarea>
+                <p class="text-xs text-gray-500 mt-1">Enter your educational background, degrees, certifications, or any relevant studies.</p>
+              </div>
+
               <div v-if="editingPersonal" class="flex gap-3">
                 <Button type="submit" variant="primary" size="md">
                   Save Changes
@@ -579,7 +602,8 @@ const personalInfo = ref({
   email: userStore.user?.email || '',
   phone: userStore.user?.phone || '',
   dateOfBirth: userStore.user?.dateOfBirth || '',
-  bio: userStore.user?.bio || ''
+  bio: userStore.user?.bio || '',
+  studies: userStore.user?.studies || ''
 })
 
 const passwordForm = ref({
@@ -674,6 +698,9 @@ const savePersonalInfo = async () => {
     if (personalInfo.value.bio?.trim()) {
       updates.bio = personalInfo.value.bio.trim()
     }
+    if (personalInfo.value.studies?.trim()) {
+      updates.studies = personalInfo.value.studies.trim()
+    }
 
     console.log('Updates:', updates)
 
@@ -698,7 +725,8 @@ const savePersonalInfo = async () => {
       lastName: data.last_name || '',
       phone: data.phone || '',
       dateOfBirth: data.date_of_birth || '',
-      bio: data.bio || ''
+      bio: data.bio || '',
+      studies: data.studies || ''
     }
 
     await userStore.login(updatedUser)
@@ -774,44 +802,68 @@ const selectAvatar = () => {
 const onAvatarChange = async (e) => {
   const file = e.target.files && e.target.files[0]
   if (!file) return
+  
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image size must be less than 5MB')
+    return
+  }
+  
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file')
+    return
+  }
+  
   uploadingAvatar.value = true
   try {
-    if (import.meta.env.VITE_USE_FIREBASE === 'true') {
-      initFirebase()
-      const uid = JSON.parse(localStorage.getItem('user'))?.id || 'anonymous'
-      const path = `avatars/${uid}/${Date.now()}_${file.name}`
-      const url = await uploadFileToStorage(path, file)
-      await setUserProfile(uid, { avatar: url })
-      const user = JSON.parse(localStorage.getItem('user')) || {}
-      user.avatar = url
-      localStorage.setItem('user', JSON.stringify(user))
-      userStore.login(user)
-    } else if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-      const result = await uploadToCloudinary(file, { folder: 'merry360x/avatars' })
-      const url = result.secure_url
-      const api = (await import('@/services/api')).default
-      if (api && api.user && api.user.updateProfile) {
-        await api.user.updateProfile({ avatar: url })
+    console.log('🖼️ Uploading profile picture...')
+    
+    // Upload to Cloudinary
+    const result = await uploadToCloudinary(file, { folder: 'merry360x/avatars' })
+    const avatarUrl = result.secure_url
+    console.log('✅ Image uploaded to Cloudinary:', avatarUrl)
+    
+    // Save to Supabase database
+    if (userStore.user?.id) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ avatar_url: avatarUrl })
+        .eq('id', userStore.user.id)
+        .select()
+        .single()
+      
+      if (error) {
+        console.error('Database error:', error)
+        throw error
       }
-      const user = JSON.parse(localStorage.getItem('user')) || {}
-      user.avatar = url
-      localStorage.setItem('user', JSON.stringify(user))
-      userStore.login(user)
+      
+      console.log('✅ Avatar saved to database:', data)
+      
+      // Update user store with new avatar
+      const updatedUser = {
+        ...userStore.user,
+        avatar_url: avatarUrl
+      }
+      await userStore.login(updatedUser)
+      alert('Profile picture updated successfully!')
     } else {
-      const reader = new FileReader()
-      reader.onload = () => {
-        const url = reader.result
-        const user = JSON.parse(localStorage.getItem('user')) || {}
-        user.avatar = url
-        localStorage.setItem('user', JSON.stringify(user))
-        userStore.login(user)
-      }
-      reader.readAsDataURL(file)
+      // Fallback for users without database ID
+      const user = JSON.parse(localStorage.getItem('user')) || {}
+      user.avatar_url = avatarUrl
+      localStorage.setItem('user', JSON.stringify(user))
+      userStore.login(user)
+      alert('Profile picture updated!')
     }
   } catch (err) {
-    console.error('Failed to upload avatar', err)
+    console.error('Failed to upload avatar:', err)
+    alert(`Failed to upload profile picture: ${err.message}`)
   } finally {
     uploadingAvatar.value = false
+    // Reset file input
+    if (avatarInput.value) {
+      avatarInput.value.value = ''
+    }
   }
 }
 </script>

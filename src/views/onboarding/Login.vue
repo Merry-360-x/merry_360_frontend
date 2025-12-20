@@ -140,8 +140,9 @@ const handleLogin = async () => {
       phone: profile?.phone || '',
       dateOfBirth: profile?.date_of_birth || '',
       bio: profile?.bio || '',
+      studies: profile?.studies || '',
       role: profile?.role || 'user',
-      avatarUrl: profile?.avatar_url || '',
+      avatar_url: profile?.avatar_url || '',
       verified: true
     })
 
