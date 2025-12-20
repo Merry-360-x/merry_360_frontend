@@ -1,0 +1,27 @@
+// Test production environment variables for Cloudinary
+
+console.log('🔍 Checking Production Build Environment Variables...\n')
+
+const requiredVars = {
+  'VITE_CLOUDINARY_CLOUD_NAME': import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+  'VITE_CLOUDINARY_UPLOAD_PRESET': import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+  'VITE_SUPABASE_URL': import.meta.env.VITE_SUPABASE_URL,
+  'VITE_SUPABASE_ANON_KEY': import.meta.env.VITE_SUPABASE_ANON_KEY
+}
+
+let allSet = true
+
+for (const [name, value] of Object.entries(requiredVars)) {
+  const status = value ? '✅' : '❌'
+  const displayValue = value ? (value.length > 20 ? value.substring(0, 20) + '...' : value) : 'NOT SET'
+  console.log(`${status} ${name}: ${displayValue}`)
+  if (!value) allSet = false
+}
+
+console.log('\n' + (allSet ? '✅ All required variables are set!' : '❌ Some variables are missing!'))
+
+// Test Cloudinary configuration
+if (requiredVars.VITE_CLOUDINARY_CLOUD_NAME && requiredVars.VITE_CLOUDINARY_UPLOAD_PRESET) {
+  console.log(`\n📸 Cloudinary Upload URL will be:`)
+  console.log(`https://api.cloudinary.com/v1_1/${requiredVars.VITE_CLOUDINARY_CLOUD_NAME}/upload`)
+}
