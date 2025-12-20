@@ -204,7 +204,7 @@ const handleSignup = async () => {
       if (profileError) console.error('Profile creation error:', profileError)
 
       // Update user store
-      userStore.login({
+      await userStore.login({
         id: authData.user.id,
         email: authData.user.email,
         name: `${firstName.value} ${lastName.value}`,
@@ -218,6 +218,9 @@ const handleSignup = async () => {
       if (authData.session?.access_token) {
         localStorage.setItem('auth_token', authData.session.access_token)
       }
+
+      console.log('✅ Signup successful, user store updated')
+      console.log('User data:', userStore.user)
 
       successMessage.value = 'Account created successfully! Redirecting...'
       

@@ -98,12 +98,30 @@ onMounted(async () => {
         console.warn('Profile check warning:', profileCheckError)
       }
       
+      // Fetch the complete profile from database
+      const { data: fullProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .single()
+      
       // Update user store with authenticated user
-      userStore.login({
+      await userStore.login({
         id: session.user.id,
         email: session.user.email,
-        name: session.user.user_metadata?.full_name || session.user.email,
-        firstName: session.user.user_metadata?.first_name || session.user.user_metadata?.given_name || '',
+        name: fullProfile ? `${fullProfile.first_name} ${fullProfile.last_name}` : session.user.email,
+        firstName: fullProfile?.first_name || session.user.user_metadata?.given_name || '',
+        lastName: fullProfile?.last_name || session.user.user_metadata?.family_name || '',
+        phone: fullProfile?.phone || '',
+        role: fullProfile?.role || 'user',
+        avatarUrl: fullProfile?.avatar_url || session.user.user_metadata?.picture || '',
+        verified: true
+      })
+      
+      localStorage.setItem('auth_token', session.access_token)
+      
+      console.log('✅ OAuth callback complete, user store updated')
+      console.log('User data:', userStore.user)
         lastName: session.user.user_metadata?.last_name || session.user.user_metadata?.family_name || '',
         phone: session.user.phone || '',
         role: 'user',

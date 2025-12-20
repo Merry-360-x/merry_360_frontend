@@ -131,7 +131,7 @@ const handleLogin = async () => {
       .single()
 
     // Update user store
-    userStore.login({
+    await userStore.login({
       id: data.user.id,
       email: data.user.email,
       name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
@@ -139,6 +139,7 @@ const handleLogin = async () => {
       lastName: profile?.last_name || '',
       phone: profile?.phone || '',
       role: profile?.role || 'user',
+      avatarUrl: profile?.avatar_url || '',
       verified: true
     })
 
@@ -146,6 +147,9 @@ const handleLogin = async () => {
     if (data.session?.access_token) {
       localStorage.setItem('auth_token', data.session.access_token)
     }
+
+    console.log('✅ Login successful, user store updated')
+    console.log('User data:', userStore.user)
 
     // Navigate based on role
     const isAdmin = data.user.email === 'admin@merry360x.com' || data.user.email === 'bebisdavy@gmail.com'
