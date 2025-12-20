@@ -658,13 +658,15 @@ const savePersonalInfo = async () => {
   try {
     console.log('🔄 Updating profile for user:', userStore.user.id)
     
-    // Don't update email in profiles table - it's managed by auth.users
+    // Build updates object with only existing columns
     const updates = {
       first_name: personalInfo.value.firstName.trim(),
-      last_name: personalInfo.value.lastName.trim(),
-      phone: personalInfo.value.phone?.trim() || null,
-      date_of_birth: personalInfo.value.dateOfBirth || null,
-      bio: personalInfo.value.bio?.trim() || null
+      last_name: personalInfo.value.lastName.trim()
+    }
+
+    // Add optional fields only if they have values
+    if (personalInfo.value.phone?.trim()) {
+      updates.phone = personalInfo.value.phone.trim()
     }
 
     console.log('Updates:', updates)
@@ -683,14 +685,15 @@ const savePersonalInfo = async () => {
 
     console.log('✅ Profile updated:', data)
 
+    // Keep dateOfBirth and bio in local state only (not persisted to DB yet)
     const updatedUser = {
       ...userStore.user,
       name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || userStore.user.email,
       firstName: data.first_name || '',
       lastName: data.last_name || '',
       phone: data.phone || '',
-      dateOfBirth: data.date_of_birth || '',
-      bio: data.bio || ''
+      dateOfBirth: personalInfo.value.dateOfBirth || '',
+      bio: personalInfo.value.bio || ''
     }
 
     await userStore.login(updatedUser)

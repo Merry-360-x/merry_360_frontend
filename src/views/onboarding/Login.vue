@@ -138,8 +138,6 @@ const handleLogin = async () => {
       firstName: profile?.first_name || '',
       lastName: profile?.last_name || '',
       phone: profile?.phone || '',
-      dateOfBirth: profile?.date_of_birth || '',
-      bio: profile?.bio || '',
       role: profile?.role || 'user',
       avatarUrl: profile?.avatar_url || '',
       verified: true
