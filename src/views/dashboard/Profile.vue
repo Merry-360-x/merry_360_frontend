@@ -541,6 +541,7 @@ import Button from '@/components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
 import { initFirebase, uploadFileToStorage, setUserProfile } from '@/services/firebase'
 import { signOut as signOutAuth } from '@/services/auth'
+import { supabase } from '@/services/supabase'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -636,21 +637,62 @@ const formatPrice = (price) => {
   return currencyStore.formatPrice(typeof price === 'string' ? parseInt(price.replace(/[^0-9]/g, '')) : price)
 }
 
-const savePersonalInfo = () => {
-  // Update user info
-  userStore.user = {
-    ...userStore.user,
-    name: `${personalInfo.value.firstName} ${personalInfo.value.lastName}`,
-    email: personalInfo.value.email,
-    phone: personalInfo.value.phone,
-    dateOfBirth: personalInfo.value.dateOfBirth,
-    bio: personalInfo.value.bio
+const savePersonalInfo = async () => {
+  if (!editingPersonal.value) return
+
+  if (!userStore.user?.id) {
+    userStore.user = {
+      ...userStore.user,
+      name: `${personalInfo.value.firstName} ${personalInfo.value.lastName}`.trim(),
+      email: personalInfo.value.email,
+      phone: personalInfo.value.phone,
+      dateOfBirth: personalInfo.value.dateOfBirth,
+      bio: personalInfo.value.bio
+    }
+    localStorage.setItem('user', JSON.stringify(userStore.user))
+    editingPersonal.value = false
+    alert('Personal information updated locally!')
+    return
   }
-  
-  editingPersonal.value = false
-  
-  // Show success message (you can add a toast notification here)
-  alert('Personal information updated successfully!')
+
+  try {
+    const updates = {
+      first_name: personalInfo.value.firstName,
+      last_name: personalInfo.value.lastName,
+      email: personalInfo.value.email,
+      phone: personalInfo.value.phone,
+      date_of_birth: personalInfo.value.dateOfBirth || null,
+      bio: personalInfo.value.bio
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userStore.user.id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    const updatedUser = {
+      ...userStore.user,
+      email: data.email,
+      name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || data.email,
+      firstName: data.first_name || '',
+      lastName: data.last_name || '',
+      phone: data.phone || '',
+      dateOfBirth: data.date_of_birth || '',
+      bio: data.bio || ''
+    }
+
+    await userStore.login(updatedUser)
+
+    editingPersonal.value = false
+    alert('Personal information updated successfully!')
+  } catch (err) {
+    console.error('Error updating profile:', err)
+    alert('Failed to update personal information. Please try again.')
+  }
 }
 
 const savePreferences = () => {
