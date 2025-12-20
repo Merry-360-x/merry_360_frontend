@@ -658,15 +658,21 @@ const savePersonalInfo = async () => {
   try {
     console.log('🔄 Updating profile for user:', userStore.user.id)
     
-    // Build updates object with only existing columns
+    // Build updates object with all fields
     const updates = {
       first_name: personalInfo.value.firstName.trim(),
       last_name: personalInfo.value.lastName.trim()
     }
 
-    // Add optional fields only if they have values
+    // Add optional fields
     if (personalInfo.value.phone?.trim()) {
       updates.phone = personalInfo.value.phone.trim()
+    }
+    if (personalInfo.value.dateOfBirth) {
+      updates.date_of_birth = personalInfo.value.dateOfBirth
+    }
+    if (personalInfo.value.bio?.trim()) {
+      updates.bio = personalInfo.value.bio.trim()
     }
 
     console.log('Updates:', updates)
@@ -685,15 +691,14 @@ const savePersonalInfo = async () => {
 
     console.log('✅ Profile updated:', data)
 
-    // Keep dateOfBirth and bio in local state only (not persisted to DB yet)
     const updatedUser = {
       ...userStore.user,
       name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || userStore.user.email,
       firstName: data.first_name || '',
       lastName: data.last_name || '',
       phone: data.phone || '',
-      dateOfBirth: personalInfo.value.dateOfBirth || '',
-      bio: personalInfo.value.bio || ''
+      dateOfBirth: data.date_of_birth || '',
+      bio: data.bio || ''
     }
 
     await userStore.login(updatedUser)
