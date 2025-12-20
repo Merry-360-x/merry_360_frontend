@@ -432,29 +432,35 @@ const submitForm = async () => {
   isSubmitting.value = true
   
   try {
-    // Save to Supabase
-    const { data, error } = await supabase
-      .from('host_applications')
-      .insert([{
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        location: formData.location,
-        hosting_type: formData.hostingType,
-        description: formData.description,
-        experience: formData.experience || null,
-        status: 'pending',
-        created_at: new Date().toISOString()
-      }])
-      .select()
-      .single()
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    if (!user) {
+      showToast('Please login first to apply as a host', 'error')
+      router.push('/login')
+      return
+    }
+    
+    console.log('Submitting host application for user:', user.email)
+    
+    // Update user profile with host application
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        host_application_status: 'pending',
+        host_application_date: new Date().toISOString()
+      })
+      .eq('id', user.id)
     
     if (error) {
+      console.error('Supabase error:', error)
       throw error
     }
     
     // Show success message
-    showToast('Application submitted successfully! We will contact you within 24 hours.', 'success')
+    showToast('✅ Host application submitted! Saved to database. Admin will review it soon.', 'success')
+    
+    console.log('Host application saved successfully to profiles table')
     
     // Reset form
     Object.keys(formData).forEach(key => {
@@ -469,7 +475,7 @@ const submitForm = async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (error) {
     console.error('Host application error:', error)
-    showToast('Failed to submit application. Please try again.', 'error')
+    showToast('Failed to submit application. Please try again: ' + error.message, 'error')
   } finally {
     isSubmitting.value = false
   }

@@ -61,6 +61,7 @@ import AdminTours from '../views/admin/AdminTours.vue'
 import AdminTransport from '../views/admin/AdminTransport.vue'
 import AdminPayments from '../views/admin/AdminPayments.vue'
 import AdminAnalytics from '../views/admin/AdminAnalytics.vue'
+import AdminHostApplications from '../views/admin/AdminHostApplications.vue'
 
 // Vendor
 import VendorDashboard from '../views/vendor/VendorDashboard.vue'
@@ -268,6 +269,12 @@ const routes = [
     path: '/admin/analytics',
     name: 'admin-analytics',
     component: AdminAnalytics,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/host-applications',
+    name: 'admin-host-applications',
+    component: AdminHostApplications,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
