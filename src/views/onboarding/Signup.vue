@@ -4,14 +4,11 @@
     <div class="max-w-md w-full">
       <!-- Logo -->
       <div class="text-center mb-8 animate-fade-in">
-        <router-link to="/" class="inline-flex items-center justify-center space-x-2">
-          <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center">
-            <span class="text-white font-bold text-2xl">M</span>
-          </div>
-          <span class="text-2xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.brandName') }}</span>
+        <router-link to="/" class="inline-flex items-center justify-center">
+          <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-16 w-auto" />
         </router-link>
-        <h2 class="mt-6 text-3xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.createAccount') }}</h2>
-        <p class="mt-2 text-text-secondary dark:text-gray-300">{{ t('auth.signupSubtitle') }}</p>
+        <h2 class="mt-6 text-3xl font-bold text-text-brand-600">{{ t('auth.createAccount') }}</h2>
+        <p class="mt-2 text-text-secondary">{{ t('auth.signupSubtitle') }}</p>
       </div>
 
       <!-- Signup Form -->
@@ -19,7 +16,7 @@
         <form @submit.prevent="handleSignup" class="space-y-5">
           <!-- Full Name -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.fullName') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.fullName') }}</label>
             <Input
               v-model="formData.name"
               type="text"
@@ -31,7 +28,7 @@
 
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.emailAddress') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.emailAddress') }}</label>
             <Input
               v-model="formData.email"
               type="email"
@@ -43,7 +40,7 @@
 
           <!-- Phone -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.phoneNumber') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.phoneNumber') }}</label>
             <Input
               v-model="formData.phone"
               type="tel"
@@ -55,7 +52,7 @@
 
           <!-- Password -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.password') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.password') }}</label>
             <Input
               v-model="formData.password"
               type="password"
@@ -67,7 +64,7 @@
 
           <!-- Confirm Password -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.confirmPassword') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.confirmPassword') }}</label>
             <Input
               v-model="formData.confirmPassword"
               type="password"
@@ -84,7 +81,7 @@
               v-model="formData.acceptTerms" 
               class="mt-1 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
             >
-            <span class="ml-2 text-sm text-text-secondary dark:text-gray-300">
+            <span class="ml-2 text-sm text-text-secondary">
               {{ t('auth.termsAgree') }}
               <a href="#" class="text-brand-600 hover:text-opacity-80">{{ t('auth.termsOfService') }}</a> 
               {{ t('auth.and') }}
@@ -108,10 +105,10 @@
         <!-- Social Signup -->
         <div class="relative my-6">
           <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+            <div class="w-full border-t border-gray-200"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-white dark:bg-gray-800 text-text-secondary dark:text-gray-300">{{ t('auth.orSignUpWith') }}</span>
+            <span class="px-4 bg-white text-text-secondary">{{ t('auth.orSignUpWith') }}</span>
           </div>
         </div>
 
@@ -120,7 +117,7 @@
 
       <!-- Login Link -->
       <div class="mt-6 text-center">
-        <p class="text-text-secondary dark:text-gray-300">
+        <p class="text-text-secondary">
           {{ t('auth.alreadyHaveAccount') }}
           <router-link to="/login" class="text-brand-600 font-medium hover:text-opacity-80 ml-1">
             {{ t('auth.login') }}

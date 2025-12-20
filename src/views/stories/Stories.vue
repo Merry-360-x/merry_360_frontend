@@ -4,8 +4,8 @@
     <section class="bg-gradient-to-br from-purple-50 to-pink-50 py-12">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900 dark:text-white">{{ t('stories.title') }}</h1>
-          <p class="text-base md:text-lg text-gray-600 dark:text-gray-300">{{ t('stories.subtitle') }}</p>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">{{ t('stories.title') }}</h1>
+          <p class="text-base md:text-lg text-gray-600">{{ t('stories.subtitle') }}</p>
         </div>
       </div>
     </section>
@@ -55,7 +55,7 @@
                 <svg class="w-3 h-3 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                 </svg>
-                <span class="text-xs font-semibold text-gray-800 dark:text-white truncate">{{ story.location }}</span>
+                <span class="text-xs font-semibold text-gray-800 truncate">{{ story.location }}</span>
               </div>
             </div>
 
@@ -69,13 +69,13 @@
 
         <!-- Empty State -->
         <div v-if="stories.length === 0" class="text-center py-20">
-          <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-            <svg class="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ t('stories.noStories') }}</h3>
-          <p class="text-gray-600 dark:text-gray-400">{{ t('stories.subtitle') }}</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ t('stories.noStories') }}</h3>
+          <p class="text-gray-600">{{ t('stories.subtitle') }}</p>
         </div>
       </div>
     </section>

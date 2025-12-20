@@ -1,16 +1,16 @@
 <template>
   <MainLayout>
     <!-- Search Bar Section -->
-    <div class="w-full py-12 bg-white dark:bg-gray-900" style="margin-top: 80px;">
+    <div class="w-full py-12 bg-white" style="margin-top: 80px;">
       <div class="container mx-auto px-4 max-w-4xl">
-        <div class="bg-white dark:bg-gray-800 rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+        <div class="bg-white rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 px-2 md:px-6">
-            <label class="block text-xs font-bold mb-1.5 dark:text-gray-200" style="font-family: Montserrat, sans-serif; color: #484848; font-size: 12px;">{{ t('nav.accommodations') }}</label>
+            <label class="block text-xs font-bold mb-1.5" style="font-family: Montserrat, sans-serif; color: #484848; font-size: 12px;">{{ t('nav.accommodations') }}</label>
             <input 
               v-model="searchQuery"
               type="text" 
               :placeholder="t('home.search')"
-              class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent dark:text-gray-200"
+              class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent"
               style="font-family: Montserrat, sans-serif; color: #484848; font-size: 14px;"
               @keyup.enter="performSearch"
             />
@@ -28,26 +28,26 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white dark:bg-gray-900 min-h-screen">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white min-h-screen">
       <!-- Header -->
       <div class="mb-6 sm:mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-text-brand-600 dark:text-white mb-2">Find Your Perfect Stay</h1>
-        <p class="text-text-secondary dark:text-gray-300 text-sm sm:text-base md:text-lg">Discover amazing accommodations across Rwanda and Africa</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-2">Find Your Perfect Stay</h1>
+        <p class="text-text-secondary text-sm sm:text-base md:text-lg">Discover amazing accommodations across Rwanda and Africa</p>
       </div>
 
       <!-- Filters and Search -->
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         <!-- Filters Sidebar -->
         <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
-            <h3 class="font-semibold text-base sm:text-lg mb-4 dark:text-white">Filters</h3>
+          <div class="bg-white rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
+            <h3 class="font-semibold text-base sm:text-lg mb-4">Filters</h3>
             
             <!-- View Toggle -->
             <div class="mb-4 sm:mb-6">
               <div class="flex gap-2">
                 <button 
                   @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-700 text-text-brand-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'"
+                  :class="viewMode === 'list' ? 'bg-primary text-white' : 'bg-gray-100 text-text-brand-600 hover:bg-gray-200 bg-gray-600'"
                   class="flex-1 py-2 rounded-lg transition-all duration-200 transform hover:scale-105"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
                 </button>
                 <button 
                   @click="viewMode = 'map'"
-                  :class="viewMode === 'map' ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-700 text-text-brand-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'"
+                  :class="viewMode === 'map' ? 'bg-primary text-white' : 'bg-gray-100 text-text-brand-600 hover:bg-gray-200 bg-gray-600'"
                   class="flex-1 py-2 rounded-button transition-colors"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@
                   v-for="rating in [3, 4, 4.5]"
                   :key="rating"
                   @click="filters.minRating = rating"
-                  :class="filters.minRating === rating ? 'bg-primary text-white' : 'bg-gray-100 dark:bg-gray-700 text-text-brand-600 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'"
+                  :class="filters.minRating === rating ? 'bg-primary text-white' : 'bg-gray-100 text-text-brand-600 hover:bg-gray-200 bg-gray-600'"
                   class="flex-1 py-2 px-3 rounded-button text-sm transition-colors"
                 >
                   {{ rating }}+⭐
@@ -160,7 +160,7 @@
             <p class="text-text-secondary text-sm sm:text-base">
               <span class="font-semibold text-text-brand-600">{{ filteredAccommodations.length }}</span> properties found
             </p>
-            <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 text-sm sm:text-base">
+            <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900 text-sm sm:text-base">
               <option value="recommended">Recommended</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
@@ -199,7 +199,7 @@
                   >
                     <svg 
                       class="w-6 h-6" 
-                      :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400 dark:text-gray-500'"
+                      :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400'"
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -249,7 +249,7 @@
                     <span 
                       v-for="amenity in accommodation.amenities.slice(0, 4)" 
                       :key="amenity"
-                      class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-text-secondary dark:text-gray-300 text-xs rounded"
+                      class="px-2 py-1 bg-gray-100 text-text-secondary text-xs rounded"
                     >
                       {{ amenity }}
                     </span>

@@ -57,12 +57,12 @@ const emit = defineEmits(['update:modelValue'])
 const isFocused = ref(false)
 
 const inputClasses = computed(() => {
-  const baseClasses = 'w-full px-4 py-3 rounded-button border transition-all duration-200 ease-out focus:outline-none focus:ring-2 text-base placeholder:text-gray-400 dark:placeholder:text-gray-400'
+  const baseClasses = 'w-full px-4 py-3 rounded-button border transition-all duration-200 ease-out focus:outline-none focus:ring-2 text-base placeholder:text-gray-400'
   const iconPadding = props.icon ? 'pl-11' : ''
   const errorClasses = props.error 
     ? 'border-error focus:ring-error focus:ring-opacity-20' 
-    : 'border-gray-200 dark:border-gray-500 focus:border-primary dark:focus:border-brand-400 focus:ring-primary dark:focus:ring-brand-400 focus:ring-opacity-20'
-  const disabledClass = props.disabled ? 'bg-gray-50 dark:bg-gray-600 cursor-not-allowed opacity-60' : 'bg-white dark:bg-gray-100 dark:text-gray-900'
+    : 'border-gray-200 focus:border-primary focus:ring-primary focus:ring-opacity-20'
+  const disabledClass = props.disabled ? 'bg-gray-50 cursor-not-allowed opacity-60' : 'bg-white'
   
   return [baseClasses, iconPadding, errorClasses, disabledClass].join(' ')
 })

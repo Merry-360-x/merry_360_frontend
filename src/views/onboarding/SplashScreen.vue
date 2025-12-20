@@ -4,9 +4,7 @@
     <div class="text-center">
       <!-- Logo -->
       <div class="mb-8 flex justify-center">
-        <div class="w-24 h-24 bg-white rounded-2xl shadow-xl flex items-center justify-center">
-          <span class="text-brand-600 font-bold text-5xl">M</span>
-        </div>
+        <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-32 w-auto drop-shadow-2xl" />
       </div>
 
       <!-- Brand Name -->

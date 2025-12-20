@@ -65,7 +65,7 @@
                 placeholder="2" 
                 class="bg-transparent border-0 focus:outline-none text-xs text-gray-900 w-12 text-center font-medium"
               />
-              <span class="text-xs text-gray-500 dark:text-gray-400 ml-1">guests</span>
+              <span class="text-xs text-gray-500 ml-1">guests</span>
             </div>
 
             <!-- Search Button -->
@@ -136,7 +136,7 @@
                 placeholder="2" 
                 class="bg-transparent border-0 focus:outline-none text-sm text-gray-900 w-12 text-center"
               />
-              <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">guests</span>
+              <span class="text-sm text-gray-500 ml-1">guests</span>
             </div>
 
             <!-- Search Button -->
@@ -330,7 +330,7 @@
           </div>
           <div class="flex justify-center order-first md:order-last">
             <div class="w-48 h-72 sm:w-56 sm:h-80 md:w-64 md:h-96 bg-gray-300 rounded-3xl flex items-center justify-center shadow-lg">
-              <svg class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
               </svg>
             </div>

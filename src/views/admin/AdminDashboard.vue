@@ -1,6 +1,6 @@
 <template>
   <MainLayout>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="min-h-screen bg-gray-50">
     <!-- Admin Sidebar -->
     <div class="flex">
       <aside class="w-64 bg-white border-r border-gray-200 min-h-screen sticky top-0">

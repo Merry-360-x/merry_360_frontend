@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans">
+  <div class="min-h-screen flex flex-col bg-white font-sans">
     <!-- Header -->
-    <header class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20 dark:border-gray-700/20">
+    <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
       <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20 md:h-24">
           <!-- Logo -->
           <router-link to="/" class="flex items-center">
-            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-12 md:h-16 w-auto" />
+            <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-12 md:h-16 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
@@ -54,7 +54,7 @@
               to="/login"
               class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
             >
-              <svg class="w-5 h-5 text-gray-800 dark:text-white" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="2" y="5" width="20" height="2" rx="1"/>
                 <rect x="2" y="11" width="20" height="2" rx="1"/>
                 <rect x="2" y="17" width="20" height="2" rx="1"/>
@@ -105,7 +105,7 @@
         leave-from-class="translate-x-0"
         leave-to-class="translate-x-full"
       >
-        <div v-if="mobileMenuOpen" class="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-800 shadow-2xl lg:hidden z-50">
+        <div v-if="mobileMenuOpen" class="fixed inset-y-0 right-0 w-64 bg-white shadow-2xl lg:hidden z-50">
           <div class="h-full flex flex-col">
             <!-- Menu Header -->
             <div class="flex items-center justify-between p-4 border-b">
@@ -234,24 +234,6 @@ const navigation = computed(() => [
   { name: t('nav.transport'), to: '/transport' },
   { name: t('nav.myTrips'), to: '/profile' },
 ])
-
-// Theme toggle
-const isDarkMode = computed(() => userStore.preferences.theme === 'dark')
-
-const toggleTheme = () => {
-  userStore.toggleTheme()
-  // Apply theme to document
-  const isDark = userStore.preferences.theme === 'dark'
-  if (isDark) {
-    document.documentElement.classList.add('dark')
-    document.body.style.backgroundColor = '#1a202c'
-    document.body.style.color = '#f7fafc'
-  } else {
-    document.documentElement.classList.remove('dark')
-    document.body.style.backgroundColor = '#ffffff'
-    document.body.style.color = '#000000'
-  }
-}
 
 // Watchlist and cart counts
 const watchlistCount = computed(() => userStore.watchlistCount)

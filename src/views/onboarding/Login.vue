@@ -1,16 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 py-12">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
     <div class="max-w-md w-full">
       <!-- Logo -->
       <div class="text-center mb-8">
-        <router-link to="/" class="inline-flex items-center justify-center space-x-2">
-          <div class="w-12 h-12 bg-brand-500 rounded-xl flex items-center justify-center">
-            <span class="text-white font-bold text-2xl">M</span>
-          </div>
-          <span class="text-2xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.brandName') }}</span>
+        <router-link to="/" class="inline-flex items-center justify-center">
+          <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-16 w-auto" />
         </router-link>
-        <h2 class="mt-6 text-3xl font-bold text-text-brand-600 dark:text-white">{{ t('auth.welcomeBack') }}</h2>
-        <p class="mt-2 text-text-secondary dark:text-gray-300">{{ t('auth.loginSubtitle') }}</p>
+        <h2 class="mt-6 text-3xl font-bold text-text-brand-600">{{ t('auth.welcomeBack') }}</h2>
+        <p class="mt-2 text-text-secondary">{{ t('auth.loginSubtitle') }}</p>
       </div>
 
       <!-- Login Form -->
@@ -18,7 +15,7 @@
         <form @submit.prevent="handleLogin" class="space-y-6">
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.emailAddress') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.emailAddress') }}</label>
             <Input
               v-model="formData.email"
               type="email"
@@ -29,7 +26,7 @@
 
           <!-- Password -->
           <div>
-            <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">{{ t('auth.password') }}</label>
+            <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.password') }}</label>
             <Input
               v-model="formData.password"
               type="password"
@@ -42,7 +39,7 @@
           <div class="flex items-center justify-between">
             <label class="flex items-center">
               <input type="checkbox" v-model="formData.remember" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
-              <span class="ml-2 text-sm text-text-secondary dark:text-gray-300">{{ t('auth.rememberMe') }}</span>
+              <span class="ml-2 text-sm text-text-secondary">{{ t('auth.rememberMe') }}</span>
             </label>
             <router-link to="/forgot-password" class="text-sm text-brand-600 hover:text-opacity-80">
               {{ t('auth.forgotPassword') }}
@@ -64,10 +61,10 @@
         <!-- Social Login -->
         <div class="relative my-6">
           <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+            <div class="w-full border-t border-gray-200"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-white dark:bg-gray-800 text-text-secondary dark:text-gray-300">{{ t('auth.orSignInWith') }}</span>
+            <span class="px-4 bg-white text-text-secondary">{{ t('auth.orSignInWith') }}</span>
           </div>
         </div>
 
@@ -75,8 +72,8 @@
 
         <!-- Language Selection -->
         <div class="pt-4">
-          <label class="block text-sm font-medium text-text-brand-600 dark:text-white mb-2">Language</label>
-          <select v-model="selectedLanguage" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-button focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-20 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+          <label class="block text-sm font-medium text-text-brand-600 mb-2">Language</label>
+          <select v-model="selectedLanguage" class="w-full px-4 py-3 border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-20 bg-white text-gray-900">
             <option value="en">English</option>
             <option value="rw">Kinyarwanda</option>
             <option value="fr">Français</option>
@@ -86,7 +83,7 @@
 
       <!-- Sign Up Link -->
       <div class="mt-6 text-center">
-        <p class="text-text-secondary dark:text-gray-300">
+        <p class="text-text-secondary">
           {{ t('auth.dontHaveAccount') }}
           <router-link to="/signup" class="text-brand-600 font-medium hover:text-opacity-80 ml-1">
             {{ t('auth.signup') }}

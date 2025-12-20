@@ -1,56 +1,56 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-800 font-sans transition-colors duration-200">
+  <div class="min-h-screen flex flex-col bg-white font-sans transition-colors duration-200">
     <!-- Header -->
-    <header class="bg-white/80 dark:bg-gray-900/80 lg:bg-white lg:dark:bg-gray-900 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
+    <header class="bg-white/80 lg:bg-white backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
           <!-- Logo -->
           <router-link to="/" class="flex items-center flex-shrink-0 mr-4">
-            <img loading="lazy" src="/logo.png" alt="Merry360" class="h-10 md:h-12 w-auto" />
+            <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-10 md:h-12 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
           <nav class="hidden lg:flex items-center gap-0">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
               exact
             >
               Home
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
             >
               Accommodations
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 dark:text-gray-200 font-medium transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-green-500 !text-green-700 !bg-green-50 dark:!bg-green-900 dark:!text-green-300"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
             >
               Tours
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
             >
               Transport
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
             >
               Services
             </router-link>
             <router-link 
               to="/stories"
-              class="text-sm text-gray-700 dark:text-gray-200 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-purple-500 !text-purple-700 !bg-purple-50 dark:!bg-purple-900 dark:!text-purple-300"
+              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600"
             >
               Stories
             </router-link>
@@ -64,27 +64,11 @@
 
           <!-- Desktop Right -->
           <div class="hidden lg:flex items-center gap-2">
-            <!-- Dark Mode Toggle -->
-            <button
-              @click="appStore.toggleDarkMode()"
-              class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
-              :title="appStore.isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-            >
-              <!-- Sun icon for light mode -->
-              <svg v-if="!appStore.isDarkMode" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-              </svg>
-              <!-- Moon icon for dark mode -->
-              <svg v-else class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-              </svg>
-            </button>
-
             <!-- Currency Selector -->
             <select 
               v-model="currencyStore.currentCurrency" 
               @change="currencyStore.setCurrency(currencyStore.currentCurrency)" 
-              class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 cursor-pointer transition-all"
+              class="px-2.5 py-1 border border-gray-300 rounded-full text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
             >
               <option value="USD">$ USD</option>
               <option value="EUR">€ EUR</option>
@@ -93,7 +77,7 @@
               <option value="RWF">RWF</option>
             </select>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 rounded-full text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
@@ -101,13 +85,13 @@
               <option value="SW">SW</option>
             </select>
 
-            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-full text-sm font-semibold text-gray-700 dark:text-white hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 rounded-full text-sm font-semibold text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-all">
               Trip Cart
               <span v-if="userStore.cartCount > 0" class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 inline-flex items-center justify-center">{{ userStore.cartCount }}</span>
             </router-link>
 
-            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" title="Wishlist">
-              <svg class="w-5 h-5 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors" title="Wishlist">
+              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
@@ -116,72 +100,72 @@
             <div v-if="userStore.isAuthenticated" class="relative" v-click-outside="closeUserMenu">
               <button 
                 @click.stop="showUserMenu = !showUserMenu"
-                class="relative flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
+                class="relative flex items-center gap-2 bg-white border border-gray-300 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
               >
                 <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
                   <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'JO' }}</span>
                 </div>
-                <svg class="w-4 h-4 text-gray-600 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
 
               <!-- Dropdown Menu -->
               <transition name="dropdown">
-                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50">
-                  <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                    <p class="font-semibold text-sm dark:text-white">{{ userStore.user?.name || 'User' }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ userStore.user?.email || '' }}</p>
+                <div v-if="showUserMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-1 z-50">
+                  <div class="px-4 py-3 border-b border-gray-100">
+                    <p class="font-semibold text-sm">{{ userStore.user?.name || 'User' }}</p>
+                    <p class="text-xs text-gray-500">{{ userStore.user?.email || '' }}</p>
                   </div>
                   
                   <router-link 
                     to="/profile" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span class="text-sm dark:text-white">My Profile</span>
+                    <span class="text-sm">My Profile</span>
                   </router-link>
 
                   <router-link 
                     to="/messages" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h8m-5 8h5a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2h3"></path>
                     </svg>
-                    <span class="text-sm dark:text-white">Messages</span>
+                    <span class="text-sm">Messages</span>
                   </router-link>
 
                   <router-link 
                     to="/profile" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span class="text-sm dark:text-white">Profile</span>
+                    <span class="text-sm">Profile</span>
                   </router-link>
 
                   <router-link 
                     to="/dashboard/watchlist" 
                     @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors"
                   >
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    <span class="text-sm dark:text-white">Wishlist</span>
+                    <span class="text-sm">Wishlist</span>
                   </router-link>
 
-                  <div class="border-t border-gray-100 dark:border-gray-700 mt-1 pt-1">
+                  <div class="border-t border-gray-100 mt-1 pt-1">
                     <button 
                       @click="handleLogout"
-                      class="flex items-center gap-3 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full text-left text-red-600 dark:text-red-400"
+                      class="flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition-colors w-full text-left text-red-600"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
@@ -199,7 +183,7 @@
               to="/login"
               class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
             >
-              <svg class="w-5 h-5 text-gray-800 dark:text-white" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="2" y="5" width="20" height="2" rx="1"/>
                 <rect x="2" y="11" width="20" height="2" rx="1"/>
                 <rect x="2" y="17" width="20" height="2" rx="1"/>
@@ -212,15 +196,15 @@
 
           <!-- Mobile Right -->
           <div class="flex lg:hidden items-center gap-2">
-            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
-              <svg class="w-5 h-5 text-gray-700 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
 
             <button 
               @click="mobileMenuOpen = !mobileMenuOpen"
-              class="p-1.5 text-gray-900 dark:text-white"
+              class="p-1.5 text-gray-900"
               aria-label="Menu"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,10 +227,10 @@
         ></div>
         
         <!-- Menu Panel -->
-        <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto transition-colors duration-200">
+        <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white shadow-2xl overflow-y-auto transition-colors duration-200">
           <!-- Header -->
-          <div class="sticky top-0 bg-white dark:bg-gray-900 px-6 py-4 flex items-center justify-end border-b border-gray-100 dark:border-gray-800">
-            <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 transition-colors">
+          <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-end border-b border-gray-100">
+            <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 text-gray-300 p-1 transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -255,24 +239,24 @@
 
           <div class="p-6">
             <!-- User Profile Section (when authenticated) -->
-            <div v-if="userStore.isAuthenticated" class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+            <div v-if="userStore.isAuthenticated" class="mb-6 pb-6 border-b border-gray-100">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span class="text-gray-600 dark:text-gray-300 text-sm font-medium">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
+                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-gray-600 text-sm font-medium">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-sm text-gray-900 dark:text-white truncate">{{ userStore.user?.name || 'User' }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ userStore.user?.email || '' }}</p>
+                  <p class="font-medium text-sm text-gray-900 truncate">{{ userStore.user?.name || 'User' }}</p>
+                  <p class="text-xs text-gray-500 truncate">{{ userStore.user?.email || '' }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Login Button (when not authenticated) -->
-            <div v-else class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+            <div v-else class="mb-6 pb-6 border-b border-gray-100">
               <router-link 
                 to="/login" 
                 @click="mobileMenuOpen = false"
-                class="block w-full py-2.5 px-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-center rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                class="block w-full py-2.5 px-4 bg-brand-500 text-white text-center rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
               >
                 Sign In
               </router-link>
@@ -282,7 +266,7 @@
             <nav class="space-y-1 mb-6">
               <router-link 
                 to="/"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,7 +276,7 @@
               </router-link>
               <router-link 
                 to="/accommodations"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,7 +286,7 @@
               </router-link>
               <router-link 
                 to="/tours"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -312,7 +296,7 @@
               </router-link>
               <router-link 
                 to="/transport"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,7 +306,7 @@
               </router-link>
               <router-link 
                 to="/services"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -332,7 +316,7 @@
               </router-link>
               <router-link 
                 to="/stories"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,7 +326,7 @@
               </router-link>
               <router-link 
                 to="/become-host"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -353,28 +337,14 @@
             </nav>
 
             <!-- Divider -->
-            <div class="border-t border-gray-100 dark:border-gray-800 my-6"></div>
+            <div class="border-t border-gray-100 my-6"></div>
 
             <!-- Settings Section -->
             <div class="space-y-3">
-              <!-- Dark Mode Toggle -->
-              <button
-                @click="appStore.toggleDarkMode()"
-                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                <span>{{ appStore.isDarkMode ? 'Dark Mode' : 'Light Mode' }}</span>
-                <svg v-if="!appStore.isDarkMode" class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                </svg>
-                <svg v-else class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-              </button>
-
               <select 
                 v-model="currencyStore.currentCurrency"
                 @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
-                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600"
+                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-gray-300"
               >
                 <option value="USD">$ USD</option>
                 <option value="EUR">€ EUR</option>
@@ -386,7 +356,7 @@
               <select 
                 v-model="languageStore.currentLanguage" 
                 @change="languageStore.setLanguage(languageStore.currentLanguage)" 
-                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600"
+                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-gray-300"
               >
                 <option value="EN">English</option>
                 <option value="RW">Kinyarwanda</option>
@@ -397,10 +367,10 @@
             </div>
 
             <!-- Logout Button -->
-            <div v-if="userStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+            <div v-if="userStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-100">
               <button 
                 @click="handleLogout"
-                class="w-full px-3 py-2.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors text-center"
+                class="w-full px-3 py-2.5 text-sm text-gray-600 hover:text-gray-900 text-gray-200 transition-colors text-center"
               >
                 Sign Out
               </button>
@@ -471,49 +441,46 @@
     <AIConcierge :isOpen="showAIConcierge" @close="showAIConcierge = false" @minimize="aiMinimized = true; showAIConcierge = false" />
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-20 relative overflow-hidden transition-colors duration-200">
+    <footer class="bg-white border-t border-gray-200 mt-20 relative overflow-hidden transition-colors duration-200">
       <div class="container mx-auto px-4 lg:px-8 py-16 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
             <div class="flex items-center space-x-3 mb-6">
-              <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span class="text-white font-bold text-2xl">M</span>
-              </div>
-              <span class="text-xl font-bold text-gray-900 tracking-tight">Merry<span class="text-red-500">360X</span></span>
+              <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
+            <p class="text-gray-600 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
-            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
+            <ul class="space-y-3 text-gray-600 text-sm">
               <li><router-link to="/accommodations" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🏠 Accommodations</router-link></li>
               <li><router-link to="/tours" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🌍 Tours</router-link></li>
               <li><router-link to="/transport" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🚗 Transport</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
-            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
+            <ul class="space-y-3 text-gray-600 text-sm">
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">About Us</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Contact</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Careers</a></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
-            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
+            <ul class="space-y-3 text-gray-600 text-sm">
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Safety</a></li>
               <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Terms</a></li>
             </ul>
           </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-600 dark:text-gray-400 text-sm">© 2025 Merry360X. All rights reserved.</p>
+        <div class="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-600 text-sm">© 2025 Merry360X. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Privacy</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Terms</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Cookies</a>
+            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Privacy</a>
+            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Terms</a>
+            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Cookies</a>
           </div>
         </div>
       </div>

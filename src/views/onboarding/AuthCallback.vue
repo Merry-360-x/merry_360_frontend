@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
     <div class="text-center">
       <LoadingSpinner size="lg" />
-      <p class="mt-4 text-gray-600 dark:text-gray-300">Completing sign in...</p>
+      <p class="mt-4 text-gray-600">Completing sign in...</p>
     </div>
   </div>
 </template>

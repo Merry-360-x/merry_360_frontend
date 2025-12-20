@@ -12,7 +12,7 @@
           playsinline
           class="w-full h-full object-cover"
         >
-          <source src="/public/videos/Merry.mp4" type="video/mp4">
+          <source src="/videos/Merry.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
       </div>
@@ -38,73 +38,73 @@
         </div>
 
         <!-- Search Box -->
-        <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+        <div class="w-full max-w-4xl bg-white rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
-            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-400">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.location') }}</label>
+            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300">
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.location') }}</label>
               <input 
                 type="text" 
                 :placeholder="t('search.whereGoing')"
                 v-model="searchQuery.location"
-                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent text-gray-900 dark:text-white"
+                class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent text-gray-900"
                 style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               />
             </div>
 
             <!-- Check In -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-400 relative">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkIn') }}</label>
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 relative">
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkIn') }}</label>
               <input 
                 type="date" 
                 v-model="searchQuery.checkIn"
                 :min="minCheckInDate"
-                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 dark:text-white cursor-pointer"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 cursor-pointer"
                 style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               />
             </div>
 
             <!-- Check Out -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-400 relative">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkOut') }}</label>
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 relative">
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkOut') }}</label>
               <input 
                 type="date" 
                 v-model="searchQuery.checkOut"
                 :min="minCheckOutDate"
-                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 dark:text-white cursor-pointer"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 cursor-pointer"
                 style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               />
             </div>
 
             <!-- Guests -->
             <div class="md:pl-5 relative">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.guests') }}</label>
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.guests') }}</label>
               <button 
                 type="button"
                 @click="showGuestSelector = !showGuestSelector"
-                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 dark:text-white text-left cursor-pointer flex items-center justify-between"
+                class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 text-left cursor-pointer flex items-center justify-between"
                 style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
               >
                 <span>{{ guestSummary }}</span>
-                <svg class="w-4 h-4 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
               
               <!-- Guest Selector Dropdown -->
-              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded p-4 w-72 z-50 border border-gray-200 dark:border-gray-700">
+              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white rounded p-4 w-72 z-50 border border-gray-200">
                 <div class="space-y-4">
                   <!-- Adults -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.adults') }}</div>
-                      <div class="text-xs text-gray-500 dark:text-gray-400">{{ t('accommodation.adultsDesc') }}</div>
+                      <div class="font-semibold text-gray-900">{{ t('accommodation.adults') }}</div>
+                      <div class="text-xs text-gray-500">{{ t('accommodation.adultsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
                         @click="decrementGuests('adults')"
                         :disabled="guestCounts.adults <= 1"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -113,7 +113,7 @@
                       <span class="w-8 text-center font-semibold">{{ guestCounts.adults }}</span>
                       <button 
                         @click="incrementGuests('adults')"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -125,14 +125,14 @@
                   <!-- Children -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.children') }}</div>
-                      <div class="text-xs text-gray-500 dark:text-gray-400">{{ t('accommodation.childrenDesc') }}</div>
+                      <div class="font-semibold text-gray-900">{{ t('accommodation.children') }}</div>
+                      <div class="text-xs text-gray-500">{{ t('accommodation.childrenDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
                         @click="decrementGuests('children')"
                         :disabled="guestCounts.children <= 0"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -141,7 +141,7 @@
                       <span class="w-8 text-center font-semibold">{{ guestCounts.children }}</span>
                       <button 
                         @click="incrementGuests('children')"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -153,14 +153,14 @@
                   <!-- Infants -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">{{ t('accommodation.infants') }}</div>
-                      <div class="text-xs text-gray-500 dark:text-gray-400">{{ t('accommodation.infantsDesc') }}</div>
+                      <div class="font-semibold text-gray-900">{{ t('accommodation.infants') }}</div>
+                      <div class="text-xs text-gray-500">{{ t('accommodation.infantsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
                         @click="decrementGuests('infants')"
                         :disabled="guestCounts.infants <= 0"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -169,7 +169,7 @@
                       <span class="w-8 text-center font-semibold">{{ guestCounts.infants }}</span>
                       <button 
                         @click="incrementGuests('infants')"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -199,7 +199,7 @@
     <!-- Latest on the Property Listing -->
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="mb-6 md:mb-8 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.latestProperties') }}</h2>
+        <h2 class="text-2xl md:text-4xl font-bold text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.latestProperties') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
@@ -210,9 +210,9 @@
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="flex flex-col md:flex-row items-center justify-between mb-6 md:mb-8 max-w-7xl mx-auto">
         <div class="text-center md:text-left mb-4 md:mb-0">
-          <h2 class="text-2xl md:text-4xl font-bold text-gray-800 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
+          <h2 class="text-2xl md:text-4xl font-bold text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
         </div>
-        <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200 text-gray-800 dark:text-gray-200" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;">
+        <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200 text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;">
           <svg class="w-5 h-5 md:w-6 md:h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
@@ -227,7 +227,7 @@
     <!-- Top Rated Properties -->
     <section class="container mx-auto px-4 py-20">
       <div class="mb-12 text-center">
-        <h2 class="text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px;">{{ t('home.topRated') }}</h2>
+        <h2 class="text-4xl font-bold text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px;">{{ t('home.topRated') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in topRatedProperties" :key="property.id" :property="property" />
@@ -255,7 +255,7 @@
     <!-- Featured Properties -->
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="mb-6 md:mb-8 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.featured') }}</h2>
+        <h2 class="text-2xl md:text-4xl font-bold text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.featured') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in featuredProperties" :key="property.id" :property="property" />
@@ -263,11 +263,11 @@
     </section>
 
     <!-- Browse For More -->
-    <section class="py-8 md:py-12 bg-gray-100 dark:bg-gray-800">
+    <section class="py-8 md:py-12 bg-gray-100">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
-          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
-          <p class="text-sm md:text-base mb-8 md:mb-10 text-gray-600 dark:text-gray-400" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.browseDesc') }}</p>
+          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
+          <p class="text-sm md:text-base mb-8 md:mb-10 text-gray-600" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.browseDesc') }}</p>
           <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
             {{ t('home.findProperty') }}
           </button>
@@ -278,7 +278,7 @@
     <!-- Property Rental Guides & Tips -->
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="mb-6 md:mb-8 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.guides') }}</h2>
+        <h2 class="text-2xl md:text-4xl font-bold text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.guides') }}</h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
         <div v-for="guide in guides" :key="guide.id" class="rounded-lg overflow-hidden transition-opacity hover:opacity-90" style="background: #E0E2E6;">
@@ -286,7 +286,7 @@
             <img loading="lazy" :src="guide.image" :alt="guide.title" class="w-full object-cover h-48 md:h-64 lg:h-80" />
           </div>
           <div class="p-4 md:p-6">
-            <h3 class="text-base md:text-lg font-bold mb-2 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ guide.title }}</h3>
+            <h3 class="text-base md:text-lg font-bold mb-2 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ guide.title }}</h3>
             <span class="inline-block text-xs md:text-sm font-semibold" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: #9A9A9A;">
               {{ guide.category }}
             </span>
@@ -301,12 +301,12 @@
     </section>
 
     <!-- Download Mobile App -->
-    <section class="py-8 md:py-12 bg-gray-100 dark:bg-gray-800">
+    <section class="py-8 md:py-12 bg-gray-100">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 max-w-7xl mx-auto">
           <div class="flex-1 text-center md:text-left">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.downloadApp') }}</h2>
-            <p class="text-sm md:text-base mb-6 md:mb-10 text-gray-600 dark:text-gray-400" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.downloadDesc') }}</p>
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.downloadApp') }}</h2>
+            <p class="text-sm md:text-base mb-6 md:mb-10 text-gray-600" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.downloadDesc') }}</p>
             <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start">
               <button class="px-4 md:px-6 py-3 rounded flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition-opacity w-full sm:w-auto" style="background: #E0E2E6;">
                 <svg class="w-5 h-5" fill="#484848" viewBox="0 0 24 24">
@@ -337,15 +337,15 @@
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center max-w-7xl mx-auto">
         <div>
-          <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.discoverMore') }}</h2>
+          <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-8 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.discoverMore') }}</h2>
           <p class="mb-6 md:mb-8 text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 400; line-height: 1.6; color: #9A9A9A;">
             {{ t('home.discoverDesc') }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 md:gap-8 mb-6 md:mb-10">
-            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
+            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
               {{ t('home.askQuestion') }}
             </button>
-            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
+            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
               {{ t('home.findProperty') }}
             </button>
           </div>
@@ -366,18 +366,18 @@
     </section>
 
     <!-- Newsletter -->
-    <section class="py-8 md:py-12 bg-gray-200 dark:bg-gray-800">
+    <section class="py-8 md:py-12 bg-gray-200">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 max-w-6xl mx-auto">
           <div class="text-center md:text-left md:w-48 mb-2 md:mb-0">
-            <h2 class="font-bold mb-1 text-base md:text-lg text-gray-900 dark:text-white" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">{{ t('home.newsletter') }}</h2>
-            <p class="text-xs md:text-sm text-gray-700 dark:text-gray-300" style="font-family: 'Montserrat', sans-serif; font-weight: 500;">{{ t('home.newsletterDesc') }}</p>
+            <h2 class="font-bold mb-1 text-base md:text-lg text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">{{ t('home.newsletter') }}</h2>
+            <p class="text-xs md:text-sm text-gray-700" style="font-family: 'Montserrat', sans-serif; font-weight: 500;">{{ t('home.newsletterDesc') }}</p>
           </div>
           <div class="flex items-center gap-3 md:gap-4 flex-1 max-w-3xl w-full">
             <input 
               type="email" 
               :placeholder="t('home.emailPlaceholder')" 
-              class="flex-1 px-4 md:px-6 py-3 rounded focus:outline-none text-sm md:text-base bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+              class="flex-1 px-4 md:px-6 py-3 rounded focus:outline-none text-sm md:text-base bg-white border border-gray-200 text-gray-900 placeholder:text-gray-500 text-gray-400"
               style="font-family: 'Montserrat', sans-serif; font-weight: 500;"
             />
             <button class="w-12 h-12 md:w-14 md:h-14 rounded flex items-center justify-center hover:opacity-90 transition-opacity flex-shrink-0 bg-brand-500" style="background: #FF3B3B;">

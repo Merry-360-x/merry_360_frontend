@@ -10,7 +10,7 @@
       <div @click="close" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
       
       <!-- Chat Window -->
-      <div class="relative bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl max-h-[85vh] sm:max-h-[80vh] flex flex-col animate-slide-up mb-0 sm:mb-0">
+      <div class="relative bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-2xl max-h-[85vh] sm:max-h-[80vh] flex flex-col animate-slide-up mb-0 sm:mb-0">
         <!-- Header -->
         <div class="bg-gradient-to-r from-brand-500 to-brand-600 text-white p-4 sm:p-6 rounded-t-3xl flex items-center justify-between">
           <div class="flex items-center gap-3">
@@ -60,31 +60,31 @@
               <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
                 <button 
                   @click="sendMessage('Tell me about accommodations in Kigali')"
-                  class="p-4 bg-white dark:bg-gray-800 hover:bg-brand-50 dark:hover:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 hover:border-brand-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                  class="p-4 bg-white hover:bg-brand-50 border-2 border-gray-200 hover:border-brand-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
                   <div class="text-2xl mb-2">🏨</div>
-                  <div class="text-xs font-semibold text-gray-700 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400">Accommodations</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-brand-600">Accommodations</div>
                 </button>
                 <button 
                   @click="sendMessage('Show me available tours')"
-                  class="p-4 bg-white dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 hover:border-green-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                  class="p-4 bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
                   <div class="text-2xl mb-2">🌿</div>
-                  <div class="text-xs font-semibold text-gray-700 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400">Tours & Activities</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-green-600">Tours & Activities</div>
                 </button>
                 <button 
                   @click="sendMessage('I need transportation options')"
-                  class="p-4 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 hover:border-blue-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                  class="p-4 bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
                   <div class="text-2xl mb-2">🚗</div>
-                  <div class="text-xs font-semibold text-gray-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">Transportation</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-blue-600">Transportation</div>
                 </button>
                 <button 
                   @click="sendMessage('What are popular destinations in Rwanda?')"
-                  class="p-4 bg-white dark:bg-gray-800 hover:bg-purple-50 dark:hover:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 hover:border-purple-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
+                  class="p-4 bg-white hover:bg-purple-50 border-2 border-gray-200 hover:border-purple-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
                   <div class="text-2xl mb-2">💡</div>
-                  <div class="text-xs font-semibold text-gray-700 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400">Travel Tips</div>
+                  <div class="text-xs font-semibold text-gray-700 group-hover:text-purple-600">Travel Tips</div>
                 </button>
               </div>
             </div>
@@ -97,7 +97,7 @@
                   v-for="suggestion in quickSuggestions" 
                   :key="suggestion"
                   @click="sendMessage(suggestion)"
-                  class="px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-white rounded-full text-xs hover:bg-brand-500 hover:text-white transition-colors shadow-sm border border-gray-200 dark:border-gray-600"
+                  class="px-3 py-1.5 bg-white text-gray-700 rounded-full text-xs hover:bg-brand-500 hover:text-white transition-colors shadow-sm border border-gray-200"
                 >
                   {{ suggestion }}
                 </button>
@@ -116,33 +116,33 @@
 
             <!-- AI Message -->
             <div v-else class="flex justify-start">
-              <div class="bg-white dark:bg-gray-700 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%] shadow-sm border border-gray-100 dark:border-gray-600">
-                <p class="text-sm text-gray-900 dark:text-white">{{ message.text }}</p>
+              <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%] shadow-sm border border-gray-100">
+                <p class="text-sm text-gray-900">{{ message.text }}</p>
               </div>
             </div>
           </div>
 
           <!-- Typing Indicator -->
           <div v-if="isTyping" class="flex justify-start">
-            <div class="bg-white dark:bg-gray-700 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100 dark:border-gray-600">
+            <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100">
               <div class="flex gap-1">
-                <div class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-                <div class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-                <div class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Input Area -->
-        <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-3xl">
+        <div class="p-4 bg-white border-t border-gray-200 rounded-b-3xl">
           <div class="flex gap-2">
             <input 
               v-model="inputMessage"
               @keypress.enter="sendUserMessage"
               type="text" 
               placeholder="Ask me anything..."
-              class="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400"
+              class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm text-gray-900 placeholder-gray-400"
             />
             <button 
               @click="sendUserMessage"

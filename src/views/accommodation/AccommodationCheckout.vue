@@ -1,14 +1,14 @@
 <template>
   <MainLayout>
-    <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl bg-white dark:bg-gray-900 min-h-screen">
-      <h1 class="text-3xl font-bold text-text-brand-600 dark:text-white mb-8">{{ t('checkout.title') }}</h1>
+    <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl bg-white min-h-screen">
+      <h1 class="text-3xl font-bold text-text-brand-600 mb-8">{{ t('checkout.title') }}</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form -->
         <div class="lg:col-span-2 space-y-6">
           <!-- General Error Message -->
-          <div v-if="errors.general" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-            <div class="flex items-center gap-2 text-red-800 dark:text-red-300">
+          <div v-if="errors.general" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center gap-2 text-red-800">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
               </svg>
@@ -18,69 +18,69 @@
 
           <!-- Guest Information -->
           <Card padding="lg">
-            <h2 class="text-2xl font-bold mb-6 dark:text-white">{{ t('checkout.guestInfo') }}</h2>
+            <h2 class="text-2xl font-bold mb-6">{{ t('checkout.guestInfo') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Input v-model="guestInfo.firstName" :placeholder="t('checkout.firstName')" :class="errors.firstName ? 'border-red-500' : ''" />
-                <p v-if="errors.firstName" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.firstName }}</p>
+                <p v-if="errors.firstName" class="mt-1 text-sm text-red-600">{{ errors.firstName }}</p>
               </div>
               <div>
                 <Input v-model="guestInfo.lastName" :placeholder="t('checkout.lastName')" :class="errors.lastName ? 'border-red-500' : ''" />
-                <p v-if="errors.lastName" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.lastName }}</p>
+                <p v-if="errors.lastName" class="mt-1 text-sm text-red-600">{{ errors.lastName }}</p>
               </div>
               <div>
                 <Input v-model="guestInfo.email" type="email" :placeholder="t('checkout.email')" :class="errors.email ? 'border-red-500' : ''" />
-                <p v-if="errors.email" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.email }}</p>
+                <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
               </div>
               <div>
                 <Input v-model="guestInfo.phone" type="tel" :placeholder="t('checkout.phone')" :class="errors.phone ? 'border-red-500' : ''" />
-                <p v-if="errors.phone" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.phone }}</p>
+                <p v-if="errors.phone" class="mt-1 text-sm text-red-600">{{ errors.phone }}</p>
               </div>
             </div>
           </Card>
 
           <!-- Payment Method -->
           <Card padding="lg">
-            <h2 class="text-2xl font-bold mb-6 dark:text-white">{{ t('checkout.paymentMethod') }}</h2>
+            <h2 class="text-2xl font-bold mb-6">{{ t('checkout.paymentMethod') }}</h2>
             <div class="space-y-4">
               <!-- Free Payment Option -->
-              <label class="flex items-center p-4 border-2 border-green-200 dark:border-green-600 bg-green-50 dark:bg-green-900/20 rounded-button hover:border-green-500 dark:hover:border-green-400 transition-colors cursor-pointer">
+              <label class="flex items-center p-4 border-2 border-green-200 bg-green-50 rounded-button hover:border-green-500 border-green-400 transition-colors cursor-pointer">
                 <input type="radio" name="payment" value="free" v-model="paymentMethod" class="mr-3" checked />
                 <svg class="w-8 h-8 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <div class="flex-1">
-                  <span class="font-semibold text-green-700 dark:text-green-400">Free Booking</span>
-                  <p class="text-sm text-green-600 dark:text-green-500">No payment required - Book now, pay later at property</p>
+                  <span class="font-semibold text-green-700">Free Booking</span>
+                  <p class="text-sm text-green-600">No payment required - Book now, pay later at property</p>
                 </div>
               </label>
 
-              <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-600 rounded-button hover:border-brand-500 dark:hover:border-brand-400 transition-colors cursor-pointer">
+              <label class="flex items-center p-4 border-2 border-gray-200 rounded-button hover:border-brand-500 border-brand-400 transition-colors cursor-pointer">
                 <input type="radio" name="payment" value="card" v-model="paymentMethod" class="mr-3" />
                 <svg class="w-8 h-8 mr-3 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                 </svg>
-                <span class="font-medium dark:text-white">{{ t('checkout.creditCard') }}</span>
+                <span class="font-medium">{{ t('checkout.creditCard') }}</span>
               </label>
 
-              <label class="flex items-center p-4 border-2 border-gray-200 dark:border-gray-600 rounded-button hover:border-brand-500 dark:hover:border-brand-400 transition-colors cursor-pointer">
+              <label class="flex items-center p-4 border-2 border-gray-200 rounded-button hover:border-brand-500 border-brand-400 transition-colors cursor-pointer">
                 <input type="radio" name="payment" value="mobile" v-model="paymentMethod" class="mr-3" />
                 <svg class="w-8 h-8 mr-3 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                 </svg>
-                <span class="font-medium dark:text-white">{{ t('checkout.mobileMoney') }}</span>
+                <span class="font-medium">{{ t('checkout.mobileMoney') }}</span>
               </label>
             </div>
 
             <div v-if="paymentMethod === 'free'" class="mt-6">
-              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                   </svg>
                   <div>
-                    <p class="font-medium text-blue-900 dark:text-blue-300 mb-1">Pay Later at Property</p>
-                    <p class="text-sm text-blue-800 dark:text-blue-400">Your booking is secured. Payment will be collected when you check in at the property.</p>
+                    <p class="font-medium text-blue-900 mb-1">Pay Later at Property</p>
+                    <p class="text-sm text-blue-800">Your booking is secured. Payment will be collected when you check in at the property.</p>
                   </div>
                 </div>
               </div>
@@ -123,15 +123,15 @@
 
             <div v-if="paymentMethod === 'mobile'" class="mt-6 space-y-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Provider</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Provider</label>
                 <div class="grid grid-cols-2 gap-3">
-                  <label class="flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="mobileMoneyInfo.provider === 'mtn' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'">
+                  <label class="flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="mobileMoneyInfo.provider === 'mtn' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-gray-300'">
                     <input type="radio" name="provider" value="mtn" v-model="mobileMoneyInfo.provider" class="sr-only" />
-                    <span class="font-semibold" :class="mobileMoneyInfo.provider === 'mtn' ? 'text-yellow-600' : 'text-gray-600 dark:text-gray-400'">MTN MoMo</span>
+                    <span class="font-semibold" :class="mobileMoneyInfo.provider === 'mtn' ? 'text-yellow-600' : 'text-gray-600'">MTN MoMo</span>
                   </label>
-                  <label class="flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="mobileMoneyInfo.provider === 'airtel' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300'">
+                  <label class="flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="mobileMoneyInfo.provider === 'airtel' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'">
                     <input type="radio" name="provider" value="airtel" v-model="mobileMoneyInfo.provider" class="sr-only" />
-                    <span class="font-semibold" :class="mobileMoneyInfo.provider === 'airtel' ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'">Airtel Money</span>
+                    <span class="font-semibold" :class="mobileMoneyInfo.provider === 'airtel' ? 'text-red-600' : 'text-gray-600'">Airtel Money</span>
                   </label>
                 </div>
               </div>
@@ -144,14 +144,14 @@
                 />
                 <p v-if="errors.mobilePhone" class="mt-1 text-sm text-red-600">{{ errors.mobilePhone }}</p>
               </div>
-              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                   </svg>
                   <div>
-                    <p class="font-medium text-blue-900 dark:text-blue-300 mb-1">Payment Prompt</p>
-                    <p class="text-sm text-blue-800 dark:text-blue-400">You will receive a USSD prompt on your phone to authorize the payment.</p>
+                    <p class="font-medium text-blue-900 mb-1">Payment Prompt</p>
+                    <p class="text-sm text-blue-800">You will receive a USSD prompt on your phone to authorize the payment.</p>
                   </div>
                 </div>
               </div>
@@ -164,7 +164,7 @@
             <textarea 
               v-model="specialRequests"
               rows="4" 
-              class="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              class="w-full px-4 py-3 border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900"
               placeholder="Any special requirements or requests?"
             ></textarea>
           </Card>
@@ -185,47 +185,47 @@
         <!-- Booking Summary -->
         <div class="lg:col-span-1">
           <Card padding="lg" class="sticky top-24">
-            <h3 class="font-bold text-xl mb-4 dark:text-white">Booking Summary</h3>
+            <h3 class="font-bold text-xl mb-4">Booking Summary</h3>
             
             <div v-if="bookingDetails.image" class="mb-4">
               <img loading="lazy" :src="bookingDetails.image" :alt="bookingDetails.name" class="w-full h-32 object-cover rounded-button mb-3" />
-              <h4 class="font-semibold text-lg dark:text-white">{{ bookingDetails.name }}</h4>
+              <h4 class="font-semibold text-lg">{{ bookingDetails.name }}</h4>
               <p class="text-sm text-text-secondary">{{ bookingDetails.location }}</p>
             </div>
 
-            <div class="space-y-2 py-4 border-t border-b border-gray-200 dark:border-gray-700 text-sm">
+            <div class="space-y-2 py-4 border-t border-b border-gray-200 text-sm">
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-in</span>
-                <span class="font-medium dark:text-white">{{ formatDate(bookingDetails.checkIn) }}</span>
+                <span class="font-medium">{{ formatDate(bookingDetails.checkIn) }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-out</span>
-                <span class="font-medium dark:text-white">{{ formatDate(bookingDetails.checkOut) }}</span>
+                <span class="font-medium">{{ formatDate(bookingDetails.checkOut) }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Guests</span>
-                <span class="font-medium dark:text-white">{{ bookingDetails.guests }} {{ bookingDetails.guests === 1 ? 'Guest' : 'Guests' }}</span>
+                <span class="font-medium">{{ bookingDetails.guests }} {{ bookingDetails.guests === 1 ? 'Guest' : 'Guests' }}</span>
               </div>
             </div>
 
-            <div class="space-y-3 py-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="space-y-3 py-4 border-b border-gray-200">
               <div class="flex justify-between text-sm">
                 <span class="text-text-secondary">{{ currencyStore.formatPrice(bookingDetails.price) }} × {{ nights }} {{ nights === 1 ? 'night' : 'nights' }}</span>
-                <span class="font-semibold dark:text-white">{{ currencyStore.formatPrice(subtotal) }}</span>
+                <span class="font-semibold">{{ currencyStore.formatPrice(subtotal) }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-text-secondary">Service fee (5%)</span>
-                <span class="font-semibold dark:text-white">{{ currencyStore.formatPrice(serviceFee) }}</span>
+                <span class="font-semibold">{{ currencyStore.formatPrice(serviceFee) }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-text-secondary">Taxes (3%)</span>
-                <span class="font-semibold dark:text-white">{{ currencyStore.formatPrice(taxes) }}</span>
+                <span class="font-semibold">{{ currencyStore.formatPrice(taxes) }}</span>
               </div>
             </div>
 
             <div class="flex justify-between pt-4 mb-6">
-              <span class="font-bold text-lg dark:text-white">Total</span>
-              <span class="text-xl font-bold text-brand-600 dark:text-brand-400">{{ currencyStore.formatPrice(total) }}</span>
+              <span class="font-bold text-lg">Total</span>
+              <span class="text-xl font-bold text-brand-600">{{ currencyStore.formatPrice(total) }}</span>
             </div>
 
             <Button 

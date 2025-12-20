@@ -4,8 +4,8 @@
     <section class="relative bg-gradient-to-br from-green-50 to-white py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900 dark:text-white">{{ t('tours.title') }}</h1>
-          <p class="text-base md:text-lg text-gray-600 dark:text-gray-300">{{ t('tours.subtitle') }}</p>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">{{ t('tours.title') }}</h1>
+          <p class="text-base md:text-lg text-gray-600">{{ t('tours.subtitle') }}</p>
         </div>
 
         <!-- Search Bar -->
@@ -13,7 +13,7 @@
           <div class="bg-white rounded-2xl shadow-xl p-4 flex flex-col md:flex-row gap-3">
             <!-- Location Search -->
             <div class="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
-              <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
               <input 
@@ -89,7 +89,7 @@
               >
                 <svg 
                   class="w-6 h-6 transition-colors" 
-                  :class="isInWatchlist(tour) ? 'text-brand-600 fill-current' : 'text-gray-400 dark:text-gray-500'"
+                  :class="isInWatchlist(tour) ? 'text-brand-600 fill-current' : 'text-gray-400'"
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"

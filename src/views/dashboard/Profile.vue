@@ -3,28 +3,28 @@
     <div class="container mx-auto px-4 lg:px-8 py-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">My Profile</h1>
-        <p class="text-text-secondary dark:text-gray-400">Manage your account information and preferences</p>
+        <h1 class="text-3xl font-bold mb-2 text-gray-900">My Profile</h1>
+        <p class="text-text-secondary">Manage your account information and preferences</p>
       </div>
 
       <!-- Profile Completion Alert -->
-      <div v-if="!isProfileComplete && !profileAlertDismissed" class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+      <div v-if="!isProfileComplete && !profileAlertDismissed" class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
         <div class="flex items-start gap-3">
           <div class="flex-shrink-0">
-            <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div class="flex-1">
-            <h3 class="font-semibold text-amber-900 dark:text-amber-200 mb-1">Complete Your Profile</h3>
-            <p class="text-sm text-amber-800 dark:text-amber-300 mb-3">
+            <h3 class="font-semibold text-amber-900 mb-1">Complete Your Profile</h3>
+            <p class="text-sm text-amber-800 mb-3">
               Please add your phone number and date of birth to help us serve you better and unlock all features.
             </p>
             <Button variant="primary" size="sm" @click="activeProfileTab = 'personal'">
               Complete Profile
             </Button>
           </div>
-          <button @click="dismissProfileAlert" class="flex-shrink-0 text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-200">
+          <button @click="dismissProfileAlert" class="flex-shrink-0 text-amber-600 hover:text-amber-800 text-amber-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -43,7 +43,7 @@
                   <span class="text-white text-4xl font-bold">{{ userInitials }}</span>
                 </div>
                 <button @click.prevent="selectAvatar" class="absolute bottom-2 right-2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
-                  <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
@@ -80,16 +80,16 @@
             <!-- Stats -->
             <div class="space-y-3">
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary dark:text-gray-400">Trips Completed</span>
-                <span class="font-semibold dark:text-gray-200">{{ userStore.pastBookings.length }}</span>
+                <span class="text-sm text-text-secondary">Trips Completed</span>
+                <span class="font-semibold">{{ userStore.pastBookings.length }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary dark:text-gray-400">Saved Items</span>
-                <span class="font-semibold dark:text-gray-200">{{ userStore.watchlistCount }}</span>
+                <span class="text-sm text-text-secondary">Saved Items</span>
+                <span class="font-semibold">{{ userStore.watchlistCount }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary dark:text-gray-400">Member Since</span>
-                <span class="font-semibold dark:text-gray-200">{{ memberSince }}</span>
+                <span class="text-sm text-text-secondary">Member Since</span>
+                <span class="font-semibold">{{ memberSince }}</span>
               </div>
             </div>
 
@@ -145,7 +145,7 @@
                 <div class="flex items-center justify-between">
                   <div>
                     <p class="text-text-muted text-xs mb-1">Cart Items</p>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ userStore.cartCount }}</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ userStore.cartCount }}</p>
                   </div>
                   <div class="px-2 py-1 bg-brand-500 text-white rounded-lg flex items-center justify-center">
                     <span class="text-xs font-bold">TripCart</span>
@@ -258,7 +258,7 @@
           <!-- Personal Information Tab -->
           <Card v-if="activeProfileTab === 'personal'" padding="lg">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xl font-bold dark:text-gray-100">Personal Information</h3>
+              <h3 class="text-xl font-bold">Personal Information</h3>
               <Button variant="outline" size="sm" @click="editingPersonal = !editingPersonal">
                 {{ editingPersonal ? 'Cancel' : 'Edit' }}
               </Button>
@@ -319,7 +319,7 @@
                   v-model="personalInfo.bio"
                   :disabled="!editingPersonal"
                   rows="3"
-                  class="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 bg-white text-gray-900"
                   placeholder="Tell us about yourself..."
                 ></textarea>
               </div>
@@ -337,7 +337,7 @@
 
           <!-- Preferences Tab -->
           <Card v-if="activeProfileTab === 'preferences'" padding="lg">
-            <h3 class="text-xl font-bold mb-6 dark:text-gray-100">Preferences</h3>
+            <h3 class="text-xl font-bold mb-6">Preferences</h3>
 
             <div class="space-y-6">
               <!-- Language -->
@@ -401,7 +401,7 @@
 
           <!-- Security Tab -->
           <Card v-if="activeProfileTab === 'security'" padding="lg">
-            <h3 class="text-xl font-bold mb-6 dark:text-gray-100">Security</h3>
+            <h3 class="text-xl font-bold mb-6">Security</h3>
 
             <div class="space-y-4">
               <div class="p-4 border border-gray-200 rounded-lg">
@@ -436,7 +436,7 @@
             <Card padding="lg" class="max-w-md w-full">
               <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold">Change Password</h3>
-                <button @click="showChangePassword = false" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400">
+                <button @click="showChangePassword = false" class="text-gray-400 hover:text-gray-600 text-gray-400">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                   </svg>
@@ -486,7 +486,7 @@
           <Card padding="lg" class="max-w-md w-full">
             <div class="flex items-center justify-between mb-6">
               <h3 class="text-xl font-bold">Enable Two-Factor Authentication</h3>
-              <button @click="show2FASetup = false" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400">
+              <button @click="show2FASetup = false" class="text-gray-400 hover:text-gray-600 text-gray-400">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -494,19 +494,19 @@
             </div>
 
             <div class="space-y-4">
-              <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p class="text-sm text-blue-800 dark:text-blue-200">
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-sm text-blue-800">
                   <strong>Note:</strong> In production, you would scan a QR code with your authenticator app 
                   (like Google Authenticator or Authy) and enter a verification code. This is a demo version.
                 </p>
               </div>
 
-              <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-lg">
+              <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg">
                 <div class="flex gap-2">
-                  <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                   </svg>
-                  <div class="text-sm text-amber-800 dark:text-amber-200">
+                  <div class="text-sm text-amber-800">
                     <strong>Important:</strong> Once enabled, you will need your authenticator app every time you login. 
                     Make sure you have access to your device before enabling.
                   </div>

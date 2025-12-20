@@ -1,12 +1,12 @@
 <template>
   <MainLayout>
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div class="min-h-screen bg-gray-50 py-8">
       <div class="container mx-auto px-4 lg:px-8">
         <!-- Header -->
         <div class="mb-8 flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Property Management</h1>
-            <p class="text-gray-600 dark:text-gray-300">Manage all properties, photos, 360° tours, and VR content</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Property Management</h1>
+            <p class="text-gray-600">Manage all properties, photos, 360° tours, and VR content</p>
           </div>
           <Button @click="showAddModal = true" variant="primary">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@
             <div class="flex gap-6">
               <!-- Property Images -->
               <div class="w-64 flex-shrink-0">
-                <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3">
+                <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 mb-3">
                   <img 
                     v-if="property.images && property.images[0]" 
                     :src="property.images[0]" 
@@ -44,7 +44,7 @@
                 <!-- Image Upload Button -->
                 <button 
                   @click="openImageUpload(property)"
-                  class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
+                  class="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
@@ -56,13 +56,13 @@
                 <div class="mt-2 grid grid-cols-2 gap-2">
                   <button 
                     @click="open360Upload(property)"
-                    class="px-2 py-1.5 text-xs bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                    class="px-2 py-1.5 text-xs bg-blue-50 border border-blue-200 rounded text-blue-700 hover:bg-blue-100 bg-blue-900/30 transition-colors"
                   >
                     360° Tour
                   </button>
                   <button 
                     @click="openVRUpload(property)"
-                    class="px-2 py-1.5 text-xs bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors"
+                    class="px-2 py-1.5 text-xs bg-purple-50 border border-purple-200 rounded text-purple-700 hover:bg-purple-100 bg-purple-900/30 transition-colors"
                   >
                     VR Content
                   </button>
@@ -73,8 +73,8 @@
               <div class="flex-1">
                 <div class="flex items-start justify-between mb-4">
                   <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ property.name || 'Untitled Property' }}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">{{ property.name || 'Untitled Property' }}</h3>
+                    <p class="text-sm text-gray-600">
                       <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -85,7 +85,7 @@
                   <div class="flex gap-2">
                     <button 
                       @click="editProperty(property)"
-                      class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                      class="p-2 text-blue-600 hover:bg-blue-50 bg-blue-900/20 rounded-lg transition-colors"
                       title="Edit Property"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +94,7 @@
                     </button>
                     <button 
                       @click="deleteProperty(property.id)"
-                      class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                      class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Delete Property"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,25 +105,25 @@
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Price</p>
-                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.price || '—' }}</p>
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 mb-1">Price</p>
+                    <p class="text-lg font-bold text-gray-900">{{ property.price || '—' }}</p>
                   </div>
-                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Bedrooms</p>
-                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.bedrooms || 0 }}</p>
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 mb-1">Bedrooms</p>
+                    <p class="text-lg font-bold text-gray-900">{{ property.bedrooms || 0 }}</p>
                   </div>
-                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Bathrooms</p>
-                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.bathrooms || 0 }}</p>
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 mb-1">Bathrooms</p>
+                    <p class="text-lg font-bold text-gray-900">{{ property.bathrooms || 0 }}</p>
                   </div>
-                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Type</p>
-                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.type || '—' }}</p>
+                  <div class="bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 mb-1">Type</p>
+                    <p class="text-lg font-bold text-gray-900">{{ property.type || '—' }}</p>
                   </div>
                 </div>
 
-                <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">
+                <p class="text-sm text-gray-600 line-clamp-2 mb-3">
                   {{ property.description || 'No description available.' }}
                 </p>
 
@@ -132,13 +132,13 @@
                   <span 
                     v-for="amenity in property.amenities.slice(0, 5)" 
                     :key="amenity"
-                    class="px-2 py-1 text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full"
+                    class="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-full"
                   >
                     {{ amenity }}
                   </span>
                   <span 
                     v-if="property.amenities.length > 5"
-                    class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full"
+                    class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full"
                   >
                     +{{ property.amenities.length - 5 }} more
                   </span>
@@ -153,8 +153,8 @@
           <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
           </svg>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Properties Yet</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-4">Start by adding your first property</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">No Properties Yet</h3>
+          <p class="text-gray-600 mb-4">Start by adding your first property</p>
           <Button @click="showAddModal = true" variant="primary">Add Property</Button>
         </div>
       </div>
@@ -167,12 +167,12 @@
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         @click.self="closeEditModal"
       >
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900">
               {{ editingProperty.id ? 'Edit Property' : 'Add New Property' }}
             </h2>
-            <button @click="closeEditModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <button @click="closeEditModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -183,34 +183,34 @@
             <form @submit.prevent="saveProperty" class="space-y-6">
               <!-- Basic Info -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Property Name *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Property Name *</label>
                 <input 
                   v-model="editingProperty.name" 
                   type="text" 
                   required
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   placeholder="e.g., Luxury Villa in Kigali"
                 />
               </div>
 
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location *</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Location *</label>
                   <input 
                     v-model="editingProperty.location" 
                     type="text" 
                     required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                     placeholder="e.g., Kigali, Rwanda"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price *</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Price *</label>
                   <input 
                     v-model="editingProperty.price" 
                     type="text" 
                     required
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                     placeholder="e.g., $250/night"
                   />
                 </div>
@@ -218,29 +218,29 @@
 
               <div class="grid grid-cols-3 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bedrooms</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
                   <input 
                     v-model.number="editingProperty.bedrooms" 
                     type="number" 
                     min="0"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bathrooms</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
                   <input 
                     v-model.number="editingProperty.bathrooms" 
                     type="number" 
                     min="0"
                     step="0.5"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Property Type</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
                   <select 
                     v-model="editingProperty.type"
-                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   >
                     <option value="apartment">Apartment</option>
                     <option value="house">House</option>
@@ -252,33 +252,33 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea 
                   v-model="editingProperty.description" 
                   rows="4"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   placeholder="Describe your property..."
                 ></textarea>
               </div>
 
               <!-- Amenities -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amenities (comma separated)</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Amenities (comma separated)</label>
                 <input 
                   v-model="amenitiesInput" 
                   type="text"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   placeholder="e.g., WiFi, Pool, Parking, Kitchen"
                 />
               </div>
 
               <!-- Image URLs -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Image URLs (comma separated)</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Image URLs (comma separated)</label>
                 <textarea 
                   v-model="imagesInput" 
                   rows="3"
-                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
                 ></textarea>
               </div>
@@ -304,10 +304,10 @@
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         @click.self="closeImageModal"
       >
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full">
-          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Manage Property Photos</h2>
-            <button @click="closeImageModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full">
+          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900">Manage Property Photos</h2>
+            <button @click="closeImageModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -326,12 +326,12 @@
                   class="hidden"
                   ref="imageInput"
                 />
-                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-brand-500 transition-colors cursor-pointer">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-500 transition-colors cursor-pointer">
                   <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                   </svg>
-                  <p class="text-gray-600 dark:text-gray-300 font-medium mb-1">Click to upload images</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">PNG, JPG up to 10MB each</p>
+                  <p class="text-gray-600 font-medium mb-1">Click to upload images</p>
+                  <p class="text-sm text-gray-500">PNG, JPG up to 10MB each</p>
                 </div>
               </label>
             </div>
@@ -341,7 +341,7 @@
               <div 
                 v-for="(image, index) in selectedProperty.images" 
                 :key="index"
-                class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 group"
+                class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 group"
               >
                 <img :src="image" :alt="`Property image ${index + 1}`" class="w-full h-full object-cover" />
                 <button 
@@ -370,10 +370,10 @@
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         @click.self="close360Modal"
       >
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full">
-          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">360° Virtual Tour</h2>
-            <button @click="close360Modal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full">
+          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900">360° Virtual Tour</h2>
+            <button @click="close360Modal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -391,19 +391,19 @@
                   class="hidden"
                   ref="tour360Input"
                 />
-                <div class="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-blue-50 dark:bg-blue-900/20">
+                <div class="border-2 border-dashed border-blue-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-blue-50">
                   <svg class="w-12 h-12 mx-auto text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
-                  <p class="text-blue-700 dark:text-blue-300 font-medium mb-1">Upload 360° panoramic images</p>
-                  <p class="text-sm text-blue-600 dark:text-blue-400">Equirectangular projection images (2:1 ratio)</p>
+                  <p class="text-blue-700 font-medium mb-1">Upload 360° panoramic images</p>
+                  <p class="text-sm text-blue-600">Equirectangular projection images (2:1 ratio)</p>
                 </div>
               </label>
             </div>
 
-            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <p class="text-sm text-blue-800 dark:text-blue-200">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p class="text-sm text-blue-800">
                 <strong>Tip:</strong> For best results, use 360° cameras or panoramic photo apps. Images should be in equirectangular format with 2:1 aspect ratio (e.g., 4096x2048px).
               </p>
             </div>
@@ -423,10 +423,10 @@
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         @click.self="closeVRModal"
       >
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full">
-          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">VR Content Upload</h2>
-            <button @click="closeVRModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full">
+          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900">VR Content Upload</h2>
+            <button @click="closeVRModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -444,20 +444,20 @@
                   class="hidden"
                   ref="vrInput"
                 />
-                <div class="border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer bg-purple-50 dark:bg-purple-900/20">
+                <div class="border-2 border-dashed border-purple-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer bg-purple-50">
                   <svg class="w-12 h-12 mx-auto text-purple-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                   </svg>
-                  <p class="text-purple-700 dark:text-purple-300 font-medium mb-1">Upload VR content</p>
-                  <p class="text-sm text-purple-600 dark:text-purple-400">360° videos, VR-ready images, or 3D models</p>
+                  <p class="text-purple-700 font-medium mb-1">Upload VR content</p>
+                  <p class="text-sm text-purple-600">360° videos, VR-ready images, or 3D models</p>
                 </div>
               </label>
             </div>
 
             <div class="space-y-4">
-              <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
-                <p class="text-sm text-purple-800 dark:text-purple-200 font-medium mb-2">Supported VR Formats:</p>
-                <ul class="text-sm text-purple-700 dark:text-purple-300 space-y-1 ml-4">
+              <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <p class="text-sm text-purple-800 font-medium mb-2">Supported VR Formats:</p>
+                <ul class="text-sm text-purple-700 space-y-1 ml-4">
                   <li>• 360° Videos (MP4, WebM) - 4K or higher recommended</li>
                   <li>• Stereoscopic 3D images (side-by-side or top-bottom)</li>
                   <li>• 8K 360° panoramic photos for VR headsets</li>

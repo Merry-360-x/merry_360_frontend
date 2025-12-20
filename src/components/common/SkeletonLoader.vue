@@ -1,7 +1,7 @@
 <template>
   <div class="animate-pulse">
     <!-- Property Card Skeleton -->
-    <div v-if="type === 'card'" class="bg-white dark:bg-gray-800 rounded-xl shadow-card overflow-hidden">
+    <div v-if="type === 'card'" class="bg-white rounded-xl shadow-card overflow-hidden">
       <div class="aspect-square bg-gray-200"></div>
       <div class="p-4 space-y-3">
         <div class="h-4 bg-gray-200 rounded w-3/4"></div>
@@ -14,7 +14,7 @@
     </div>
 
     <!-- List Item Skeleton -->
-    <div v-else-if="type === 'list'" class="bg-white dark:bg-gray-800 rounded-xl shadow-card overflow-hidden p-4">
+    <div v-else-if="type === 'list'" class="bg-white rounded-xl shadow-card overflow-hidden p-4">
       <div class="flex gap-4">
         <div class="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0"></div>
         <div class="flex-1 space-y-3">

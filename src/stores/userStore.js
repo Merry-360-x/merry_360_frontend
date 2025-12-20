@@ -22,7 +22,6 @@ export const useUserStore = defineStore('user', () => {
   const preferences = ref({
     language: 'EN', // EN, RW, FR, ZH
     currency: 'RWF',
-    theme: 'light', // light, dark
     notifications: {
       email: true,
       push: true,
@@ -201,10 +200,6 @@ export const useUserStore = defineStore('user', () => {
     preferences.value.language = lang
   }
   
-  const toggleTheme = () => {
-    preferences.value.theme = preferences.value.theme === 'light' ? 'dark' : 'light'
-  }
-  
   const updateSubscription = (tier, expiresAt) => {
     subscription.value = {
       active: true,
@@ -245,7 +240,6 @@ export const useUserStore = defineStore('user', () => {
     addLoyaltyPoints,
     redeemPoints,
     setLanguage,
-    toggleTheme,
     updateSubscription
   }
 })
