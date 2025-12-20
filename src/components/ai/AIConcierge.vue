@@ -51,7 +51,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h4 class="font-bold text-gray-900 mb-2 text-base sm:text-lg">👋 Welcome! I'm Amani</h4>
+            <h4 class="font-bold text-gray-900 mb-2 text-base sm:text-lg">Welcome! I'm Amani</h4>
             <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">Your personal AI Trip Advisor for Rwanda. I'm here to help you plan the perfect adventure!</p>
             
             <!-- Category Options -->
@@ -59,32 +59,32 @@
               <p class="text-sm font-semibold text-gray-700 mb-3">What can I help you with today?</p>
               <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
                 <button 
-                  @click="sendMessage('Tell me about accommodations in Kigali')"
+                  @click="sendMessage('Tell me about accommodations')"
                   class="p-4 bg-white hover:bg-brand-50 border-2 border-gray-200 hover:border-brand-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
-                  <div class="text-2xl mb-2">🏨</div>
-                  <div class="text-xs font-semibold text-gray-700 group-hover:text-brand-600">Accommodations</div>
+                  <div class="text-sm font-bold text-gray-700 group-hover:text-brand-600">Accommodations</div>
+                  <div class="text-xs text-gray-500 mt-1">Hotels & Lodges</div>
                 </button>
                 <button 
                   @click="sendMessage('Show me available tours')"
                   class="p-4 bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
-                  <div class="text-2xl mb-2">🌿</div>
-                  <div class="text-xs font-semibold text-gray-700 group-hover:text-green-600">Tours & Activities</div>
+                  <div class="text-sm font-bold text-gray-700 group-hover:text-green-600">Tours & Activities</div>
+                  <div class="text-xs text-gray-500 mt-1">Explore Rwanda</div>
                 </button>
                 <button 
-                  @click="sendMessage('I need transportation options')"
+                  @click="sendMessage('I need transportation')"
                   class="p-4 bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
-                  <div class="text-2xl mb-2">🚗</div>
-                  <div class="text-xs font-semibold text-gray-700 group-hover:text-blue-600">Transportation</div>
+                  <div class="text-sm font-bold text-gray-700 group-hover:text-blue-600">Transportation</div>
+                  <div class="text-xs text-gray-500 mt-1">Get Around</div>
                 </button>
                 <button 
-                  @click="sendMessage('What are popular destinations in Rwanda?')"
+                  @click="sendMessage('Services available')"
                   class="p-4 bg-white hover:bg-purple-50 border-2 border-gray-200 hover:border-purple-500 rounded-xl transition-all shadow-sm hover:shadow-md group"
                 >
-                  <div class="text-2xl mb-2">💡</div>
-                  <div class="text-xs font-semibold text-gray-700 group-hover:text-purple-600">Travel Tips</div>
+                  <div class="text-sm font-bold text-gray-700 group-hover:text-purple-600">Services</div>
+                  <div class="text-xs text-gray-500 mt-1">Other Services</div>
                 </button>
               </div>
             </div>
@@ -232,66 +232,66 @@ const getAIResponse = (userMessage) => {
   
   // Accommodation queries
   if (msg.includes('hotel') || msg.includes('accommodation') || msg.includes('stay') || msg.includes('kigali')) {
-    return "🏨 I'd be happy to help you find accommodations! Rwanda offers amazing options:\n\n🌟 **Luxury Hotels** ($150-500/night)\n• 5-star hotels in Kigali\n• Safari lodges near parks\n• Lakeside resorts\n\n💰 **Mid-Range** ($50-150/night)\n• Comfortable hotels with amenities\n• Boutique guesthouses\n\n🏡 **Budget-Friendly** ($20-50/night)\n• Clean hostels & guesthouses\n• Local homestays\n\nClick on 'Accommodations' in the menu to browse and book!"
+    return "I can help you find the perfect place to stay in Rwanda!\n\nWe offer a wide range of accommodations:\n\n**Luxury Options** (from $150/night)\n• Premium hotels in Kigali\n• Safari lodges near national parks\n• Lakeside resorts\n\n**Mid-Range** ($50-150/night)\n• Comfortable hotels with modern amenities\n• Boutique guesthouses\n• City center locations\n\n**Budget-Friendly** ($20-50/night)\n• Clean hostels and guesthouses\n• Local homestays for authentic experiences\n\nBrowse our Accommodations section to see available properties, check real-time availability, and book instantly with secure payment options."
   }
   
   // Tour queries
   if (msg.includes('tour') || msg.includes('activity') || msg.includes('gorilla') || msg.includes('safari')) {
-    return "🦍 Rwanda offers incredible tours! Here are our most popular:\n\n🌋 **Gorilla Trekking** - $1500\n• Volcanoes National Park\n• Once-in-a-lifetime experience\n• Permits included\n\n🦁 **Safari Adventures** - $200-500\n• Akagera National Park\n• Big 5 game viewing\n• Day or multi-day trips\n\n🏛️ **Cultural Tours** - $50-150\n• Kigali city tours\n• Village experiences\n• Genocide memorial visits\n\n🚴 **Adventure Activities** - $30-200\n• Hiking & biking\n• Kayaking on Lake Kivu\n• Canopy walks\n\nVisit our 'Tours' section to book your adventure!"
+    return "Rwanda offers incredible tour experiences!\n\n**Gorilla Trekking** - from $1500\n• Volcanoes National Park\n• Once-in-a-lifetime wildlife experience\n• Permits and guides included\n\n**Safari Adventures** - $200-500\n• Akagera National Park\n• Big 5 game viewing opportunities\n• Day trips or multi-day packages\n\n**Cultural Experiences** - $50-150\n• Kigali city historical tours\n• Traditional village visits\n• Genocide memorial and museums\n\n**Adventure Activities** - $30-200\n• Mountain hiking and trekking\n• Kayaking on Lake Kivu\n• Forest canopy walks\n\nVisit our Tours section to browse all experiences and book your adventure with instant confirmation!"
   }
   
   // Transport queries
   if (msg.includes('transport') || msg.includes('airport') || msg.includes('transfer') || msg.includes('taxi') || msg.includes('car')) {
-    return "🚗 Transportation made easy in Rwanda:\n\n✈️ **Airport Transfers**\n• Private: $25-40 (Kigali)\n• Shared shuttle: $10-15\n\n🚙 **Car Rentals**\n• With driver: $80-150/day\n• Self-drive: $50-100/day\n• 4x4 available for safaris\n\n🚕 **City Transport**\n• Ride apps (Yego, Move, Uber)\n• Taxi services\n• Motorcycle taxis (moto)\n\n🚌 **Inter-City**\n• Comfortable bus services\n• Scheduled routes\n\nCheck our 'Transport' section to book your ride!"
+    return " Transportation made easy in Rwanda:\n\n **Airport Transfers**\n• Private: $25-40 (Kigali)\n• Shared shuttle: $10-15\n\n **Car Rentals**\n• With driver: $80-150/day\n• Self-drive: $50-100/day\n• 4x4 available for safaris\n\n **City Transport**\n• Ride apps (Yego, Move, Uber)\n• Taxi services\n• Motorcycle taxis (moto)\n\n **Inter-City**\n• Comfortable bus services\n• Scheduled routes\n\nCheck our 'Transport' section to book your ride!"
   }
   
   // Eco-friendly queries
   if (msg.includes('eco') || msg.includes('sustainable') || msg.includes('green') || msg.includes('environment')) {
-    return "🌿 Sustainable travel in Rwanda:\n\n♻️ **Eco-Certified Lodges**\n• Solar-powered properties\n• Rainwater harvesting\n• Local community support\n\n🌱 **Sustainable Activities**\n• Community-based tourism\n• Conservation projects\n• Wildlife protection programs\n\n💚 **Rwanda is a leader in eco-tourism**\n• Plastic bag ban since 2008\n• Monthly community clean-up\n• Protected national parks\n\nWould you like to see our eco-certified properties?"
+    return " Sustainable travel in Rwanda:\n\n **Eco-Certified Lodges**\n• Solar-powered properties\n• Rainwater harvesting\n• Local community support\n\n **Sustainable Activities**\n• Community-based tourism\n• Conservation projects\n• Wildlife protection programs\n\n **Rwanda is a leader in eco-tourism**\n• Plastic bag ban since 2008\n• Monthly community clean-up\n• Protected national parks\n\nWould you like to see our eco-certified properties?"
   }
   
   // Pricing queries
   if (msg.includes('price') || msg.includes('cost') || msg.includes('budget') || msg.includes('cheap') || msg.includes('expensive') || msg.includes('$')) {
-    return "💰 Budget planning for Rwanda:\n\n**Accommodation:**\n• Budget: $20-50/night\n• Mid-range: $50-150/night\n• Luxury: $150-500/night\n\n**Tours:**\n• City tours: $50-100\n• Day trips: $100-300\n• Gorilla trekking: $1500\n• Safari packages: $200-500/day\n\n**Transport:**\n• Airport transfer: $10-40\n• Car rental: $50-150/day\n• Local taxis: $5-20\n\n**Daily Budget:**\n• Backpacker: $30-50\n• Mid-range: $100-200\n• Luxury: $300+\n\nAll prices in USD. What's your budget range?"
+    return " Budget planning for Rwanda:\n\n**Accommodation:**\n• Budget: $20-50/night\n• Mid-range: $50-150/night\n• Luxury: $150-500/night\n\n**Tours:**\n• City tours: $50-100\n• Day trips: $100-300\n• Gorilla trekking: $1500\n• Safari packages: $200-500/day\n\n**Transport:**\n• Airport transfer: $10-40\n• Car rental: $50-150/day\n• Local taxis: $5-20\n\n**Daily Budget:**\n• Backpacker: $30-50\n• Mid-range: $100-200\n• Luxury: $300+\n\nAll prices in USD. What's your budget range?"
   }
   
   // Booking queries
   if (msg.includes('book') || msg.includes('reserve') || msg.includes('availability') || msg.includes('how to')) {
-    return "📅 Easy booking process:\n\n**Step 1:** Browse\n• Explore accommodations, tours, or transport\n• Filter by price, location, ratings\n\n**Step 2:** Select\n• Choose your dates\n• Review details & amenities\n• Check availability\n\n**Step 3:** Book\n• Add to Trip Cart\n• Secure checkout\n• Instant confirmation\n\n✅ **Benefits:**\n• Best price guarantee\n• Instant confirmation\n• 24/7 customer support\n• Flexible cancellation\n\nReady to start exploring?"
+    return " Easy booking process:\n\n**Step 1:** Browse\n• Explore accommodations, tours, or transport\n• Filter by price, location, ratings\n\n**Step 2:** Select\n• Choose your dates\n• Review details & amenities\n• Check availability\n\n**Step 3:** Book\n• Add to Trip Cart\n• Secure checkout\n• Instant confirmation\n\n **Benefits:**\n• Best price guarantee\n• Instant confirmation\n• 24/7 customer support\n• Flexible cancellation\n\nReady to start exploring?"
   }
   
   // Best time to visit
   if (msg.includes('when') || msg.includes('best time') || msg.includes('season') || msg.includes('weather')) {
-    return "🌤️ Best time to visit Rwanda:\n\n☀️ **Dry Season (Jun-Sep, Dec-Feb)**\n• Best for gorilla trekking\n• Clear skies, great views\n• Peak safari season\n• Higher prices\n\n🌧️ **Wet Season (Mar-May, Oct-Nov)**\n• Lush green landscapes\n• Fewer tourists\n• Lower prices\n• Some roads challenging\n\n🌡️ **Climate:**\n• Year-round spring-like weather\n• 15-27°C (59-81°F)\n• Pleasant temperatures\n\n🦍 **Gorilla Trekking:** Year-round (book 6+ months ahead)\n\nWhen are you planning to visit?"
+    return " Best time to visit Rwanda:\n\n **Dry Season (Jun-Sep, Dec-Feb)**\n• Best for gorilla trekking\n• Clear skies, great views\n• Peak safari season\n• Higher prices\n\n **Wet Season (Mar-May, Oct-Nov)**\n• Lush green landscapes\n• Fewer tourists\n• Lower prices\n• Some roads challenging\n\n **Climate:**\n• Year-round spring-like weather\n• 15-27°C (59-81°F)\n• Pleasant temperatures\n\n **Gorilla Trekking:** Year-round (book 6+ months ahead)\n\nWhen are you planning to visit?"
   }
   
   // Safety queries
   if (msg.includes('safe') || msg.includes('security') || msg.includes('danger')) {
-    return "🛡️ Safety in Rwanda:\n\n✅ **Rwanda is very safe!**\n• One of Africa's safest countries\n• Low crime rate\n• Clean & organized\n• Friendly locals\n\n💡 **Safety Tips:**\n• Keep valuables secure\n• Use registered taxis/rides\n• Follow park ranger guidance\n• Respect local customs\n\n👮 **Tourist Police:**\n• Available in major areas\n• English-speaking\n• Very helpful\n\n😊 **Cultural Note:**\n• Rwandans are welcoming\n• English widely spoken\n• Tourist-friendly infrastructure\n\nFeel confident exploring Rwanda!"
+    return " Safety in Rwanda:\n\n **Rwanda is very safe!**\n• One of Africa's safest countries\n• Low crime rate\n• Clean & organized\n• Friendly locals\n\n **Safety Tips:**\n• Keep valuables secure\n• Use registered taxis/rides\n• Follow park ranger guidance\n• Respect local customs\n\n **Tourist Police:**\n• Available in major areas\n• English-speaking\n• Very helpful\n\n **Cultural Note:**\n• Rwandans are welcoming\n• English widely spoken\n• Tourist-friendly infrastructure\n\nFeel confident exploring Rwanda!"
   }
   
   // Visa & entry
   if (msg.includes('visa') || msg.includes('passport') || msg.includes('entry') || msg.includes('requirements')) {
-    return "🛂 Visa & Entry Requirements:\n\n✈️ **Visa on Arrival**\n• Available for most nationalities\n• $50 for 30 days\n• Apply online before travel\n\n🌍 **Visa-Free:**\n• African Union members\n• Some Commonwealth countries\n\n📱 **E-Visa:**\n• Apply online: irembo.gov.rw\n• 3-7 days processing\n• Easier than arrival visa\n\n📋 **Requirements:**\n• Valid passport (6+ months)\n• Return ticket\n• Proof of accommodation\n• Yellow fever certificate (if from endemic area)\n\n💡 Check specific requirements for your nationality!"
+    return " Visa & Entry Requirements:\n\n **Visa on Arrival**\n• Available for most nationalities\n• $50 for 30 days\n• Apply online before travel\n\n **Visa-Free:**\n• African Union members\n• Some Commonwealth countries\n\n **E-Visa:**\n• Apply online: irembo.gov.rw\n• 3-7 days processing\n• Easier than arrival visa\n\n **Requirements:**\n• Valid passport (6+ months)\n• Return ticket\n• Proof of accommodation\n• Yellow fever certificate (if from endemic area)\n\n Check specific requirements for your nationality!"
   }
   
   // Food queries
   if (msg.includes('food') || msg.includes('restaurant') || msg.includes('eat') || msg.includes('cuisine')) {
-    return "🍽️ Rwandan Cuisine & Dining:\n\n🇷🇼 **Traditional Dishes:**\n• Isombe - cassava leaves\n• Brochettes - grilled meat skewers\n• Ugali - maize porridge\n• Matoke - cooked plantains\n\n🌍 **International Options:**\n• Indian, Chinese, Italian\n• French fine dining\n• American fast food\n• Fusion restaurants\n\n☕ **Must-Try:**\n• Rwandan coffee (world-class!)\n• Local tea\n• Fresh tropical fruits\n\n💰 **Prices:**\n• Street food: $2-5\n• Local restaurants: $5-15\n• Mid-range: $15-30\n• Fine dining: $30-60\n\nKigali has excellent dining scene!"
+    return " Rwandan Cuisine & Dining:\n\n **Traditional Dishes:**\n• Isombe - cassava leaves\n• Brochettes - grilled meat skewers\n• Ugali - maize porridge\n• Matoke - cooked plantains\n\n **International Options:**\n• Indian, Chinese, Italian\n• French fine dining\n• American fast food\n• Fusion restaurants\n\n **Must-Try:**\n• Rwandan coffee (world-class!)\n• Local tea\n• Fresh tropical fruits\n\n **Prices:**\n• Street food: $2-5\n• Local restaurants: $5-15\n• Mid-range: $15-30\n• Fine dining: $30-60\n\nKigali has excellent dining scene!"
   }
   
   // Greetings
   if (msg.includes('hello') || msg.includes('hi') || msg === 'hey' || msg.includes('good morning') || msg.includes('good afternoon')) {
-    return "👋 Hello! Welcome to Merry360X - your gateway to Rwanda!\n\nI'm Amani, your AI travel advisor. I'm here to help you discover:\n\n🏨 Perfect accommodations\n🦍 Unforgettable tours\n🚗 Easy transportation\n💡 Insider travel tips\n\nHow can I help you plan your Rwandan adventure today?"
+    return " Hello! Welcome to Merry360X - your gateway to Rwanda!\n\nI'm Amani, your AI travel advisor. I'm here to help you discover:\n\n Perfect accommodations\n Unforgettable tours\n Easy transportation\n Insider travel tips\n\nHow can I help you plan your Rwandan adventure today?"
   }
   
   // Thank you
   if (msg.includes('thank') || msg.includes('thanks')) {
-    return "You're very welcome! 😊\n\nI'm always here to help you plan the perfect trip to Rwanda. If you have any more questions about accommodations, tours, transportation, or anything else, just ask!\n\nHappy travels! 🇷🇼✨"
+    return "You're very welcome! \n\nI'm always here to help you plan the perfect trip to Rwanda. If you have any more questions about accommodations, tours, transportation, or anything else, just ask!\n\nHappy travels! "
   }
   
   // Default helpful response
-  return "I'm Amani, your AI travel advisor for Rwanda! 🇷🇼\n\nI can help you with:\n\n🏨 **Accommodations** - Hotels, lodges, guesthouses\n🦍 **Tours & Activities** - Gorilla trekking, safaris, cultural tours\n🚗 **Transportation** - Airport transfers, car rentals, taxis\n💰 **Budget Planning** - Price ranges and tips\n📅 **Travel Info** - Best time to visit, visas, safety\n🍽️ **Dining** - Restaurants and local cuisine\n\nWhat would you like to know? Just type your question!"
+  return "I'm Amani, your AI travel advisor for Rwanda! \n\nI can help you with:\n\n **Accommodations** - Hotels, lodges, guesthouses\n **Tours & Activities** - Gorilla trekking, safaris, cultural tours\n **Transportation** - Airport transfers, car rentals, taxis\n **Budget Planning** - Price ranges and tips\n **Travel Info** - Best time to visit, visas, safety\n **Dining** - Restaurants and local cuisine\n\nWhat would you like to know? Just type your question!"
 }
 
 const scrollToBottom = () => {
