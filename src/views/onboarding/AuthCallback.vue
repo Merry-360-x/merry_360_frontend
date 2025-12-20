@@ -122,16 +122,6 @@ onMounted(async () => {
       
       console.log('✅ OAuth callback complete, user store updated')
       console.log('User data:', userStore.user)
-        lastName: session.user.user_metadata?.last_name || session.user.user_metadata?.family_name || '',
-        phone: session.user.phone || '',
-        role: 'user',
-        verified: true
-      })
-      
-      // Store the access token
-      if (session.access_token) {
-        localStorage.setItem('auth_token', session.access_token)
-      }
       
       // Redirect to profile or home
       router.push('/profile')
