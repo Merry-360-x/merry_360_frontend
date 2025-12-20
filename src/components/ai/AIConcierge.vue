@@ -181,6 +181,7 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 import { getAIResponse as callOpenAI, isOpenAIConfigured } from '../../services/openai'
+import { getMerry360XContext, formatContextForAI } from '../../services/aiContext'
 
 const props = defineProps({
   isOpen: {
@@ -275,8 +276,12 @@ const sendMessage = async (text) => {
       // Admin response (simulated for now)
       response = getAdminResponse(text)
     } else if (useOpenAI.value) {
-      // Use OpenAI GPT API
-      response = await callOpenAI(text, conversationHistory.value)
+      // Fetch real-time data from Supabase before calling AI
+      const realtimeContext = await getMerry360XContext()
+      const formattedContext = formatContextForAI(realtimeContext)
+      
+      // Use OpenAI GPT API with real-time data
+      response = await callOpenAI(text, conversationHistory.value, formattedContext)
       
       // Update conversation history for context
       conversationHistory.value.push(
