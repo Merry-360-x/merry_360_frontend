@@ -114,17 +114,11 @@ export async function signInWithGoogle() {
   }
 
   if (USE_SUPABASE) {
-    // Supabase Google OAuth
-    const { data, error } = await supabaseService.googleSignIn()
-    if (error) throw error
-    return {
-      user: {
-        id: data.user?.id || '',
-        email: data.user?.email || '',
-        firstName: data.user?.user_metadata?.firstName || '',
-        lastName: data.user?.user_metadata?.lastName || ''
-      }
-    }
+    // Supabase Google OAuth - this will redirect the browser to Google
+    await supabaseService.googleSignIn()
+    // Note: Code after this won't execute because browser redirects to Google
+    // User will come back to /auth/callback after Google authentication
+    return
   }
 
   // Non-Firebase, Non-Supabase flow: use Google Identity Services (GSI)
