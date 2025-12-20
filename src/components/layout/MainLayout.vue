@@ -453,9 +453,9 @@
           <div>
             <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
             <ul class="space-y-3 text-gray-600 text-sm">
-              <li><router-link to="/accommodations" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🏠 Accommodations</router-link></li>
-              <li><router-link to="/tours" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🌍 Tours</router-link></li>
-              <li><router-link to="/transport" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">🚗 Transport</router-link></li>
+              <li><router-link to="/accommodations" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Accommodations</router-link></li>
+              <li><router-link to="/tours" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Tours</router-link></li>
+              <li><router-link to="/transport" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Transport</router-link></li>
             </ul>
           </div>
           <div>
