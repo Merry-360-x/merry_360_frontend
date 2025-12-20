@@ -55,6 +55,12 @@ import Stories from '../views/stories/Stories.vue'
 // Admin
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
 import ManageProperties from '../views/admin/ManageProperties.vue'
+import AdminAccommodations from '../views/admin/AdminAccommodations.vue'
+import AdminUsers from '../views/admin/AdminUsers.vue'
+import AdminTours from '../views/admin/AdminTours.vue'
+import AdminTransport from '../views/admin/AdminTransport.vue'
+import AdminPayments from '../views/admin/AdminPayments.vue'
+import AdminAnalytics from '../views/admin/AdminAnalytics.vue'
 
 // Vendor
 import VendorDashboard from '../views/vendor/VendorDashboard.vue'
@@ -219,12 +225,50 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: AdminDashboard
+    component: AdminDashboard,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/accommodations',
+    name: 'admin-accommodations',
+    component: AdminAccommodations,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/users',
+    name: 'admin-users',
+    component: AdminUsers,
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/admin/properties',
     name: 'admin-properties',
-    component: ManageProperties
+    component: ManageProperties,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/tours',
+    name: 'admin-tours',
+    component: AdminTours,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/transport',
+    name: 'admin-transport',
+    component: AdminTransport,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/payments',
+    name: 'admin-payments',
+    component: AdminPayments,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/analytics',
+    name: 'admin-analytics',
+    component: AdminAnalytics,
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/vendor',
@@ -263,6 +307,38 @@ const router = createRouter({
       return { top: 0 }
     }
   }
+})
+
+// Navigation guard for admin routes
+router.beforeEach((to, from, next) => {
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+  
+  if (requiresAdmin) {
+    // Check if user is logged in
+    const userStr = localStorage.getItem('user')
+    if (!userStr) {
+      // Not logged in, redirect to login
+      next({ name: 'login', query: { redirect: to.fullPath } })
+      return
+    }
+    
+    try {
+      const user = JSON.parse(userStr)
+      // Check if user has admin role
+      if (user.role !== 'admin') {
+        // Not an admin, redirect to home with error
+        alert('Access denied. Admin privileges required.')
+        next({ name: 'home' })
+        return
+      }
+    } catch (err) {
+      console.error('Error parsing user data:', err)
+      next({ name: 'login' })
+      return
+    }
+  }
+  
+  next()
 })
 
 export default router

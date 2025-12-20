@@ -1,0 +1,143 @@
+<template>
+  <AdminLayout>
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">Accommodations Management</h1>
+      <p class="text-text-secondary">Manage all accommodation listings</p>
+    </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card padding="md">
+            <p class="text-text-secondary text-sm mb-1">Total Properties</p>
+            <p class="text-3xl font-bold">{{ stats.total }}</p>
+          </Card>
+          <Card padding="md">
+            <p class="text-text-secondary text-sm mb-1">Active</p>
+            <p class="text-3xl font-bold text-success">{{ stats.active }}</p>
+          </Card>
+          <Card padding="md">
+            <p class="text-text-secondary text-sm mb-1">Pending</p>
+            <p class="text-3xl font-bold text-warning">{{ stats.pending }}</p>
+          </Card>
+          <Card padding="md">
+            <p class="text-text-secondary text-sm mb-1">Inactive</p>
+            <p class="text-3xl font-bold text-error">{{ stats.inactive }}</p>
+          </Card>
+        </div>
+
+        <!-- Properties List -->
+        <Card padding="lg">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="text-left py-3 px-4">Property</th>
+                  <th class="text-left py-3 px-4">Host</th>
+                  <th class="text-left py-3 px-4">Location</th>
+                  <th class="text-left py-3 px-4">Price</th>
+                  <th class="text-left py-3 px-4">Status</th>
+                  <th class="text-left py-3 px-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="property in properties" :key="property.id" class="border-b border-gray-100">
+                  <td class="py-4 px-4">
+                    <div class="flex items-center">
+                      <img :src="property.image" class="w-16 h-16 rounded-lg object-cover mr-3" />
+                      <div>
+                        <p class="font-semibold">{{ property.name }}</p>
+                        <p class="text-sm text-text-secondary">{{ property.type }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-4">{{ property.host }}</td>
+                  <td class="py-4 px-4">{{ property.location }}</td>
+                  <td class="py-4 px-4">${{ property.price }}/night</td>
+                  <td class="py-4 px-4">
+                    <span :class="statusClass(property.status)">{{ property.status }}</span>
+                  </td>
+                  <td class="py-4 px-4">
+                    <div class="flex gap-2">
+                      <Button variant="outline" size="sm">Edit</Button>
+                      <Button variant="outline" size="sm" @click="toggleStatus(property)">
+                        {{ property.status === 'active' ? 'Deactivate' : 'Activate' }}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </Card>
+  </AdminLayout>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import AdminLayout from '@/components/layout/AdminLayout.vue'
+import Card from '@/components/common/Card.vue'
+import Button from '@/components/common/Button.vue'
+import { supabase } from '@/services/supabase'
+
+const properties = ref([])
+const loading = ref(true)
+
+const stats = computed(() => ({
+  total: properties.value.length,
+  active: properties.value.filter(p => p.available).length,
+  pending: 0,
+  inactive: properties.value.filter(p => !p.available).length
+}))
+
+const statusClass = (status) => {
+  return {
+    'active': 'px-2 py-1 bg-success text-white rounded text-sm',
+    'pending': 'px-2 py-1 bg-warning text-white rounded text-sm',
+    'inactive': 'px-2 py-1 bg-gray-400 text-white rounded text-sm'
+  }[status] || 'px-2 py-1 bg-gray-400 text-white rounded text-sm'
+}
+
+const loadProperties = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    
+    properties.value = data.map(p => ({
+      id: p.id,
+      name: p.name,
+      type: p.property_type || 'Property',
+      host: 'Host Name',
+      location: p.city || p.location,
+      price: p.price_per_night,
+      status: p.available ? 'active' : 'inactive',
+      image: p.main_image || '/placeholder-property.jpg'
+    }))
+  } catch (err) {
+    console.error('Error loading properties:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+const toggleStatus = async (property) => {
+  try {
+    const newStatus = property.status === 'active' ? false : true
+    await supabase
+      .from('properties')
+      .update({ available: newStatus })
+      .eq('id', property.id)
+    
+    property.status = newStatus ? 'active' : 'inactive'
+  } catch (err) {
+    console.error('Error updating property:', err)
+  }
+}
+
+onMounted(() => {
+  loadProperties()
+})
+</script>
