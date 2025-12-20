@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Debug</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+        .section { margin: 20px 0; padding: 15px; background: #252526; border-radius: 5px; }
+        h2 { color: #4ec9b0; margin: 0 0 10px 0; }
+        pre { background: #1e1e1e; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .success { color: #4ec9b0; }
+        .error { color: #f48771; }
+        .info { color: #569cd6; }
+        button { background: #0e639c; color: white; border: none; padding: 10px 20px; border-radius: 3px; cursor: pointer; margin: 5px; }
+        button:hover { background: #1177bb; }
+        input { padding: 8px; margin: 5px; border: 1px solid #3c3c3c; background: #1e1e1e; color: #d4d4d4; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Authentication Debug Panel</h1>
+    
+    <div class="section">
+        <h2>1. LocalStorage State</h2>
+        <pre id="localStorage"></pre>
+        <button onclick="refreshLocalStorage()">Refresh</button>
+        <button onclick="clearLocalStorage()">Clear All</button>
+    </div>
+
+    <div class="section">
+        <h2>2. Supabase Session</h2>
+        <pre id="supabaseSession"></pre>
+        <button onclick="checkSupabaseSession()">Check Session</button>
+    </div>
+
+    <div class="section">
+        <h2>3. Quick Login Test</h2>
+        <input type="email" id="email" placeholder="Email" value="bebisdavy@gmail.com" style="width: 250px;">
+        <input type="password" id="password" placeholder="Password" style="width: 150px;">
+        <br>
+        <button onclick="quickLogin()">Login</button>
+        <button onclick="quickLogout()">Logout</button>
+        <pre id="loginResult"></pre>
+    </div>
+
+    <div class="section">
+        <h2>4. Profile Data</h2>
+        <pre id="profileData"></pre>
+        <button onclick="fetchProfile()">Fetch Profile</button>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+        const supabaseUrl = 'https://gzmxelgcdpaeklmabszo.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bXhlbGdjZHBhZWtsbWFic3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQyMDQzNzAsImV4cCI6MjA0OTc4MDM3MH0.Oi3xCmPCYEjykOrLEp2AxBE8kzewy0nDNlbcGkuKL1w'
+
+        window.supabase = createClient(supabaseUrl, supabaseKey)
+
+        // Auto-refresh on load
+        window.onload = () => {
+            refreshLocalStorage()
+            checkSupabaseSession()
+        }
+
+        // Listen for storage changes
+        window.addEventListener('storage', (e) => {
+            console.log('Storage changed:', e.key, e.newValue)
+            refreshLocalStorage()
+        })
+
+        // Listen for Supabase auth changes
+        window.supabase.auth.onAuthStateChange((event, session) => {
+            console.log('🔔 Auth state changed:', event)
+            checkSupabaseSession()
+            refreshLocalStorage()
+        })
+
+        window.refreshLocalStorage = () => {
+            const data = {
+                user: localStorage.getItem('user'),
+                isAuthenticated: localStorage.getItem('isAuthenticated'),
+                auth_token: localStorage.getItem('auth_token')
+            }
+            
+            const formatted = JSON.stringify(data, null, 2)
+            const el = document.getElementById('localStorage')
+            
+            if (data.user || data.isAuthenticated || data.auth_token) {
+                el.innerHTML = `<span class="success">✅ Data found:</span>\n${formatted}`
+            } else {
+                el.innerHTML = `<span class="error">❌ No data in localStorage</span>\n${formatted}`
+            }
+        }
+
+        window.clearLocalStorage = () => {
+            localStorage.clear()
+            refreshLocalStorage()
+            checkSupabaseSession()
+            console.log('Cleared localStorage')
+        }
+
+        window.checkSupabaseSession = async () => {
+            const el = document.getElementById('supabaseSession')
+            try {
+                const { data: { session }, error } = await window.supabase.auth.getSession()
+                
+                if (error) throw error
+                
+                if (session) {
+                    el.innerHTML = `<span class="success">✅ Active session:</span>\n${JSON.stringify({
+                        email: session.user.email,
+                        id: session.user.id,
+                        expires_at: new Date(session.expires_at * 1000).toLocaleString()
+                    }, null, 2)}`
+                    
+                    // Auto-fetch profile
+                    fetchProfile()
+                } else {
+                    el.innerHTML = `<span class="info">ℹ️ No active session</span>`
+                }
+            } catch (error) {
+                el.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`
+            }
+        }
+
+        window.quickLogin = async () => {
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const resultEl = document.getElementById('loginResult')
+            
+            resultEl.innerHTML = '<span class="info">🔄 Logging in...</span>'
+            
+            try {
+                const { data, error } = await window.supabase.auth.signInWithPassword({
+                    email,
+                    password
+                })
+                
+                if (error) throw error
+                
+                // Manually update localStorage (like the app does)
+                const { data: profile } = await window.supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single()
+                
+                const userData = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
+                    firstName: profile?.first_name || '',
+                    lastName: profile?.last_name || '',
+                    phone: profile?.phone || '',
+                    role: profile?.role || 'user',
+                    avatarUrl: profile?.avatar_url || '',
+                    verified: true
+                }
+                
+                localStorage.setItem('user', JSON.stringify(userData))
+                localStorage.setItem('isAuthenticated', 'true')
+                localStorage.setItem('auth_token', data.session.access_token)
+                
+                resultEl.innerHTML = `<span class="success">✅ Login successful!</span>\n${JSON.stringify(userData, null, 2)}`
+                refreshLocalStorage()
+                
+            } catch (error) {
+                resultEl.innerHTML = `<span class="error">❌ ${error.message}</span>`
+            }
+        }
+
+        window.quickLogout = async () => {
+            const resultEl = document.getElementById('loginResult')
+            resultEl.innerHTML = '<span class="info">🔄 Logging out...</span>'
+            
+            try {
+                await window.supabase.auth.signOut()
+                localStorage.removeItem('user')
+                localStorage.removeItem('isAuthenticated')
+                localStorage.removeItem('auth_token')
+                
+                resultEl.innerHTML = '<span class="success">✅ Logged out</span>'
+                refreshLocalStorage()
+                checkSupabaseSession()
+            } catch (error) {
+                resultEl.innerHTML = `<span class="error">❌ ${error.message}</span>`
+            }
+        }
+
+        window.fetchProfile = async () => {
+            const el = document.getElementById('profileData')
+            
+            try {
+                const { data: { session } } = await window.supabase.auth.getSession()
+                
+                if (!session) {
+                    el.innerHTML = '<span class="info">ℹ️ No session - login first</span>'
+                    return
+                }
+                
+                const { data: profile, error } = await window.supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single()
+                
+                if (error) throw error
+                
+                if (profile) {
+                    el.innerHTML = `<span class="success">✅ Profile found:</span>\n${JSON.stringify(profile, null, 2)}`
+                } else {
+                    el.innerHTML = '<span class="error">❌ No profile found</span>'
+                }
+            } catch (error) {
+                el.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`
+            }
+        }
+    </script>
+</body>
+</html>
