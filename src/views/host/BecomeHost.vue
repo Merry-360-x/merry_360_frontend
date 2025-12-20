@@ -1,5 +1,33 @@
 <template>
   <MainLayout>
+    <!-- Success Modal -->
+    <div v-if="showSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="showSuccessModal = false">
+      <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 text-center">
+        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h2>
+        <p class="text-gray-600 mb-6">
+          Your host application has been successfully submitted and saved to our database. Our admin team will review your application within 24 hours.
+        </p>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <p class="text-sm text-blue-800 font-semibold">✅ Saved to Database</p>
+          <p class="text-xs text-blue-600 mt-1">Application Status: Pending Review</p>
+        </div>
+        <p class="text-sm text-gray-500 mb-6">
+          You will receive an email notification once your application has been reviewed.
+        </p>
+        <button 
+          @click="showSuccessModal = false; router.push('/')"
+          class="w-full px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-lg transition-all"
+        >
+          Return to Home
+        </button>
+      </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-brand-50 via-orange-50 to-white py-16 md:py-24">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -374,6 +402,7 @@ import { useToast } from '../../composables/useToast'
 const router = useRouter()
 const formSection = ref(null)
 const isSubmitting = ref(false)
+const showSuccessModal = ref(false)
 const { showToast } = useToast()
 
 const formData = reactive({
@@ -443,7 +472,7 @@ const submitForm = async () => {
     
     console.log('Submitting host application for user:', user.email)
     
-    // Update user profile with host application
+    // Update user profile with host application - SAVES TO DATABASE IMMEDIATELY
     const { error } = await supabase
       .from('profiles')
       .update({
@@ -457,10 +486,14 @@ const submitForm = async () => {
       throw error
     }
     
-    // Show success message
-    showToast('✅ Host application submitted! Saved to database. Admin will review it soon.', 'success')
+    console.log('✅ Host application saved successfully to database!')
+    console.log('📊 Admin can now see this application at /admin/host-applications')
     
-    console.log('Host application saved successfully to profiles table')
+    // Show success modal with confirmation
+    showSuccessModal.value = true
+    
+    // Also show toast for immediate feedback
+    showToast('✅ Application submitted! Admin will review it soon.', 'success')
     
     // Reset form
     Object.keys(formData).forEach(key => {
@@ -471,8 +504,6 @@ const submitForm = async () => {
       }
     })
     
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   } catch (error) {
     console.error('Host application error:', error)
     showToast('Failed to submit application. Please try again: ' + error.message, 'error')
