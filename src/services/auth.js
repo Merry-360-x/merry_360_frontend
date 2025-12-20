@@ -62,18 +62,33 @@ export async function signUp(data) {
   }
 
   if (USE_SUPABASE) {
-    const { data: authData, error } = await supabaseService.signUpWithEmail(data.email, data.password)
+    // Pass user metadata during signup so it's available to the trigger
+    const { data: authData, error } = await supabaseService.signUpWithEmail(
+      data.email, 
+      data.password,
+      {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone
+      }
+    )
     if (error) throw error
     
-    // Store additional profile data WITH 0 LOYALTY POINTS FOR NEW ACCOUNTS
-    await supabaseService.setUserProfile(authData.user.id, {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      phone: data.phone,
-      loyalty_points: 0,
-      loyalty_tier: 'bronze',
-      updated_at: new Date().toISOString()
-    })
+    // Also manually set profile data as backup (in case trigger doesn't run)
+    // This will be upserted, so it won't conflict with trigger-created profile
+    try {
+      await supabaseService.setUserProfile(authData.user.id, {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        phone: data.phone,
+        loyalty_points: 0,
+        loyalty_tier: 'bronze',
+        updated_at: new Date().toISOString()
+      })
+    } catch (profileError) {
+      console.warn('Profile creation warning:', profileError)
+      // Don't throw - profile might already exist from trigger
+    }
 
     const token = authData.session?.access_token
     return {
