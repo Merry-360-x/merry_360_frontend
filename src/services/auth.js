@@ -6,6 +6,14 @@ import mockApiService from './mockApi'
 const USE_FIREBASE = import.meta.env.VITE_USE_FIREBASE === 'true'
 const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true'
 
+// Debug logging for environment variables
+console.log('🔧 Auth Service Environment:', {
+  USE_FIREBASE,
+  USE_SUPABASE,
+  VITE_USE_SUPABASE: import.meta.env.VITE_USE_SUPABASE,
+  VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL
+})
+
 export async function signIn(credentials) {
   // Check if admin email
   const isAdmin = credentials.email === 'admin@merry360x.com' || credentials.email === 'bebisdavy@gmail.com'
@@ -104,6 +112,8 @@ export async function signUp(data) {
 }
 
 export async function signInWithGoogle() {
+  console.log('🔧 signInWithGoogle called - USE_FIREBASE:', USE_FIREBASE, 'USE_SUPABASE:', USE_SUPABASE)
+  
   if (USE_FIREBASE) {
     const res = await googleSignIn()
     const user = res.user
@@ -112,6 +122,7 @@ export async function signInWithGoogle() {
   }
 
   if (USE_SUPABASE) {
+    console.log('🔧 Using Supabase OAuth')
     // Supabase Google OAuth - this will redirect the browser to Google
     await supabaseService.googleSignIn()
     // Note: Code after this won't execute because browser redirects to Google
@@ -120,6 +131,11 @@ export async function signInWithGoogle() {
   }
 
   // No OAuth configured
+  console.error('❌ Neither Firebase nor Supabase is enabled!')
+  console.error('Environment check:', {
+    VITE_USE_FIREBASE: import.meta.env.VITE_USE_FIREBASE,
+    VITE_USE_SUPABASE: import.meta.env.VITE_USE_SUPABASE
+  })
   throw new Error('Google sign-in not configured. Please enable Firebase or Supabase.')
 }
 
