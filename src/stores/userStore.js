@@ -58,11 +58,20 @@ export const useUserStore = defineStore('user', () => {
   
   // Actions
   const login = async (userData) => {
+    console.log('🔐 userStore.login() called with:', userData)
+    
     user.value = userData
     isAuthenticated.value = true
+    
+    console.log('✅ User state updated:')
+    console.log('   user.value:', user.value)
+    console.log('   isAuthenticated.value:', isAuthenticated.value)
+    
     // Persist to localStorage
     localStorage.setItem('user', JSON.stringify(userData))
     localStorage.setItem('isAuthenticated', 'true')
+    
+    console.log('💾 Persisted to localStorage')
     
     // Load loyalty points from Supabase
     if (userData.id) {
@@ -70,6 +79,8 @@ export const useUserStore = defineStore('user', () => {
       await loadWatchlist()
       await loadBookings()
     }
+    
+    console.log('🎉 Login complete! Final user state:', user.value)
   }
   
   const loadLoyaltyPoints = async (userId) => {
