@@ -19,7 +19,31 @@ const userStore = useUserStore()
 
 onMounted(async () => {
   try {
-    console.log('Auth callback - checking session...')
+    console.log('🔄 Auth callback - processing OAuth redirect...')
+    console.log('Current URL:', window.location.href)
+    console.log('Hash params:', window.location.hash)
+    
+    // Handle hash fragment from OAuth (Supabase uses hash-based redirects)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1))
+    const accessToken = hashParams.get('access_token')
+    const refreshToken = hashParams.get('refresh_token')
+    
+    if (accessToken) {
+      console.log('✅ Access token found in URL hash')
+      
+      // Set the session with the tokens from the URL
+      const { data, error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken || ''
+      })
+      
+      if (sessionError) {
+        console.error('❌ Session error:', sessionError)
+        throw sessionError
+      }
+      
+      console.log('✅ Session set successfully')
+    }
     
     // Get the session from Supabase after OAuth redirect
     const { data: { session }, error } = await supabase.auth.getSession()
