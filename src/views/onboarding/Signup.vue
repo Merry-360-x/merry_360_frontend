@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center px-4 py-12">
+  <div class="min-h-screen bg-white flex items-center justify-center px-4 py-12">
     <div class="max-w-md w-full">
       <!-- Logo -->
       <div class="text-center mb-8">
@@ -239,22 +239,37 @@ const handleGoogleSignUp = async () => {
   errorMessage.value = ''
 
   try {
+    console.log('🔵 Google sign-up initiated')
+    console.log('Redirect URL:', `${window.location.origin}/auth/callback`)
+    
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
       }
     })
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ OAuth error:', error)
+      throw error
+    }
+
+    console.log('✅ OAuth data received:', data)
 
     // Redirect to Google
     if (data?.url) {
+      console.log('🔗 Redirecting to:', data.url)
       window.location.href = data.url
+    } else {
+      throw new Error('No OAuth URL returned from Supabase')
     }
   } catch (error) {
-    console.error('Google sign-up error:', error)
-    errorMessage.value = 'Failed to sign up with Google. Please try again.'
+    console.error('❌ Google sign-up error:', error)
+    errorMessage.value = error.message || 'Failed to sign up with Google. Please check your internet connection and try again.'
     googleLoading.value = false
   }
 }
