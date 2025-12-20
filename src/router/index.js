@@ -44,6 +44,7 @@ import Messages from '../views/dashboard/Messages.vue'
 
 // Cart
 import TripCart from '../views/cart/TripCart.vue'
+import Checkout from '../views/cart/Checkout.vue'
 
 // Wishlist
 import Wishlist from '../views/wishlist/Wishlist.vue'
@@ -206,6 +207,12 @@ const routes = [
     path: '/trip-cart',
     name: 'trip-cart',
     component: TripCart
+  },
+  {
+    path: '/checkout',
+    name: 'checkout',
+    component: Checkout,
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin',

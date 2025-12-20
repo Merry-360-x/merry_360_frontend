@@ -108,7 +108,6 @@ import Button from '../../components/common/Button.vue'
 import { signIn, signInWithGoogle } from '../../services/auth'
 import { setUserProfile } from '../../services/supabase'
 import googleService from '../../services/google'
-import mockApiService from '../../services/mockApi'
 
 const router = useRouter()
 const userStore = useUserStore()

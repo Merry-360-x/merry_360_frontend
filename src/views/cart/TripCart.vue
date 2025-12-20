@@ -170,7 +170,14 @@ const applyPoints = () => {
   }
 }
 
-const proceedToCheckout = () => {
-  alert('Checkout functionality coming soon! Your total: ' + currencyStore.formatPrice(total.value))
+const proceedToCheckout = async () => {
+  if (!userStore.user) {
+    alert('Please login to complete your booking')
+    router.push('/login')
+    return
+  }
+  
+  // Navigate to checkout page with cart data
+  router.push('/checkout')
 }
 </script>
