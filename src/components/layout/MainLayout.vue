@@ -56,7 +56,7 @@
             </router-link>
             <router-link 
               to="/become-host"
-              class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px]"
+              class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px] ml-4"
             >
               Become a Host
             </router-link>
