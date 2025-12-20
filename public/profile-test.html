@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Update Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Profile Update Test - Production</h1>
+    <p><strong>Production URL:</strong> https://merry-360-frontend-pdh14ixy5-das-48ca2629.vercel.app</p>
+    
+    <div class="test-section">
+        <h2>✅ Backend Testing Complete</h2>
+        <p>Profile updates are working correctly on the backend!</p>
+        <ul>
+            <li>✅ Account creation works</li>
+            <li>✅ Profile updates persist to database</li>
+            <li>✅ First name and last name updates work</li>
+            <li>✅ Phone number updates work</li>
+            <li>✅ Date of birth and bio saved locally only</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Manual Test Steps</h2>
+        <p>Test these steps on the production site:</p>
+        <ol>
+            <li><strong>Go to Profile:</strong> <a href="https://merry-360-frontend-pdh14ixy5-das-48ca2629.vercel.app/profile" target="_blank">Open Profile Page</a></li>
+            <li><strong>Login</strong> with your account (davyncidavy@gmail.com)</li>
+            <li><strong>Click "Edit"</strong> on Personal Info tab</li>
+            <li><strong>Change your name:</strong> 
+                <br>First Name: <input type="text" placeholder="Davy" />
+                <br>Last Name: <input type="text" placeholder="Updated" />
+            </li>
+            <li><strong>Change phone:</strong> <input type="text" placeholder="+250789123456" /></li>
+            <li><strong>Add date/bio:</strong> (these save locally only for now)
+                <br>Date: <input type="date" />
+                <br>Bio: <input type="text" placeholder="Updated bio text" />
+            </li>
+            <li><strong>Click "Save Changes"</strong> - should show success alert</li>
+            <li><strong>Click "Logout"</strong></li>
+            <li><strong>Login again</strong> with same credentials</li>
+            <li><strong>Check profile</strong> - name and phone should persist!</li>
+        </ol>
+    </div>
+    
+    <div class="test-section success">
+        <h2>🎉 Expected Results</h2>
+        <p><strong>Should work:</strong></p>
+        <ul>
+            <li>✅ First name and last name changes persist after logout/login</li>
+            <li>✅ Phone number changes persist after logout/login</li>
+            <li>✅ No more "Failed to update" errors</li>
+            <li>✅ Success message appears when saving</li>
+        </ul>
+        
+        <p><strong>Temporary limitations:</strong></p>
+        <ul>
+            <li>⚠️ Date of birth and bio save locally only (until we add DB columns)</li>
+            <li>⚠️ They won't persist after logout/login yet</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>🚀 Quick Test Links</h2>
+        <p>
+            <a href="https://merry-360-frontend-pdh14ixy5-das-48ca2629.vercel.app/login" target="_blank">
+                <button class="btn-primary">Login Page</button>
+            </a>
+            <a href="https://merry-360-frontend-pdh14ixy5-das-48ca2629.vercel.app/profile" target="_blank">
+                <button class="btn-success">Profile Page</button>
+            </a>
+        </p>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔧 What Was Fixed</h2>
+        <ul>
+            <li>❌ <strike>Invalid API key errors</strike> → ✅ Fixed with correct Supabase credentials</li>
+            <li>❌ <strike>Email update permission errors</strike> → ✅ Removed email from profile updates</li>
+            <li>❌ <strike>Missing date_of_birth column errors</strike> → ✅ Removed non-existent columns from DB updates</li>
+            <li>❌ <strike>Personal info disappearing</strike> → ✅ Now persists to database and reloads on login</li>
+        </ul>
+    </div>
+</body>
+</html>
