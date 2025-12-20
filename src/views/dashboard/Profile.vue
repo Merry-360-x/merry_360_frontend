@@ -656,14 +656,18 @@ const savePersonalInfo = async () => {
   }
 
   try {
+    console.log('🔄 Updating profile for user:', userStore.user.id)
+    
+    // Don't update email in profiles table - it's managed by auth.users
     const updates = {
-      first_name: personalInfo.value.firstName,
-      last_name: personalInfo.value.lastName,
-      email: personalInfo.value.email,
-      phone: personalInfo.value.phone,
+      first_name: personalInfo.value.firstName.trim(),
+      last_name: personalInfo.value.lastName.trim(),
+      phone: personalInfo.value.phone?.trim() || null,
       date_of_birth: personalInfo.value.dateOfBirth || null,
-      bio: personalInfo.value.bio
+      bio: personalInfo.value.bio?.trim() || null
     }
+
+    console.log('Updates:', updates)
 
     const { data, error } = await supabase
       .from('profiles')
@@ -672,12 +676,16 @@ const savePersonalInfo = async () => {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+
+    console.log('✅ Profile updated:', data)
 
     const updatedUser = {
       ...userStore.user,
-      email: data.email,
-      name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || data.email,
+      name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || userStore.user.email,
       firstName: data.first_name || '',
       lastName: data.last_name || '',
       phone: data.phone || '',
@@ -691,7 +699,8 @@ const savePersonalInfo = async () => {
     alert('Personal information updated successfully!')
   } catch (err) {
     console.error('Error updating profile:', err)
-    alert('Failed to update personal information. Please try again.')
+    const errorMsg = err.message || err.hint || 'Unknown error'
+    alert(`Failed to update personal information: ${errorMsg}`)
   }
 }
 
