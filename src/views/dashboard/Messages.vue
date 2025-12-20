@@ -57,7 +57,8 @@
 import { ref, reactive, onMounted, watch, nextTick } from 'vue'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { useUserStore } from '../../stores/userStore'
-import * as supabaseService from '../../services/supabase'
+import { supabase } from '../../services/supabase'
+import * as supabaseApi from '../../services/supabaseApi'
 import { initFirebase, createMessage as createFirestoreMessage, listenToMessages as listenFirestoreMessages } from '../../services/firebase'
 
 const userStore = useUserStore()
@@ -152,10 +153,10 @@ const sendMessage = async () => {
   try {
     if (useSupabase) {
       const userId = userStore.user?.id || 'guest'
-      await supabaseService.createMessage(
-        selectedConversation.value.id,
-        userId,
-        message.text
+      // Use sendMessage from supabaseApi
+      await supabaseApi.sendMessage(
+        selectedConversation.value.id, // receiverId
+        message.text // content
       )
     } else {
       await createFirestoreMessage(selectedConversation.value.id, message)
