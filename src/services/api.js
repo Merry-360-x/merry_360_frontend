@@ -3,12 +3,16 @@
  * Centralized HTTP client for all API requests
  */
 
-// Import mock API for MVP
+// Import Supabase API (real database operations)
+import supabaseApi from './supabaseApi'
+
+// Import mock API for fallback
 import { mockApiService } from './mockApi'
 
 // Base API URL - should be from environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API !== 'false' // Default to true for MVP
+const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true' // Use Supabase if enabled
+const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true' // Only use mock if explicitly enabled
 
 /**
  * Custom API Error class
@@ -252,4 +256,5 @@ export const api = {
 }
 
 // Export both for flexibility
-export default USE_MOCK_API ? mockApiService : api
+// Priority: Supabase > Mock > HTTP API
+export default USE_SUPABASE ? supabaseApi : (USE_MOCK_API ? mockApiService : api)
