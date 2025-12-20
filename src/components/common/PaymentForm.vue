@@ -1,13 +1,11 @@
 <template>
   <div>
     <div v-if="!useStripe">
-      <p class="text-sm text-gray-600 mb-4">Stripe not configured - using mock payment flow for demo.</p>
-      <input v-model="cardNumber" placeholder="Card number (mock)" class="w-full p-3 border rounded mb-2" />
-      <div class="grid grid-cols-2 gap-2">
-        <input v-model="expiry" placeholder="MM/YY" class="p-3 border rounded" />
-        <input v-model="cvv" placeholder="CVV" class="p-3 border rounded" />
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+        <p class="text-sm font-medium text-amber-900">Payment Integration Coming Soon</p>
+        <p class="text-xs text-amber-700 mt-1">Online payment will be available soon. Our team will contact you with payment instructions.</p>
       </div>
-      <button @click="payMock" class="mt-3 px-4 py-2 bg-brand-500 text-white rounded">Pay (Demo)</button>
+      <button @click="payMock" class="w-full px-4 py-3 bg-gray-400 text-white rounded-lg font-semibold cursor-not-allowed" disabled>Payment Gateway Not Available</button>
     </div>
 
     <div v-else>
@@ -49,12 +47,19 @@ onMounted(async () => {
 
 async function handlePay() {
   if (!useStripe) return
-  // Create Payment Intent via backend (mock fallback)
+  // Create Payment Intent via backend
   try {
-    const amount = 1000 // demo amount
+    const amount = props.amount || 1000
     const res = await apiClient.post('/payments/intent', { amount, currency: currencyStore.selectedCurrency })
-    // ideally use client_secret and confirm card via stripe
-    alert('Payment flow created (demo). Replace with a backend Payment Intent for production.')
+    // Use client_secret to confirm card via stripe
+    const { error } = await stripe.value.confirmCardPayment(res.data.client_secret, {
+      payment_method: { card: card.value }
+    })
+    if (error) {
+      alert('Payment failed: ' + error.message)
+    } else {
+      alert('Payment successful!')
+    }
   } catch (err) {
     console.error(err)
     alert('Payment failed')
@@ -62,13 +67,7 @@ async function handlePay() {
 }
 
 async function payMock() {
-  // Simulate success via API
-  try {
-    const res = await apiClient.post('/payments/intent', { amount: 1000, currency: currencyStore.selectedCurrency })
-    await apiClient.post(`/payments/${res.data.intentId}/confirm`)
-    alert('Mock payment succeeded')
-  } catch (err) {
-    alert('Payment error')
-  }
+  // Payment not available yet
+  alert('Payment integration coming soon. Our team will contact you with payment instructions.')
 }
 </script>

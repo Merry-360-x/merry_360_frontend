@@ -31,7 +31,7 @@ The application will be available at `http://localhost:5173`
 ## 🔑 Test Credentials
 
 ### Regular User
-- **Email:** demo@merry360.com
+- **Email:** support@merry360x.com
 - **Password:** password123
 
 ### Admin

@@ -48,11 +48,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '@/stores/currency'
 import { useUserStore } from '@/stores/userStore'
 import { useToast } from '@/composables/useToast'
+import api from '@/services/api'
 import Card from './Card.vue'
 import Button from './Button.vue'
 
@@ -72,99 +73,51 @@ const currencyStore = useCurrencyStore()
 const userStore = useUserStore()
 const { success } = useToast()
 
-// Mock suggestions based on category
-const suggestions = computed(() => {
-  const allSuggestions = {
-    accommodation: [
-      {
-        id: 1,
-        title: 'Airport Transfer Service',
-        description: 'Convenient transport from airport to your accommodation',
-        price: 50,
-        category: 'Transport',
-        type: 'transport',
-        image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400'
-      },
-      {
-        id: 2,
-        title: 'City Cultural Tour',
-        description: 'Explore local culture and attractions',
-        price: 75,
-        category: 'Tour',
-        type: 'tour',
-        image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=400'
-      },
-      {
-        id: 3,
-        title: 'Restaurant Recommendations',
-        description: 'Best local dining experiences nearby',
-        price: 30,
-        category: 'Service',
-        type: 'service',
-        image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400'
-      }
-    ],
-    tour: [
-      {
-        id: 4,
-        title: 'Nearby Hotel Stay',
-        description: 'Comfortable accommodation near tour location',
-        price: 120,
-        category: 'Accommodation',
-        type: 'accommodation',
-        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400'
-      },
-      {
-        id: 5,
-        title: 'Private Tour Transport',
-        description: 'Exclusive vehicle for your tour group',
-        price: 100,
-        category: 'Transport',
-        type: 'transport',
-        image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400'
-      },
-      {
-        id: 6,
-        title: 'Photography Package',
-        description: 'Professional photos of your tour experience',
-        price: 150,
-        category: 'Service',
-        type: 'service',
-        image: 'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400'
-      }
-    ],
-    transport: [
-      {
-        id: 7,
-        title: 'Destination Accommodation',
-        description: 'Book your stay at your destination',
-        price: 95,
-        category: 'Accommodation',
-        type: 'accommodation',
-        image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400'
-      },
-      {
-        id: 8,
-        title: 'Sightseeing Tour',
-        description: 'Explore attractions along your route',
-        price: 60,
-        category: 'Tour',
-        type: 'tour',
-        image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400'
-      },
-      {
-        id: 9,
-        title: 'Travel Insurance',
-        description: 'Comprehensive coverage for your journey',
-        price: 25,
-        category: 'Service',
-        type: 'service',
-        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400'
-      }
-    ]
+// Fetch suggestions from database based on category
+const suggestions = ref([])
+const loading = ref(false)
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    // Fetch related items from database based on category
+    if (props.currentCategory === 'accommodation') {
+      // Suggest tours and transport
+      const [tours, transport] = await Promise.all([
+        api.tours.getAll({ limit: 2 }),
+        api.transport.getRoutes({ limit: 1 })
+      ])
+      suggestions.value = [
+        ...tours.map(t => ({ ...t, type: 'tour', category: 'Tour', title: t.title || t.name })),
+        ...transport.map(t => ({ ...t, type: 'transport', category: 'Transport', title: t.service_type || t.name }))
+      ].slice(0, 3)
+    } else if (props.currentCategory === 'tour') {
+      // Suggest accommodations and transport
+      const [accommodations, transport] = await Promise.all([
+        api.accommodations.getAll({ limit: 2 }),
+        api.transport.getRoutes({ limit: 1 })
+      ])
+      suggestions.value = [
+        ...accommodations.map(a => ({ ...a, type: 'accommodation', category: 'Accommodation', title: a.name, image: a.images?.[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' })),
+        ...transport.map(t => ({ ...t, type: 'transport', category: 'Transport', title: t.service_type || t.name }))
+      ].slice(0, 3)
+    } else if (props.currentCategory === 'transport') {
+      // Suggest accommodations and tours
+      const [accommodations, tours] = await Promise.all([
+        api.accommodations.getAll({ limit: 2 }),
+        api.tours.getAll({ limit: 1 })
+      ])
+      suggestions.value = [
+        ...accommodations.map(a => ({ ...a, type: 'accommodation', category: 'Accommodation', title: a.name, image: a.images?.[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' })),
+        ...tours.map(t => ({ ...t, type: 'tour', category: 'Tour', title: t.title || t.name }))
+      ].slice(0, 3)
+    }
+  } catch (error) {
+    console.error('Error loading suggestions:', error)
+    suggestions.value = []
+  } finally {
+    loading.value = false
   }
-  
-  return allSuggestions[props.currentCategory] || []
 })
 
 const formatPrice = (price) => {

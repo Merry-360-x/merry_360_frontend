@@ -497,7 +497,7 @@
               <div class="bg-blue-50 p-4 rounded-lg">
                 <p class="text-sm text-blue-800">
                   <strong>Note:</strong> In production, you would scan a QR code with your authenticator app 
-                  (like Google Authenticator or Authy) and enter a verification code. This is a demo version.
+                  (like Google Authenticator or Authy) and enter a verification code.
                 </p>
               </div>
 

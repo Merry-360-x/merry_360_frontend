@@ -325,13 +325,8 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Save to localStorage for demo
-    const properties = JSON.parse(localStorage.getItem('vendor_properties') || '[]')
+    // Create property in database
     const newProperty = {
-      id: Date.now(),
       ...form.value,
       images: [form.value.image, ...form.value.additionalImages.filter(img => img)],
       rating: 0,
