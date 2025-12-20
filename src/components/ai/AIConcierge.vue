@@ -180,6 +180,7 @@
 
 <script setup>
 import { ref, watch, nextTick } from 'vue'
+import { getAIResponse as callOpenAI, isOpenAIConfigured } from '../../services/openai'
 
 const props = defineProps({
   isOpen: {
@@ -197,6 +198,8 @@ const messagesContainer = ref(null)
 const adminMode = ref(false)
 const adminName = ref('')
 const adminRole = ref('')
+const conversationHistory = ref([]) // Store conversation for context
+const useOpenAI = ref(isOpenAIConfigured())
 
 const quickSuggestions = [
   'Show me hotels',
@@ -265,9 +268,31 @@ const sendMessage = async (text) => {
   // Show typing indicator
   isTyping.value = true
   
-  // Simulate AI or Admin response
-  setTimeout(() => {
-    const response = adminMode.value ? getAdminResponse(text) : getAIResponse(text)
+  try {
+    let response
+    
+    if (adminMode.value) {
+      // Admin response (simulated for now)
+      response = getAdminResponse(text)
+    } else if (useOpenAI.value) {
+      // Use OpenAI GPT API
+      response = await callOpenAI(text, conversationHistory.value)
+      
+      // Update conversation history for context
+      conversationHistory.value.push(
+        { role: 'user', content: text },
+        { role: 'assistant', content: response }
+      )
+      
+      // Keep only last 10 messages for context (5 exchanges)
+      if (conversationHistory.value.length > 10) {
+        conversationHistory.value = conversationHistory.value.slice(-10)
+      }
+    } else {
+      // Fallback to rule-based responses
+      response = getFallbackResponse(text)
+    }
+    
     messages.value.push({
       type: 'ai',
       text: response,
@@ -275,9 +300,17 @@ const sendMessage = async (text) => {
       adminName: adminMode.value ? adminName.value : null,
       adminRole: adminMode.value ? adminRole.value : null
     })
+  } catch (error) {
+    console.error('AI Response Error:', error)
+    messages.value.push({
+      type: 'ai',
+      text: "I'm having trouble connecting right now. Please try again or click 'Talk to Support' for immediate help.",
+      isAdmin: false
+    })
+  } finally {
     isTyping.value = false
     scrollToBottom()
-  }, 1000 + Math.random() * 1000)
+  }
 }
 
 const getAdminResponse = (userMessage) => {
@@ -285,7 +318,7 @@ const getAdminResponse = (userMessage) => {
   return "I understand your question. Let me check that for you and get back with the exact details. Is there anything specific you'd like to know?"
 }
 
-const getAIResponse = (userMessage) => {
+const getFallbackResponse = (userMessage) => {
   const msg = userMessage.toLowerCase()
   
   // Accommodation queries
