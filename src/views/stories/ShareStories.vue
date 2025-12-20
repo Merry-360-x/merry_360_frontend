@@ -236,11 +236,8 @@ const storyForm = ref({
   photos: []
 })
 
+// Stories loaded from database
 const stories = ref([])
-    date: 'Oct 15, 2025',
-    views: 2103
-  }
-])
 
 const filteredStories = computed(() => {
   if (filterCategory.value === 'all') {

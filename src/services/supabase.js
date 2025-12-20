@@ -52,26 +52,30 @@ export async function signOutUser() {
   if (error) throw error
 }
 
-export function onAuthChange(callback) {
+export function onAuthStateChange(callback) {
   return supabase.auth.onAuthStateChange((event, session) => {
-    const user = session?.user || null
-    callback(user ? {
-      id: user.id,
-      email: user.email,
-      firstName: user.user_metadata?.firstName || '',
-      lastName: user.user_metadata?.lastName || '',
-      displayName: user.user_metadata?.displayName || user.email,
-      phone: user.user_metadata?.phone || null,
-      avatar: user.user_metadata?.avatar || null
-    } : null)
+    callback(event, session)
   })
 }
 
-// ============ User Profile ============
-export async function setUserProfile(userId, profile) {
+export async function getCurrentUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+}
+
+// ============ Profile ============
+export async function setUserProfile(userId, updates) {
   const { error } = await supabase
     .from('profiles')
-    .upsert({ id: userId, ...profile }, { onConflict: 'id' })
+    .upsert({ id: userId, ...updates }, { onConflict: 'id' })
+  if (error) throw error
+}
+
+export async function updateUserProfile(userId, updates) {
+  const { error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId)
   if (error) throw error
 }
 
@@ -85,201 +89,122 @@ export async function getUserProfile(userId) {
   return data
 }
 
-// ============ Messaging (Real-time) ============
-export async function createMessage(conversationId, senderId, content, attachmentUrl = null) {
+// ============ Listings ============
+export async function getListings(filters = {}) {
   const { data, error } = await supabase
-    .from('messages')
-    .insert([{
-      conversation_id: conversationId,
-      sender_id: senderId,
-      content,
-      attachment_url: attachmentUrl,
-      created_at: new Date().toISOString()
-    }])
-    .select()
-  if (error) throw error
-  return data[0]
-}
-
-export function listenToMessages(conversationId, callback) {
-  const subscription = supabase
-    .channel(`messages:conversation_${conversationId}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'messages',
-        filter: `conversation_id=eq.${conversationId}`
-      },
-      (payload) => {
-        callback(payload)
-      }
-    )
-    .subscribe()
-
-  return subscription
-}
-
-export async function getConversationMessages(conversationId, limit = 50) {
-  const { data, error } = await supabase
-    .from('messages')
+    .from('listings')
     .select('*')
-    .eq('conversation_id', conversationId)
+    .match(filters)
     .order('created_at', { ascending: false })
-    .limit(limit)
+  
   if (error) throw error
   return data
 }
 
-export async function getOrCreateConversation(participantIds) {
-  // Sort IDs to ensure consistency
-  const sorted = participantIds.sort()
-  const conversationKey = sorted.join('_')
-
-  const { data, error } = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('participant_key', conversationKey)
-    .single()
-
-  if (error && error.code !== 'PGRST116') throw error
-
-  if (data) return data
-
-  // Create new conversation
-  const { data: newConv, error: createError } = await supabase
-    .from('conversations')
-    .insert([{ participant_key: conversationKey, participants: participantIds }])
-    .select()
-    .single()
-
-  if (createError) throw createError
-  return newConv
-}
-
-export function listenToConversations(userId, callback) {
+// ============ Realtime ============
+export function subscribeToListings(callback) {
   const subscription = supabase
-    .channel(`conversations:user_${userId}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'conversations',
-        filter: `participants.cs.{"${userId}"}`
-      },
-      (payload) => {
-        callback(payload)
-      }
+    .channel('listings')
+    .on('postgres_changes', 
+      { event: '*', schema: 'public', table: 'listings' },
+      callback
     )
     .subscribe()
-
+  
   return subscription
 }
 
-// ============ Storage (File Upload) ============
+// ============ Storage ============
 export async function uploadFile(bucket, path, file) {
   const { data, error } = await supabase.storage
     .from(bucket)
-    .upload(path, file, { upsert: true })
+    .upload(path, file)
+  
   if (error) throw error
   return data
 }
 
-export function getFileUrl(bucket, path) {
-  const { data } = supabase.storage.from(bucket).getPublicUrl(path)
+export function getPublicUrl(bucket, path) {
+  const { data } = supabase.storage
+    .from(bucket)
+    .getPublicUrl(path)
+  
   return data.publicUrl
 }
 
-export async function deleteFile(bucket, path) {
-  const { error } = await supabase.storage
-    .from(bucket)
-    .remove([path])
-  if (error) throw error
-}
-
-// ============ Bookings ============
-export async function createBooking(bookingData) {
-  const { data, error } = await supabase
-    .from('bookings')
-    .insert([bookingData])
-    .select()
-  if (error) throw error
-  return data[0]
-}
-
-export async function getMyBookings(userId) {
-  const { data, error } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
+// ============ Database Queries ============
+export async function query(table, options = {}) {
+  let query = supabase.from(table).select(options.select || '*')
+  
+  if (options.eq) {
+    Object.entries(options.eq).forEach(([key, value]) => {
+      query = query.eq(key, value)
+    })
+  }
+  
+  if (options.order) {
+    query = query.order(options.order.column, { ascending: options.order.ascending ?? true })
+  }
+  
+  if (options.limit) {
+    query = query.limit(options.limit)
+  }
+  
+  const { data, error } = await query
   if (error) throw error
   return data
 }
 
-export async function getBookingById(bookingId) {
-  const { data, error } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('id', bookingId)
-    .single()
+export async function insert(table, data) {
+  const { data: result, error } = await supabase
+    .from(table)
+    .insert(data)
+    .select()
+  
+  if (error) throw error
+  return result
+}
+
+export async function update(table, id, data) {
+  const { data: result, error } = await supabase
+    .from(table)
+    .update(data)
+    .eq('id', id)
+    .select()
+  
+  if (error) throw error
+  return result
+}
+
+export async function remove(table, id) {
+  const { error } = await supabase
+    .from(table)
+    .delete()
+    .eq('id', id)
+  
+  if (error) throw error
+}
+
+// ============ RPC (Remote Procedure Calls) ============
+export async function callFunction(functionName, params = {}) {
+  const { data, error } = await supabase.rpc(functionName, params)
   if (error) throw error
   return data
 }
 
-export async function updateBooking(bookingId, updates) {
-  const { data, error } = await supabase
-    .from('bookings')
-    .update(updates)
-    .eq('id', bookingId)
-    .select()
-  if (error) throw error
-  return data[0]
+// ============ Utilities ============
+export function isSupabaseConfigured() {
+  return !!(supabaseUrl && supabaseAnonKey && supabaseUrl !== 'your_supabase_url_here')
 }
 
-// ============ Payments ============
-export async function createPaymentRecord(bookingId, amount, currency, status = 'pending') {
-  const { data, error } = await supabase
-    .from('payments')
-    .insert([{ booking_id: bookingId, amount, currency, status }])
-    .select()
-  if (error) throw error
-  return data[0]
+export async function testConnection() {
+  try {
+    const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true })
+    if (error) throw error
+    return { success: true, message: 'Connected to Supabase successfully' }
+  } catch (error) {
+    return { success: false, message: error.message }
+  }
 }
 
-export async function updatePaymentStatus(paymentId, status) {
-  const { data, error } = await supabase
-    .from('payments')
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq('id', paymentId)
-    .select()
-  if (error) throw error
-  return data[0]
-}
-
-export default {
-  supabase,
-  signUpWithEmail,
-  signInWithEmail,
-  googleSignIn,
-  signOutUser,
-  onAuthChange,
-  setUserProfile,
-  getUserProfile,
-  createMessage,
-  listenToMessages,
-  getConversationMessages,
-  getOrCreateConversation,
-  listenToConversations,
-  uploadFile,
-  getFileUrl,
-  deleteFile,
-  createBooking,
-  getMyBookings,
-  getBookingById,
-  updateBooking,
-  createPaymentRecord,
-  updatePaymentStatus
-}
+export default supabase

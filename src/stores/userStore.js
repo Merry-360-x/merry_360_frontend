@@ -67,6 +67,8 @@ export const useUserStore = defineStore('user', () => {
     // Load loyalty points from Supabase
     if (userData.id) {
       await loadLoyaltyPoints(userData.id)
+      await loadWatchlist()
+      await loadBookings()
     }
   }
   
@@ -108,22 +110,76 @@ export const useUserStore = defineStore('user', () => {
     localStorage.removeItem('isAuthenticated')
   }
   
-  const addToWatchlist = (item) => {
+  const addToWatchlist = async (item) => {
     const exists = watchlist.value.find(w => w.id === item.id && w.type === item.type)
     if (!exists) {
       watchlist.value.push({
         ...item,
         savedAt: new Date().toISOString()
       })
+      
+      // Save to Supabase
+      if (user.value?.id && item.id) {
+        try {
+          await supabase
+            .from('wishlist')
+            .upsert({ 
+              user_id: user.value.id,
+              listing_id: item.id,
+              notes: item.notes || ''
+            }, { onConflict: 'user_id,listing_id' })
+        } catch (error) {
+          console.error('Error saving to wishlist:', error)
+        }
+      }
     }
   }
   
-  const removeFromWatchlist = (id, type) => {
+  const removeFromWatchlist = async (id, type) => {
     watchlist.value = watchlist.value.filter(w => !(w.id === id && w.type === type))
+    
+    // Remove from Supabase
+    if (user.value?.id) {
+      try {
+        await supabase
+          .from('wishlist')
+          .delete()
+          .eq('user_id', user.value.id)
+          .eq('listing_id', id)
+      } catch (error) {
+        console.error('Error removing from wishlist:', error)
+      }
+    }
   }
   
   const isInWatchlist = (id, type) => {
     return watchlist.value.some(w => w.id === id && w.type === type)
+  }
+  
+  const loadWatchlist = async () => {
+    if (!user.value?.id) return
+    
+    try {
+      const { data, error } = await supabase
+        .from('wishlist')
+        .select(`
+          *,
+          listing:listings(*)
+        `)
+        .eq('user_id', user.value.id)
+      
+      if (error) throw error
+      
+      watchlist.value = data.map(item => ({
+        id: item.listing_id,
+        type: 'listing',
+        ...item.listing,
+        savedAt: item.created_at,
+        notes: item.notes
+      }))
+    } catch (error) {
+      console.error('Error loading wishlist:', error)
+    }
   }
   
   const addToCart = (item) => {
@@ -208,6 +264,29 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   
+  const loadBookings = async () => {
+    if (!user.value?.id) return
+    
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .select(`
+          *,
+          listing:listings(*)
+        `)
+        .eq('user_id', user.value.id)
+        .order('check_in', { ascending: false })
+      
+      if (error) throw error
+      
+      const now = new Date()
+      upcomingBookings.value = data.filter(b => new Date(b.check_in) >= now)
+      pastBookings.value = data.filter(b => new Date(b.check_in) < now)
+    } catch (error) {
+      console.error('Error loading bookings:', error)
+    }
+  }
+  
   return {
     // State
     user,
@@ -231,6 +310,8 @@ export const useUserStore = defineStore('user', () => {
     // Actions
     login,
     logout,
+    loadWatchlist,
+    loadBookings,
     addToWatchlist,
     removeFromWatchlist,
     isInWatchlist,
