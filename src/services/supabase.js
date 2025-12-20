@@ -58,6 +58,9 @@ export function onAuthStateChange(callback) {
   })
 }
 
+// Alias for compatibility
+export const onAuthChange = onAuthStateChange
+
 export async function getCurrentUser() {
   const { data: { user } } = await supabase.auth.getUser()
   return user
@@ -95,6 +98,29 @@ export async function getListings(filters = {}) {
     .from('listings')
     .select('*')
     .match(filters)
+    .order('created_at', { ascending: false })
+  
+  if (error) throw error
+  return data
+}
+
+// ============ Bookings ============
+export async function createBooking(bookingData) {
+  const { data, error } = await supabase
+    .from('bookings')
+    .insert(bookingData)
+    .select()
+    .single()
+  
+  if (error) throw error
+  return data
+}
+
+export async function getBookings(userId) {
+  const { data, error } = await supabase
+    .from('bookings')
+    .select('*, listings(*)')
+    .eq('user_id', userId)
     .order('created_at', { ascending: false })
   
   if (error) throw error

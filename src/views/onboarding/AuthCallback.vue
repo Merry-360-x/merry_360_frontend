@@ -32,6 +32,48 @@ onMounted(async () => {
     if (session?.user) {
       console.log('User authenticated:', session.user)
       
+      // Ensure profile exists in database (especially for Google OAuth)
+      try {
+        const { data: existingProfile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('id', session.user.id)
+          .single()
+        
+        if (!existingProfile) {
+          console.log('Creating profile for OAuth user...')
+          
+          // Extract first and last name from Google OAuth metadata
+          const firstName = session.user.user_metadata?.given_name || 
+                           session.user.user_metadata?.first_name || 
+                           session.user.email?.split('@')[0] || ''
+          const lastName = session.user.user_metadata?.family_name || 
+                          session.user.user_metadata?.last_name || ''
+          const avatarUrl = session.user.user_metadata?.picture || 
+                           session.user.user_metadata?.avatar_url || ''
+          
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({
+              id: session.user.id,
+              email: session.user.email,
+              first_name: firstName,
+              last_name: lastName,
+              avatar_url: avatarUrl,
+              loyalty_points: 0,
+              loyalty_tier: 'bronze'
+            })
+          
+          if (profileError) {
+            console.error('Profile creation error:', profileError)
+          } else {
+            console.log('✅ Profile created successfully')
+          }
+        }
+      } catch (profileCheckError) {
+        console.warn('Profile check warning:', profileCheckError)
+      }
+      
       // Update user store with authenticated user
       userStore.login({
         id: session.user.id,
