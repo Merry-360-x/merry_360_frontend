@@ -127,8 +127,8 @@
               <Button type="button" variant="secondary" full-width @click="showShareForm = false">
                 Cancel
               </Button>
-              <Button type="submit" variant="primary" full-width class="bg-gradient-to-r from-teal-500 to-cyan-600">
-                Share Story
+              <Button type="submit" variant="primary" full-width class="bg-gradient-to-r from-teal-500 to-cyan-600" :disabled="isSubmitting">
+                {{ isSubmitting ? 'Sharing...' : 'Share Story' }}
               </Button>
             </div>
           </form>
@@ -215,16 +215,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
+import api from '../../services/api'
 
 const router = useRouter()
 const showShareForm = ref(false)
 const filterCategory = ref('all')
+const isSubmitting = ref(false)
 
 const storyForm = ref({
   name: '',
@@ -277,35 +279,61 @@ const removePhoto = (index) => {
   storyForm.value.photos.splice(index, 1)
 }
 
-const submitStory = () => {
-  // Add new story to the beginning of the array
-  const newStory = {
-    id: stories.value.length + 1,
-    title: storyForm.value.title,
-    excerpt: storyForm.value.story.substring(0, 150) + '...',
-    location: storyForm.value.location,
-    image: storyForm.value.photos[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-    category: 'adventure',
-    author: storyForm.value.name,
-    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    views: 0
+// Load stories from database on mount
+onMounted(async () => {
+  try {
+    const data = await api.stories.getAll()
+    stories.value = data
+  } catch (error) {
+    console.warn('Failed to load stories:', error)
+    // Stories will remain empty array if table doesn't exist yet
   }
+})
+
+const submitStory = async () => {
+  if (isSubmitting.value) return
   
-  stories.value.unshift(newStory)
+  isSubmitting.value = true
   
-  // Reset form
-  storyForm.value = {
-    name: '',
-    title: '',
-    location: '',
-    story: '',
-    photos: []
+  try {
+    // Create story in database
+    const storyData = {
+      title: storyForm.value.title,
+      content: storyForm.value.story,
+      excerpt: storyForm.value.story.substring(0, 150) + '...',
+      location: storyForm.value.location,
+      author: storyForm.value.name,
+      images: storyForm.value.photos,
+      image: storyForm.value.photos[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
+      category: 'adventure'
+    }
+    
+    const newStory = await api.stories.create(storyData)
+    
+    // Add to local array for immediate display
+    stories.value.unshift({
+      ...newStory,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    })
+    
+    // Reset form
+    storyForm.value = {
+      name: '',
+      title: '',
+      location: '',
+      story: '',
+      photos: []
+    }
+    
+    showShareForm.value = false
+    alert('Your story has been shared successfully!')
+    
+  } catch (error) {
+    console.error('Story submission error:', error)
+    alert('Failed to share your story. Please try again.')
+  } finally {
+    isSubmitting.value = false
   }
-  
-  showShareForm.value = false
-  
-  // Show success message (you can add a toast notification here)
-  alert('Your story has been shared successfully!')
 }
 
 const viewStory = (story) => {

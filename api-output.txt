@@ -1,26 +1,0 @@
-🔨 Creating host_applications table via Supabase Management API...
-
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  2517    0   283  100  2234    597   4713 --:--:-- --:--:-- --:--:--  5321
-{"code":"PGRST202","details":"Searched for the function public.exec_sql with parameter query or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache.","hint":null,"message":"Could not find the function public.exec_sql(query) in the schema cache"}
-
-Testing table creation...
-
-🧪 TESTING HOST APPLICATION SYSTEM
-═══════════════════════════════════
-
-📝 Creating test host application...
-
-Application Details:
-─────────────────────────────────
-Name: Test Host
-Email: testhost@example.com
-Phone: +250 788 123 456
-Location: Kigali, Rwanda
-Type: accommodation
-Experience: some
-─────────────────────────────────
-
-❌ Error creating test application: Could not find the table 'public.host_applications' in the schema cache
-❌ Test failed: Could not find the table 'public.host_applications' in the schema cache

@@ -79,6 +79,27 @@ export const accommodations = {
     // TODO: Implement reviews table
     // For now return empty array
     return []
+  },
+
+  async create(propertyData) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Not authenticated')
+    
+    const { data, error } = await supabase
+      .from('properties')
+      .insert({
+        ...propertyData,
+        host_id: user.id,
+        available: true,
+        rating: 0,
+        reviews: 0,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
   }
 }
 
@@ -162,6 +183,27 @@ export const tours = {
     
     if (error) throw error
     return data
+  },
+
+  async create(tourData) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Not authenticated')
+    
+    const { data, error } = await supabase
+      .from('tours')
+      .insert({
+        ...tourData,
+        host_id: user.id,
+        available: true,
+        rating: 0,
+        reviews: 0,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
   }
 }
 
@@ -191,6 +233,41 @@ export const transport = {
       console.warn('Transport query error:', error)
       return []
     }
+  },
+
+  async book(transportId, bookingData) {
+    const { data, error } = await supabase
+      .from('bookings')
+      .insert({
+        item_id: transportId,
+        item_type: 'transport',
+        ...bookingData
+      })
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async create(transportData) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Not authenticated')
+    
+    const { data, error } = await supabase
+      .from('transport_services')
+      .insert({
+        ...transportData,
+        host_id: user.id,
+        available: true,
+        rating: 0,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
   },
 
   async getVehicles(params = {}) {
@@ -478,6 +555,55 @@ export const auth = {
 }
 
 /**
+ * Stories API
+ */
+export const stories = {
+  async getAll(params = {}) {
+    try {
+      let query = supabase
+        .from('stories')
+        .select('*')
+        .eq('approved', true)
+
+      if (params.category && params.category !== 'all') {
+        query = query.eq('category', params.category)
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false })
+      
+      if (error) {
+        console.warn('Stories table not found:', error)
+        return []
+      }
+      return data || []
+    } catch (error) {
+      console.warn('Stories query error:', error)
+      return []
+    }
+  },
+
+  async create(storyData) {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new Error('Not authenticated')
+    
+    const { data, error } = await supabase
+      .from('stories')
+      .insert({
+        ...storyData,
+        user_id: user.id,
+        approved: true, // Auto-approve for now, can add moderation later
+        views: 0,
+        created_at: new Date().toISOString()
+      })
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  }
+}
+
+/**
  * Combined API export
  */
 export const supabaseApi = {
@@ -487,7 +613,8 @@ export const supabaseApi = {
   transport,
   bookings,
   user,
-  payments
+  payments,
+  stories
 }
 
 export default supabaseApi

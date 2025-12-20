@@ -59,6 +59,8 @@ import ManageProperties from '../views/admin/ManageProperties.vue'
 // Vendor
 import VendorDashboard from '../views/vendor/VendorDashboard.vue'
 import CreateProperty from '../views/vendor/CreateProperty.vue'
+import CreateTour from '../views/vendor/CreateTour.vue'
+import CreateTransport from '../views/vendor/CreateTransport.vue'
 
 const routes = [
   {
@@ -233,6 +235,16 @@ const routes = [
     path: '/vendor/create-property',
     name: 'create-property',
     component: CreateProperty
+  },
+  {
+    path: '/vendor/create-tour',
+    name: 'create-tour',
+    component: CreateTour
+  },
+  {
+    path: '/vendor/create-transport',
+    name: 'create-transport',
+    component: CreateTransport
   },
   {
     path: '/about',

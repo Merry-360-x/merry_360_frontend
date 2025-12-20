@@ -265,6 +265,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
+import api from '../../services/api'
 
 const { t } = useTranslation()
 const router = useRouter()
@@ -325,25 +326,23 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
-    // Create property in database
-    const newProperty = {
-      ...form.value,
+    // Create property in database via Supabase
+    const propertyData = {
+      name: form.value.name,
+      type: form.value.type,
+      location: form.value.location,
+      description: form.value.description,
+      price: form.value.price,
+      beds: form.value.beds,
+      baths: form.value.baths,
+      area: form.value.area,
+      image: form.value.image,
       images: [form.value.image, ...form.value.additionalImages.filter(img => img)],
-      rating: 0,
-      reviews: 0,
-      available: true,
-      host: {
-        name: 'Current User',
-        joinedDate: `Member since ${new Date().getFullYear()}`,
-        rating: 5.0,
-        verified: true
-      },
-      reviewsList: [],
-      createdAt: new Date().toISOString()
+      amenities: form.value.amenities,
+      eco_friendly: form.value.ecoFriendly
     }
     
-    properties.push(newProperty)
-    localStorage.setItem('vendor_properties', JSON.stringify(properties))
+    await api.accommodations.create(propertyData)
     
     showSuccess.value = true
     showToast(t('vendor.listingCreatedSuccess'), 'success')
@@ -352,7 +351,8 @@ const handleSubmit = async () => {
       router.push('/vendor')
     }, 2000)
   } catch (error) {
-    showToast(t('vendor.createError'), 'error')
+    console.error('Property creation error:', error)
+    showToast(error.message || t('vendor.createError'), 'error')
   } finally {
     isSubmitting.value = false
   }
