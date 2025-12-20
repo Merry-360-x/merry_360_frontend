@@ -124,51 +124,123 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
+import { supabase } from '@/services/supabase'
+import { useToast } from '@/composables/useToast'
+
+const { showToast } = useToast()
+const loading = ref(true)
 
 const metrics = ref({
-  totalRevenue: 45670,
-  activeUsers: 1234,
-  totalBookings: 567,
-  conversionRate: 18.5
+  totalRevenue: 0,
+  activeUsers: 0,
+  totalBookings: 0,
+  conversionRate: 0
 })
 
 const revenueData = ref([
-  { name: 'Jul', value: 32 },
-  { name: 'Aug', value: 38 },
-  { name: 'Sep', value: 35 },
-  { name: 'Oct', value: 42 },
-  { name: 'Nov', value: 39 },
-  { name: 'Dec', value: 46 }
+  { name: 'Jul', value: 0 },
+  { name: 'Aug', value: 0 },
+  { name: 'Sep', value: 0 },
+  { name: 'Oct', value: 0 },
+  { name: 'Nov', value: 0 },
+  { name: 'Dec', value: 0 }
 ])
 
-const topServices = ref([
-  { name: 'Masai Mara Safari', bookings: 145 },
-  { name: 'Beachfront Villa', bookings: 128 },
-  { name: 'Nairobi City Tour', bookings: 98 },
-  { name: 'Mount Kenya Hike', bookings: 76 },
-  { name: 'Airport Transfer', bookings: 65 }
-])
-
+const topServices = ref([])
 const userActivity = ref([
-  { day: 'Monday', users: 234 },
-  { day: 'Tuesday', users: 289 },
-  { day: 'Wednesday', users: 312 },
-  { day: 'Thursday', users: 278 },
-  { day: 'Friday', users: 345 },
-  { day: 'Saturday', users: 412 },
-  { day: 'Sunday', users: 389 }
+  { day: 'Monday', users: 0 },
+  { day: 'Tuesday', users: 0 },
+  { day: 'Wednesday', users: 0 },
+  { day: 'Thursday', users: 0 },
+  { day: 'Friday', users: 0 },
+  { day: 'Saturday', users: 0 },
+  { day: 'Sunday', users: 0 }
 ])
 
-const topLocations = ref([
-  { city: 'Nairobi', country: 'Kenya', users: 456, percentage: 37 },
-  { city: 'Mombasa', country: 'Kenya', users: 234, percentage: 19 },
-  { city: 'Kisumu', country: 'Kenya', users: 178, percentage: 14 },
-  { city: 'Nakuru', country: 'Kenya', users: 145, percentage: 12 },
-  { city: 'Eldoret', country: 'Kenya', users: 112, percentage: 9 }
-])
+const topLocations = ref([])
+
+// Load real analytics data from Supabase
+const loadAnalytics = async () => {
+  try {
+    loading.value = true
+    console.log('Loading analytics from Supabase...')
+    
+    // Get total users
+    const { data: users, error: usersError } = await supabase
+      .from('profiles')
+      .select('id, created_at, city')
+    
+    if (usersError) throw usersError
+    
+    // Get all bookings with payment info
+    const { data: bookings, error: bookingsError } = await supabase
+      .from('bookings')
+      .select('*, properties(name), tours(name), vehicles(name)')
+    
+    if (bookingsError) throw bookingsError
+    
+    // Calculate metrics
+    metrics.value = {
+      totalRevenue: (bookings || []).filter(b => b.payment_status === 'paid').reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0),
+      activeUsers: (users || []).length,
+      totalBookings: (bookings || []).length,
+      conversionRate: (bookings || []).length > 0 ? ((bookings.filter(b => b.status === 'confirmed').length / bookings.length) * 100).toFixed(1) : 0
+    }
+    
+    // Calculate top services from bookings
+    const serviceCounts = {}
+    ;(bookings || []).forEach(booking => {
+      let serviceName = 'Unknown'
+      if (booking.properties) serviceName = booking.properties.name
+      else if (booking.tours) serviceName = booking.tours.name
+      else if (booking.vehicles) serviceName = booking.vehicles.name
+      
+      serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1
+    })
+    
+    topServices.value = Object.entries(serviceCounts)
+      .map(([name, bookings]) => ({ name, bookings }))
+      .sort((a, b) => b.bookings - a.bookings)
+      .slice(0, 5)
+    
+    // Calculate location distribution
+    const locationCounts = {}
+    const totalUsers = users?.length || 1
+    ;(users || []).forEach(user => {
+      const city = user.city || 'Unknown'
+      locationCounts[city] = (locationCounts[city] || 0) + 1
+    })
+    
+    topLocations.value = Object.entries(locationCounts)
+      .map(([city, count]) => ({
+        city,
+        country: 'Kenya',
+        users: count,
+        percentage: Math.round((count / totalUsers) * 100)
+      }))
+      .sort((a, b) => b.users - a.users)
+      .slice(0, 5)
+    
+    console.log('Analytics loaded:', {
+      revenue: metrics.value.totalRevenue,
+      users: metrics.value.activeUsers,
+      bookings: metrics.value.totalBookings
+    })
+    
+  } catch (err) {
+    console.error('Error loading analytics:', err)
+    showToast('Failed to load analytics: ' + err.message, 'error')
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  loadAnalytics()
+})
 
 const maxRevenue = computed(() => Math.max(...revenueData.value.map(d => d.value)))
 const maxBookings = computed(() => Math.max(...topServices.value.map(s => s.bookings)))

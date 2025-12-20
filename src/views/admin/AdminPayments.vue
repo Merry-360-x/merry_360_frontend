@@ -92,68 +92,76 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
+import { supabase } from '@/services/supabase'
+import { useToast } from '@/composables/useToast'
 
-const payments = ref([
-  {
-    id: 1,
-    transactionId: 'TXN-2024-001',
-    customer: 'John Doe',
-    email: 'john@example.com',
-    service: 'Masai Mara Safari',
-    amount: 450,
-    paymentMethod: 'M-Pesa',
-    date: '2024-01-15',
-    status: 'completed'
-  },
-  {
-    id: 2,
-    transactionId: 'TXN-2024-002',
-    customer: 'Jane Smith',
-    email: 'jane@example.com',
-    service: 'Beachfront Villa',
-    amount: 350,
-    paymentMethod: 'Credit Card',
-    date: '2024-01-14',
-    status: 'completed'
-  },
-  {
-    id: 3,
-    transactionId: 'TXN-2024-003',
-    customer: 'Mike Johnson',
-    email: 'mike@example.com',
-    service: 'Nairobi City Tour',
-    amount: 50,
-    paymentMethod: 'M-Pesa',
-    date: '2024-01-14',
-    status: 'pending'
-  },
-  {
-    id: 4,
-    transactionId: 'TXN-2024-004',
-    customer: 'Sarah Williams',
-    email: 'sarah@example.com',
-    service: 'Airport Transfer',
-    amount: 80,
-    paymentMethod: 'PayPal',
-    date: '2024-01-13',
-    status: 'failed'
-  },
-  {
-    id: 5,
-    transactionId: 'TXN-2024-005',
-    customer: 'David Brown',
-    email: 'david@example.com',
-    service: 'Mount Kenya Hike',
-    amount: 200,
-    paymentMethod: 'Credit Card',
-    date: '2024-01-13',
-    status: 'completed'
+const { showToast } = useToast()
+const payments = ref([])
+const loading = ref(true)
+
+// Load real payments from bookings table
+const loadPayments = async () => {
+  try {
+    loading.value = true
+    console.log('Loading payments from Supabase...')
+    
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`
+        *,
+        profiles:user_id(first_name, last_name, email),
+        properties(name),
+        tours(name),
+        vehicles(name)
+      `)
+      .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    
+    payments.value = (data || []).map(booking => {
+      let serviceName = 'Service'
+      if (booking.properties) serviceName = booking.properties.name
+      else if (booking.tours) serviceName = booking.tours.name
+      else if (booking.vehicles) serviceName = booking.vehicles.name
+      
+      const customerName = booking.profiles 
+        ? `${booking.profiles.first_name} ${booking.profiles.last_name}`
+        : 'Guest'
+      const customerEmail = booking.profiles?.email || 'N/A'
+      
+      return {
+        id: booking.id,
+        transactionId: `TXN-${booking.id.substring(0, 8).toUpperCase()}`,
+        customer: customerName,
+        email: customerEmail,
+        service: serviceName,
+        amount: parseFloat(booking.total_price) || 0,
+        paymentMethod: booking.payment_method || 'N/A',
+        date: new Date(booking.created_at).toLocaleDateString(),
+        status: booking.payment_status === 'paid' ? 'completed' : booking.payment_status === 'refunded' ? 'failed' : 'pending'
+      }
+    })
+    
+    console.log('Loaded payments:', payments.value.length)
+    
+    if (payments.value.length === 0) {
+      showToast('No payments found. Payments will appear when users make bookings.', 'info')
+    }
+  } catch (err) {
+    console.error('Error loading payments:', err)
+    showToast('Failed to load payments: ' + err.message, 'error')
+  } finally {
+    loading.value = false
   }
-])
+}
+
+onMounted(() => {
+  loadPayments()
+})
 
 const stats = computed(() => ({
   totalRevenue: payments.value
