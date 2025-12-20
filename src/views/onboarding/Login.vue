@@ -74,6 +74,7 @@
           size="lg" 
           full-width
           @click="handleGoogleSignIn"
+          :loading="googleLoading"
           class="flex items-center justify-center gap-3"
         >
           <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -128,19 +129,6 @@ const appStore = useAppStore()
 const { errors, validateAll, setError, clearErrors } = useFormValidation()
 const { t } = useTranslation()
 
-const handleGoogleSignIn = async () => {
-  try {
-    loading.value = true
-    // Use Supabase OAuth for Google authentication
-    await signInWithGoogle()
-    // The signInWithGoogle function will redirect to Google and then back to /auth/callback
-  } catch (err) {
-    console.error('Google sign-in error', err)
-    setError('email', 'Failed to sign in with Google')
-    loading.value = false
-  }
-}
-
 const formData = reactive({
   email: '',
   password: '',
@@ -148,6 +136,24 @@ const formData = reactive({
 })
 
 const loading = ref(false)
+const googleLoading = ref(false)
+
+const handleGoogleSignIn = async () => {
+  try {
+    console.log('🔵 Google sign-in button clicked')
+    googleLoading.value = true
+    
+    console.log('🔵 Calling signInWithGoogle...')
+    await signInWithGoogle()
+    
+    // Note: If redirect works, code below won't execute
+    console.log('🔵 signInWithGoogle completed')
+  } catch (err) {
+    console.error('❌ Google sign-in error:', err)
+    alert(`Google sign-in failed: ${err.message}`)
+    googleLoading.value = false
+  }
+}
 const selectedLanguage = ref('en')
 
 watch(selectedLanguage, (newLang) => {

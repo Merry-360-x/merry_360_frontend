@@ -118,6 +118,7 @@
           size="lg" 
           full-width
           @click="handleGoogleSignUp"
+          :loading="googleLoading"
           class="flex items-center justify-center gap-3"
         >
           <svg class="w-5 h-5" viewBox="0 0 24 24">
@@ -161,18 +162,6 @@ const userStore = useUserStore()
 const { errors, validateAll, setError, clearErrors } = useFormValidation()
 const { t } = useTranslation()
 
-const handleGoogleSignUp = async () => {
-  try {
-    loading.value = true
-    // Use Supabase OAuth for Google authentication
-    await signInWithGoogle()
-    // The signInWithGoogle function will redirect to Google and then back to /auth/callback
-  } catch (err) {
-    console.error('Google sign-up error', err)
-    loading.value = false
-  }
-}
-
 const formData = ref({
   name: '',
   email: '',
@@ -183,6 +172,24 @@ const formData = ref({
 })
 
 const loading = ref(false)
+const googleLoading = ref(false)
+
+const handleGoogleSignUp = async () => {
+  try {
+    console.log('🔵 Google sign-up button clicked')
+    googleLoading.value = true
+    
+    console.log('🔵 Calling signInWithGoogle...')
+    await signInWithGoogle()
+    
+    // Note: If redirect works, code below won't execute
+    console.log('🔵 signInWithGoogle completed')
+  } catch (err) {
+    console.error('❌ Google sign-up error:', err)
+    alert(`Google sign-up failed: ${err.message}`)
+    googleLoading.value = false
+  }
+}
 
 const userIcon = {
   template: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>`
