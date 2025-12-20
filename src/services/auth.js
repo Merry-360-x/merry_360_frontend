@@ -3,8 +3,8 @@ import { initFirebase, signInWithEmail, signUpWithEmail, googleSignIn, signOutUs
 import * as supabaseService from './supabase'
 import mockApiService from './mockApi'
 
-const USE_FIREBASE = import.meta.env.VITE_USE_FIREBASE === 'true'
-const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true'
+const USE_FIREBASE = String(import.meta.env.VITE_USE_FIREBASE || '').trim() === 'true'
+const USE_SUPABASE = String(import.meta.env.VITE_USE_SUPABASE || '').trim() === 'true'
 
 // Debug logging for environment variables
 console.log('🔧 Auth Service Environment:', {
