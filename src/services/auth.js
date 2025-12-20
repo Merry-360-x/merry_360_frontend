@@ -15,10 +15,13 @@ console.log('🔧 Auth Service Environment:', {
 })
 
 export async function signIn(credentials) {
+  console.log('🔵 signIn called with:', credentials.email)
+  
   // Check if admin email
   const isAdmin = credentials.email === 'admin@merry360x.com' || credentials.email === 'bebisdavy@gmail.com'
   
   if (USE_FIREBASE) {
+    console.log('🔧 Using Firebase for sign in')
     const res = await signInWithEmail(credentials.email, credentials.password)
     const user = res.user
     const token = await user.getIdToken()
@@ -35,8 +38,13 @@ export async function signIn(credentials) {
   }
 
   if (USE_SUPABASE) {
+    console.log('🔧 Using Supabase for sign in')
     const { data, error } = await supabaseService.signInWithEmail(credentials.email, credentials.password)
-    if (error) throw error
+    if (error) {
+      console.error('❌ Supabase sign in error:', error)
+      throw error
+    }
+    console.log('✅ Supabase sign in successful')
     const token = data.session?.access_token
     return {
       user: {
