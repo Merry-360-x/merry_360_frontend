@@ -309,7 +309,7 @@
       <div class="bg-gray-100 rounded-xl md:rounded-2xl p-6 sm:p-8 md:p-12">
         <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
-            <h2 class="text-2xl sm:text-3xl font-bold text-text-primary mb-3 sm:mb-4">Download Our Mobile App</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-text-primary mb-3 sm:mb-4">Download Our Mobile App</h2>
             <p class="text-text-secondary mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
               Discover more about property buying, selling and renting with our mobile app. Available on iOS and Android.
             </p>

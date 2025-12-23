@@ -1,9 +1,8 @@
 import api from './api'
-import { initFirebase, signInWithEmail, signUpWithEmail, googleSignIn, signOutUser, onAuthChange } from './firebase'
 import * as supabaseService from './supabase'
 import mockApiService from './mockApi'
 
-const USE_FIREBASE = String(import.meta.env.VITE_USE_FIREBASE || '').trim() === 'true'
+const USE_FIREBASE = false
 const USE_SUPABASE = String(import.meta.env.VITE_USE_SUPABASE || '').trim() === 'true'
 
 // Debug logging for environment variables
@@ -20,23 +19,6 @@ export async function signIn(credentials) {
   // Check if admin email
   const isAdmin = credentials.email === 'admin@merry360x.com' || credentials.email === 'bebisdavy@gmail.com'
   
-  if (USE_FIREBASE) {
-    console.log('🔧 Using Firebase for sign in')
-    const res = await signInWithEmail(credentials.email, credentials.password)
-    const user = res.user
-    const token = await user.getIdToken()
-    return { 
-      user: { 
-        id: user.uid, 
-        email: user.email, 
-        firstName: user.displayName || '', 
-        lastName: '',
-        role: isAdmin ? 'admin' : 'user'
-      }, 
-      token 
-    }
-  }
-
   if (USE_SUPABASE) {
     console.log('🔧 Using Supabase for sign in')
     const { data, error } = await supabaseService.signInWithEmail(credentials.email, credentials.password)
@@ -68,13 +50,6 @@ export async function signIn(credentials) {
 }
 
 export async function signUp(data) {
-  if (USE_FIREBASE) {
-    const res = await signUpWithEmail(data.email, data.password)
-    const user = res.user
-    const token = await user.getIdToken()
-    return { user: { id: user.uid, email: user.email, firstName: user.displayName || '', lastName: '' }, token }
-  }
-
   if (USE_SUPABASE) {
     // Pass user metadata during signup so it's available to the trigger
     const { data: authData, error } = await supabaseService.signUpWithEmail(
@@ -122,13 +97,6 @@ export async function signUp(data) {
 export async function signInWithGoogle() {
   console.log('🔧 signInWithGoogle called - USE_FIREBASE:', USE_FIREBASE, 'USE_SUPABASE:', USE_SUPABASE)
   
-  if (USE_FIREBASE) {
-    const res = await googleSignIn()
-    const user = res.user
-    const token = await user.getIdToken()
-    return { user: { id: user.uid, email: user.email, firstName: user.displayName || '', lastName: '' }, token }
-  }
-
   if (USE_SUPABASE) {
     console.log('🔧 Using Supabase OAuth')
     // Supabase Google OAuth - this will redirect the browser to Google
@@ -148,10 +116,6 @@ export async function signInWithGoogle() {
 }
 
 export async function signOut() {
-  if (USE_FIREBASE) {
-    return await signOutUser()
-  }
-
   if (USE_SUPABASE) {
     return await supabaseService.signOutUser()
   }
@@ -160,10 +124,6 @@ export async function signOut() {
 }
 
 export function onAuthChanged(cb) {
-  if (USE_FIREBASE) {
-    return onAuthChange(cb)
-  }
-
   if (USE_SUPABASE) {
     return supabaseService.onAuthChange(cb)
   }

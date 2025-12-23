@@ -197,7 +197,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
-import api from '../../services/api'
+import { createBooking, supabase } from '../../services/supabase'
+import { startFlutterwavePayment } from '../../services/flutterwave'
 import MainLayout from '../../components/layout/MainLayout.vue'
 
 const router = useRouter()
@@ -266,36 +267,70 @@ const confirmBooking = async () => {
   isProcessing.value = true
 
   try {
-    // Create bookings for each item in cart
-    const bookingPromises = tripCart.value.map(item => {
-      return api.bookings.create({
+    // Create bookings for each item in cart (Supabase)
+    const created = []
+    for (const item of tripCart.value) {
+      const price = typeof item.price === 'string'
+        ? parseInt(item.price.replace(/[^0-9]/g, ''))
+        : item.price
+
+      const booking = await createBooking({
+        user_id: userStore.user.id,
         item_id: item.id,
         item_type: item.type,
         check_in: bookingDetails.value.checkIn,
         check_out: bookingDetails.value.checkOut,
         guests: bookingDetails.value.guests,
-        total_price: typeof item.price === 'string' 
-          ? parseInt(item.price.replace(/[^0-9]/g, '')) 
-          : item.price,
-        guest_info: {
-          firstName: guestInfo.value.firstName,
-          lastName: guestInfo.value.lastName,
-          email: guestInfo.value.email,
-          phone: guestInfo.value.phone
-        },
+        total_price: price || 0,
+        guest_first_name: guestInfo.value.firstName,
+        guest_last_name: guestInfo.value.lastName,
+        guest_email: guestInfo.value.email,
+        guest_phone: guestInfo.value.phone,
         special_requests: guestInfo.value.specialRequests,
-        payment_method: paymentMethod.value,
-        status: 'pending'
+        payment_method: paymentMethod.value === 'pay_on_arrival' ? 'pay_on_arrival' : 'flutterwave',
+        payment_status: paymentMethod.value === 'pay_on_arrival' ? 'pending' : 'pending',
+        status: paymentMethod.value === 'pay_on_arrival' ? 'confirmed' : 'pending_payment',
+        created_at: new Date().toISOString()
       })
-    })
 
-    const bookings = await Promise.all(bookingPromises)
+      created.push(booking)
+    }
+
+    // If user chose pay_on_arrival, skip online payment
+    if (paymentMethod.value !== 'pay_on_arrival') {
+      const customer = {
+        email: guestInfo.value.email,
+        phone: guestInfo.value.phone,
+        name: `${guestInfo.value.firstName} ${guestInfo.value.lastName}`.trim()
+      }
+
+      const { response } = await startFlutterwavePayment({
+        amount: total.value,
+        currency: currencyStore.selectedCurrency,
+        customer,
+        title: 'Merry 360 Booking',
+        description: 'Cart checkout',
+        txRef: `CART_${created[0]?.id || Date.now()}`,
+        meta: { booking_ids: created.map(b => b.id) }
+      })
+
+      if (response?.status === 'successful') {
+        for (const b of created) {
+          await supabase
+            .from('bookings')
+            .update({ payment_status: 'paid', status: 'confirmed' })
+            .eq('id', b.id)
+        }
+      } else {
+        alert('Payment was not completed. Your bookings are pending payment.')
+      }
+    }
 
     // Clear cart after successful booking
     userStore.clearCart()
 
     // Show success message
-    alert(`Booking confirmed! Booking ID: ${bookings[0].id}\n\nOur team will contact you shortly with payment instructions.`)
+    alert(`Booking confirmed! Booking ID: ${created[0].id}`)
 
     // Redirect to my bookings page
     router.push('/dashboard/bookings')

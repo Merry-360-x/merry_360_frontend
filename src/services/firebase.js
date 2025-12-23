@@ -1,101 +1,104 @@
-import { initializeApp } from 'firebase/app'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, query, orderBy, where } from 'firebase/firestore'
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+/**
+ * Firebase Compatibility Shim (Supabase-only project)
+ *
+ * This project has migrated off Firebase. This file intentionally contains
+ * no Firebase SDK imports so builds work without the firebase package.
+ *
+ * If something still imports from '@/services/firebase', it will use Supabase.
+ */
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
-}
-
-let app, auth, db, storage
+import { supabase } from './supabase'
 
 export function initFirebase() {
-  if (!app) {
-    app = initializeApp(firebaseConfig)
-    auth = getAuth(app)
-    db = getFirestore(app)
-    storage = getStorage(app)
-  }
-  return { app, auth, db, storage }
+  // No-op for backwards compatibility
+  return {}
 }
 
-export const firebaseAuth = () => auth || initFirebase().auth
-export const firebaseDB = () => db || initFirebase().db
-export const firebaseStorage = () => storage || initFirebase().storage
-
-/* Authentication helpers */
+// Auth helpers (map to Supabase)
 export async function signUpWithEmail(email, password) {
-  await initFirebase()
-  return await createUserWithEmailAndPassword(auth, email, password)
+  const { data, error } = await supabase.auth.signUp({ email, password })
+  if (error) throw error
+  return data
 }
 
 export async function signInWithEmail(email, password) {
-  await initFirebase()
-  return await signInWithEmailAndPassword(auth, email, password)
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  if (error) throw error
+  return { user: data.user, session: data.session }
 }
 
 export async function googleSignIn() {
-  await initFirebase()
-  const provider = new GoogleAuthProvider()
-  return await signInWithPopup(auth, provider)
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: `${window.location.origin}/auth/callback` }
+  })
+  if (error) throw error
+  if (data?.url) window.location.href = data.url
+  return data
 }
 
 export async function signOutUser() {
-  await initFirebase()
-  return await signOut(auth)
+  const { error } = await supabase.auth.signOut()
+  if (error) throw error
 }
 
 export function onAuthChange(cb) {
-  initFirebase()
-  return onAuthStateChanged(auth, cb)
+  return supabase.auth.onAuthStateChange((_event, session) => cb(session?.user || null))
 }
 
-/* Firestore helpers */
+// Messaging helpers (simple messages table)
 export async function createMessage(conversationId, message) {
-  const db = firebaseDB()
-  const messagesRef = collection(db, 'conversations', conversationId, 'messages')
-  const docRef = await addDoc(messagesRef, {
-    ...message,
-    createdAt: new Date().toISOString()
-  })
-  return docRef
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const { data, error } = await supabase
+    .from('messages')
+    .insert([{ conversation_id: conversationId, sender_id: user.id, content: message.text }])
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
 }
 
 export function listenToMessages(conversationId, cb) {
-  const db = firebaseDB()
-  const messagesRef = collection(db, 'conversations', conversationId, 'messages')
-  const q = query(messagesRef, orderBy('createdAt', 'asc'))
-  return onSnapshot(q, (snapshot) => {
-    const messages = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
-    cb(messages)
-  })
+  const channel = supabase
+    .channel(`messages:${conversationId}`)
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
+      async () => {
+        const { data, error } = await supabase
+          .from('messages')
+          .select('*')
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: true })
+
+        if (!error) cb(data || [])
+      }
+    )
+    .subscribe()
+
+  return () => {
+    supabase.removeChannel(channel)
+  }
 }
 
-export async function uploadFileToStorage(path, file) {
-  const storage = firebaseStorage()
-  const ref = storageRef(storage, path)
-  const snapshot = await uploadBytes(ref, file)
-  const url = await getDownloadURL(snapshot.ref)
-  return url
+// Storage helpers: not supported here (use Cloudinary/Supabase Storage)
+export async function uploadFileToStorage() {
+  throw new Error('Firebase storage is not available. Use Cloudinary or Supabase Storage.')
 }
 
 export async function setUserProfile(uid, data) {
-  const db = firebaseDB()
-  const userRef = doc(db, 'users', uid)
-  await setDoc(userRef, data, { merge: true })
+  const { error } = await supabase.from('profiles').upsert({ id: uid, ...data }, { onConflict: 'id' })
+  if (error) throw error
   return true
 }
 
 export async function getUserProfile(uid) {
-  const db = firebaseDB()
-  const userRef = doc(db, 'users', uid)
-  const snap = await getDoc(userRef)
-  return snap.exists() ? snap.data() : null
+  const { data, error } = await supabase.from('profiles').select('*').eq('id', uid).single()
+  if (error) throw error
+  return data
 }
 
 export default {

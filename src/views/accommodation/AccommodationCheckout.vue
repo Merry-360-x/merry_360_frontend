@@ -87,36 +87,15 @@
             </div>
 
             <div v-if="paymentMethod === 'card'" class="mt-6 space-y-4">
-              <div>
-                <Input 
-                  v-model="cardInfo.number" 
-                  placeholder="Card Number (1234 5678 9012 3456)" 
-                  @input="formatCardNumber"
-                  maxlength="19"
-                  :class="errors.cardNumber ? 'border-red-500' : ''" 
-                />
-                <p v-if="errors.cardNumber" class="mt-1 text-sm text-red-600">{{ errors.cardNumber }}</p>
-              </div>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <Input 
-                    v-model="cardInfo.expiry" 
-                    placeholder="MM/YY" 
-                    @input="formatExpiry"
-                    maxlength="5"
-                    :class="errors.cardExpiry ? 'border-red-500' : ''" 
-                  />
-                  <p v-if="errors.cardExpiry" class="mt-1 text-sm text-red-600">{{ errors.cardExpiry }}</p>
-                </div>
-                <div>
-                  <Input 
-                    v-model="cardInfo.cvv" 
-                    placeholder="CVV" 
-                    type="password"
-                    maxlength="4"
-                    :class="errors.cardCvv ? 'border-red-500' : ''" 
-                  />
-                  <p v-if="errors.cardCvv" class="mt-1 text-sm text-red-600">{{ errors.cardCvv }}</p>
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <p class="font-medium text-blue-900 mb-1">Pay with Flutterwave</p>
+                    <p class="text-sm text-blue-800">You will be redirected to Flutterwave to complete payment securely.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -151,7 +130,7 @@
                   </svg>
                   <div>
                     <p class="font-medium text-blue-900 mb-1">Payment Prompt</p>
-                    <p class="text-sm text-blue-800">You will receive a USSD prompt on your phone to authorize the payment.</p>
+                    <p class="text-sm text-blue-800">You will complete payment securely via Flutterwave.</p>
                   </div>
                 </div>
               </div>
@@ -263,7 +242,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import { useUserStore } from '../../stores/userStore'
 import { useTranslation } from '../../composables/useTranslation'
-import { createBooking } from '../../services/supabase'
+import { createBooking, supabase } from '../../services/supabase'
+import { startFlutterwavePayment } from '../../services/flutterwave'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -294,11 +274,6 @@ onMounted(() => {
 })
 
 const paymentMethod = ref('free')
-const cardInfo = ref({
-  number: '',
-  expiry: '',
-  cvv: ''
-})
 const mobileMoneyInfo = ref({
   provider: 'mtn', // mtn, airtel
   phoneNumber: ''
@@ -364,31 +339,7 @@ const validateBooking = () => {
   }
 
   // Validate payment info based on selected method
-  if (paymentMethod.value === 'card') {
-    if (!cardInfo.value.number) {
-      errors.value.cardNumber = 'Card number is required'
-      isValid = false
-    } else if (!/^\d{13,19}$/.test(cardInfo.value.number.replace(/\s/g, ''))) {
-      errors.value.cardNumber = 'Invalid card number'
-      isValid = false
-    }
-    
-    if (!cardInfo.value.expiry) {
-      errors.value.cardExpiry = 'Expiry date is required'
-      isValid = false
-    } else if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(cardInfo.value.expiry)) {
-      errors.value.cardExpiry = 'Format should be MM/YY'
-      isValid = false
-    }
-    
-    if (!cardInfo.value.cvv) {
-      errors.value.cardCvv = 'CVV is required'
-      isValid = false
-    } else if (!/^\d{3,4}$/.test(cardInfo.value.cvv)) {
-      errors.value.cardCvv = 'Invalid CVV'
-      isValid = false
-    }
-  } else if (paymentMethod.value === 'mobile') {
+  if (paymentMethod.value === 'mobile') {
     if (!mobileMoneyInfo.value.phoneNumber) {
       errors.value.mobilePhone = 'Phone number is required'
       isValid = false
@@ -444,9 +395,9 @@ const confirmBooking = async () => {
       guest_last_name: guestInfo.value.lastName,
       guest_email: guestInfo.value.email,
       guest_phone: guestInfo.value.phone,
-      payment_method: paymentMethod.value,
+      payment_method: paymentMethod.value === 'free' ? 'pay_on_arrival' : 'flutterwave',
       payment_status: paymentMethod.value === 'free' ? 'completed' : 'pending',
-      booking_status: 'confirmed',
+      booking_status: paymentMethod.value === 'free' ? 'confirmed' : 'pending_payment',
       special_requests: specialRequests.value,
       booking_number: `MRY${Date.now().toString().slice(-8)}`,
       created_at: new Date().toISOString()
@@ -464,37 +415,63 @@ const confirmBooking = async () => {
       userStore.upcomingBookings.push(booking)
     }
     
-    // Booking successful - redirect to success page
-    router.push({
-      path: '/profile',
-      query: { 
-        bookingSuccess: 'true',
-        bookingNumber: bookingData.booking_number,
-        tab: 'trips'
+    // If free, we're done
+    if (paymentMethod.value === 'free') {
+      router.push({
+        path: '/profile',
+        query: { 
+          bookingSuccess: 'true',
+          bookingNumber: bookingData.booking_number,
+          tab: 'trips'
+        }
+      })
+      return
+    }
+
+    // Paid flow: launch Flutterwave, then mark booking as paid
+    const customer = {
+      email: guestInfo.value.email,
+      phone: guestInfo.value.phone,
+      name: `${guestInfo.value.firstName} ${guestInfo.value.lastName}`.trim()
+    }
+
+    const { response } = await startFlutterwavePayment({
+      amount: total.value,
+      currency: currencyStore.selectedCurrency,
+      customer,
+      title: 'Merry 360 Booking',
+      description: bookingData.booking_number,
+      txRef: `BOOKING_${booking.id}`,
+      meta: {
+        booking_id: booking.id,
+        booking_number: bookingData.booking_number,
+        payment_method: paymentMethod.value
       }
     })
+
+    if (response?.status === 'successful') {
+      await supabase
+        .from('bookings')
+        .update({ payment_status: 'paid', booking_status: 'confirmed' })
+        .eq('id', booking.id)
+
+      router.push({
+        path: '/profile',
+        query: { 
+          bookingSuccess: 'true',
+          bookingNumber: bookingData.booking_number,
+          tab: 'trips'
+        }
+      })
+    } else {
+      errors.value.general = 'Payment was not completed. Your booking is pending payment.'
+    }
   } catch (error) {
     console.error('Booking error:', error)
     errors.value.general = error.message || 'Failed to create booking. Please try again.'
   } finally {
     processing.value = false
   }
-}
-
-// Format card number with spaces
-const formatCardNumber = (event) => {
-  let value = event.target.value.replace(/\s/g, '')
-  let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value
-  cardInfo.value.number = formattedValue
-}
-
-// Format expiry date
-const formatExpiry = (event) => {
-  let value = event.target.value.replace(/\D/g, '')
-  if (value.length >= 2) {
-    value = value.slice(0, 2) + '/' + value.slice(2, 4)
-  }
-  cardInfo.value.expiry = value
 }
 
 // Format date for display

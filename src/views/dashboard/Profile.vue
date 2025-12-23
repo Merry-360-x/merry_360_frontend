@@ -579,7 +579,6 @@ import Card from '@/components/common/Card.vue'
 import Input from '@/components/common/Input.vue'
 import Button from '@/components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
-import { initFirebase, uploadFileToStorage, setUserProfile } from '@/services/firebase'
 import { signOut as signOutAuth } from '@/services/auth'
 import { supabase } from '@/services/supabase'
 

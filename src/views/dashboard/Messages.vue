@@ -59,10 +59,9 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import { useUserStore } from '../../stores/userStore'
 import { supabase } from '../../services/supabase'
 import * as supabaseApi from '../../services/supabaseApi'
-import { initFirebase, createMessage as createFirestoreMessage, listenToMessages as listenFirestoreMessages } from '../../services/firebase'
 
 const userStore = useUserStore()
-const useSupabase = import.meta.env.VITE_USE_SUPABASE === 'true'
+const useSupabase = true
 
 const conversations = ref([])
 
@@ -71,58 +70,106 @@ const messages = ref([])
 const newMessage = ref('')
 const messagesContainer = ref(null)
 
+let messagesChannel = null
+
 onMounted(async () => {
-  // Initialize Firebase if configured
-  if (!useSupabase) {
-    try {
-      initFirebase()
-    } catch (err) {
-      console.warn('Firebase not initialized:', err.message)
-    }
-  }
+  await loadConversations()
 })
+
+async function loadConversations() {
+  try {
+    const userId = userStore.user?.id
+    if (!userId) {
+      conversations.value = []
+      return
+    }
+
+    const rows = await supabaseApi.getUserConversations(userId)
+    // Group by conversation_id, keep latest message per conversation
+    const byConversation = new Map()
+    for (const msg of rows || []) {
+      const key = msg.conversation_id
+      if (!key) continue
+      if (!byConversation.has(key)) byConversation.set(key, msg)
+    }
+
+    const convs = Array.from(byConversation.values())
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .map((msg) => {
+        const other = (msg.sender?.id === userId) ? msg.receiver : msg.sender
+        const otherName = other ? `${other.first_name || ''} ${other.last_name || ''}`.trim() : 'Unknown'
+
+        return {
+          id: msg.conversation_id,
+          with: otherName || 'Unknown',
+          lastMessage: msg.content || '',
+          updatedAt: msg.created_at ? new Date(msg.created_at).toLocaleDateString() : '',
+          otherUserId: other?.id || null
+        }
+      })
+
+    conversations.value = convs
+  } catch (err) {
+    console.error('Failed to load conversations:', err)
+    conversations.value = []
+  }
+}
 
 const selectConversation = async (conv) => {
   selectedConversation.value = conv
   messages.value = []
 
+  // Clean up any existing realtime subscription
+  try {
+    if (messagesChannel) {
+      await supabase.removeChannel(messagesChannel)
+      messagesChannel = null
+    }
+  } catch (err) {
+    // ignore
+  }
+
   if (useSupabase) {
-    // Listen via Supabase real-time
     try {
-      supabaseService.listenToMessages(conv.id, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          messages.value.push({
-            id: payload.new.id,
-            from: 'User',
-            text: payload.new.content,
-            createdAt: payload.new.created_at
-          })
-          scrollToBottom()
-        }
-      })
       // Load initial messages
-      const msgs = await supabaseService.getConversationMessages(conv.id)
-      messages.value = msgs.map(m => ({
+      const { data: initial, error } = await supabase
+        .from('messages')
+        .select('id, sender_id, receiver_id, content, created_at')
+        .eq('conversation_id', conv.id)
+        .order('created_at', { ascending: true })
+
+      if (error) throw error
+
+      const userId = userStore.user?.id
+      messages.value = (initial || []).map((m) => ({
         id: m.id,
-        from: 'User',
+        from: m.sender_id === userId ? (userStore.user?.name || 'You') : conv.with,
         text: m.content,
         createdAt: m.created_at
-      })).reverse()
+      }))
+
+      // Subscribe to new messages
+      messagesChannel = supabase
+        .channel(`messages:${conv.id}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conv.id}` },
+          (payload) => {
+            const row = payload.new
+            messages.value.push({
+              id: row.id,
+              from: row.sender_id === userId ? (userStore.user?.name || 'You') : conv.with,
+              text: row.content,
+              createdAt: row.created_at
+            })
+            scrollToBottom()
+          }
+        )
+        .subscribe()
+
       scrollToBottom()
     } catch (err) {
       console.error('Supabase messaging error:', err)
-      showLocalMessages()
-    }
-  } else {
-    // Fallback to Firebase or local
-    try {
-      const unsubscribe = listenFirestoreMessages(conv.id, (msgs) => {
-        messages.value = msgs
-        scrollToBottom()
-      })
-      conv.unsubscribe = unsubscribe
-    } catch (err) {
-      console.warn('Firestore not configured; showing local messages')
       showLocalMessages()
     }
   }
@@ -152,14 +199,10 @@ const sendMessage = async () => {
 
   try {
     if (useSupabase) {
-      const userId = userStore.user?.id || 'guest'
-      // Use sendMessage from supabaseApi
-      await supabaseApi.sendMessage(
-        selectedConversation.value.id, // receiverId
-        message.text // content
-      )
-    } else {
-      await createFirestoreMessage(selectedConversation.value.id, message)
+      const receiverId = selectedConversation.value.otherUserId
+      if (!receiverId) throw new Error('Missing conversation recipient')
+
+      await supabaseApi.sendMessage(receiverId, message.text, null, selectedConversation.value.id)
     }
     newMessage.value = ''
   } catch (err) {

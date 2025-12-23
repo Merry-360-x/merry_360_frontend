@@ -128,6 +128,24 @@
           </Card>
         </div>
 
+        <div class="mb-8">
+          <Card padding="md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-text-secondary text-sm mb-1">Host Applications</p>
+                <p class="text-3xl font-bold">{{ stats.pendingHostApplications }}</p>
+                <p class="text-text-secondary text-sm mt-1">Pending review</p>
+              </div>
+              <router-link
+                to="/admin/host-applications"
+                class="px-4 py-2 bg-brand-500 text-white rounded-button text-sm"
+              >
+                View
+              </router-link>
+            </div>
+          </Card>
+        </div>
+
         <!-- Recent Activity -->
         <Card padding="lg">
           <h2 class="text-2xl font-bold mb-6">Recent Bookings</h2>
@@ -191,7 +209,8 @@ const stats = ref({
   bookings: 0,
   revenue: 0,
   users: 0,
-  properties: 0
+  properties: 0,
+  pendingHostApplications: 0
 })
 
 const recentBookings = ref([])
@@ -221,6 +240,12 @@ async function loadStats() {
     const { count: propertiesCount } = await supabase
       .from('listings')
       .select('*', { count: 'exact', head: true })
+
+    // Load pending host applications count
+    const { count: pendingHostApplicationsCount } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .eq('host_application_status', 'pending')
     
     // Load recent bookings with listing details
     const { data: bookings } = await supabase
@@ -237,7 +262,8 @@ async function loadStats() {
       bookings: bookingsCount || 0,
       revenue: totalRevenue,
       users: usersCount || 0,
-      properties: propertiesCount || 0
+      properties: propertiesCount || 0,
+      pendingHostApplications: pendingHostApplicationsCount || 0
     }
     
     recentBookings.value = bookings || []

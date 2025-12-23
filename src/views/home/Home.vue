@@ -19,7 +19,7 @@
 
       <!-- Content -->
       <div class="relative z-10 container mx-auto px-4 h-full min-h-screen flex flex-col items-center justify-center py-24">
-        <h1 class="text-3xl md:text-[40px] font-bold text-white mb-8 md:mb-10 text-center tracking-wider" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.2; letter-spacing: 0.1em;">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-8 md:mb-10 text-center tracking-wider" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.2; letter-spacing: 0.1em;">
           {{ t('transport.bookNow').toUpperCase() }}
         </h1>
 
@@ -42,48 +42,48 @@
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
             <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.location') }}</label>
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif;">{{ t('accommodation.location') }}</label>
               <input 
                 type="text" 
                 :placeholder="t('search.whereGoing')"
                 v-model="searchQuery.location"
                 class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent text-gray-900"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
+                style="font-family: 'Montserrat', sans-serif;"
               />
             </div>
 
             <!-- Check In -->
             <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 relative">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkIn') }}</label>
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif;">{{ t('search.checkIn') }}</label>
               <input 
                 type="date" 
                 v-model="searchQuery.checkIn"
                 :min="minCheckInDate"
                 class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 cursor-pointer"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
+                style="font-family: 'Montserrat', sans-serif;"
               />
             </div>
 
             <!-- Check Out -->
             <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 relative">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('search.checkOut') }}</label>
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif;">{{ t('search.checkOut') }}</label>
               <input 
                 type="date" 
                 v-model="searchQuery.checkOut"
                 :min="minCheckOutDate"
                 class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 cursor-pointer"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
+                style="font-family: 'Montserrat', sans-serif;"
               />
             </div>
 
             <!-- Guests -->
             <div class="md:pl-5 relative">
-              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif; font-size: 12px;">{{ t('accommodation.guests') }}</label>
+              <label class="block text-xs font-bold mb-1.5 text-gray-700" style="font-family: 'Montserrat', sans-serif;">{{ t('accommodation.guests') }}</label>
               <button 
                 type="button"
                 @click="showGuestSelector = !showGuestSelector"
                 class="w-full text-sm font-semibold focus:outline-none bg-transparent text-gray-900 text-left cursor-pointer flex items-center justify-between"
-                style="font-family: 'Montserrat', sans-serif; font-size: 14px;"
+                style="font-family: 'Montserrat', sans-serif;"
               >
                 <span>{{ guestSummary }}</span>
                 <svg class="w-4 h-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,7 +199,7 @@
     <!-- Latest on the Property Listing -->
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="mb-6 md:mb-8 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.latestProperties') }}</h2>
+        <h2 class="text-xl md:text-3xl font-bold text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.latestProperties') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
@@ -210,9 +210,9 @@
     <section class="container mx-auto px-4 py-8 md:py-12">
       <div class="flex flex-col md:flex-row items-center justify-between mb-6 md:mb-8 max-w-7xl mx-auto">
         <div class="text-center md:text-left mb-4 md:mb-0">
-          <h2 class="text-2xl md:text-4xl font-bold text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
+          <h2 class="text-xl md:text-3xl font-bold text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.nearbyProperties') }}</h2>
         </div>
-        <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200 text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;">
+        <button class="font-bold text-sm flex items-center hover:opacity-80 transition-all hover:scale-105 duration-200 text-gray-800" style="font-family: 'Montserrat', sans-serif; font-weight: 700;">
           <svg class="w-5 h-5 md:w-6 md:h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
@@ -227,7 +227,7 @@
     <!-- Top Rated Properties -->
     <section class="container mx-auto px-4 py-20">
       <div class="mb-12 text-center">
-        <h2 class="text-4xl font-bold text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 36px; line-height: 48px;">{{ t('home.topRated') }}</h2>
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.topRated') }}</h2>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <PropertyCard v-for="property in topRatedProperties" :key="property.id" :property="property" />
@@ -243,9 +243,9 @@
           class="w-full h-full object-cover absolute inset-0" style="min-height: 300px;"
         />
         <div class="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent flex flex-col items-start justify-center px-6 md:px-20 py-12 md:py-16">
-          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800; line-height: 1.3; color: #000000;">{{ t('home.tryHosting') }}</h2>
+          <h2 class="text-xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800; line-height: 1.3; color: #000000;">{{ t('home.tryHosting') }}</h2>
           <p class="text-sm md:text-base mb-6 md:mb-8" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.5; color: #000000; max-width: 400px;">{{ t('home.tryHostingDesc') }}</p>
-          <button class="px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg" style="background: #ef4444; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; min-width: 180px; height: 48px;">
+          <button class="px-8 md:px-12 py-3 md:py-4 text-sm md:text-base text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg" style="background: #ef4444; font-family: 'Montserrat', sans-serif; font-weight: 800; min-width: 180px; height: 48px;">
             {{ t('nav.login') }}
           </button>
         </div>
@@ -266,9 +266,9 @@
     <section class="py-8 md:py-12 bg-gray-100">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
-          <h2 class="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
+          <h2 class="text-xl md:text-4xl font-bold mb-3 md:mb-4 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
           <p class="text-sm md:text-base mb-8 md:mb-10 text-gray-600" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.browseDesc') }}</p>
-          <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
+          <button class="px-8 md:px-12 py-3 text-sm md:text-base text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600;">
             {{ t('home.findProperty') }}
           </button>
         </div>
@@ -305,20 +305,20 @@
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 max-w-7xl mx-auto">
           <div class="flex-1 text-center md:text-left">
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.downloadApp') }}</h2>
+            <h2 class="text-xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.downloadApp') }}</h2>
             <p class="text-sm md:text-base mb-6 md:mb-10 text-gray-600" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.downloadDesc') }}</p>
             <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start">
               <button class="px-4 md:px-6 py-3 rounded flex items-center justify-center gap-2 md:gap-3 hover:opacity-90 transition-opacity w-full sm:w-auto" style="background: #E0E2E6;">
                 <svg class="w-5 h-5" fill="#484848" viewBox="0 0 24 24">
                   <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
                 </svg>
-                <span style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 15px; color: #484848;">{{ t('home.playStore') }}</span>
+                <span class="text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: #484848;">{{ t('home.playStore') }}</span>
               </button>
               <button class="px-6 py-3 rounded flex items-center gap-3 hover:opacity-90 transition-opacity" style="background: #E0E2E6;">
                 <svg class="w-5 h-5" fill="#484848" viewBox="0 0 24 24">
                   <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
                 </svg>
-                <span style="font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 15px; color: #484848;">{{ t('home.appleStore') }}</span>
+                <span class="text-sm md:text-base" style="font-family: 'Montserrat', sans-serif; font-weight: 600; color: #484848;">{{ t('home.appleStore') }}</span>
               </button>
             </div>
           </div>

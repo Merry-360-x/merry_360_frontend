@@ -2,6 +2,10 @@
 
 The error "Google sign-in not configured" means Vercel doesn't have the VITE_USE_SUPABASE environment variable.
 
+Important:
+- **Do NOT put Brevo keys in Vercel.** Email sending happens in Supabase Edge Functions, and the Brevo key is stored in **Supabase secrets**.
+- Vercel only needs **public frontend config** (the `VITE_*` variables) so the SPA can connect to Supabase/Flutterwave.
+
 ## Add these to Vercel:
 
 1. Go to: https://vercel.com/das-48ca2629/merry-360-frontend/settings/environment-variables
@@ -18,7 +22,9 @@ The error "Google sign-in not configured" means Vercel doesn't have the VITE_USE
 - `VITE_API_BASE_URL` = `https://gzmxelgcdpaeklmabszo.supabase.co`
 - `VITE_APP_ENV` = `production`
 - `VITE_GOOGLE_CLIENT_ID` = `270563800148-mafsbml3i6h01gjeo7qdlruc75a1s63i.apps.googleusercontent.com`
-- `VITE_GOOGLE_CLIENT_SECRET` = `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`
+
+Note:
+- Do not add a Google client secret to the frontend. Secrets must stay server-side.
 
 ## After adding variables:
 
