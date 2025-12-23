@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { supabase } from '@/services/supabase'
+import { useUserStore } from '@/stores/userStore'
 
 // Onboarding
 import SplashScreen from '../views/onboarding/SplashScreen.vue'
@@ -317,30 +319,28 @@ const router = createRouter({
 })
 
 // Navigation guard for admin routes
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
   
   if (requiresAdmin) {
-    // Check if user is logged in
-    const userStr = localStorage.getItem('user')
-    if (!userStr) {
-      // Not logged in, redirect to login
+    const store = useUserStore()
+
+    // Ensure auth/profile loaded
+    if (!store.initialized) {
+      try { await store.initAuth() } catch (_) {}
+    }
+
+    // Must have a Supabase session
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
       next({ name: 'login', query: { redirect: to.fullPath } })
       return
     }
-    
-    try {
-      const user = JSON.parse(userStr)
-      // Check if user has admin role
-      if (user.role !== 'admin') {
-        // Not an admin, redirect to home with error
-        alert('Access denied. Admin privileges required.')
-        next({ name: 'home' })
-        return
-      }
-    } catch (err) {
-      console.error('Error parsing user data:', err)
-      next({ name: 'login' })
+
+    // Must be admin
+    if (store.user?.role !== 'admin') {
+      alert('Access denied. Admin privileges required.')
+      next({ name: 'home' })
       return
     }
   }

@@ -31,7 +31,6 @@ if (import.meta.env.VITE_USE_FIREBASE === 'true') {
         phone: user.phone || ''
       }
       store.login(normalized)
-      localStorage.setItem('user', JSON.stringify(normalized))
     } else {
       // not signed in
       store.logout()
@@ -42,6 +41,9 @@ if (import.meta.env.VITE_USE_FIREBASE === 'true') {
 // Initialize Supabase auth listener
 const initSupabaseAuth = async () => {
   const store = useUserStore()
+
+  // Hydrate state from existing session (no custom localStorage)
+  await store.initAuth()
   
   // Check for existing session on app load
   const { data: { session } } = await supabase.auth.getSession()
@@ -71,8 +73,6 @@ const initSupabaseAuth = async () => {
         avatar_url: profile.avatar_url || '',
         verified: true
       })
-      
-      localStorage.setItem('auth_token', session.access_token)
     }
   }
   
@@ -105,8 +105,6 @@ const initSupabaseAuth = async () => {
           avatar_url: profile.avatar_url || '',
           verified: true
         })
-        
-        localStorage.setItem('auth_token', session.access_token)
       }
     } else if (event === 'SIGNED_OUT') {
       console.log('👋 User signed out')

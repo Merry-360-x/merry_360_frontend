@@ -3,13 +3,14 @@ import { ref, computed } from 'vue'
 import { supabase } from '../services/supabase'
 
 export const useUserStore = defineStore('user', () => {
-  // Load initial state from localStorage
-  const savedUser = localStorage.getItem('user')
-  const savedAuth = localStorage.getItem('isAuthenticated')
-  
   // User data
-  const user = ref(savedUser ? JSON.parse(savedUser) : null)
-  const isAuthenticated = ref(savedAuth === 'true')
+  // NOTE: Do not persist our own auth/user object in localStorage.
+  // Supabase handles session persistence; we hydrate the profile from the database.
+  const user = ref(null)
+  const isAuthenticated = ref(false)
+
+  const initialized = ref(false)
+  let initPromise = null
   
   // Watchlist / Saved Items
   const watchlist = ref([])
@@ -67,12 +68,6 @@ export const useUserStore = defineStore('user', () => {
     console.log('   user.value:', user.value)
     console.log('   isAuthenticated.value:', isAuthenticated.value)
     
-    // Persist to localStorage
-    localStorage.setItem('user', JSON.stringify(userData))
-    localStorage.setItem('isAuthenticated', 'true')
-    
-    console.log('💾 Persisted to localStorage')
-    
     // Load loyalty points from Supabase
     if (userData.id) {
       await loadLoyaltyPoints(userData.id)
@@ -81,6 +76,64 @@ export const useUserStore = defineStore('user', () => {
     }
     
     console.log('🎉 Login complete! Final user state:', user.value)
+  }
+
+  const setFromSupabaseSession = async (session) => {
+    if (!session?.user) {
+      logout()
+      return
+    }
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single()
+
+    if (error) {
+      console.warn('Profile load warning:', error)
+      await login({
+        id: session.user.id,
+        email: session.user.email,
+        firstName: session.user.user_metadata?.firstName || session.user.user_metadata?.first_name || '',
+        lastName: session.user.user_metadata?.lastName || session.user.user_metadata?.last_name || '',
+        role: 'user',
+        verified: true
+      })
+      return
+    }
+
+    await login({
+      id: session.user.id,
+      email: session.user.email,
+      name: `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
+      firstName: profile.first_name || '',
+      lastName: profile.last_name || '',
+      phone: profile.phone || profile.phone_number || '',
+      dateOfBirth: profile.date_of_birth || '',
+      bio: profile.bio || '',
+      studies: profile.studies || '',
+      role: profile.role || 'user',
+      avatar_url: profile.avatar_url || '',
+      verified: true
+    })
+  }
+
+  // Initialize store from Supabase session (call once on app startup).
+  const initAuth = async () => {
+    if (initialized.value) return
+    if (initPromise) return initPromise
+
+    initPromise = (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        await setFromSupabaseSession(session)
+      } finally {
+        initialized.value = true
+      }
+    })()
+
+    return initPromise
   }
   
   const loadLoyaltyPoints = async (userId) => {
@@ -116,9 +169,6 @@ export const useUserStore = defineStore('user', () => {
     tripCart.value = []
     loyaltyPoints.value = 0
     loyaltyTier.value = 'bronze'
-    // Clear localStorage
-    localStorage.removeItem('user')
-    localStorage.removeItem('isAuthenticated')
   }
   
   const addToWatchlist = async (item) => {
@@ -302,6 +352,7 @@ export const useUserStore = defineStore('user', () => {
     // State
     user,
     isAuthenticated,
+    initialized,
     watchlist,
     loyaltyPoints,
     loyaltyTier,
@@ -320,6 +371,8 @@ export const useUserStore = defineStore('user', () => {
     
     // Actions
     login,
+    initAuth,
+    setFromSupabaseSession,
     logout,
     loadWatchlist,
     loadBookings,
