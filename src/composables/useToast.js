@@ -10,6 +10,7 @@ export function useToast() {
       id,
       message,
       type,
+      duration,
       visible: true
     }
     
@@ -44,6 +45,12 @@ export function useToast() {
   const info = (message, duration) => {
     return addToast(message, 'info', duration)
   }
+
+  // Backwards-compatible API used across the app
+  // showToast(message, type?, duration?)
+  const showToast = (message, type = 'success', duration = 3000) => {
+    return addToast(message, type, duration)
+  }
   
   return {
     toasts,
@@ -52,6 +59,7 @@ export function useToast() {
     success,
     error,
     warning,
-    info
+    info,
+    showToast
   }
 }

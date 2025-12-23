@@ -43,9 +43,9 @@
         <!-- Progress Bar -->
         <div class="h-1 bg-gray-100">
           <div 
-            class="h-full transition-all duration-[3000ms] ease-linear"
+            class="h-full transition-all ease-linear"
             :class="progressBarClass(toast.type)"
-            style="width: 0%; animation: progress 3s linear forwards;"
+            :style="{ width: '0%', animation: `progress ${toast.duration || 3000}ms linear forwards` }"
           ></div>
         </div>
       </div>
