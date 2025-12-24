@@ -451,24 +451,40 @@ const submitForm = async () => {
     const firstName = nameParts[0] || null
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : null
 
-    const { error } = await supabase
+    const profilePayload = {
+      id: user.id,
+      email: user.email,
+      first_name: firstName,
+      last_name: lastName,
+      phone_number: formData.phone || null,
+      city: formData.location || null,
+      host_application_status: 'pending',
+      host_application_date: new Date().toISOString()
+    }
+
+    const isMissingCityColumnError = (err) => {
+      const msg = String(err?.message || '')
+      return msg.includes("Could not find the 'city' column")
+    }
+
+    let upsertResult = await supabase
       .from('profiles')
-      .upsert({
-        id: user.id,
-        email: user.email,
-        first_name: firstName,
-        last_name: lastName,
-        phone_number: formData.phone || null,
-        city: formData.location || null,
-        host_application_status: 'pending',
-        host_application_date: new Date().toISOString()
-      }, { onConflict: 'id' })
+      .upsert(profilePayload, { onConflict: 'id' })
       .select('id')
       .single()
-    
-    if (error) {
-      console.error('Supabase error:', error)
-      throw error
+
+    if (upsertResult.error && isMissingCityColumnError(upsertResult.error)) {
+      const { city: _city, ...payloadWithoutCity } = profilePayload
+      upsertResult = await supabase
+        .from('profiles')
+        .upsert(payloadWithoutCity, { onConflict: 'id' })
+        .select('id')
+        .single()
+    }
+
+    if (upsertResult.error) {
+      console.error('Supabase error:', upsertResult.error)
+      throw upsertResult.error
     }
     
     console.log('✅ Host application saved successfully to database!')
