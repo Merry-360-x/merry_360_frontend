@@ -342,16 +342,16 @@
             {{ t('home.discoverDesc') }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 md:gap-8 mb-6 md:mb-10">
-            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
+            <router-link to="/services" class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
               {{ t('home.askQuestion') }}
-            </button>
-            <button class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
+            </router-link>
+            <router-link to="/accommodations" class="font-semibold hover:opacity-80 transition-opacity text-sm md:text-base text-gray-900 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 600;">
               {{ t('home.findProperty') }}
-            </button>
+            </router-link>
           </div>
-          <button class="px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg w-full sm:w-auto" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; min-width: 180px; height: 48px;">
+          <router-link to="/about" class="inline-block px-8 md:px-12 py-3 md:py-4 text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg w-full sm:w-auto text-center" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; min-width: 180px; height: 48px; line-height: 2.8;">
             {{ t('home.learnMore') }}
-          </button>
+          </router-link>
         </div>
         <div class="mt-8 md:mt-0">
           <div class="relative rounded-xl overflow-hidden shadow-2xl">
