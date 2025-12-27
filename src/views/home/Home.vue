@@ -245,9 +245,9 @@
         <div class="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-transparent flex flex-col items-start justify-center px-6 md:px-20 py-12 md:py-16">
           <h2 class="text-xl md:text-4xl font-bold mb-3 md:mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: 800; line-height: 1.3; color: #000000;">{{ t('home.tryHosting') }}</h2>
           <p class="text-sm md:text-base mb-6 md:mb-8" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.5; color: #000000; max-width: 400px;">{{ t('home.tryHostingDesc') }}</p>
-          <button class="px-8 md:px-12 py-3 md:py-4 text-sm md:text-base text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg" style="background: #ef4444; font-family: 'Montserrat', sans-serif; font-weight: 800; min-width: 180px; height: 48px;">
-            {{ t('nav.login') }}
-          </button>
+          <router-link to="/become-host" class="px-8 md:px-12 py-3 md:py-4 text-sm md:text-base text-white rounded-full hover:scale-105 transition-all duration-200 shadow-lg inline-flex items-center justify-center" style="background: #ef4444; font-family: 'Montserrat', sans-serif; font-weight: 800; min-width: 180px; height: 48px;">
+            {{ t('home.tryHosting') }}
+          </router-link>
         </div>
       </div>
     </section>
