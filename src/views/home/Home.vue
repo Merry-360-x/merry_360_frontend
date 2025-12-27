@@ -263,14 +263,14 @@
     </section>
 
     <!-- Browse For More -->
-    <section class="py-8 md:py-12 bg-gray-100">
+    <section class="py-8 md:py-12 bg-gray-100 dark:bg-gray-800">
       <div class="container mx-auto px-4">
         <div class="max-w-7xl mx-auto text-center px-4 md:px-8">
-          <h2 class="text-xl md:text-4xl font-bold mb-3 md:mb-4 text-gray-900" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
-          <p class="text-sm md:text-base mb-8 md:mb-10 text-gray-600" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.browseDesc') }}</p>
-          <button class="px-8 md:px-12 py-3 text-sm md:text-base text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600;">
+          <h2 class="text-xl md:text-4xl font-bold mb-3 md:mb-4 text-gray-900 dark:text-gray-100" style="font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.3;">{{ t('home.browseMore') }}</h2>
+          <p class="text-sm md:text-base mb-8 md:mb-10 text-gray-600 dark:text-gray-400" style="font-family: 'Montserrat', sans-serif; font-weight: 500; line-height: 1.5;">{{ t('home.browseDesc') }}</p>
+          <router-link to="/accommodations" class="inline-block px-8 md:px-12 py-3 text-sm md:text-base text-white rounded hover:opacity-90 transition-opacity mx-auto" style="background: #FE4F4F; font-family: 'Montserrat', sans-serif; font-weight: 600;">
             {{ t('home.findProperty') }}
-          </button>
+          </router-link>
         </div>
       </div>
     </section>
