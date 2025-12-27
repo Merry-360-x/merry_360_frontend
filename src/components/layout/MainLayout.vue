@@ -55,10 +55,18 @@
               Stories
             </router-link>
             <router-link 
+              v-if="!userStore.isApprovedHost"
               to="/become-host"
               class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px] ml-4"
             >
               Become a Host
+            </router-link>
+            <router-link 
+              v-else
+              to="/host-dashboard"
+              class="text-sm text-white font-medium hover:bg-orange-600 transition-all px-4 py-2 bg-orange-500 rounded-[25px] ml-4"
+            >
+              Host Dashboard
             </router-link>
           </nav>
 
@@ -174,6 +182,18 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
                     <span class="text-sm">Wishlist</span>
+                  </router-link>
+
+                  <router-link 
+                    v-if="userStore.isApprovedHost"
+                    to="/host-dashboard" 
+                    @click="showUserMenu = false"
+                    class="flex items-center gap-3 px-4 py-2 hover:bg-orange-50 transition-colors"
+                  >
+                    <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span class="text-sm font-medium text-orange-600">Host Dashboard</span>
                   </router-link>
 
                   <div class="border-t border-gray-100 mt-1 pt-1">
@@ -340,6 +360,7 @@
                 Stories
               </router-link>
               <router-link 
+                v-if="!userStore.isApprovedHost"
                 to="/become-host"
                 class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
@@ -348,6 +369,17 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 Become a Host
+              </router-link>
+              <router-link 
+                v-else
+                to="/host-dashboard"
+                class="flex items-center gap-3 py-2.5 px-3 text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm font-medium"
+                @click="mobileMenuOpen = false"
+              >
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Host Dashboard
               </router-link>
             </nav>
 

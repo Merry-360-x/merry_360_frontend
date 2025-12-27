@@ -50,6 +50,8 @@ export const useUserStore = defineStore('user', () => {
   const cartCount = computed(() => tripCart.value.length)
   const isAdmin = computed(() => user.value?.role === 'admin')
   const isVendor = computed(() => user.value?.role === 'vendor')
+  const isApprovedHost = computed(() => user.value?.host_application_status === 'approved')
+  const hostStatus = computed(() => user.value?.host_application_status || null)
   const nextTierPoints = computed(() => {
     const tiers = { bronze: 1000, silver: 5000, gold: 15000, platinum: 50000 }
     const current = loyaltyPoints.value
@@ -115,7 +117,9 @@ export const useUserStore = defineStore('user', () => {
       studies: profile.studies || '',
       role: profile.role || 'user',
       avatar_url: profile.avatar_url || '',
-      verified: true
+      verified: true,
+      host_application_status: profile.host_application_status || null,
+      isApprovedHost: profile.host_application_status === 'approved'
     })
   }
 
@@ -367,6 +371,8 @@ export const useUserStore = defineStore('user', () => {
     cartCount,
     isAdmin,
     isVendor,
+    isApprovedHost,
+    hostStatus,
     nextTierPoints,
     
     // Actions

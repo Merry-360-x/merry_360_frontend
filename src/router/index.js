@@ -38,6 +38,7 @@ import ServicesPage from '../views/services/ServicesPage.vue'
 
 // Host
 import BecomeHost from '../views/host/BecomeHost.vue'
+import HostDashboard from '../views/host/HostDashboard.vue'
 
 // Dashboard
 import UserDashboard from '../views/dashboard/UserDashboard.vue'
@@ -180,6 +181,12 @@ const routes = [
     path: '/become-host',
     name: 'become-host',
     component: BecomeHost
+  },
+  {
+    path: '/host-dashboard',
+    name: 'host-dashboard',
+    component: HostDashboard,
+    meta: { requiresAuth: true, requiresHost: true }
   },
   {
     path: '/dashboard',
