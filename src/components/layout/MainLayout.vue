@@ -470,46 +470,46 @@
     <AIConcierge :isOpen="showAIConcierge" @close="showAIConcierge = false" @minimize="aiMinimized = true; showAIConcierge = false" />
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-20 relative overflow-hidden transition-colors duration-200">
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20 relative overflow-hidden transition-colors duration-200">
       <div class="container mx-auto px-4 lg:px-8 py-16 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
             <div class="flex items-center space-x-3 mb-6">
               <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />
             </div>
-            <p class="text-gray-600 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
-            <ul class="space-y-3 text-gray-600 text-sm">
-              <li><router-link to="/accommodations" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Accommodations</router-link></li>
-              <li><router-link to="/tours" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Tours</router-link></li>
-              <li><router-link to="/transport" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Transport</router-link></li>
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+              <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Accommodations</router-link></li>
+              <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Tours</router-link></li>
+              <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Transport</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
-            <ul class="space-y-3 text-gray-600 text-sm">
-              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">About Us</a></li>
-              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Contact</a></li>
-              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Careers</a></li>
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+              <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">About Us</router-link></li>
+              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Contact</a></li>
+              <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Become a Host</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
-            <ul class="space-y-3 text-gray-600 text-sm">
-              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
-              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Safety</a></li>
-              <li><a href="#" class="hover:text-brand-500 transition-all hover:translate-x-1 inline-block">Terms</a></li>
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
+            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
+              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Safety</a></li>
+              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Terms</a></li>
             </ul>
           </div>
         </div>
-        <div class="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-600 text-sm">© 2025 Merry360X. All rights reserved.</p>
+        <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-600 dark:text-gray-400 text-sm">© 2025 Merry360X. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Privacy</a>
-            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Terms</a>
-            <a href="#" class="text-gray-600 hover:text-brand-500 text-sm transition-colors">Cookies</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Privacy</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Terms</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Cookies</a>
           </div>
         </div>
       </div>
