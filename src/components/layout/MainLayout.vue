@@ -509,6 +509,7 @@ import { useAppStore } from '../../stores/app'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useLanguageStore } from '../../stores/language'
+import { useThemeStore } from '../../stores/theme'
 import AIConcierge from '../ai/AIConcierge.vue'
 
 const router = useRouter()
@@ -516,6 +517,12 @@ const appStore = useAppStore()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const languageStore = useLanguageStore()
+const themeStore = useThemeStore()
+
+// Initialize theme on mount
+onMounted(() => {
+  themeStore.initTheme()
+})
 
 const mobileMenuOpen = ref(false)
 const showAIConcierge = ref(false)
