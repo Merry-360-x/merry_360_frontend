@@ -241,10 +241,11 @@
         ></div>
         
         <!-- Menu Panel -->
-        <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white shadow-2xl overflow-y-auto transition-colors duration-200">
+        <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto transition-colors duration-200">
           <!-- Header -->
-          <div class="sticky top-0 bg-white px-6 py-4 flex items-center justify-end border-b border-gray-100">
-            <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 text-gray-300 p-1 transition-colors">
+          <div class="sticky top-0 bg-white dark:bg-gray-800 px-6 py-4 flex items-center justify-between border-b border-gray-100 dark:border-gray-700">
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">Menu</h3>
+            <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
