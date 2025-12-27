@@ -1,13 +1,13 @@
 <template>
   <MainLayout>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-brand-50 via-orange-50 to-white py-16 md:py-24">
+    <section class="relative bg-gradient-to-br from-brand-50 dark:from-gray-800 via-orange-50 dark:via-gray-700 to-white dark:to-gray-900 py-16 md:py-24 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+          <h1 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
             Become a Host on Merry360
           </h1>
-          <p class="text-base md:text-lg text-gray-600 mb-8">
+          <p class="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8">
             Share your unique space, experiences, or services with travelers from around the world and earn extra income.
           </p>
           <button 
@@ -20,343 +20,379 @@
       </div>
     </section>
 
-    <!-- How It Works Section -->
-    <section class="py-16 md:py-20 bg-white">
+    <!-- Multi-Step Registration Form -->
+    <section ref="formSection" class="py-16 md:py-20 bg-gradient-to-br from-brand-50 dark:from-gray-900 to-white dark:to-gray-800 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
-          <p class="text-base text-gray-600">
-            Getting started is easy - just follow these simple steps
-          </p>
-        </div>
-
         <div class="max-w-4xl mx-auto">
-          <div class="space-y-8">
-            <!-- Step 1 -->
-            <div class="flex gap-6 items-start">
-              <div class="flex-shrink-0 w-12 h-12 bg-brand-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                1
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Create Your Host Account</h3>
-                <p class="text-gray-600">
-                  Fill out our simple registration form with your basic information and what you'd like to host.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="flex gap-6 items-start">
-              <div class="flex-shrink-0 w-12 h-12 bg-brand-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                2
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Set Up Your Listing</h3>
-                <p class="text-gray-600">
-                  Add photos, descriptions, pricing, and availability. Our team will help you create an attractive listing.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="flex gap-6 items-start">
-              <div class="flex-shrink-0 w-12 h-12 bg-brand-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                3
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Get Verified</h3>
-                <p class="text-gray-600">
-                  Complete a quick verification process to ensure safety and quality for all our users.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="flex gap-6 items-start">
-              <div class="flex-shrink-0 w-12 h-12 bg-brand-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                4
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Start Hosting & Earning</h3>
-                <p class="text-gray-600">
-                  Once approved, your listing goes live! Manage bookings, communicate with guests, and start earning.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Registration Form Section -->
-    <section ref="formSection" class="py-16 md:py-20 bg-gradient-to-br from-brand-50 to-white">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
           <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Start Your Hosting Journey</h2>
-            <p class="text-lg text-gray-600">
-              Fill out the form below and our team will get in touch with you within 24 hours.
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Start Your Hosting Journey</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+              Complete the 3-step registration process
             </p>
           </div>
 
-          <form @submit.prevent="submitForm" class="bg-white rounded-2xl shadow-xl p-8">
-            <!-- Personal Information -->
-            <div class="mb-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-4">Personal Information</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
-                  <input 
-                    v-model="formData.fullName"
-                    type="text" 
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    placeholder="Enter your full legal name"
-                  />
+          <!-- Step Indicator -->
+          <div class="mb-12">
+            <div class="flex items-center justify-between max-w-2xl mx-auto">
+              <!-- Step 1 -->
+              <div class="flex flex-col items-center flex-1">
+                <div 
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'"
+                >
+                  <svg v-if="currentStep > 1" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>1</span>
                 </div>
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
-                  <input 
-                    v-model="formData.email"
-                    type="email" 
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    placeholder="your.email@example.com"
-                  />
+                <span class="mt-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Personal Info</span>
+              </div>
+
+              <!-- Connector Line 1 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 2 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 2 -->
+              <div class="flex flex-col items-center flex-1">
+                <div 
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'"
+                >
+                  <svg v-if="currentStep > 2" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>2</span>
                 </div>
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
-                  <input 
-                    v-model="formData.phone"
-                    type="tel" 
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    placeholder="+250 788 123 456"
-                  />
+                <span class="mt-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Business Info</span>
+              </div>
+
+              <!-- Connector Line 2 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 3 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 3 -->
+              <div class="flex flex-col items-center flex-1">
+                <div 
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'"
+                >
+                  <svg v-if="currentStep > 3" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>3</span>
                 </div>
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
-                  <input 
-                    v-model="formData.location"
-                    type="text" 
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    placeholder="City or District, e.g., Kigali, Musanze, Rubavu"
-                  />
-                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Property Details</span>
               </div>
             </div>
+          </div>
 
-            <!-- Hosting Details -->
-            <div class="mb-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-4">Hosting Details</h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">What would you like to host? *</label>
-                  <select 
-                    v-model="formData.hostingType"
-                    required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                  >
-                    <option value="">Select hosting type</option>
-                    <option value="accommodation">Accommodation</option>
-                    <option value="tour">Tours & Experiences</option>
-                    <option value="transport">Transport Services</option>
-                    <option value="service">Other Services</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Tell us more about what you're offering *</label>
-                  <textarea 
-                    v-model="formData.description"
-                    required
-                    rows="4"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    placeholder="Example: I have a 3-bedroom lakeside villa in Gisenyi with stunning views, or I offer guided gorilla trekking tours in Volcanoes National Park..."
-                  ></textarea>
-                </div>
-                <div>
-                  <label class="block text-sm font-semibold text-gray-700 mb-2">Previous hosting experience (optional)</label>
-                  <select 
-                    v-model="formData.experience"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                  >
-                    <option value="">Select experience level</option>
-                    <option value="none">No previous experience</option>
-                    <option value="some">Some experience</option>
-                    <option value="extensive">Extensive experience</option>
-                  </select>
+          <!-- Form Card -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors duration-200">
+            <form @submit.prevent="handleSubmit">
+              <!-- Step 1: Personal Information -->
+              <div v-show="currentStep === 1" class="animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Personal Information</h3>
+                <div class="space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
+                      <input 
+                        v-model="formData.firstName"
+                        type="text" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        placeholder="John"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
+                      <input 
+                        v-model="formData.lastName"
+                        type="text" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        placeholder="Doe"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
+                      <input 
+                        v-model="formData.email"
+                        type="email" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+                      <input 
+                        v-model="formData.phone"
+                        type="tel" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        placeholder="+250 788 123 456"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Address *</label>
+                    <input 
+                      v-model="formData.address"
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="Street address, City"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nationality *</label>
+                    <input 
+                      v-model="formData.nationality"
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="e.g., Rwandan, Kenyan, etc."
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Terms and Submit -->
-            <div class="mb-6">
-              <label class="flex items-start gap-3 cursor-pointer">
-                <input 
-                  v-model="formData.agreeToTerms"
-                  type="checkbox" 
-                  required
-                  class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
-                />
-                <span class="text-sm text-gray-600">
-                  I agree to Merry360's Terms of Service and Privacy Policy, and I understand that my application will be reviewed before approval. *
-                </span>
-              </label>
-            </div>
+              <!-- Step 2: Business Information -->
+              <div v-show="currentStep === 2" class="animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Business Information</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Business Name *</label>
+                    <input 
+                      v-model="formData.businessName"
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="Your company or individual business name"
+                    />
+                  </div>
 
-            <button 
-              type="submit"
-              :disabled="isSubmitting"
-              class="w-full px-8 py-4 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-bold rounded-lg text-lg transition-all shadow-lg hover:shadow-xl"
-            >
-              {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
-            </button>
-          </form>
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Business Type *</label>
+                    <select 
+                      v-model="formData.businessType"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    >
+                      <option value="">Select business type</option>
+                      <option value="individual">Individual/Sole Proprietor</option>
+                      <option value="company">Registered Company</option>
+                      <option value="partnership">Partnership</option>
+                      <option value="ngo">NGO/Non-Profit</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tax ID / TIN Number</label>
+                    <input 
+                      v-model="formData.taxId"
+                      type="text" 
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="Optional - if registered"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Years in Business *</label>
+                    <select 
+                      v-model="formData.yearsInBusiness"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    >
+                      <option value="">Select experience</option>
+                      <option value="new">Just Starting</option>
+                      <option value="1-2">1-2 Years</option>
+                      <option value="3-5">3-5 Years</option>
+                      <option value="5+">5+ Years</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Bank Account Details *</label>
+                    <input 
+                      v-model="formData.bankAccount"
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="Bank name and account number for payouts"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3: Property/Service Details -->
+              <div v-show="currentStep === 3" class="animate-fade-in">
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Property & Service Details</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">What would you like to host? *</label>
+                    <select 
+                      v-model="formData.hostingType"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    >
+                      <option value="">Select hosting type</option>
+                      <option value="accommodation">Accommodation (Hotel, Guesthouse, Villa)</option>
+                      <option value="tour">Tours & Experiences</option>
+                      <option value="transport">Transport Services</option>
+                      <option value="service">Other Services</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Property/Service Location *</label>
+                    <input 
+                      v-model="formData.propertyLocation"
+                      type="text" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="e.g., Kigali, Musanze, Gisenyi"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Number of Units/Capacity *</label>
+                    <input 
+                      v-model="formData.capacity"
+                      type="number" 
+                      required
+                      min="1"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="e.g., 5 rooms, 10 guests, 3 vehicles"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Detailed Description *</label>
+                    <textarea 
+                      v-model="formData.description"
+                      required
+                      rows="5"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      placeholder="Tell us about your property/service: amenities, unique features, target audience, pricing expectations..."
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Upload Photos/Documents</label>
+                    <input 
+                      type="file"
+                      @change="handleFileUpload"
+                      multiple
+                      accept="image/*,.pdf"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    />
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Upload photos of your property or relevant documents (optional)</p>
+                  </div>
+
+                  <div class="mt-6">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input 
+                        v-model="formData.agreeToTerms"
+                        type="checkbox" 
+                        required
+                        class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
+                      />
+                      <span class="text-sm text-gray-600 dark:text-gray-400">
+                        I agree to Merry360's Terms of Service and Privacy Policy, and I understand that my application will be reviewed before approval. *
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <button 
+                  v-if="currentStep > 1"
+                  type="button"
+                  @click="previousStep"
+                  class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-all"
+                >
+                  Previous
+                </button>
+                <div v-else></div>
+
+                <button 
+                  v-if="currentStep < 3"
+                  type="button"
+                  @click="nextStep"
+                  class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-all shadow-lg"
+                >
+                  Next Step
+                </button>
+                <button 
+                  v-else
+                  type="submit"
+                  :disabled="isSubmitting"
+                  class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
+                >
+                  {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Benefits Section -->
-    <section class="py-16 md:py-20 bg-white">
+    <section class="py-16 md:py-20 bg-white dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Host with Merry360?</h2>
-          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Why Host with Merry360?</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Join thousands of hosts who are earning income while sharing Rwanda's beauty with the world.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Benefit 1 -->
-          <div class="bg-gradient-to-br from-brand-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+          <div class="bg-gradient-to-br from-brand-50 dark:from-gray-800 to-white dark:to-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all">
             <div class="w-16 h-16 bg-brand-500 rounded-full flex items-center justify-center mb-6">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Earn Extra Income</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Earn Extra Income</h3>
+            <p class="text-gray-600 dark:text-gray-400">
               Set your own prices and availability. Earn money from your property, tours, or transport services on your schedule.
             </p>
           </div>
 
           <!-- Benefit 2 -->
-          <div class="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+          <div class="bg-gradient-to-br from-orange-50 dark:from-gray-800 to-white dark:to-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all">
             <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mb-6">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Secure & Protected</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Secure & Protected</h3>
+            <p class="text-gray-600 dark:text-gray-400">
               Benefit from secure payment processing, insurance coverage, and 24/7 host support for peace of mind.
             </p>
           </div>
 
           <!-- Benefit 3 -->
-          <div class="bg-gradient-to-br from-red-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+          <div class="bg-gradient-to-br from-red-50 dark:from-gray-800 to-white dark:to-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all">
             <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mb-6">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Global Reach</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Global Reach</h3>
+            <p class="text-gray-600 dark:text-gray-400">
               Connect with travelers worldwide and showcase Rwanda's unique offerings to an international audience.
             </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- What You Can Host Section -->
-    <section class="py-16 md:py-20 bg-gray-50">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Can You Host?</h2>
-          <p class="text-lg text-gray-600">
-            We welcome a variety of hosting opportunities
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Accommodation -->
-          <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Accommodations</h3>
-            <p class="text-sm text-gray-600">Hotels, guesthouses, apartments, or unique stays</p>
-          </div>
-
-          <!-- Tours -->
-          <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Tours & Experiences</h3>
-            <p class="text-sm text-gray-600">Guided tours, activities, and unique experiences</p>
-          </div>
-
-          <!-- Transport -->
-          <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-            <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Transport Services</h3>
-            <p class="text-sm text-gray-600">Car rentals, airport transfers, or private drivers</p>
-          </div>
-
-          <!-- Services -->
-          <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow text-center">
-            <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">Other Services</h3>
-            <p class="text-sm text-gray-600">Photography, guides, consultations, and more</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="py-16 md:py-20 bg-gray-50">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-          </div>
-
-          <div class="space-y-4">
-            <div v-for="(faq, index) in faqs" :key="index" class="bg-white rounded-xl shadow-md overflow-hidden">
-              <button 
-                @click="toggleFaq(index)"
-                class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-              >
-                <span class="font-semibold text-gray-900">{{ faq.question }}</span>
-                <svg 
-                  class="w-5 h-5 text-gray-500 transition-transform"
-                  :class="{ 'rotate-180': faq.open }"
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </button>
-              <div v-if="faq.open" class="px-6 pb-4">
-                <p class="text-gray-600">{{ faq.answer }}</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -369,67 +405,79 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
-import { useToast } from '../../composables/useToast'
-import { sendHostApplicationEmails } from '../../services/hostApplicationEmails'
 
 const router = useRouter()
 const formSection = ref(null)
 const isSubmitting = ref(false)
-const { showToast } = useToast()
+const currentStep = ref(1)
 
 const formData = reactive({
-  fullName: '',
+  // Step 1: Personal Info
+  firstName: '',
+  lastName: '',
   email: '',
   phone: '',
-  location: '',
+  address: '',
+  nationality: '',
+  
+  // Step 2: Business Info
+  businessName: '',
+  businessType: '',
+  taxId: '',
+  yearsInBusiness: '',
+  bankAccount: '',
+  
+  // Step 3: Property Details
   hostingType: '',
+  propertyLocation: '',
+  capacity: '',
   description: '',
-  experience: '',
   agreeToTerms: false
 })
 
-const faqs = ref([
-  {
-    question: 'How much does it cost to become a host?',
-    answer: 'Joining Merry360 as a host is completely free. We only charge a small service fee when you receive a booking.',
-    open: false
-  },
-  {
-    question: 'How long does the approval process take?',
-    answer: 'Typically, applications are reviewed within 24-48 hours. Once approved, you can start setting up your listings immediately.',
-    open: false
-  },
-  {
-    question: 'What is the commission structure?',
-    answer: 'Merry360 charges a competitive service fee of 15% on each booking. You keep 85% of your listing price.',
-    open: false
-  },
-  {
-    question: 'Can I host multiple properties or services?',
-    answer: 'Yes! You can create multiple listings under one host account for different properties, tours, or services.',
-    open: false
-  },
-  {
-    question: 'How do I receive payments?',
-    answer: 'Payments are processed securely through our platform and transferred to your bank account or mobile money within 3-5 business days after guest check-in.',
-    open: false
-  },
-  {
-    question: 'What kind of support do hosts receive?',
-    answer: 'We provide 24/7 host support, dedicated account managers, marketing assistance, and resources to help you succeed.',
-    open: false
-  }
-])
+const uploadedFiles = ref([])
 
 const scrollToForm = () => {
   formSection.value?.scrollIntoView({ behavior: 'smooth' })
 }
 
-const toggleFaq = (index) => {
-  faqs.value[index].open = !faqs.value[index].open
+const nextStep = () => {
+  if (validateCurrentStep()) {
+    currentStep.value++
+    scrollToForm()
+  }
 }
 
-const submitForm = async () => {
+const previousStep = () => {
+  currentStep.value--
+  scrollToForm()
+}
+
+const validateCurrentStep = () => {
+  if (currentStep.value === 1) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality) {
+      alert('Please fill in all required fields in Step 1')
+      return false
+    }
+  } else if (currentStep.value === 2) {
+    if (!formData.businessName || !formData.businessType || !formData.yearsInBusiness || !formData.bankAccount) {
+      alert('Please fill in all required fields in Step 2')
+      return false
+    }
+  }
+  return true
+}
+
+const handleFileUpload = (event) => {
+  uploadedFiles.value = Array.from(event.target.files)
+}
+
+const handleSubmit = async () => {
+  if (!formData.agreeToTerms) {
+    alert('Please agree to the terms and conditions')
+    return
+  }
+
   isSubmitting.value = true
   
   try {
@@ -437,84 +485,42 @@ const submitForm = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
-      showToast('Please login first to apply as a host', 'error')
+      alert('Please login first to apply as a host')
       router.push('/login')
       return
     }
     
     console.log('Submitting host application for user:', user.email)
 
-    // Save host application to the database.
-    // Use upsert to handle the case where a profile row doesn't exist yet.
-    const fullName = String(formData.fullName || '').trim()
-    const nameParts = fullName.split(/\s+/).filter(Boolean)
-    const firstName = nameParts[0] || null
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : null
-
+    // Save to database
     const profilePayload = {
       id: user.id,
-      email: user.email,
-      first_name: firstName,
-      last_name: lastName,
-      phone_number: formData.phone || null,
-      city: formData.location || null,
+      email: formData.email,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      phone_number: formData.phone,
       host_application_status: 'pending',
-      host_application_date: new Date().toISOString()
+      host_application_date: new Date().toISOString(),
+      host_application_data: JSON.stringify({
+        ...formData,
+        submittedAt: new Date().toISOString()
+      })
     }
 
-    const isMissingCityColumnError = (err) => {
-      const msg = String(err?.message || '')
-      return msg.includes("Could not find the 'city' column")
-    }
-
-    let upsertResult = await supabase
+    const { error } = await supabase
       .from('profiles')
       .upsert(profilePayload, { onConflict: 'id' })
-      .select('id')
-      .single()
 
-    if (upsertResult.error && isMissingCityColumnError(upsertResult.error)) {
-      const { city: _city, ...payloadWithoutCity } = profilePayload
-      upsertResult = await supabase
-        .from('profiles')
-        .upsert(payloadWithoutCity, { onConflict: 'id' })
-        .select('id')
-        .single()
-    }
-
-    if (upsertResult.error) {
-      console.error('Supabase error:', upsertResult.error)
-      throw upsertResult.error
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
     }
     
-    console.log('✅ Host application saved successfully to database!')
-    console.log('📊 Admin can now see this application at /admin/host-applications')
-
-    // Send emails (host confirmation + admin notification). If email fails, do not block success.
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('first_name, last_name')
-        .eq('id', user.id)
-        .single()
-
-      const applicantName = [profile?.first_name, profile?.last_name].filter(Boolean).join(' ').trim()
-
-      await sendHostApplicationEmails({
-        applicantEmail: user.email,
-        applicantName,
-        applicantId: user.id,
-        appliedAt: new Date().toISOString(),
-        siteUrl: window.location.origin
-      })
-    } catch (emailErr) {
-      console.warn('Host application email failed:', emailErr)
-    }
-
-    // Simple confirmation UI (auto-dismiss)
-    showToast('Application submitted successfully.', 'success', 2000)
+    console.log('✅ Host application saved successfully!')
+    alert('Application submitted successfully! We will review your application and get back to you within 24-48 hours.')
     
     // Reset form
+    currentStep.value = 1
     Object.keys(formData).forEach(key => {
       if (key === 'agreeToTerms') {
         formData[key] = false
@@ -523,11 +529,31 @@ const submitForm = async () => {
       }
     })
     
+    // Redirect to home
+    router.push('/')
+    
   } catch (error) {
     console.error('Host application error:', error)
-    showToast('Failed to submit application. Please try again: ' + error.message, 'error')
+    alert('Failed to submit application. Please try again.')
   } finally {
     isSubmitting.value = false
   }
 }
 </script>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
