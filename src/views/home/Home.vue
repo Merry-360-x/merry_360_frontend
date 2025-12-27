@@ -294,9 +294,9 @@
         </div>
       </div>
       <div class="text-center mt-8 md:mt-12">
-        <button class="px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
+        <router-link to="/stories" class="inline-block px-8 md:px-12 py-3 text-white rounded hover:opacity-90 transition-opacity" style="background: #FF3B3B; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 14px;">
           {{ t('home.viewAllBlogs') }}
-        </button>
+        </router-link>
       </div>
     </section>
 
