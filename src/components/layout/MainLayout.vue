@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white font-sans transition-colors duration-200">
+  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans transition-colors duration-200">
     <!-- Header -->
-    <header class="bg-white/80 lg:bg-white backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 transition-colors duration-200">
+    <header class="bg-white/80 dark:bg-gray-800/80 lg:bg-white dark:lg:bg-gray-800 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
           <!-- Logo -->
