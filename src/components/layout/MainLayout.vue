@@ -254,20 +254,20 @@
 
           <div class="p-6">
             <!-- User Profile Section (when authenticated) -->
-            <div v-if="userStore.isAuthenticated" class="mb-6 pb-6 border-b border-gray-100">
+            <div v-if="userStore.isAuthenticated" class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span class="text-gray-600 text-sm font-medium">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
+                <div class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-gray-600 dark:text-gray-300 text-sm font-medium">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'U' }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-medium text-sm text-gray-900 truncate">{{ userStore.user?.name || 'User' }}</p>
-                  <p class="text-xs text-gray-500 truncate">{{ userStore.user?.email || '' }}</p>
+                  <p class="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">{{ userStore.user?.name || 'User' }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ userStore.user?.email || '' }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Login Button (when not authenticated) -->
-            <div v-else class="mb-6 pb-6 border-b border-gray-100">
+            <div v-else class="mb-6 pb-6 border-b border-gray-100 dark:border-gray-700">
               <router-link 
                 to="/login" 
                 @click="mobileMenuOpen = false"
@@ -281,70 +281,70 @@
             <nav class="space-y-1 mb-6">
               <router-link 
                 to="/"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 Home
               </router-link>
               <router-link 
                 to="/accommodations"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
                 Accommodations
               </router-link>
               <router-link 
                 to="/tours"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 Tours
               </router-link>
               <router-link 
                 to="/transport"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
                 Transport
               </router-link>
               <router-link 
                 to="/services"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
                 Services
               </router-link>
               <router-link 
                 to="/stories"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
                 Stories
               </router-link>
               <router-link 
                 to="/become-host"
-                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                class="flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
                 @click="mobileMenuOpen = false"
               >
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 Become a Host
@@ -352,14 +352,28 @@
             </nav>
 
             <!-- Divider -->
-            <div class="border-t border-gray-100 my-6"></div>
+            <div class="border-t border-gray-100 dark:border-gray-700 my-6"></div>
 
             <!-- Settings Section -->
             <div class="space-y-3">
+              <!-- Dark Mode Toggle -->
+              <button
+                @click="themeStore.toggleTheme()"
+                class="w-full flex items-center gap-3 py-2.5 px-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-sm"
+              >
+                <svg v-if="!themeStore.isDark" class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+                <svg v-else class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <span>{{ themeStore.isDark ? 'Light Mode' : 'Dark Mode' }}</span>
+              </button>
+
               <select 
                 v-model="currencyStore.currentCurrency"
                 @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
-                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-gray-300"
+                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-500"
               >
                 <option value="USD">$ USD</option>
                 <option value="EUR">€ EUR</option>
@@ -371,7 +385,7 @@
               <select 
                 v-model="languageStore.currentLanguage" 
                 @change="languageStore.setLanguage(languageStore.currentLanguage)" 
-                class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-gray-300"
+                class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-500"
               >
                 <option value="EN">English</option>
                 <option value="RW">Kinyarwanda</option>
@@ -382,10 +396,10 @@
             </div>
 
             <!-- Logout Button -->
-            <div v-if="userStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-100">
+            <div v-if="userStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700">
               <button 
                 @click="handleLogout"
-                class="w-full px-3 py-2.5 text-sm text-gray-600 hover:text-gray-900 text-gray-200 transition-colors text-center"
+                class="w-full px-3 py-2.5 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors text-center"
               >
                 Sign Out
               </button>
