@@ -13,44 +13,44 @@
           <nav class="hidden lg:flex items-center gap-0">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
               exact
             >
               Home
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Accommodations
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Tours
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Transport
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Services
             </router-link>
             <router-link 
               to="/stories"
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
-              active-class="!border-brand-500 !text-brand-600"
+              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               Stories
             </router-link>
