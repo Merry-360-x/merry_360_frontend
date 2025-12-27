@@ -91,7 +91,7 @@
               <option value="RWF">RWF</option>
             </select>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 rounded-full text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
@@ -99,13 +99,13 @@
               <option value="SW">SW</option>
             </select>
 
-            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 rounded-full text-sm font-semibold text-gray-700 hover:border-brand-500 hover:text-brand-600 transition-all">
+            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-full text-sm font-semibold text-gray-700 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
               Trip Cart
               <span v-if="userStore.cartCount > 0" class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 inline-flex items-center justify-center">{{ userStore.cartCount }}</span>
             </router-link>
 
-            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 rounded-full transition-colors" title="Wishlist">
-              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" title="Wishlist">
+              <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
