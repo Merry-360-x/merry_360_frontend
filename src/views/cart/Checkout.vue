@@ -1,64 +1,64 @@
 <template>
   <MainLayout>
-    <section class="py-12 md:py-16 bg-gray-50">
+    <section class="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
-          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">Checkout</h1>
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">Checkout</h1>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Checkout Form -->
             <div class="lg:col-span-2 space-y-6">
               <!-- Guest Information -->
-              <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">Guest Information</h2>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Guest Information</h2>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
                       <input 
                         v-model="guestInfo.firstName"
                         type="text" 
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
                       <input 
                         v-model="guestInfo.lastName"
                         type="text" 
                         required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
                     <input 
                       v-model="guestInfo.email"
                       type="email" 
                       required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
                     <input 
                       v-model="guestInfo.phone"
                       type="tel" 
                       required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Special Requests (Optional)</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Special Requests (Optional)</label>
                     <textarea 
                       v-model="guestInfo.specialRequests"
                       rows="3"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       placeholder="Any special requirements or requests..."
                     ></textarea>
                   </div>
@@ -66,72 +66,68 @@
               </div>
 
               <!-- Booking Details -->
-              <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">Booking Details</h2>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Booking Details</h2>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Check-in Date *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-in Date *</label>
                       <input 
                         v-model="bookingDetails.checkIn"
                         type="date" 
                         required
                         :min="minDate"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Check-out Date *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-out Date *</label>
                       <input 
                         v-model="bookingDetails.checkOut"
                         type="date" 
                         required
                         :min="bookingDetails.checkIn || minDate"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Number of Guests *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of Guests *</label>
                     <input 
                       v-model.number="bookingDetails.guests"
                       type="number" 
                       min="1"
                       required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                      class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                     />
                   </div>
                 </div>
               </div>
 
-              <!-- Payment Method -->
-              <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">Payment Method</h2>
-                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
-                  <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-amber-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                    </svg>
-                    <div>
-                      <p class="text-sm font-medium text-amber-900">Payment Integration Coming Soon</p>
-                      <p class="text-xs text-amber-700 mt-1">Your booking will be confirmed and our team will contact you with payment instructions.</p>
-                    </div>
-                  </div>
-                </div>
-
+              <!-- Payment Method Selection -->
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Payment Method</h2>
+                
                 <div class="space-y-3">
-                  <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-brand-500 transition-colors">
-                    <input type="radio" value="bank_transfer" v-model="paymentMethod" class="w-4 h-4 text-brand-600" />
-                    <span class="ml-3 text-gray-900 font-medium">Bank Transfer</span>
-                  </label>
-                  <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-brand-500 transition-colors">
-                    <input type="radio" value="mobile_money" v-model="paymentMethod" class="w-4 h-4 text-brand-600" />
-                    <span class="ml-3 text-gray-900 font-medium">Mobile Money</span>
-                  </label>
-                  <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-brand-500 transition-colors">
-                    <input type="radio" value="pay_on_arrival" v-model="paymentMethod" class="w-4 h-4 text-brand-600" />
-                    <span class="ml-3 text-gray-900 font-medium">Pay on Arrival</span>
+                  <label 
+                    v-for="method in paymentMethods" 
+                    :key="method.id"
+                    class="flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all"
+                    :class="paymentMethod === method.id ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'"
+                  >
+                    <input type="radio" :value="method.id" v-model="paymentMethod" class="w-4 h-4 text-brand-600" />
+                    <div class="ml-4 flex-1">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center" :class="method.bgColor">
+                          <component :is="method.icon" class="w-5 h-5" :class="method.iconColor" />
+                        </div>
+                        <div>
+                          <p class="font-semibold text-gray-900 dark:text-gray-100">{{ method.name }}</p>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">{{ method.description }}</p>
+                        </div>
+                      </div>
+                    </div>
                   </label>
                 </div>
               </div>
@@ -139,48 +135,48 @@
 
             <!-- Order Summary -->
             <div class="lg:col-span-1">
-              <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
-                <h3 class="text-xl font-bold text-gray-900 mb-4">Order Summary</h3>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-24 transition-colors duration-200">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Order Summary</h3>
                 
                 <div class="space-y-3 mb-4">
-                  <div v-for="item in tripCart" :key="`${item.type}-${item.id}`" class="flex gap-3 pb-3 border-b border-gray-200">
+                  <div v-for="item in tripCart" :key="`${item.type}-${item.id}`" class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
                     <img :src="item.image" :alt="item.name || item.title" class="w-16 h-16 object-cover rounded-lg" />
                     <div class="flex-1">
-                      <p class="text-sm font-semibold text-gray-900">{{ item.name || item.title }}</p>
-                      <p class="text-xs text-gray-500">{{ item.type }}</p>
-                      <p class="text-sm font-bold text-brand-600 mt-1">
+                      <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ item.name || item.title }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">{{ item.type }}</p>
+                      <p class="text-sm font-bold text-brand-600 dark:text-brand-400 mt-1">
                         {{ currencyStore.formatPrice(typeof item.price === 'string' ? parseInt(item.price.replace(/[^0-9]/g, '')) : item.price) }}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div class="space-y-2 mb-4 pb-4 border-b border-gray-200">
-                  <div class="flex justify-between text-sm text-gray-600">
+                <div class="space-y-2 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                  <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                     <span>Subtotal</span>
-                    <span class="font-semibold">{{ currencyStore.formatPrice(subtotal) }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ currencyStore.formatPrice(subtotal) }}</span>
                   </div>
-                  <div class="flex justify-between text-sm text-gray-600">
+                  <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                     <span>Service Fee</span>
-                    <span class="font-semibold">{{ currencyStore.formatPrice(serviceFee) }}</span>
+                    <span class="font-semibold text-gray-900 dark:text-gray-100">{{ currencyStore.formatPrice(serviceFee) }}</span>
                   </div>
                 </div>
 
-                <div class="flex justify-between text-xl font-bold text-gray-900 mb-6">
+                <div class="flex justify-between text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
                   <span>Total</span>
-                  <span class="text-brand-600">{{ currencyStore.formatPrice(total) }}</span>
+                  <span class="text-brand-600 dark:text-brand-400">{{ currencyStore.formatPrice(total) }}</span>
                 </div>
 
                 <button 
-                  @click="confirmBooking" 
+                  @click="proceedToPayment" 
                   :disabled="isProcessing || !isFormValid"
                   class="w-full px-6 py-4 bg-brand-500 text-white rounded-xl font-bold text-lg hover:bg-brand-600 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span v-if="isProcessing">Processing...</span>
-                  <span v-else>Confirm Booking</span>
+                  <span v-else>Proceed to Payment</span>
                 </button>
 
-                <p class="text-xs text-gray-500 mt-4 text-center">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center">
                   By confirming, you agree to our Terms of Service and Privacy Policy
                 </p>
               </div>
@@ -189,30 +185,53 @@
         </div>
       </div>
     </section>
+
+    <!-- Payment Modal -->
+    <PaymentModal 
+      :isOpen="showPaymentModal"
+      :amount="total"
+      :currency="currencyStore.currentCurrency"
+      :bookingDetails="bookingDetails"
+      @close="showPaymentModal = false"
+      @success="handlePaymentSuccess"
+      @error="handlePaymentError"
+    />
+
+    <!-- Success Modal -->
+    <BookingSuccessModal 
+      :isOpen="showSuccessModal"
+      :booking="completedBooking"
+      @close="handleSuccessClose"
+      @viewBooking="goToBookings"
+    />
   </MainLayout>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, h } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { createBooking, supabase } from '../../services/supabase'
-import { startFlutterwavePayment } from '../../services/flutterwave'
 import MainLayout from '../../components/layout/MainLayout.vue'
+import PaymentModal from '../../components/payment/PaymentModal.vue'
+import BookingSuccessModal from '../../components/payment/BookingSuccessModal.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 
 const isProcessing = ref(false)
-const paymentMethod = ref('bank_transfer')
+const showPaymentModal = ref(false)
+const showSuccessModal = ref(false)
+const completedBooking = ref({})
+const paymentMethod = ref('card')
 
 const guestInfo = ref({
-  firstName: userStore.user?.user_metadata?.full_name?.split(' ')[0] || '',
-  lastName: userStore.user?.user_metadata?.full_name?.split(' ')[1] || '',
+  firstName: userStore.user?.firstName || '',
+  lastName: userStore.user?.lastName || '',
   email: userStore.user?.email || '',
-  phone: userStore.user?.user_metadata?.phone || '',
+  phone: userStore.user?.phone || '',
   specialRequests: ''
 })
 
@@ -252,7 +271,22 @@ const isFormValid = computed(() => {
          paymentMethod.value
 })
 
-const confirmBooking = async () => {
+// Payment method icons
+const CardIcon = () => h('svg', { fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [
+  h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' })
+])
+
+const MobileIcon = () => h('svg', { fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24' }, [
+  h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z' })
+])
+
+const paymentMethods = [
+  { id: 'card', name: 'Bank Card', description: 'Visa, Mastercard, etc.', icon: CardIcon, bgColor: 'bg-blue-100 dark:bg-blue-900', iconColor: 'text-blue-600 dark:text-blue-400' },
+  { id: 'mtn', name: 'MTN Mobile Money', description: 'Pay with MTN MoMo', icon: MobileIcon, bgColor: 'bg-yellow-100 dark:bg-yellow-900', iconColor: 'text-yellow-600 dark:text-yellow-400' },
+  { id: 'airtel', name: 'Airtel Money', description: 'Pay with Airtel Money', icon: MobileIcon, bgColor: 'bg-red-100 dark:bg-red-900', iconColor: 'text-red-600 dark:text-red-400' }
+]
+
+function proceedToPayment() {
   if (!isFormValid.value) {
     alert('Please fill in all required fields')
     return
@@ -264,10 +298,15 @@ const confirmBooking = async () => {
     return
   }
 
+  showPaymentModal.value = true
+}
+
+async function handlePaymentSuccess(paymentResult) {
+  showPaymentModal.value = false
   isProcessing.value = true
 
   try {
-    // Create bookings for each item in cart (Supabase)
+    // Create bookings for each item in cart
     const created = []
     for (const item of tripCart.value) {
       const price = typeof item.price === 'string'
@@ -276,7 +315,7 @@ const confirmBooking = async () => {
 
       const booking = await createBooking({
         user_id: userStore.user.id,
-        item_id: item.id,
+        listing_id: item.id,
         item_type: item.type,
         check_in: bookingDetails.value.checkIn,
         check_out: bookingDetails.value.checkOut,
@@ -287,53 +326,36 @@ const confirmBooking = async () => {
         guest_email: guestInfo.value.email,
         guest_phone: guestInfo.value.phone,
         special_requests: guestInfo.value.specialRequests,
-        payment_method: paymentMethod.value === 'pay_on_arrival' ? 'pay_on_arrival' : 'flutterwave',
-        payment_status: paymentMethod.value === 'pay_on_arrival' ? 'pending' : 'pending',
-        status: paymentMethod.value === 'pay_on_arrival' ? 'confirmed' : 'pending_payment',
-        created_at: new Date().toISOString()
+        payment_method: paymentResult.method,
+        payment_status: 'paid',
+        status: 'confirmed',
+        transaction_ref: paymentResult.transactionRef
       })
 
       created.push(booking)
     }
 
-    // If user chose pay_on_arrival, skip online payment
-    if (paymentMethod.value !== 'pay_on_arrival') {
-      const customer = {
-        email: guestInfo.value.email,
-        phone: guestInfo.value.phone,
-        name: `${guestInfo.value.firstName} ${guestInfo.value.lastName}`.trim()
-      }
-
-      const { response } = await startFlutterwavePayment({
-        amount: total.value,
-        currency: currencyStore.selectedCurrency,
-        customer,
-        title: 'Merry 360 Booking',
-        description: 'Cart checkout',
-        txRef: `CART_${created[0]?.id || Date.now()}`,
-        meta: { booking_ids: created.map(b => b.id) }
-      })
-
-      if (response?.status === 'successful') {
-        for (const b of created) {
-          await supabase
-            .from('bookings')
-            .update({ payment_status: 'paid', status: 'confirmed' })
-            .eq('id', b.id)
-        }
-      } else {
-        alert('Payment was not completed. Your bookings are pending payment.')
-      }
-    }
-
-    // Clear cart after successful booking
+    // Clear cart
     userStore.clearCart()
 
-    // Show success message
-    alert(`Booking confirmed! Booking ID: ${created[0].id}`)
+    // Set completed booking data for success modal
+    const firstItem = tripCart.value[0] || {}
+    completedBooking.value = {
+      id: created[0]?.id?.substring(0, 8) || 'N/A',
+      propertyName: firstItem.name || firstItem.title || 'Property',
+      propertyImage: firstItem.image,
+      location: firstItem.location || 'Location',
+      rating: firstItem.rating || 4.8,
+      checkIn: bookingDetails.value.checkIn,
+      checkOut: bookingDetails.value.checkOut,
+      guests: bookingDetails.value.guests,
+      paymentMethod: paymentResult.method,
+      transactionRef: paymentResult.transactionRef,
+      amount: total.value,
+      email: guestInfo.value.email
+    }
 
-    // Redirect to my bookings page
-    router.push('/dashboard/bookings')
+    showSuccessModal.value = true
 
   } catch (error) {
     console.error('Booking error:', error)
@@ -341,5 +363,20 @@ const confirmBooking = async () => {
   } finally {
     isProcessing.value = false
   }
+}
+
+function handlePaymentError(error) {
+  showPaymentModal.value = false
+  alert('Payment failed. Please try again.')
+}
+
+function handleSuccessClose() {
+  showSuccessModal.value = false
+  router.push('/')
+}
+
+function goToBookings() {
+  showSuccessModal.value = false
+  router.push('/profile')
 }
 </script>
