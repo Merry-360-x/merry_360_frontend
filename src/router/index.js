@@ -351,8 +351,10 @@ const router = createRouter({
 // Navigation guard for admin routes
 router.beforeEach(async (to, from, next) => {
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+  const requiresStaff = to.matched.some(record => record.meta.requiresStaff)
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   
-  if (requiresAdmin) {
+  if (requiresAdmin || requiresStaff || requiresAuth) {
     const store = useUserStore()
 
     // Ensure auth/profile loaded
@@ -367,9 +369,16 @@ router.beforeEach(async (to, from, next) => {
       return
     }
 
-    // Must be admin
-    if (store.user?.role !== 'admin') {
+    // Check admin access
+    if (requiresAdmin && store.user?.role !== 'admin') {
       alert('Access denied. Admin privileges required.')
+      next({ name: 'home' })
+      return
+    }
+
+    // Check staff access (staff or admin can access)
+    if (requiresStaff && store.user?.role !== 'staff' && store.user?.role !== 'admin' && store.user?.role !== 'vendor') {
+      alert('Access denied. Staff privileges required.')
       next({ name: 'home' })
       return
     }
