@@ -308,6 +308,31 @@ const routes = [
     path: '/about',
     name: 'about',
     component: About
+  },
+  // Staff routes
+  {
+    path: '/staff',
+    name: 'staff',
+    component: StaffDashboard,
+    meta: { requiresAuth: true, requiresStaff: true }
+  },
+  {
+    path: '/staff/properties',
+    name: 'staff-properties',
+    component: StaffProperties,
+    meta: { requiresAuth: true, requiresStaff: true }
+  },
+  {
+    path: '/staff/add-property',
+    name: 'staff-add-property',
+    component: StaffAddProperty,
+    meta: { requiresAuth: true, requiresStaff: true }
+  },
+  {
+    path: '/staff/edit-property/:id',
+    name: 'staff-edit-property',
+    component: StaffAddProperty,
+    meta: { requiresAuth: true, requiresStaff: true }
   }
 ]
 
