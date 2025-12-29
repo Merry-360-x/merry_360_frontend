@@ -71,6 +71,11 @@ import CreateProperty from '../views/vendor/CreateProperty.vue'
 import CreateTour from '../views/vendor/CreateTour.vue'
 import CreateTransport from '../views/vendor/CreateTransport.vue'
 
+// Staff
+import StaffDashboard from '../views/staff/StaffDashboard.vue'
+import StaffProperties from '../views/staff/StaffProperties.vue'
+import StaffAddProperty from '../views/staff/StaffAddProperty.vue'
+
 const routes = [
   {
     path: '/',
