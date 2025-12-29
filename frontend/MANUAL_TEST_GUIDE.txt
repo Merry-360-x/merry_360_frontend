@@ -1,0 +1,380 @@
+╔══════════════════════════════════════════════════════════════════╗
+║           MERRY 360 - STEP-BY-STEP TESTING GUIDE                 ║
+╚══════════════════════════════════════════════════════════════════╝
+
+🌐 PRODUCTION URL: https://merry-360-frontend-lmxekrx37-das-48ca2629.vercel.app
+
+📊 AUTOMATED TEST RESULTS: 80% Pass Rate (20/25 tests passed)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚡ QUICK START - TEST IN THIS ORDER:
+
+1️⃣  SIGN UP & LOGIN
+2️⃣  PROFILE MANAGEMENT (including new features)
+3️⃣  BECOME A HOST
+4️⃣  ADD PROPERTIES
+5️⃣  ADMIN ACCESS
+6️⃣  BROWSE & BOOK
+7️⃣  FULL FEATURE TEST
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣  AUTHENTICATION TESTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Test 1.1: Sign Up
+   • Go to: /register
+   • Fill in:
+     - Email: your-email@gmail.com
+     - Password: YourPassword123!
+     - First Name: Your First Name
+     - Last Name: Your Last Name
+   • Click "Sign Up"
+   • ✓ Should redirect to dashboard
+   • ✓ Should see welcome message
+
+✅ Test 1.2: Logout
+   • Click profile menu
+   • Click "Logout"
+   • ✓ Should redirect to login page
+   • ✓ Should clear session
+
+✅ Test 1.3: Login
+   • Go to: /login
+   • Enter email and password
+   • Click "Sign In"
+   • ✓ Should redirect to dashboard
+   • ✓ Should show your name
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2️⃣  PROFILE MANAGEMENT (★ NEW FEATURES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Test 2.1: Upload Profile Picture (★ NEW)
+   • Go to: /profile
+   • Click camera icon on avatar
+   • Select image file (max 5MB)
+   • Wait for upload (spinner shows)
+   • ✓ Should show success message
+   • ✓ Picture should appear immediately
+   • Refresh page
+   • ✓ Picture should persist
+   • Logout and login again
+   • ✓ Picture should STILL be there
+
+✅ Test 2.2: Update Personal Information
+   • Go to: /profile
+   • Click "Personal Info" tab
+   • Click "Edit" button
+   • Update all fields:
+     - First Name: ____________________
+     - Last Name: _____________________
+     - Phone: +250 7XX XXX XXX
+     - Date of Birth: Select date
+     - Bio: Write something about yourself
+     - ★ Studies/Education (NEW): Enter your education
+       Example:
+       Bachelor of Computer Science, University of Rwanda (2015-2019)
+       Master of Business Administration (2020-2022)
+   
+   • Click "Save Changes"
+   • ✓ Should show success message
+   
+   • Refresh page
+   • ✓ All fields should persist
+   
+   • Logout and login
+   • ✓ All fields should STILL be there
+   • ✓ Education field should show your studies
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3️⃣  BECOME A HOST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Test 3.1: Switch to Host Mode
+   • Look for "Become a Host" button/link
+   • OR navigate to /host or /host/dashboard
+   • ✓ Should see host dashboard
+   • ✓ Should see option to add properties
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4️⃣  ADD & MANAGE PROPERTIES (HOST)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Test 4.1: Add New Property
+   • Go to: /host/properties or /host/add-property
+   • Click "Add Property" or similar
+   • Fill in property details:
+     - Property Name: ____________________
+     - Description: ______________________
+     - Location/City: ____________________
+     - Address: __________________________
+     - Price per Night: __________________
+     - Bedrooms: _________________________
+     - Bathrooms: ________________________
+     - Max Guests: _______________________
+     - Amenities: (select from checkboxes)
+   
+   • Upload property photos
+   • Click "Publish" or "Submit"
+   • ✓ Should show success message
+   • ✓ Should see property in your listings
+
+✅ Test 4.2: View Your Properties
+   • Go to host dashboard
+   • ✓ Should see list of your properties
+   • ✓ Each property should show:
+     - Name
+     - Location
+     - Price
+     - Photo
+     - Status (available/unavailable)
+
+✅ Test 4.3: Edit Property
+   • Click "Edit" on a property
+   • Update some details
+   • Save changes
+   • ✓ Should update successfully
+
+✅ Test 4.4: Delete Property (if available)
+   • Click "Delete" on a property
+   • Confirm deletion
+   • ✓ Should remove from list
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5️⃣  ADMIN ACCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  First, make your account an admin:
+
+   • After signing up, run this command:
+     cd /Users/davy/merry_360_frontend
+     node setup-admin.mjs
+   
+   • OR manually update in Supabase:
+     UPDATE profiles SET role = 'admin' WHERE email = 'your-email@gmail.com';
+
+✅ Test 5.1: Access Admin Dashboard
+   • Go to: /admin
+   • ✓ Should see admin dashboard
+   • ✓ Should see statistics:
+     - Total Users
+     - Total Properties  
+     - Total Bookings
+     - Revenue/Analytics
+
+✅ Test 5.2: Manage Users (Admin)
+   • Go to: /admin/users or admin dashboard
+   • ✓ Should see list of all users
+   • ✓ Should be able to view user details
+   • ✓ Should be able to change user roles
+
+✅ Test 5.3: Manage Properties (Admin)
+   • Go to: /admin/properties
+   • ✓ Should see all properties from all hosts
+   • ✓ Should be able to approve/reject
+   • ✓ Should be able to delete
+
+✅ Test 5.4: View All Bookings (Admin)
+   • Go to: /admin/bookings
+   • ✓ Should see all bookings
+   • ✓ Should see booking details
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6️⃣  BROWSE & BOOK PROPERTIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Test 6.1: Search Properties
+   • Go to: /home or /explore
+   • Use search filters:
+     - Location: ____________________
+     - Check-in Date: _______________
+     - Check-out Date: ______________
+     - Guests: ______________________
+     - Price Range: _________________
+   • ✓ Results should update
+   • ✓ Should show matching properties
+
+✅ Test 6.2: View Property Details
+   • Click on any property
+   • ✓ Should see:
+     - Photo gallery
+     - Property name and description
+     - Host information
+     - Amenities list
+     - Price per night
+     - Reviews/ratings
+     - Availability calendar
+     - Book now button
+
+✅ Test 6.3: Add to Cart
+   • From property details:
+   • Select check-in and check-out dates
+   • Click "Add to Cart" or "Book Now"
+   • ✓ Should add to TripCart
+   • ✓ Cart icon should show count
+
+✅ Test 6.4: View Cart
+   • Click cart icon or go to /cart
+   • ✓ Should see all items
+   • ✓ Should show total price
+   • ✓ Should be able to update dates
+   • ✓ Should be able to remove items
+
+✅ Test 6.5: Complete Booking
+   • Click "Proceed to Checkout"
+   • Fill in booking details
+   • Confirm payment (if integrated)
+   • ✓ Should show confirmation
+   • ✓ Should receive booking confirmation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7️⃣  ADDITIONAL FEATURES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Test 7.1: Wishlist/Save Properties
+   • Click heart icon on property
+   • ✓ Should save to wishlist
+   • Go to profile → Saved tab
+   • ✓ Should see saved properties
+
+✅ Test 7.2: Loyalty Points
+   • Go to: /profile
+   • ✓ Should see loyalty points
+   • ✓ Should see tier (Bronze/Silver/Gold/Platinum)
+   • ✓ Should see progress to next tier
+
+✅ Test 7.3: Language Settings
+   • Go to: /profile → Preferences
+   • Change language:
+     - English
+     - Kinyarwanda
+     - Français
+   • ✓ UI should update to selected language
+
+✅ Test 7.4: Currency Settings
+   • Go to: /profile → Preferences
+   • Change currency:
+     - RWF (Rwandan Franc)
+     - USD (US Dollar)
+     - EUR (Euro)
+   • ✓ Prices should update throughout site
+
+✅ Test 7.5: Notification Preferences
+   • Go to: /profile → Preferences
+   • Toggle:
+     - Email notifications
+     - Push notifications
+     - SMS notifications
+   • Save preferences
+   • ✓ Should update successfully
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 DATABASE STATISTICS (from automated tests):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Total Users in Database: 16
+✅ Users with Profile Pictures: 10
+✅ Users with Complete Profiles: 1
+✅ Users with Education Info: 0 (new field - ready to test!)
+✅ Properties Table: Created and ready
+✅ Bookings Table: Exists (0 bookings so far)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆕 NEW FEATURES TO TEST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⭐ Profile Picture Upload (Cloudinary)
+   - Upload from profile page
+   - Persists across logout/login
+   - Shows in profile and navigation
+
+⭐ Studies/Education Field
+   - New field in Personal Info
+   - Save education background
+   - Persists in database
+
+⭐ Properties Table (Host Features)
+   - Add properties as a host
+   - Manage property listings
+   - Upload property photos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐛 KNOWN ISSUES TO CHECK:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  If you find any errors:
+   1. Check browser console (F12)
+   2. Note the error message
+   3. Take screenshot if needed
+   4. Report with steps to reproduce
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST SUMMARY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Authentication:
+[ ] Sign up
+[ ] Login  
+[ ] Logout
+
+Profile:
+[ ] Upload profile picture
+[ ] Update all personal info fields
+[ ] Add studies/education
+[ ] Verify persistence after logout/login
+
+Host Features:
+[ ] Become a host
+[ ] Add property
+[ ] Upload property photos
+[ ] View your properties
+[ ] Edit property
+[ ] Delete property
+
+Admin:
+[ ] Make account admin (run script)
+[ ] Access admin dashboard
+[ ] View statistics
+[ ] Manage users
+[ ] Manage properties
+[ ] View bookings
+
+Bookings:
+[ ] Search properties
+[ ] View property details
+[ ] Add to cart
+[ ] View cart
+[ ] Complete booking
+
+Other:
+[ ] Save to wishlist
+[ ] Check loyalty points
+[ ] Change language
+[ ] Change currency
+[ ] Update notification preferences
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PRIORITY TESTS (Do These First):
+
+1. Login/Logout ← CRITICAL
+2. Profile Picture Upload ← NEW FEATURE
+3. Studies Field ← NEW FEATURE
+4. Add Property as Host ← MAIN FEATURE
+5. Admin Dashboard ← MANAGEMENT
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Good luck with testing! 🚀

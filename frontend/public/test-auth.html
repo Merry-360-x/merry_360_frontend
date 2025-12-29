@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth State Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Authentication State Test</h1>
+    
+    <div class="section">
+        <h2>Current State</h2>
+        <div id="currentState"></div>
+    </div>
+
+    <div class="section">
+        <h2>Sign Up</h2>
+        <input type="email" id="signupEmail" placeholder="Email" value="test@example.com">
+        <input type="password" id="signupPassword" placeholder="Password" value="password123">
+        <input type="text" id="signupFirstName" placeholder="First Name" value="Test">
+        <input type="text" id="signupLastName" placeholder="Last Name" value="User">
+        <br>
+        <button onclick="testSignup()">Sign Up</button>
+        <div id="signupResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" value="bebisdavy@gmail.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="">
+        <br>
+        <button onclick="testLogin()">Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>Check Session</h2>
+        <button onclick="checkSession()">Check Current Session</button>
+        <div id="sessionResult"></div>
+    </div>
+
+    <div class="section">
+        <h2>Logout</h2>
+        <button onclick="testLogout()">Logout</button>
+        <div id="logoutResult"></div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+        const supabaseUrl = 'https://gzmxelgcdpaeklmabszo.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bXhlbGdjZHBhZWtsbWFic3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQyMDQzNzAsImV4cCI6MjA0OTc4MDM3MH0.Oi3xCmPCYEjykOrLEp2AxBE8kzewy0nDNlbcGkuKL1w'
+
+        const supabase = createClient(supabaseUrl, supabaseKey)
+
+        // Make functions global
+        window.testSignup = testSignup
+        window.testLogin = testLogin
+        window.checkSession = checkSession
+        window.testLogout = testLogout
+
+        // Update current state on load
+        updateCurrentState()
+
+        // Listen for auth changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('Auth state changed:', event)
+            updateCurrentState()
+        })
+
+        async function updateCurrentState() {
+            const { data: { session } } = await supabase.auth.getSession()
+            const stateDiv = document.getElementById('currentState')
+            
+            if (session) {
+                stateDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>✅ Authenticated</strong><br>
+                        Email: ${session.user.email}<br>
+                        User ID: ${session.user.id}
+                    </div>
+                `
+            } else {
+                stateDiv.innerHTML = `<div class="status info">ℹ️ Not authenticated</div>`
+            }
+        }
+
+        async function testSignup() {
+            const email = document.getElementById('signupEmail').value
+            const password = document.getElementById('signupPassword').value
+            const firstName = document.getElementById('signupFirstName').value
+            const lastName = document.getElementById('signupLastName').value
+            const resultDiv = document.getElementById('signupResult')
+
+            try {
+                resultDiv.innerHTML = '<div class="status info">🔄 Signing up...</div>'
+
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            first_name: firstName,
+                            last_name: lastName
+                        }
+                    }
+                })
+
+                if (error) throw error
+
+                // Create profile
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .upsert({
+                        id: data.user.id,
+                        email: data.user.email,
+                        first_name: firstName,
+                        last_name: lastName,
+                        role: 'user',
+                        loyalty_points: 0,
+                        loyalty_tier: 'bronze'
+                    })
+
+                if (profileError) throw profileError
+
+                resultDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ Signup successful!<br>
+                        User ID: ${data.user.id}<br>
+                        Email: ${data.user.email}
+                    </div>
+                `
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ ${error.message}</div>`
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('loginEmail').value
+            const password = document.getElementById('loginPassword').value
+            const resultDiv = document.getElementById('loginResult')
+
+            try {
+                resultDiv.innerHTML = '<div class="status info">🔄 Logging in...</div>'
+
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                })
+
+                if (error) throw error
+
+                // Fetch profile
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single()
+
+                resultDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ Login successful!<br>
+                        <pre>${JSON.stringify({ user: data.user.email, profile }, null, 2)}</pre>
+                    </div>
+                `
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ ${error.message}</div>`
+            }
+        }
+
+        async function checkSession() {
+            const resultDiv = document.getElementById('sessionResult')
+
+            try {
+                const { data: { session } } = await supabase.auth.getSession()
+
+                if (session) {
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', session.user.id)
+                        .single()
+
+                    resultDiv.innerHTML = `
+                        <div class="status success">
+                            ✅ Active session found<br>
+                            <pre>${JSON.stringify({ session: { email: session.user.email, id: session.user.id }, profile }, null, 2)}</pre>
+                        </div>
+                    `
+                } else {
+                    resultDiv.innerHTML = `<div class="status info">ℹ️ No active session</div>`
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ ${error.message}</div>`
+            }
+        }
+
+        async function testLogout() {
+            const resultDiv = document.getElementById('logoutResult')
+
+            try {
+                resultDiv.innerHTML = '<div class="status info">🔄 Logging out...</div>'
+
+                const { error } = await supabase.auth.signOut()
+
+                if (error) throw error
+
+                resultDiv.innerHTML = `<div class="status success">✅ Logged out successfully</div>`
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">❌ ${error.message}</div>`
+            }
+        }
+    </script>
+</body>
+</html>

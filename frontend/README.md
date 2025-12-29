@@ -1,70 +1,135 @@
-# Getting Started with Create React App
+# Merry360 - Complete Travel & Hospitality Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Merry360 Logo](https://via.placeholder.com/150x150?text=Merry360)
 
-## Available Scripts
+A fully functional MVP travel booking platform for Rwanda, featuring accommodations, tours, transport services, and more.
 
-In the project directory, you can run:
+## 🚀 Quick Start
 
-### `npm start`
+### Prerequisites
+- Node.js 16+ 
+- npm or yarn
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+# Clone the repository
+git clone https://github.com/Merry-360-x/merry_360_frontend.git
 
-### `npm test`
+# Navigate to project directory
+cd merry_360_frontend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Install dependencies
+npm install
 
-### `npm run build`
+# Start development server
+npm run dev
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The application will be available at `http://localhost:5173`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🔑 Test Credentials
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Regular User
+- **Email:** support@merry360x.com
+- **Password:** password123
 
-### `npm run eject`
+### Admin
+- **Email:** admin@merry360.com
+- **Password:** admin123
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Vendor
+- **Email:** vendor@merry360.com
+- **Password:** vendor123
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## ✨ Features
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **🏨 Accommodations** - Browse and book hotels, resorts, lodges
+- **🗺️ Tours & Activities** - Gorilla trekking, safaris, cultural tours
+- **🚗 Transport Services** - Airport transfers, car rentals, shuttles
+- **💳 Booking System** - Complete checkout with payment integration
+- **👤 User Dashboard** - Manage bookings, profile, wishlist
+- **🌐 Multi-language** - EN, FR, RW, ZH, SW
+- **💱 Multi-currency** - USD, EUR, GBP, CNY, RWF
+- **🌙 Dark Mode** - Full dark mode support
+- **📱 Mobile Responsive** - Optimized for all devices
+- **🤖 AI Concierge** - Interactive chat assistant
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🛠️ Tech Stack
 
-## Learn More
+- **Frontend:** Vue 3 (Composition API)
+- **Routing:** Vue Router
+- **State Management:** Pinia
+- **Styling:** Tailwind CSS
+- **Build Tool:** Vite
+- **Mock Backend:** Custom mock API service
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📁 Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+src/
+├── components/     # Reusable Vue components
+├── views/          # Page components
+├── stores/         # Pinia state management
+├── services/       # API services & mock data
+├── router/         # Vue Router configuration
+├── composables/    # Vue composables
+└── utils/          # Utility functions
+```
 
-### Code Splitting
+## 🎯 Available Scripts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+# Development server
+npm run dev
 
-### Analyzing the Bundle Size
+# Production build
+npm run build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Preview production build
+npm run preview
+```
 
-### Making a Progressive Web App
+## 📖 Documentation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+For detailed documentation, see [MVP_DOCUMENTATION.md](./MVP_DOCUMENTATION.md)
 
-### Advanced Configuration
+## 🔌 Integrations & Environment Variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+This project supports multiple backend options for production-ready services. Choose one:
 
-### Deployment
+### Option 1: Firebase
+For Firebase Auth/Firestore/Storage integration:
+- `VITE_USE_FIREBASE=true`
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Option 2: Mock API (Default)
+For local development without external dependencies:
+- `VITE_USE_MOCK_API=true` (runs in-memory mock backend)
 
-### `npm run build` fails to minify
+## 🤝 Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+All rights reserved - Merry360 © 2025
+
+## 📧 Contact
+
+- **Email:** support@merry360.com
+- **Website:** https://merry360.com
+- **GitHub:** https://github.com/Merry-360-x
+
+---
+
+**Built with ❤️ in Rwanda**
