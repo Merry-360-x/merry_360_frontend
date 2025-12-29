@@ -47,7 +47,7 @@
               <div class="flex gap-2">
                 <button 
                   @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'bg-primary text-white' : 'bg-gray-100 text-text-brand-600 hover:bg-gray-200 bg-gray-600'"
+                  :class="viewMode === 'list' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'"
                   class="flex-1 py-2 rounded-lg transition-all duration-200 transform hover:scale-105"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
                 </button>
                 <button 
                   @click="viewMode = 'map'"
-                  :class="viewMode === 'map' ? 'bg-primary text-white' : 'bg-gray-100 text-text-brand-600 hover:bg-gray-200 bg-gray-600'"
+                  :class="viewMode === 'map' ? 'bg-brand-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'"
                   class="flex-1 py-2 rounded-button transition-colors"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +108,7 @@
                   v-for="rating in [3, 4, 4.5]"
                   :key="rating"
                   @click="filters.minRating = rating"
-                  :class="filters.minRating === rating ? 'bg-primary text-white' : 'bg-gray-100 text-text-brand-600 hover:bg-gray-200 bg-gray-600'"
+                  :class="filters.minRating === rating ? 'bg-brand-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'"
                   class="flex-1 py-2 px-3 rounded-button text-sm transition-colors"
                 >
                   {{ rating }}+⭐
