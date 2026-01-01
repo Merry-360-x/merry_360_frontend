@@ -155,6 +155,7 @@
                   </router-link>
 
                   <router-link 
+                    v-if="canSeeStaffPortal"
                     to="/staff" 
                     @click="showUserMenu = false"
                     class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
@@ -543,6 +544,11 @@ const mobileMenuOpen = ref(false)
 const showAIConcierge = ref(false)
 const showUserMenu = ref(false)
 const aiMinimized = ref(false)
+
+const canSeeStaffPortal = computed(() => {
+  const role = userStore.user?.role
+  return role === 'staff' || role === 'admin'
+})
 
 const mobileNavigation = [
   { name: 'Home', to: '/home' },
