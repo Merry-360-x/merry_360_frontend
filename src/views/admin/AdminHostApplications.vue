@@ -163,7 +163,7 @@
           <div class="grid grid-cols-2 gap-4 border-t pt-4">
             <div>
               <p class="text-sm text-gray-500">Phone</p>
-              <p class="font-medium">{{ selectedApplication.phone_number || 'Not provided' }}</p>
+              <p class="font-medium">{{ selectedApplication.phone || selectedApplication.phone_number || 'Not provided' }}</p>
             </div>
             <div>
               <p class="text-sm text-gray-500">City</p>

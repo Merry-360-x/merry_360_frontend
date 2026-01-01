@@ -495,16 +495,12 @@ const handleSubmit = async () => {
     // Save to database
     const profilePayload = {
       id: user.id,
-      email: formData.email,
+      email: user.email,
       first_name: formData.firstName,
       last_name: formData.lastName,
-      phone_number: formData.phone,
+      phone: formData.phone,
       host_application_status: 'pending',
-      host_application_date: new Date().toISOString(),
-      host_application_data: JSON.stringify({
-        ...formData,
-        submittedAt: new Date().toISOString()
-      })
+      host_application_date: new Date().toISOString()
     }
 
     const { error } = await supabase

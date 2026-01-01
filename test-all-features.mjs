@@ -358,6 +358,51 @@ async function testHostFeatures() {
   }
 }
 
+// Test 6b: Host application submission (profiles host_application_* fields)
+async function testHostApplicationSubmission(auth) {
+  section('HOST APPLICATION SUBMISSION')
+
+  if (!auth?.userId || !auth?.email || !auth?.password) {
+    test('Host Application Submission', 'SKIP', 'No test user available')
+    return
+  }
+
+  try {
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: auth.email,
+      password: auth.password
+    })
+    if (signInError) throw signInError
+
+    const nowIso = new Date().toISOString()
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        host_application_status: 'pending',
+        host_application_date: nowIso
+      })
+      .eq('id', auth.userId)
+      .select('host_application_status, host_application_date')
+      .single()
+
+    if (error) throw error
+
+    test('Set Host Application Status', data.host_application_status === 'pending' ? 'PASS' : 'FAIL')
+    test('Set Host Application Date', data.host_application_date ? 'PASS' : 'FAIL')
+  } catch (err) {
+    test('Host Application Submission', 'FAIL', err.message)
+  } finally {
+    // Best-effort cleanup
+    try {
+      await supabase
+        .from('profiles')
+        .update({ host_application_status: null, host_application_date: null })
+        .eq('id', auth.userId)
+    } catch (_) {}
+    try { await supabase.auth.signOut() } catch (_) {}
+  }
+}
+
 // Test 7: Check bookings
 async function testBookings() {
   section('BOOKING SYSTEM')
@@ -451,6 +496,7 @@ async function runAllTests() {
   const testAuth = await testAuthentication()
   await testProfileManagement(testAuth)
   await testExistingUsers()
+  await testHostApplicationSubmission(testAuth)
   await testHostFeatures()
   await testBookings()
   await testCloudinaryConfig()
