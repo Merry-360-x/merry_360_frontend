@@ -91,33 +91,60 @@ const { showToast } = useToast()
 const tours = ref([])
 const loading = ref(true)
 
+const sourceTable = ref('tours')
+
 const loadTours = async () => {
   try {
     loading.value = true
     console.log('Loading tours from Supabase...')
-    
-    const { data, error } = await supabase
+
+    let data = []
+    let error = null
+
+    const primary = await supabase
       .from('tours')
       .select('*')
       .order('created_at', { ascending: false })
-    
+
+    if (primary.error?.code === 'PGRST205') {
+      // Fallback: some environments store tours inside listings.
+      sourceTable.value = 'listings'
+      const fallback = await supabase
+        .from('listings')
+        .select('*')
+        .ilike('category', 'tour%')
+        .order('created_at', { ascending: false })
+
+      data = fallback.data || []
+      error = fallback.error
+    } else {
+      sourceTable.value = 'tours'
+      data = primary.data || []
+      error = primary.error
+    }
+
     if (error) {
       console.error('Supabase error:', error)
       throw error
     }
-    
+
     console.log('Loaded tours:', data?.length || 0)
-    tours.value = (data || []).map(t => ({
-      id: t.id,
-      name: t.name,
-      category: t.category || 'Tour',
-      location: t.destination,
-      duration: `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}`,
-      price: t.price,
-      bookings: 0, // TODO: count from bookings table
-      status: t.available ? 'active' : 'inactive',
-      image: t.main_image || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=100&h=100&fit=crop'
-    }))
+    tours.value = (data || []).map(t => {
+      const isListings = sourceTable.value === 'listings'
+      return {
+        id: t.id,
+        name: isListings ? (t.title || 'Tour') : (t.name || 'Tour'),
+        category: (t.category || t.subcategory || 'Tour'),
+        location: t.destination || t.location || '—',
+        duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '—',
+        price: t.price ?? 0,
+        bookings: 0,
+        status: isListings
+          ? (String(t.status || '').toLowerCase() === 'active' ? 'active' : 'inactive')
+          : (t.available ? 'active' : 'inactive'),
+        image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=100&h=100&fit=crop'
+      }
+    })
     
     if (tours.value.length === 0) {
       showToast('No tours found. Please add tours in the database.', 'warning')
@@ -140,10 +167,16 @@ const stats = computed(() => ({
 const toggleStatus = async (tour) => {
   try {
     const newStatus = tour.status === 'active' ? false : true
-    const { error } = await supabase
-      .from('tours')
-      .update({ available: newStatus })
-      .eq('id', tour.id)
+
+    const { error } = sourceTable.value === 'listings'
+      ? await supabase
+        .from('listings')
+        .update({ status: newStatus ? 'active' : 'inactive' })
+        .eq('id', tour.id)
+      : await supabase
+        .from('tours')
+        .update({ available: newStatus })
+        .eq('id', tour.id)
     
     if (error) throw error
     

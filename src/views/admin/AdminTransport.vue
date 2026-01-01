@@ -90,32 +90,58 @@ const { showToast } = useToast()
 const vehicles = ref([])
 const loading = ref(true)
 
+const sourceTable = ref('vehicles')
+
 const loadVehicles = async () => {
   try {
     loading.value = true
     console.log('Loading vehicles from Supabase...')
-    
-    const { data, error } = await supabase
+
+    let data = []
+    let error = null
+
+    const primary = await supabase
       .from('vehicles')
       .select('*')
       .order('created_at', { ascending: false })
-    
+
+    if (primary.error?.code === 'PGRST205') {
+      sourceTable.value = 'listings'
+      const fallback = await supabase
+        .from('listings')
+        .select('*')
+        .in('category', ['transport', 'vehicle', 'vehicles', 'car', 'rental'])
+        .order('created_at', { ascending: false })
+
+      data = fallback.data || []
+      error = fallback.error
+    } else {
+      sourceTable.value = 'vehicles'
+      data = primary.data || []
+      error = primary.error
+    }
+
     if (error) {
       console.error('Supabase error:', error)
       throw error
     }
-    
+
     console.log('Loaded vehicles:', data?.length || 0)
-    vehicles.value = (data || []).map(v => ({
-      id: v.id,
-      name: v.name,
-      plateNumber: v.license_plate || 'N/A',
-      driver: v.driver_included ? 'With Driver' : 'Self Drive',
-      type: v.type,
-      capacity: v.capacity,
-      ratePerDay: v.price_per_day,
-      status: v.available ? 'available' : 'in-use'
-    }))
+    vehicles.value = (data || []).map(v => {
+      const isListings = sourceTable.value === 'listings'
+      return {
+        id: v.id,
+        name: isListings ? (v.title || 'Vehicle') : (v.name || 'Vehicle'),
+        plateNumber: v.license_plate || 'N/A',
+        driver: v.driver_included ? 'With Driver' : 'Self Drive',
+        type: v.type || v.subcategory || '—',
+        capacity: v.capacity ?? '—',
+        ratePerDay: v.price_per_day ?? v.price ?? 0,
+        status: isListings
+          ? (String(v.status || '').toLowerCase() === 'active' ? 'available' : 'in-use')
+          : (v.available ? 'available' : 'in-use')
+      }
+    })
     
     if (vehicles.value.length === 0) {
       showToast('No vehicles found in database', 'warning')

@@ -216,47 +216,81 @@ const stats = ref({
 const recentBookings = ref([])
 const loading = ref(true)
 
+function buildDisplayName(profile) {
+  if (!profile) return 'Guest'
+  const first = String(profile.first_name || '').trim()
+  const last = String(profile.last_name || '').trim()
+  const full = `${first} ${last}`.trim()
+  return full || profile.email || 'Guest'
+}
+
+function safeNumber(value) {
+  const n = Number(value)
+  return Number.isFinite(n) ? n : 0
+}
+
 async function loadStats() {
   try {
     // Load bookings count
-    const { count: bookingsCount } = await supabase
+    const { count: bookingsCount, error: bookingsCountError } = await supabase
       .from('bookings')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
+    if (bookingsCountError) throw bookingsCountError
     
     // Load total revenue
-    const { data: bookingsData } = await supabase
+    const { data: bookingsData, error: revenueError } = await supabase
       .from('bookings')
       .select('total_price')
       .eq('payment_status', 'paid')
+    if (revenueError) throw revenueError
     
-    const totalRevenue = bookingsData?.reduce((sum, b) => sum + parseFloat(b.total_price || 0), 0) || 0
+    const totalRevenue = (bookingsData || []).reduce((sum, b) => sum + safeNumber(b.total_price), 0)
     
     // Load users count
-    const { count: usersCount } = await supabase
+    const { count: usersCount, error: usersCountError } = await supabase
       .from('profiles')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
+    if (usersCountError) throw usersCountError
     
-    // Load properties count
-    const { count: propertiesCount } = await supabase
+    // Load listings count (used by bookings via listing_id)
+    const { count: propertiesCount, error: listingsCountError } = await supabase
       .from('listings')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
+    if (listingsCountError) throw listingsCountError
 
     // Load pending host applications count
-    const { count: pendingHostApplicationsCount } = await supabase
+    const { count: pendingHostApplicationsCount, error: pendingHostsError } = await supabase
       .from('profiles')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('host_application_status', 'pending')
+    if (pendingHostsError) throw pendingHostsError
     
-    // Load recent bookings with listing details
-    const { data: bookings } = await supabase
+    // Load recent bookings (hydrate listing + profile info manually)
+    const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
-      .select(`
-        *,
-        listings (title),
-        profiles (first_name, last_name, email)
-      `)
+      .select('*')
       .order('created_at', { ascending: false })
       .limit(10)
+    if (bookingsError) throw bookingsError
+
+    const bookingRows = bookings || []
+    const userIds = [...new Set(bookingRows.map(b => b.user_id).filter(Boolean))]
+    const listingIds = [...new Set(bookingRows.map(b => b.listing_id).filter(Boolean))]
+
+    const [profilesRes, listingsRes] = await Promise.all([
+      userIds.length
+        ? supabase.from('profiles').select('id, first_name, last_name, email').in('id', userIds)
+        : Promise.resolve({ data: [], error: null }),
+      listingIds.length
+        ? supabase.from('listings').select('id, title').in('id', listingIds)
+        : Promise.resolve({ data: [], error: null })
+    ])
+
+    if (profilesRes.error) throw profilesRes.error
+    if (listingsRes.error) throw listingsRes.error
+
+    const profilesById = new Map((profilesRes.data || []).map(p => [p.id, p]))
+    const listingsById = new Map((listingsRes.data || []).map(l => [l.id, l]))
     
     stats.value = {
       bookings: bookingsCount || 0,
@@ -266,7 +300,15 @@ async function loadStats() {
       pendingHostApplications: pendingHostApplicationsCount || 0
     }
     
-    recentBookings.value = bookings || []
+    recentBookings.value = bookingRows.map(b => {
+      const profile = b.user_id ? profilesById.get(b.user_id) : null
+      const listing = b.listing_id ? listingsById.get(b.listing_id) : null
+      return {
+        ...b,
+        profiles: profile ? { first_name: profile.first_name, last_name: profile.last_name, email: profile.email } : null,
+        listings: listing ? { title: listing.title } : null
+      }
+    })
     loading.value = false
   } catch (error) {
     console.error('Error loading stats:', error)

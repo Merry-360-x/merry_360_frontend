@@ -162,6 +162,12 @@ const userActivity = ref([
 
 const topLocations = ref([])
 
+function monthKey(date) {
+  const d = new Date(date)
+  if (Number.isNaN(d.getTime())) return null
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+
 // Load real analytics data from Supabase
 const loadAnalytics = async () => {
   try {
@@ -178,9 +184,18 @@ const loadAnalytics = async () => {
     // Get all bookings with payment info
     const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
-      .select('*, properties(name), tours(name), vehicles(name)')
+      .select('id, created_at, total_price, payment_status, status, listing_id')
     
     if (bookingsError) throw bookingsError
+
+    const listingIds = [...new Set((bookings || []).map(b => b.listing_id).filter(Boolean))]
+    const { data: listings, error: listingsError } = listingIds.length
+      ? await supabase.from('listings').select('id, title').in('id', listingIds)
+      : { data: [], error: null }
+
+    if (listingsError) throw listingsError
+
+    const listingsById = new Map((listings || []).map(l => [l.id, l]))
     
     // Calculate metrics
     metrics.value = {
@@ -193,10 +208,9 @@ const loadAnalytics = async () => {
     // Calculate top services from bookings
     const serviceCounts = {}
     ;(bookings || []).forEach(booking => {
-      let serviceName = 'Unknown'
-      if (booking.properties) serviceName = booking.properties.name
-      else if (booking.tours) serviceName = booking.tours.name
-      else if (booking.vehicles) serviceName = booking.vehicles.name
+      const serviceName = booking.listing_id
+        ? (listingsById.get(booking.listing_id)?.title || 'Unknown')
+        : 'Unknown'
       
       serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1
     })
@@ -223,6 +237,27 @@ const loadAnalytics = async () => {
       }))
       .sort((a, b) => b.users - a.users)
       .slice(0, 5)
+
+    // Revenue trend (last 6 months) from paid bookings
+    const paid = (bookings || []).filter(b => b.payment_status === 'paid')
+    const byMonth = new Map()
+    for (const b of paid) {
+      const k = monthKey(b.created_at)
+      if (!k) continue
+      byMonth.set(k, (byMonth.get(k) || 0) + (parseFloat(b.total_price) || 0))
+    }
+
+    // Build last 6 calendar months including current
+    const now = new Date()
+    const months = []
+    for (let i = 5; i >= 0; i -= 1) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+      const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      const label = d.toLocaleString('en-US', { month: 'short' })
+      const value = Math.round((byMonth.get(k) || 0) / 1000) // display in $k
+      months.push({ name: label, value })
+    }
+    revenueData.value = months
     
     console.log('Analytics loaded:', {
       revenue: metrics.value.totalRevenue,
@@ -242,7 +277,7 @@ onMounted(() => {
   loadAnalytics()
 })
 
-const maxRevenue = computed(() => Math.max(...revenueData.value.map(d => d.value)))
-const maxBookings = computed(() => Math.max(...topServices.value.map(s => s.bookings)))
-const maxUsers = computed(() => Math.max(...userActivity.value.map(d => d.users)))
+const maxRevenue = computed(() => Math.max(1, ...revenueData.value.map(d => d.value)))
+const maxBookings = computed(() => Math.max(1, ...topServices.value.map(s => s.bookings)))
+const maxUsers = computed(() => Math.max(1, ...userActivity.value.map(d => d.users)))
 </script>
