@@ -195,7 +195,25 @@ const routes = [
   {
     path: '/host',
     name: 'host',
-    component: VendorDashboard,
+    component: StaffDashboard,
+    meta: { requiresAuth: true, requiresHost: true }
+  },
+  {
+    path: '/host/properties',
+    name: 'host-properties',
+    component: StaffProperties,
+    meta: { requiresAuth: true, requiresHost: true }
+  },
+  {
+    path: '/host/add-property',
+    name: 'host-add-property',
+    component: StaffAddProperty,
+    meta: { requiresAuth: true, requiresHost: true }
+  },
+  {
+    path: '/host/edit-property/:id',
+    name: 'host-edit-property',
+    component: StaffAddProperty,
     meta: { requiresAuth: true, requiresHost: true }
   },
   {

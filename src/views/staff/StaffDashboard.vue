@@ -13,16 +13,16 @@
                   alt="Staff photo"
                   class="w-full h-full object-cover"
                 />
-                <span v-else class="text-white font-bold text-xl">S</span>
+                <span v-else class="text-white font-bold text-xl">{{ portalInitial }}</span>
               </div>
-              <span class="text-xl font-bold text-gray-900 dark:text-gray-100">Staff Portal</span>
+              <span class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ portalTitle }}</span>
             </div>
           </div>
           <nav class="p-4 space-y-1">
             <router-link 
-              to="/staff" 
+              :to="dashboardPath" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === '/staff' ? 'bg-blue-500 text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path === dashboardPath ? 'bg-blue-500 text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -30,9 +30,9 @@
               Dashboard
             </router-link>
             <router-link 
-              to="/staff/properties" 
+              :to="propertiesPath" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === '/staff/properties' ? 'bg-blue-500 text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path === propertiesPath ? 'bg-blue-500 text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -40,9 +40,9 @@
               My Properties
             </router-link>
             <router-link 
-              to="/staff/add-property" 
+              :to="addPropertyPath" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === '/staff/add-property' ? 'bg-blue-500 text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path === addPropertyPath ? 'bg-blue-500 text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -55,8 +55,8 @@
         <!-- Main Content -->
         <main class="flex-1 p-8">
           <div class="mb-8">
-            <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">Staff Dashboard</h1>
-            <p class="text-gray-600 dark:text-gray-400">Manage properties assigned to you</p>
+            <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">{{ dashboardTitle }}</h1>
+            <p class="text-gray-600 dark:text-gray-400">Manage your listings and bookings</p>
           </div>
 
           <!-- Stats Grid -->
@@ -112,7 +112,7 @@
             <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Quick Actions</h2>
             <div class="flex flex-wrap gap-4">
               <router-link 
-                to="/staff/add-property"
+                :to="addPropertyPath"
                 class="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@
                 Add New Property
               </router-link>
               <router-link 
-                to="/staff/properties"
+                :to="propertiesPath"
                 class="flex items-center gap-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +148,7 @@
               <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No properties yet</h3>
               <p class="text-gray-600 dark:text-gray-400 mb-4">Start by adding your first property</p>
               <router-link 
-                to="/staff/add-property"
+                :to="addPropertyPath"
                 class="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,12 +192,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { useUserStore } from '../../stores/userStore'
 
+const route = useRoute()
 const userStore = useUserStore()
+
+const isHostPortal = computed(() => String(route.path || '').startsWith('/host'))
+const portalTitle = computed(() => (isHostPortal.value ? 'Host Portal' : 'Staff Portal'))
+const portalInitial = computed(() => (isHostPortal.value ? 'H' : 'S'))
+const dashboardTitle = computed(() => (isHostPortal.value ? 'Host Dashboard' : 'Staff Dashboard'))
+
+const basePath = computed(() => (isHostPortal.value ? '/host' : '/staff'))
+const dashboardPath = computed(() => basePath.value)
+const propertiesPath = computed(() => `${basePath.value}/properties`)
+const addPropertyPath = computed(() => `${basePath.value}/add-property`)
+
 const loading = ref(true)
 const properties = ref([])
 const stats = ref({

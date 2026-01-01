@@ -7,25 +7,25 @@
           <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center space-x-2">
               <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
-                <span class="text-white font-bold text-xl">S</span>
+                <span class="text-white font-bold text-xl">{{ portalInitial }}</span>
               </div>
-              <span class="text-xl font-bold text-gray-900 dark:text-gray-100">Staff Portal</span>
+              <span class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ portalTitle }}</span>
             </div>
           </div>
           <nav class="p-4 space-y-1">
-            <router-link to="/staff" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <router-link :to="dashboardPath" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
               </svg>
               Dashboard
             </router-link>
-            <router-link to="/staff/properties" class="flex items-center px-4 py-3 bg-blue-500 text-white rounded-lg">
+            <router-link :to="propertiesPath" class="flex items-center px-4 py-3 bg-blue-500 text-white rounded-lg">
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
               </svg>
               My Properties
             </router-link>
-            <router-link to="/staff/add-property" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <router-link :to="addPropertyPath" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
@@ -42,7 +42,7 @@
               <p class="text-gray-600 dark:text-gray-400">Manage and edit your property listings</p>
             </div>
             <router-link 
-              to="/staff/add-property"
+              :to="addPropertyPath"
               class="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@
             <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">No Properties Yet</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-6">Start adding properties to manage them here</p>
             <router-link 
-              to="/staff/add-property"
+              :to="addPropertyPath"
               class="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-lg font-semibold"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,19 +153,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { useUserStore } from '../../stores/userStore'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const loading = ref(true)
 const properties = ref([])
 const showDeleteModal = ref(false)
 const propertyToDelete = ref(null)
 const deleting = ref(false)
+
+const isHostPortal = computed(() => String(route.path || '').startsWith('/host'))
+const portalTitle = computed(() => (isHostPortal.value ? 'Host Portal' : 'Staff Portal'))
+const portalInitial = computed(() => (isHostPortal.value ? 'H' : 'S'))
+const basePath = computed(() => (isHostPortal.value ? '/host' : '/staff'))
+const dashboardPath = computed(() => basePath.value)
+const propertiesPath = computed(() => `${basePath.value}/properties`)
+const addPropertyPath = computed(() => `${basePath.value}/add-property`)
 
 onMounted(async () => {
   await loadProperties()
@@ -195,7 +204,7 @@ async function loadProperties() {
 }
 
 function editProperty(property) {
-  router.push(`/staff/edit-property/${property.id}`)
+  router.push(`${basePath.value}/edit-property/${property.id}`)
 }
 
 function confirmDelete(property) {

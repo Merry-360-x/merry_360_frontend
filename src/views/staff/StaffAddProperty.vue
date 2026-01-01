@@ -3,13 +3,13 @@
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-200">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
         <div class="mb-8">
-          <router-link to="/staff" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-2 mb-4">
+          <router-link :to="dashboardPath" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-2 mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
             Back to Dashboard
           </router-link>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Add New Property</h1>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ pageTitle }}</h1>
           <p class="text-gray-600 dark:text-gray-400">Fill in the details to list a new property</p>
         </div>
 
@@ -218,7 +218,7 @@
                 {{ isSubmitting ? 'Adding Property...' : 'Add Property' }}
               </button>
               <router-link 
-                to="/staff"
+                :to="dashboardPath"
                 class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors text-center"
               >
                 Cancel
@@ -233,7 +233,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
@@ -241,7 +241,15 @@ import { useUserStore } from '../../stores/userStore'
 import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
+
+const isHostPortal = computed(() => String(route.path || '').startsWith('/host'))
+const basePath = computed(() => (isHostPortal.value ? '/host' : '/staff'))
+const dashboardPath = computed(() => basePath.value)
+const propertiesPath = computed(() => `${basePath.value}/properties`)
+
+const pageTitle = computed(() => (isHostPortal.value ? 'Add New Listing' : 'Add New Property'))
 
 const form = ref({
   title: '',
@@ -301,7 +309,7 @@ async function handleImageUpload(event) {
     import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
   )
 
-  const runWithConcurrency = async (tasks, limit = 3) => {
+  const runWithConcurrency = async (tasks, limit = 4) => {
     const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
       while (tasks.length) {
         const task = tasks.shift()
@@ -422,10 +430,8 @@ async function handleSubmit() {
     }
     uploadedImages.value = []
 
-    // Redirect after delay
-    setTimeout(() => {
-      router.push('/staff/properties')
-    }, 2000)
+    // Redirect immediately for a snappier UX
+    router.push(propertiesPath.value)
 
   } catch (error) {
     console.error('Error adding property:', error)
