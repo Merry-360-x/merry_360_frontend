@@ -106,10 +106,7 @@ const loadProperties = async () => {
     
     const { data, error } = await supabase
       .from('properties')
-      .select(`
-        *,
-        profiles:host_id(first_name, last_name)
-      `)
+      .select('*')
       .order('created_at', { ascending: false })
     
     if (error) {
@@ -122,7 +119,7 @@ const loadProperties = async () => {
       id: p.id,
       name: p.name,
       type: p.property_type || 'Property',
-      host: p.profiles ? `${p.profiles.first_name} ${p.profiles.last_name}` : 'Unknown Host',
+      host: 'Unknown Host',
       location: p.city || p.location || 'Unknown',
       price: p.price_per_night || 0,
       status: p.available ? 'active' : 'inactive',

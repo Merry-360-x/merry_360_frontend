@@ -473,10 +473,7 @@ const loadFeaturedProperties = async () => {
   try {
     const { data, error } = await supabase
       .from('properties')
-      .select(`
-        *,
-        profiles:host_id(first_name, last_name)
-      `)
+      .select('*')
       .eq('available', true)
       .order('created_at', { ascending: false })
       // Pull more than we render so we can derive sections like Top Rated
@@ -488,7 +485,7 @@ const loadFeaturedProperties = async () => {
     const mapped = (data || []).map(p => ({
       id: p.id,
       name: p.name,
-      host: p.profiles ? `${p.profiles.first_name} ${p.profiles.last_name}` : 'Host',
+      host: 'Host',
       location: p.city || p.location,
       price: p.price_per_night,
       rating: p.rating || 4.5,
