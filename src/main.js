@@ -4,9 +4,13 @@ import './style.css'
 import App from './App.vue'
 import router from './router'
 import { supabase } from './services/supabase'
+import { initAlertToToast } from './lib/alertToToast'
 
 // Scroll to top on initial page load
 window.scrollTo(0, 0)
+
+// Replace blocking alert() popups with toast notifications globally
+initAlertToToast()
 
 const app = createApp(App)
 const pinia = createPinia()
