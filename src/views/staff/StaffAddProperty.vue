@@ -317,27 +317,25 @@ async function handleSubmit() {
   isSubmitting.value = true
 
   try {
-    const propertyData = {
-      title: form.value.title,
-      category: form.value.category || 'accommodation',
-      location: form.value.location,
+    const propertyRow = {
+      host_id: userStore.user.id,
+      name: form.value.title,
       description: form.value.description,
-      beds: form.value.beds || 1,
-      baths: form.value.baths || 1,
+      property_type: form.value.category || 'accommodation',
+      location: form.value.location,
+      price_per_night: form.value.price,
+      bedrooms: form.value.beds || 1,
+      bathrooms: form.value.baths || 1,
       max_guests: form.value.maxGuests || 2,
-      price: form.value.price,
-      images: uploadedImages.value,
-      image: uploadedImages.value[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
       amenities: form.value.amenities,
-      vendor_id: userStore.user.id,
-      status: 'active',
-      featured: false,
-      rating: 0
+      images: uploadedImages.value,
+      main_image: uploadedImages.value[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
+      available: true
     }
 
     const { error } = await supabase
-      .from('listings')
-      .insert([propertyData])
+      .from('properties')
+      .insert([propertyRow])
 
     if (error) throw error
 

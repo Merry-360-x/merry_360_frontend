@@ -16,6 +16,29 @@
             </div>
           </div>
 
+          <!-- Stay Details -->
+          <Card padding="lg">
+            <h2 class="text-2xl font-bold mb-6">Stay Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Check-in</label>
+                <Input v-model="stay.checkIn" type="date" :class="errors.checkIn ? 'border-red-500' : ''" />
+                <p v-if="errors.checkIn" class="mt-1 text-sm text-red-600">{{ errors.checkIn }}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Check-out</label>
+                <Input v-model="stay.checkOut" type="date" :class="errors.checkOut ? 'border-red-500' : ''" />
+                <p v-if="errors.checkOut" class="mt-1 text-sm text-red-600">{{ errors.checkOut }}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Guests</label>
+                <Input v-model.number="stay.guests" type="number" min="1" :class="errors.guests ? 'border-red-500' : ''" />
+                <p v-if="errors.guests" class="mt-1 text-sm text-red-600">{{ errors.guests }}</p>
+              </div>
+            </div>
+            <p v-if="errors.dateRange" class="mt-3 text-sm text-red-600">{{ errors.dateRange }}</p>
+          </Card>
+
           <!-- Guest Information -->
           <Card padding="lg">
             <h2 class="text-2xl font-bold mb-6">{{ t('checkout.guestInfo') }}</h2>
@@ -166,30 +189,30 @@
           <Card padding="lg" class="sticky top-24">
             <h3 class="font-bold text-xl mb-4">Booking Summary</h3>
             
-            <div v-if="bookingDetails.image" class="mb-4">
-              <img loading="lazy" :src="bookingDetails.image" :alt="bookingDetails.name" class="w-full h-32 object-cover rounded-button mb-3" />
-              <h4 class="font-semibold text-lg">{{ bookingDetails.name }}</h4>
-              <p class="text-sm text-text-secondary">{{ bookingDetails.location }}</p>
+            <div v-if="property.image" class="mb-4">
+              <img loading="lazy" :src="property.image" :alt="property.name" class="w-full h-32 object-cover rounded-button mb-3" />
+              <h4 class="font-semibold text-lg">{{ property.name }}</h4>
+              <p class="text-sm text-text-secondary">{{ property.location }}</p>
             </div>
 
             <div class="space-y-2 py-4 border-t border-b border-gray-200 text-sm">
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-in</span>
-                <span class="font-medium">{{ formatDate(bookingDetails.checkIn) }}</span>
+                <span class="font-medium">{{ formatDate(stay.checkIn) }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-out</span>
-                <span class="font-medium">{{ formatDate(bookingDetails.checkOut) }}</span>
+                <span class="font-medium">{{ formatDate(stay.checkOut) }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Guests</span>
-                <span class="font-medium">{{ bookingDetails.guests }} {{ bookingDetails.guests === 1 ? 'Guest' : 'Guests' }}</span>
+                <span class="font-medium">{{ stay.guests }} {{ stay.guests === 1 ? 'Guest' : 'Guests' }}</span>
               </div>
             </div>
 
             <div class="space-y-3 py-4 border-b border-gray-200">
               <div class="flex justify-between text-sm">
-                <span class="text-text-secondary">{{ currencyStore.formatPrice(bookingDetails.price) }} × {{ nights }} {{ nights === 1 ? 'night' : 'nights' }}</span>
+                <span class="text-text-secondary">{{ currencyStore.formatPrice(property.price) }} × {{ nights }} {{ nights === 1 ? 'night' : 'nights' }}</span>
                 <span class="font-semibold">{{ currencyStore.formatPrice(subtotal) }}</span>
               </div>
               <div class="flex justify-between text-sm">
@@ -215,7 +238,7 @@
               :loading="processing"
               @click="confirmBooking"
             >
-              Confirm & Pay
+              {{ paymentMethod === 'free' ? 'Confirm Booking' : 'Confirm & Pay' }}
             </Button>
 
             <div class="mt-4 p-3 bg-success bg-opacity-10 rounded-button">
@@ -244,6 +267,7 @@ import { useUserStore } from '../../stores/userStore'
 import { useTranslation } from '../../composables/useTranslation'
 import { createBooking, supabase } from '../../services/supabase'
 import { startFlutterwavePayment } from '../../services/flutterwave'
+import api from '../../services/api'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -263,14 +287,64 @@ const guestInfo = ref({
   phone: userStore.user?.phone || ''
 })
 
-// Redirect to login if not authenticated
-onMounted(() => {
+const property = ref({
+  id: null,
+  name: '',
+  location: '',
+  price: 0,
+  image: ''
+})
+
+const stay = ref({
+  checkIn: '',
+  checkOut: '',
+  guests: 2
+})
+
+function toDateInputValue(date) {
+  return date.toISOString().split('T')[0]
+}
+
+async function loadProperty() {
+  const { id } = route.params
+  if (!id) {
+    router.push('/accommodation')
+    return
+  }
+
+  const response = await api.accommodations.getById(id)
+  const data = response?.data
+  if (!data) {
+    router.push('/accommodation')
+    return
+  }
+
+  property.value = {
+    id: data.id,
+    name: data.name,
+    location: data.location,
+    price: data.price,
+    image: data.images?.[0] || data.image
+  }
+}
+
+// Hydrate auth + defaults
+onMounted(async () => {
+  await userStore.initAuth()
   if (!userStore.isAuthenticated) {
     router.push('/login')
+    return
   }
-  if (!bookingDetails.value.id || !bookingDetails.value.name) {
-    router.push('/accommodation')
-  }
+
+  await loadProperty()
+
+  // Default stay dates
+  const checkIn = new Date()
+  checkIn.setDate(checkIn.getDate() + 7)
+  const checkOut = new Date()
+  checkOut.setDate(checkOut.getDate() + 10)
+  stay.value.checkIn = toDateInputValue(checkIn)
+  stay.value.checkOut = toDateInputValue(checkOut)
 })
 
 const paymentMethod = ref('free')
@@ -283,30 +357,18 @@ const specialRequests = ref('')
 const acceptTerms = ref(false)
 const processing = ref(false)
 
-// Get booking details from route params
-const bookingDetails = ref({
-  id: route.query.id || null,
-  name: route.query.name || '',
-  location: route.query.location || '',
-  price: parseFloat(route.query.price) || 0,
-  image: route.query.image || '',
-  checkIn: route.query.checkIn || '',
-  checkOut: route.query.checkOut || '',
-  guests: parseInt(route.query.guests) || 2
-})
-
 // Calculate nights between check-in and check-out
 const nights = computed(() => {
-  if (!bookingDetails.value.checkIn || !bookingDetails.value.checkOut) return 1
-  const checkIn = new Date(bookingDetails.value.checkIn)
-  const checkOut = new Date(bookingDetails.value.checkOut)
+  if (!stay.value.checkIn || !stay.value.checkOut) return 1
+  const checkIn = new Date(stay.value.checkIn)
+  const checkOut = new Date(stay.value.checkOut)
   const diffTime = Math.abs(checkOut - checkIn)
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   return diffDays || 1
 })
 
 // Calculate totals
-const subtotal = computed(() => bookingDetails.value.price * nights.value)
+const subtotal = computed(() => (property.value.price || 0) * nights.value)
 const serviceFee = computed(() => Math.round(subtotal.value * 0.05)) // 5% service fee
 const taxes = computed(() => Math.round(subtotal.value * 0.03)) // 3% taxes
 const total = computed(() => subtotal.value + serviceFee.value + taxes.value)
@@ -316,6 +378,34 @@ const errors = ref({})
 const validateBooking = () => {
   errors.value = {}
   let isValid = true
+
+  // Validate property loaded
+  if (!property.value.id) {
+    errors.value.general = 'Property not found'
+    return false
+  }
+
+  // Validate stay details
+  if (!stay.value.checkIn) {
+    errors.value.checkIn = 'Check-in date is required'
+    isValid = false
+  }
+  if (!stay.value.checkOut) {
+    errors.value.checkOut = 'Check-out date is required'
+    isValid = false
+  }
+  if (!stay.value.guests || stay.value.guests < 1) {
+    errors.value.guests = 'Guests must be at least 1'
+    isValid = false
+  }
+  if (stay.value.checkIn && stay.value.checkOut) {
+    const inDate = new Date(stay.value.checkIn)
+    const outDate = new Date(stay.value.checkOut)
+    if (!(outDate > inDate)) {
+      errors.value.dateRange = 'Check-out must be after check-in'
+      isValid = false
+    }
+  }
 
   // Validate guest info
   if (!guestInfo.value.firstName.trim()) {
@@ -374,37 +464,18 @@ const confirmBooking = async () => {
   errors.value = {}
   
   try {
-    // Create booking data
-    const bookingData = {
+    const bookingInsert = {
       user_id: userStore.user.id,
-      accommodation_id: bookingDetails.value.id,
-      accommodation_name: bookingDetails.value.name,
-      accommodation_location: bookingDetails.value.location,
-      accommodation_image: bookingDetails.value.image,
-      check_in: bookingDetails.value.checkIn,
-      check_out: bookingDetails.value.checkOut,
-      guests: bookingDetails.value.guests,
-      nights: nights.value,
-      price_per_night: bookingDetails.value.price,
-      subtotal: subtotal.value,
-      service_fee: serviceFee.value,
-      taxes: taxes.value,
-      total_amount: total.value,
-      currency: currencyStore.selectedCurrency,
-      guest_first_name: guestInfo.value.firstName,
-      guest_last_name: guestInfo.value.lastName,
-      guest_email: guestInfo.value.email,
-      guest_phone: guestInfo.value.phone,
-      payment_method: paymentMethod.value === 'free' ? 'pay_on_arrival' : 'flutterwave',
-      payment_status: paymentMethod.value === 'free' ? 'completed' : 'pending',
-      booking_status: paymentMethod.value === 'free' ? 'confirmed' : 'pending_payment',
-      special_requests: specialRequests.value,
-      booking_number: `MRY${Date.now().toString().slice(-8)}`,
-      created_at: new Date().toISOString()
+      property_id: property.value.id,
+      check_in: stay.value.checkIn,
+      check_out: stay.value.checkOut,
+      guests: stay.value.guests,
+      total_price: total.value,
+      status: paymentMethod.value === 'free' ? 'confirmed' : 'pending',
+      payment_status: paymentMethod.value === 'free' ? 'pending' : 'pending'
     }
-    
-    // Save to Supabase
-    const booking = await createBooking(bookingData)
+
+    const booking = await createBooking(bookingInsert)
     
     if (!booking) {
       throw new Error('Failed to create booking')
@@ -421,7 +492,7 @@ const confirmBooking = async () => {
         path: '/profile',
         query: { 
           bookingSuccess: 'true',
-          bookingNumber: bookingData.booking_number,
+          bookingId: booking.id,
           tab: 'trips'
         }
       })
@@ -440,11 +511,10 @@ const confirmBooking = async () => {
       currency: currencyStore.selectedCurrency,
       customer,
       title: 'Merry 360 Booking',
-      description: bookingData.booking_number,
+      description: `Booking ${booking.id}`,
       txRef: `BOOKING_${booking.id}`,
       meta: {
         booking_id: booking.id,
-        booking_number: bookingData.booking_number,
         payment_method: paymentMethod.value
       }
     })
@@ -452,14 +522,14 @@ const confirmBooking = async () => {
     if (response?.status === 'successful') {
       await supabase
         .from('bookings')
-        .update({ payment_status: 'paid', booking_status: 'confirmed' })
+        .update({ payment_status: 'paid', status: 'confirmed' })
         .eq('id', booking.id)
 
       router.push({
         path: '/profile',
         query: { 
           bookingSuccess: 'true',
-          bookingNumber: bookingData.booking_number,
+          bookingId: booking.id,
           tab: 'trips'
         }
       })

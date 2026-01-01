@@ -5,11 +5,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:supabase:connection": "node test-supabase-connection.mjs",
+    "test:supabase:real": "node test-real-operations.mjs",
+    "test:supabase:db": "node test-database-operations.mjs",
+    "test:supabase:all": "node test-all-features.mjs",
+    "test:admin-staff:live": "node test-admin-staff-live.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
+    "dotenv": "^16.6.1",
     "jwt-decode": "^3.1.2",
+    "pg": "^8.16.3",
     "pinia": "^2.3.1",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"

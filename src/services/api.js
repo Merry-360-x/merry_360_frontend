@@ -3,8 +3,8 @@
  * Centralized HTTP client for all API requests
  */
 
-// Import Supabase API (real database operations)
-import supabaseApi from './supabaseApi'
+// Import Supabase API adapter (real database operations, matches api.* shape)
+import supabaseApiAdapter from './supabaseApiAdapter'
 
 // Import mock API for fallback
 import { mockApiService } from './mockApi'
@@ -257,4 +257,4 @@ export const api = {
 
 // Export both for flexibility
 // Priority: Supabase > Mock > HTTP API
-export default USE_SUPABASE ? supabaseApi : (USE_MOCK_API ? mockApiService : api)
+export default USE_SUPABASE ? supabaseApiAdapter : (USE_MOCK_API ? mockApiService : api)

@@ -2,25 +2,53 @@
 
 /**
  * Supabase Database Connection Test
- * Tests connection to Supabase database using the provided connection string
+ * Tests a direct Postgres connection using a connection string from environment variables.
+ *
+ * Required env var (choose one):
+ * - SUPABASE_DB_URL (recommended)
+ * - DATABASE_URL
  */
 
+import 'dotenv/config'
 import pg from 'pg'
 const { Client } = pg
 
-// Connection string provided by user
-const connectionString = 'postgresql://postgres:Davy$100@db.gzmxelgcdpaeklmabszo.supabase.co:5432/postgres'
+const connectionString = process.env.SUPABASE_DB_URL || process.env.DATABASE_URL
+
+if (!connectionString) {
+  console.error('\n❌ Missing database connection string')
+  console.error('Set SUPABASE_DB_URL (recommended) or DATABASE_URL in your .env')
+  process.exit(1)
+}
 
 async function testDatabaseConnection() {
   console.log('\n🔍 Testing Supabase Database Connection...\n')
-  console.log('Connection Details:')
-  console.log('  Host: db.gzmxelgcdpaeklmabszo.supabase.co')
-  console.log('  Port: 5432')
-  console.log('  Database: postgres')
-  console.log('  User: postgres\n')
+  let parsed
+  try {
+    parsed = new URL(connectionString)
+  } catch {
+    parsed = null
+  }
+
+  const host = parsed?.hostname || '(unknown)'
+  const port = parsed?.port || '(default)'
+  const database = (parsed?.pathname || '').replace(/^\//, '') || '(unknown)'
+  const username = parsed?.username || '(unknown)'
+
+  // Hosted Supabase Postgres requires SSL. We enable it automatically when it looks like hosted.
+  const useSsl = Boolean(parsed && /\.supabase\.co$/i.test(host))
+
+  console.log('Connection Details (sanitized):')
+  console.log(`  Host: ${host}`)
+  console.log(`  Port: ${port}`)
+  console.log(`  Database: ${database}`)
+  console.log(`  User: ${username}`)
+  console.log(`  SSL: ${useSsl ? 'enabled' : 'disabled'}`)
+  console.log('  Source: env (SUPABASE_DB_URL/DATABASE_URL)\n')
 
   const client = new Client({
-    connectionString: connectionString,
+    connectionString,
+    ssl: useSsl ? { rejectUnauthorized: false } : undefined,
   })
 
   try {

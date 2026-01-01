@@ -20,24 +20,37 @@ console.log('╚═════════════════════�
 console.log('ℹ️  This test uses existing authenticated session');
 console.log('ℹ️  No new users will be created (avoiding email bounces)\n');
 
-// Get current session
-const { data: { session } } = await supabase.auth.getSession();
-let userId = session?.user?.id;
+// In Node, there is no persisted browser session. We sign in using env vars.
+const testEmail = process.env.TEST_USER_EMAIL;
+const testPassword = process.env.TEST_USER_PASSWORD;
 
-if (!userId) {
-  console.log('⚠️  No active session found.');
-  console.log('📝 Please sign in to your Supabase project first:\n');
-  console.log('   1. Go to: https://supabase.com/dashboard/project/gzmxelgcdpaeklmabszo');
-  console.log('   2. Use the Authentication section to create a test user');
-  console.log('   3. Sign in with that user in your app');
-  console.log('   4. Run this test again\n');
-  
-  console.log('🔧 OR, for testing purposes, I can create data with RLS disabled.');
-  console.log('   Would you like me to create a version that tests database structure only?\n');
+if (!testEmail || !testPassword) {
+  console.log('⚠️  Missing TEST_USER_EMAIL / TEST_USER_PASSWORD.');
+  console.log('📝 Create a Supabase Auth user, then set these in your .env.local:\n');
+  console.log('   TEST_USER_EMAIL=you@example.com');
+  console.log('   TEST_USER_PASSWORD=your_password\n');
   process.exit(0);
 }
 
-console.log(`✅ Found active session for user: ${userId}\n`);
+console.log('🔐 Signing in test user...');
+const { data: signinData, error: signinError } = await supabase.auth.signInWithPassword({
+  email: testEmail,
+  password: testPassword,
+});
+
+if (signinError) {
+  console.log(`❌ Sign-in failed: ${signinError.message}`);
+  process.exit(1);
+}
+
+const userId = signinData.user?.id;
+
+if (!userId) {
+  console.log('❌ Sign-in succeeded but no user id returned.');
+  process.exit(1);
+}
+
+console.log(`✅ Signed in as user: ${userId}\n`);
 
 let listingId = null;
 let bookingId = null;

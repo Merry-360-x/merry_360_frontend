@@ -5,12 +5,19 @@
  * Tests ALL features on the LIVE production site
  */
 
+import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
 import readline from 'readline'
 
-const PRODUCTION_URL = 'https://merry-360x.vercel.app'
-const SUPABASE_URL = 'https://gzmxelgcdpaeklmabszo.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6bXhlbGdjZHBhZWtsbWFic3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMjIxOTEsImV4cCI6MjA4MTc5ODE5MX0.nPNTqN3O6eWouM_dPafFpa93YDn8iZDWBdDnS1ZJBb8'
+const PRODUCTION_URL = process.env.PRODUCTION_URL || process.env.VITE_PRODUCTION_URL || 'https://merry-360x.vercel.app'
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL
+const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error('❌ Missing Supabase credentials')
+  console.error('Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env/.env.local')
+  process.exit(1)
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 

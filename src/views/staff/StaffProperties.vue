@@ -82,28 +82,28 @@
               class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row transition-colors duration-200"
             >
               <img 
-                :src="property.image || property.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400'"
-                :alt="property.title"
+                :src="property.main_image || property.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400'"
+                :alt="property.name"
                 class="w-full md:w-64 h-48 md:h-auto object-cover"
               />
               <div class="flex-1 p-6">
                 <div class="flex items-start justify-between mb-4">
                   <div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ property.title }}</h3>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ property.name }}</h3>
                     <p class="text-gray-600 dark:text-gray-400">{{ property.location }}</p>
                   </div>
                   <span 
                     class="px-3 py-1 text-sm rounded-full"
-                    :class="property.status === 'active' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300'"
+                    :class="property.available ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300'"
                   >
-                    {{ property.status || 'active' }}
+                    {{ property.available ? 'active' : 'inactive' }}
                   </span>
                 </div>
                 <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">{{ property.description }}</p>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
-                    <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">${{ property.price }}/night</span>
-                    <span class="text-gray-500 dark:text-gray-500">{{ property.beds }} beds • {{ property.baths }} baths</span>
+                    <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">${{ property.price_per_night }}/night</span>
+                    <span class="text-gray-500 dark:text-gray-500">{{ property.bedrooms }} beds • {{ property.bathrooms }} baths</span>
                   </div>
                   <div class="flex gap-2">
                     <button 
@@ -131,7 +131,7 @@
     <div v-if="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
         <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Delete Property</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to delete "{{ propertyToDelete?.title }}"? This action cannot be undone.</p>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to delete "{{ propertyToDelete?.name }}"? This action cannot be undone.</p>
         <div class="flex gap-4">
           <button 
             @click="showDeleteModal = false"
@@ -180,9 +180,9 @@ async function loadProperties() {
     }
 
     const { data, error } = await supabase
-      .from('listings')
+      .from('properties')
       .select('*')
-      .eq('vendor_id', userId)
+      .eq('host_id', userId)
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -209,7 +209,7 @@ async function deleteProperty() {
   deleting.value = true
   try {
     const { error } = await supabase
-      .from('listings')
+      .from('properties')
       .delete()
       .eq('id', propertyToDelete.value.id)
 

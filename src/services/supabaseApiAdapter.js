@@ -1,0 +1,285 @@
+/**
+ * Supabase API Adapter
+ *
+ * Provides the same interface shape as `src/services/api.js`'s HTTP client
+ * (api.accommodations.getAll, api.tours.getAll, etc.) but executes directly
+ * against Supabase.
+ */
+
+import { supabase } from './supabase'
+
+function mapPropertyRowToAccommodation(row) {
+  if (!row) return null
+
+  return {
+    id: row.id,
+    name: row.name,
+    type: row.property_type || 'Accommodation',
+    location: row.city || row.location,
+    price: row.price_per_night,
+    rating: row.rating ?? 0,
+    reviews: row.reviews_count ?? 0,
+    description: row.description || '',
+    amenities: row.amenities || [],
+    image: row.main_image || row.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
+    images: row.images || (row.main_image ? [row.main_image] : []),
+    ecoFriendly: false
+  }
+}
+
+export const supabaseApiAdapter = {
+  accommodations: {
+    getAll: async (params = {}) => {
+      const { search, limit } = params || {}
+
+      let query = supabase
+        .from('properties')
+        .select('*')
+        .eq('available', true)
+        .order('created_at', { ascending: false })
+
+      if (search && String(search).trim()) {
+        const term = String(search).trim()
+        query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+      }
+
+      if (limit) {
+        query = query.limit(limit)
+      }
+
+      const { data, error } = await query
+      if (error) throw error
+
+      return { data: (data || []).map(mapPropertyRowToAccommodation) }
+    },
+
+    getById: async (id) => {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (error) throw error
+      return { data: mapPropertyRowToAccommodation(data) }
+    },
+
+    search: async (query) => {
+      return supabaseApiAdapter.accommodations.getAll({ search: query })
+    },
+
+    getNearby: async () => {
+      // No geo columns currently in schema; return latest available.
+      return supabaseApiAdapter.accommodations.getAll({})
+    },
+
+    getReviews: async (id) => {
+      // Reviews table is keyed to listings in some parts of the codebase; for
+      // properties, we return an empty list unless a property_reviews table exists.
+      return { data: [], accommodationId: id }
+    },
+
+    create: async (propertyData) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const user = auth?.user
+      if (!user) throw new Error('Not authenticated')
+
+      const insertRow = {
+        host_id: user.id,
+        name: propertyData.name,
+        description: propertyData.description || null,
+        property_type: propertyData.type || propertyData.property_type || null,
+        location: propertyData.location,
+        price_per_night: propertyData.price,
+        bedrooms: propertyData.beds ?? propertyData.bedrooms ?? 1,
+        bathrooms: propertyData.baths ?? propertyData.bathrooms ?? 1,
+        max_guests: propertyData.max_guests ?? propertyData.maxGuests ?? 2,
+        amenities: propertyData.amenities || [],
+        images: propertyData.images || (propertyData.image ? [propertyData.image] : []),
+        main_image: propertyData.image || propertyData.main_image || null,
+        available: true
+      }
+
+      const { data, error } = await supabase
+        .from('properties')
+        .insert([insertRow])
+        .select('*')
+        .single()
+
+      if (error) throw error
+      return { data: mapPropertyRowToAccommodation(data) }
+    }
+  },
+
+  tours: {
+    getAll: async (params = {}) => {
+      const limit = params?.limit
+      let query = supabase
+        .from('tours')
+        .select('*')
+        .eq('available', true)
+        .order('created_at', { ascending: false })
+
+      if (limit) query = query.limit(limit)
+
+      const { data, error } = await query
+      if (error) throw error
+
+      // Return shape consistent with existing pages that use tours.
+      return {
+        data: (data || []).map(t => ({
+          id: t.id,
+          title: t.name,
+          destination: t.destination,
+          days: t.duration_days,
+          price: t.price,
+          rating: t.rating || 0,
+          reviews: t.reviews_count || 0,
+          image: t.main_image
+        }))
+      }
+    },
+
+    getById: async (id) => {
+      const { data, error } = await supabase
+        .from('tours')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (error) throw error
+      return { data }
+    },
+
+    search: async (query) => {
+      const term = String(query || '').trim()
+      let q = supabase
+        .from('tours')
+        .select('*')
+        .eq('available', true)
+        .order('created_at', { ascending: false })
+
+      if (term) {
+        q = q.or(`name.ilike.%${term}%,destination.ilike.%${term}%`)
+      }
+
+      const { data, error } = await q
+      if (error) throw error
+      return { data }
+    },
+
+    create: async (tourData) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const user = auth?.user
+      if (!user) throw new Error('Not authenticated')
+
+      // Minimal pass-through; table columns vary between environments.
+      const { data, error } = await supabase
+        .from('tours')
+        .insert([tourData])
+        .select('*')
+        .single()
+
+      if (error) throw error
+      return { data }
+    },
+
+    book: async (tourId, data) => {
+      // Booking tours not implemented in DB adapter yet.
+      return { data: { tourId, ...data } }
+    }
+  },
+
+  transport: {
+    getRoutes: async (params = {}) => {
+      const limit = params?.limit
+
+      // Some environments store transport routes separately; fall back gracefully.
+      let query = supabase
+        .from('transport_routes')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (limit) query = query.limit(limit)
+
+      const { data, error } = await query
+      if (error) {
+        // If the table doesn't exist, return an empty list.
+        if (error.code === '42P01') return { data: [] }
+        throw error
+      }
+
+      return { data: data || [] }
+    },
+
+    getVehicles: async (params = {}) => {
+      const limit = params?.limit
+      let query = supabase
+        .from('vehicles')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (limit) query = query.limit(limit)
+
+      const { data, error } = await query
+      if (error) {
+        if (error.code === '42P01') return { data: [] }
+        throw error
+      }
+
+      return { data: data || [] }
+    },
+
+    create: async (transportData) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const user = auth?.user
+      if (!user) throw new Error('Not authenticated')
+
+      // Attempt insert into vehicles; if schema differs, this will surface the error.
+      const { data, error } = await supabase
+        .from('vehicles')
+        .insert([transportData])
+        .select('*')
+        .single()
+
+      if (error) throw error
+      return { data }
+    },
+
+    book: async (data) => {
+      return { data }
+    }
+  },
+
+  stories: {
+    getAll: async () => {
+      const { data, error } = await supabase
+        .from('stories')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        if (error.code === '42P01') return []
+        throw error
+      }
+
+      return (data || []).map(s => ({
+        ...s,
+        date: s.created_at ? new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''
+      }))
+    },
+
+    create: async (storyData) => {
+      const { data, error } = await supabase
+        .from('stories')
+        .insert([storyData])
+        .select('*')
+        .single()
+
+      if (error) throw error
+      return data
+    }
+  }
+}
+
+export default supabaseApiAdapter
