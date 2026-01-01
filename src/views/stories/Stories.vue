@@ -386,6 +386,7 @@ const creating = ref(false)
 const storyComments = ref([])
 const newComment = ref('')
 const addingComment = ref(false)
+const uploadingMedia = ref(false)
 
 const newStory = ref({
   title: '',
@@ -402,9 +403,11 @@ onMounted(async () => {
 
 async function loadStories() {
   try {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     const { data, error } = await supabase
       .from('stories')
       .select('*, story_likes(count), story_comments(count)')
+      .gte('created_at', since)
       .order('created_at', { ascending: false })
 
     if (error) {
@@ -451,31 +454,47 @@ async function handleStoryImage(event) {
   const file = event.target.files[0]
   if (!file) return
 
+  uploadingMedia.value = true
   newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 
-  // Show preview
-  // Use an object URL for videos to avoid huge base64 strings.
-  if (newStory.value.mediaType === 'video') {
-    newStory.value.imagePreview = URL.createObjectURL(file)
-  } else {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      newStory.value.imagePreview = e.target.result
-    }
-    reader.readAsDataURL(file)
-  }
-
-  // Upload to Cloudinary if configured
   try {
+    // Show preview
+    // Use an object URL for videos to avoid huge base64 strings.
+    if (newStory.value.mediaType === 'video') {
+      newStory.value.imagePreview = URL.createObjectURL(file)
+    } else {
+      const preview = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = (e) => resolve(e.target.result)
+        reader.onerror = () => reject(new Error('Failed to read file'))
+        reader.readAsDataURL(file)
+      })
+      newStory.value.imagePreview = preview
+    }
+
+    // Upload to Cloudinary if configured
     if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
       const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
       newStory.value.image = result.secure_url
     } else {
-      newStory.value.image = newStory.value.imagePreview
+      // Without Cloudinary, videos cannot be stored reliably (object URLs won't work for others).
+      if (newStory.value.mediaType === 'video') {
+        alert('Video uploads require Cloudinary configuration. Please upload an image instead.')
+        newStory.value.image = null
+        newStory.value.imagePreview = null
+        newStory.value.mediaType = 'image'
+      } else {
+        newStory.value.image = newStory.value.imagePreview
+      }
     }
   } catch (error) {
     console.error('Upload error:', error)
-    newStory.value.image = newStory.value.imagePreview
+    // Best-effort fallback for images
+    if (newStory.value.mediaType !== 'video') {
+      newStory.value.image = newStory.value.imagePreview
+    }
+  } finally {
+    uploadingMedia.value = false
   }
 }
 
@@ -497,6 +516,11 @@ function isVideoUrl(url) {
 async function createStory() {
   if (!newStory.value.title || !newStory.value.content) {
     alert('Please fill in all required fields')
+    return
+  }
+
+  if (uploadingMedia.value) {
+    alert('Please wait for your media to finish uploading')
     return
   }
 
@@ -531,7 +555,7 @@ async function createStory() {
     })
 
     // Reset form
-    newStory.value = { title: '', location: '', content: '', image: null, imagePreview: null }
+    newStory.value = { title: '', location: '', content: '', image: null, imagePreview: null, mediaType: 'image' }
     showCreateModal.value = false
 
   } catch (error) {

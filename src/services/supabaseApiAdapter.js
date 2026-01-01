@@ -285,9 +285,11 @@ export const supabaseApiAdapter = {
 
   stories: {
     getAll: async () => {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
       const { data, error } = await supabase
         .from('stories')
         .select('*')
+        .gte('created_at', since)
         .order('created_at', { ascending: false })
 
       if (error) {
