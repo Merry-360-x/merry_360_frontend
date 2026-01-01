@@ -181,7 +181,7 @@ async function loadProperties() {
 
     const { data, error } = await supabase
       .from('properties')
-      .select('*')
+      .select('id,host_id,name,location,description,available,main_image,images,price_per_night,bedrooms,bathrooms,created_at')
       .eq('host_id', userId)
       .order('created_at', { ascending: false })
 

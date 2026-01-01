@@ -218,15 +218,37 @@ async function loadStaffData() {
       return
     }
 
-    // Load properties created by this staff member
-    const { data: propertiesData, error: propertiesError } = await supabase
-      .from('properties')
-      .select('*')
-      .eq('host_id', userId)
-      .order('created_at', { ascending: false })
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 
-    if (propertiesError) throw propertiesError
-    properties.value = (propertiesData || []).map((row) => ({
+    const [propertiesCountRes, recentPropertiesRes, bookingsRes] = await Promise.all([
+      supabase
+        .from('properties')
+        .select('id', { count: 'exact', head: true })
+        .eq('host_id', userId),
+
+      supabase
+        .from('properties')
+        .select('id,name,location,price_per_night,images,main_image,available,created_at')
+        .eq('host_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(6),
+
+      // Bookings for this staff's properties (this month, paid)
+      // Uses FK join bookings.property_id -> properties.id.
+      supabase
+        .from('bookings')
+        .select('total_price, properties!inner(host_id)', { count: 'exact' })
+        .eq('properties.host_id', userId)
+        .eq('payment_status', 'paid')
+        .gte('created_at', monthStart)
+    ])
+
+    if (propertiesCountRes.error) throw propertiesCountRes.error
+    if (recentPropertiesRes.error) throw recentPropertiesRes.error
+    if (bookingsRes.error) throw bookingsRes.error
+
+    properties.value = (recentPropertiesRes.data || []).map((row) => ({
       id: row.id,
       title: row.name || 'Untitled Property',
       location: row.location || '',
@@ -236,26 +258,14 @@ async function loadStaffData() {
       status: row.available === false ? 'inactive' : 'active'
     }))
 
-    // Load bookings for staff's properties
-    const propertyIds = properties.value.map(p => p.id)
-    let bookingsCount = 0
-    let totalRevenue = 0
-
-    if (propertyIds.length > 0) {
-      const { data: bookingsData } = await supabase
-        .from('bookings')
-        .select('total_price')
-        .in('property_id', propertyIds)
-        .eq('payment_status', 'paid')
-
-      if (bookingsData) {
-        bookingsCount = bookingsData.length
-        totalRevenue = bookingsData.reduce((sum, b) => sum + parseFloat(b.total_price || 0), 0)
-      }
-    }
+    const bookingsCount = bookingsRes.count || 0
+    const totalRevenue = (bookingsRes.data || []).reduce(
+      (sum, b) => sum + Number(b?.total_price || 0),
+      0
+    )
 
     stats.value = {
-      properties: properties.value.length,
+      properties: propertiesCountRes.count || 0,
       bookings: bookingsCount,
       revenue: totalRevenue
     }
