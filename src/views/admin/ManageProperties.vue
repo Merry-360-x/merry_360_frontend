@@ -514,6 +514,7 @@ const editingProperty = ref({
   bedrooms: 0,
   bathrooms: 0,
   property_type: 'Apartment',
+  available: true,
   description: '',
   amenities: [],
   images: [],
@@ -594,6 +595,7 @@ const saveProperty = async () => {
     const propertyData = {
       ...editingProperty.value,
       property_type: normalizePropertyType(editingProperty.value.property_type),
+      available: editingProperty.value.available ?? true,
       amenities: amenitiesInput.value.split(',').map(a => a.trim()).filter(Boolean),
       images: imagesInput.value.split(',').map(i => i.trim()).filter(Boolean),
       updated_at: new Date().toISOString()
@@ -714,6 +716,7 @@ const closeEditModal = () => {
     bedrooms: 0,
     bathrooms: 0,
     property_type: 'Apartment',
+    available: true,
     description: '',
     amenities: [],
     images: []
