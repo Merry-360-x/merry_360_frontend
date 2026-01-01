@@ -527,6 +527,7 @@ import { useCurrencyStore } from '../../stores/currency'
 import { useLanguageStore } from '../../stores/language'
 import { useThemeStore } from '../../stores/theme'
 import AIConcierge from '../ai/AIConcierge.vue'
+import { confirmDialog } from '../../composables/useConfirm'
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -567,13 +568,19 @@ const closeUserMenu = () => {
   showUserMenu.value = false
 }
 
-const handleLogout = () => {
-  if (confirm('Are you sure you want to logout?')) {
-    userStore.logout()
-    showUserMenu.value = false
-    mobileMenuOpen.value = false
-    router.push('/login')
-  }
+const handleLogout = async () => {
+  const ok = await confirmDialog('Are you sure you want to logout?', {
+    title: 'Logout',
+    confirmText: 'Logout',
+    cancelText: 'Cancel'
+  })
+
+  if (!ok) return
+
+  userStore.logout()
+  showUserMenu.value = false
+  mobileMenuOpen.value = false
+  router.push('/login')
 }
 
 // Click outside directive

@@ -581,6 +581,7 @@ import Button from '@/components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
 import { signOut as signOutAuth } from '@/services/auth'
 import { supabase } from '@/services/supabase'
+import { confirmDialog } from '@/composables/useConfirm'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -828,7 +829,13 @@ const setup2FA = () => {
 }
 
 const handleLogout = async () => {
-  if (confirm('Are you sure you want to logout?')) {
+  const ok = await confirmDialog('Are you sure you want to logout?', {
+    title: 'Logout',
+    confirmText: 'Logout',
+    cancelText: 'Cancel'
+  })
+
+  if (ok) {
     try {
       await signOutAuth()
     } catch (err) {

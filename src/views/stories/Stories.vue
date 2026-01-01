@@ -400,6 +400,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
+import { confirmDialog } from '../../composables/useConfirm'
 
 const userStore = useUserStore()
 
@@ -595,7 +596,11 @@ async function deleteStory(story) {
     return
   }
 
-  const ok = confirm('Delete this story? This cannot be undone.')
+  const ok = await confirmDialog('Delete this story? This cannot be undone.', {
+    title: 'Delete Story',
+    confirmText: 'Delete',
+    cancelText: 'Cancel'
+  })
   if (!ok) return
 
   deletingStoryId.value = story.id

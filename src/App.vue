@@ -1,12 +1,14 @@
 <template>
   <router-view />
   <ToastNotification />
+  <ConfirmDialog />
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
 import { useUserStore } from './stores/userStore'
 import ToastNotification from './components/common/ToastNotification.vue'
+import ConfirmDialog from './components/common/ConfirmDialog.vue'
 
 const userStore = useUserStore()
 

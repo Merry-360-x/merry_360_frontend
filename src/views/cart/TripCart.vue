@@ -127,6 +127,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import MainLayout from '../../components/layout/MainLayout.vue'
+import { confirmDialog } from '../../composables/useConfirm'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -155,10 +156,15 @@ const removeItem = (item) => {
   userStore.removeFromCart(item.id, item.type)
 }
 
-const clearAllItems = () => {
-  if (confirm('Are you sure you want to clear your cart?')) {
-    userStore.clearCart()
-  }
+const clearAllItems = async () => {
+  const ok = await confirmDialog('Are you sure you want to clear your cart?', {
+    title: 'Clear Cart',
+    confirmText: 'Clear',
+    cancelText: 'Cancel'
+  })
+
+  if (!ok) return
+  userStore.clearCart()
 }
 
 const applyPoints = () => {

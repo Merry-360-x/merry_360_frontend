@@ -496,6 +496,7 @@ import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 import ToastNotification from '../../components/common/ToastNotification.vue'
+import { confirmDialog } from '../../composables/useConfirm'
 
 const properties = ref([])
 const loading = ref(true)
@@ -635,7 +636,12 @@ const saveProperty = async () => {
 
 // Delete property
 const deleteProperty = async (id) => {
-  if (!confirm('Are you sure you want to delete this property?')) return
+  const ok = await confirmDialog('Are you sure you want to delete this property?', {
+    title: 'Delete Property',
+    confirmText: 'Delete',
+    cancelText: 'Cancel'
+  })
+  if (!ok) return
   
   try {
     const { error } = await supabase
