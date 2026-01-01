@@ -119,36 +119,34 @@ const loadPayments = async () => {
     
     const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select(`
+        id,
+        created_at,
+        total_price,
+        payment_method,
+        payment_status,
+        status,
+        profiles!bookings_user_id_fkey(
+          id,
+          first_name,
+          last_name,
+          email
+        ),
+        listings!bookings_listing_id_fkey(
+          id,
+          title
+        )
+      `)
       .order('created_at', { ascending: false })
 
     if (error) throw error
 
     const bookings = data || []
-    const userIds = [...new Set(bookings.map(b => b.user_id).filter(Boolean))]
-    const listingIds = [...new Set(bookings.map(b => b.listing_id).filter(Boolean))]
-
-    const [profilesRes, listingsRes] = await Promise.all([
-      userIds.length
-        ? supabase.from('profiles').select('id, first_name, last_name, email').in('id', userIds)
-        : Promise.resolve({ data: [], error: null }),
-      listingIds.length
-        ? supabase.from('listings').select('id, title').in('id', listingIds)
-        : Promise.resolve({ data: [], error: null })
-    ])
-
-    if (profilesRes.error) throw profilesRes.error
-    if (listingsRes.error) throw listingsRes.error
-
-    const profilesById = new Map((profilesRes.data || []).map(p => [p.id, p]))
-    const listingsById = new Map((listingsRes.data || []).map(l => [l.id, l]))
 
     payments.value = bookings.map(booking => {
-      const listing = booking.listing_id ? listingsById.get(booking.listing_id) : null
-      const profile = booking.user_id ? profilesById.get(booking.user_id) : null
-      const serviceName = listing?.title || 'Service'
-      const customerName = buildDisplayName(profile)
-      const customerEmail = profile?.email || 'N/A'
+      const serviceName = booking.listings?.title || 'Service'
+      const customerName = buildDisplayName(booking.profiles)
+      const customerEmail = booking.profiles?.email || 'N/A'
       
       return {
         id: booking.id,

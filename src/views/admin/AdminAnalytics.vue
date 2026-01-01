@@ -184,33 +184,32 @@ const loadAnalytics = async () => {
     // Get all bookings with payment info
     const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
-      .select('id, created_at, total_price, payment_status, status, listing_id')
+      .select(`
+        id,
+        created_at,
+        total_price,
+        payment_status,
+        status,
+        listing_id,
+        listings!bookings_listing_id_fkey(id, title)
+      `)
     
     if (bookingsError) throw bookingsError
 
-    const listingIds = [...new Set((bookings || []).map(b => b.listing_id).filter(Boolean))]
-    const { data: listings, error: listingsError } = listingIds.length
-      ? await supabase.from('listings').select('id, title').in('id', listingIds)
-      : { data: [], error: null }
-
-    if (listingsError) throw listingsError
-
-    const listingsById = new Map((listings || []).map(l => [l.id, l]))
+    const bookingRows = bookings || []
     
     // Calculate metrics
     metrics.value = {
-      totalRevenue: (bookings || []).filter(b => b.payment_status === 'paid').reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0),
+      totalRevenue: bookingRows.filter(b => b.payment_status === 'paid').reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0),
       activeUsers: (users || []).length,
-      totalBookings: (bookings || []).length,
-      conversionRate: (bookings || []).length > 0 ? ((bookings.filter(b => b.status === 'confirmed').length / bookings.length) * 100).toFixed(1) : 0
+      totalBookings: bookingRows.length,
+      conversionRate: bookingRows.length > 0 ? ((bookingRows.filter(b => b.status === 'confirmed').length / bookingRows.length) * 100).toFixed(1) : 0
     }
     
     // Calculate top services from bookings
     const serviceCounts = {}
-    ;(bookings || []).forEach(booking => {
-      const serviceName = booking.listing_id
-        ? (listingsById.get(booking.listing_id)?.title || 'Unknown')
-        : 'Unknown'
+    ;(bookingRows || []).forEach(booking => {
+      const serviceName = booking.listings?.title || 'Unknown'
       
       serviceCounts[serviceName] = (serviceCounts[serviceName] || 0) + 1
     })
@@ -239,7 +238,7 @@ const loadAnalytics = async () => {
       .slice(0, 5)
 
     // Revenue trend (last 6 months) from paid bookings
-    const paid = (bookings || []).filter(b => b.payment_status === 'paid')
+    const paid = bookingRows.filter(b => b.payment_status === 'paid')
     const byMonth = new Map()
     for (const b of paid) {
       const k = monthKey(b.created_at)

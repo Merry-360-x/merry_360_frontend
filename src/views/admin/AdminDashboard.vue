@@ -265,32 +265,17 @@ async function loadStats() {
       .eq('host_application_status', 'pending')
     if (pendingHostsError) throw pendingHostsError
     
-    // Load recent bookings (hydrate listing + profile info manually)
-    const { data: bookings, error: bookingsError } = await supabase
+    // Load recent bookings (embedded listing + profile info via FKs)
+    const { data: bookingRows, error: bookingsError } = await supabase
       .from('bookings')
-      .select('*')
+      .select(`
+        *,
+        profiles!bookings_user_id_fkey(first_name, last_name, email),
+        listings!bookings_listing_id_fkey(title)
+      `)
       .order('created_at', { ascending: false })
       .limit(10)
     if (bookingsError) throw bookingsError
-
-    const bookingRows = bookings || []
-    const userIds = [...new Set(bookingRows.map(b => b.user_id).filter(Boolean))]
-    const listingIds = [...new Set(bookingRows.map(b => b.listing_id).filter(Boolean))]
-
-    const [profilesRes, listingsRes] = await Promise.all([
-      userIds.length
-        ? supabase.from('profiles').select('id, first_name, last_name, email').in('id', userIds)
-        : Promise.resolve({ data: [], error: null }),
-      listingIds.length
-        ? supabase.from('listings').select('id, title').in('id', listingIds)
-        : Promise.resolve({ data: [], error: null })
-    ])
-
-    if (profilesRes.error) throw profilesRes.error
-    if (listingsRes.error) throw listingsRes.error
-
-    const profilesById = new Map((profilesRes.data || []).map(p => [p.id, p]))
-    const listingsById = new Map((listingsRes.data || []).map(l => [l.id, l]))
     
     stats.value = {
       bookings: bookingsCount || 0,
@@ -300,15 +285,7 @@ async function loadStats() {
       pendingHostApplications: pendingHostApplicationsCount || 0
     }
     
-    recentBookings.value = bookingRows.map(b => {
-      const profile = b.user_id ? profilesById.get(b.user_id) : null
-      const listing = b.listing_id ? listingsById.get(b.listing_id) : null
-      return {
-        ...b,
-        profiles: profile ? { first_name: profile.first_name, last_name: profile.last_name, email: profile.email } : null,
-        listings: listing ? { title: listing.title } : null
-      }
-    })
+    recentBookings.value = bookingRows || []
     loading.value = false
   } catch (error) {
     console.error('Error loading stats:', error)

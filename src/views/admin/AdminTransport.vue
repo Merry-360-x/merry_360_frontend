@@ -90,45 +90,38 @@ const { showToast } = useToast()
 const vehicles = ref([])
 const loading = ref(true)
 
-const sourceTable = ref('vehicles')
-
 const loadVehicles = async () => {
   try {
     loading.value = true
     console.log('Loading vehicles from Supabase...')
-
-    let data = []
-    let error = null
 
     const primary = await supabase
       .from('vehicles')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (primary.error?.code === 'PGRST205') {
-      sourceTable.value = 'listings'
+    if (primary.error) throw primary.error
+
+    // If vehicles table is empty (common after migrating from listings), fall back temporarily.
+    let source = 'vehicles'
+    let data = primary.data || []
+
+    if (data.length === 0) {
       const fallback = await supabase
         .from('listings')
         .select('*')
         .in('category', ['transport', 'vehicle', 'vehicles', 'car', 'rental'])
         .order('created_at', { ascending: false })
-
-      data = fallback.data || []
-      error = fallback.error
-    } else {
-      sourceTable.value = 'vehicles'
-      data = primary.data || []
-      error = primary.error
-    }
-
-    if (error) {
-      console.error('Supabase error:', error)
-      throw error
+      if (!fallback.error && (fallback.data || []).length > 0) {
+        source = 'listings'
+        data = fallback.data || []
+      }
     }
 
     console.log('Loaded vehicles:', data?.length || 0)
-    vehicles.value = (data || []).map(v => {
-      const isListings = sourceTable.value === 'listings'
+    const isListingsSource = source === 'listings'
+    const mapped = (data || []).map(v => {
+      const isListings = isListingsSource
       return {
         id: v.id,
         name: isListings ? (v.title || 'Vehicle') : (v.name || 'Vehicle'),
@@ -142,6 +135,27 @@ const loadVehicles = async () => {
           : (v.available ? 'available' : 'in-use')
       }
     })
+
+    // If we are using canonical vehicles table, derive in-use status from bookings.vehicle_id
+    if (!isListingsSource && mapped.length > 0) {
+      const ids = mapped.map(v => v.id)
+      const { data: bookingIds, error: bookingsError } = await supabase
+        .from('bookings')
+        .select('vehicle_id')
+        .in('vehicle_id', ids)
+      if (!bookingsError && bookingIds) {
+        const counts = new Map()
+        for (const b of bookingIds) {
+          if (!b.vehicle_id) continue
+          counts.set(b.vehicle_id, (counts.get(b.vehicle_id) || 0) + 1)
+        }
+        for (const v of mapped) {
+          if ((counts.get(v.id) || 0) > 0 && v.status === 'available') v.status = 'in-use'
+        }
+      }
+    }
+
+    vehicles.value = mapped
     
     if (vehicles.value.length === 0) {
       showToast('No vehicles found in database', 'warning')
@@ -160,4 +174,8 @@ const stats = computed(() => ({
   activeBookings: vehicles.value.filter(v => v.status === 'in-use').length,
   drivers: new Set(vehicles.value.map(v => v.driver)).size
 }))
+
+onMounted(() => {
+  loadVehicles()
+})
 </script>

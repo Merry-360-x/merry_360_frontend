@@ -91,46 +91,38 @@ const { showToast } = useToast()
 const tours = ref([])
 const loading = ref(true)
 
-const sourceTable = ref('tours')
-
 const loadTours = async () => {
   try {
     loading.value = true
     console.log('Loading tours from Supabase...')
-
-    let data = []
-    let error = null
 
     const primary = await supabase
       .from('tours')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (primary.error?.code === 'PGRST205') {
-      // Fallback: some environments store tours inside listings.
-      sourceTable.value = 'listings'
+    if (primary.error) throw primary.error
+
+    // If tours table is empty (common after migrating from listings), fall back temporarily.
+    let source = 'tours'
+    let data = primary.data || []
+
+    if (data.length === 0) {
       const fallback = await supabase
         .from('listings')
         .select('*')
         .ilike('category', 'tour%')
         .order('created_at', { ascending: false })
-
-      data = fallback.data || []
-      error = fallback.error
-    } else {
-      sourceTable.value = 'tours'
-      data = primary.data || []
-      error = primary.error
-    }
-
-    if (error) {
-      console.error('Supabase error:', error)
-      throw error
+      if (!fallback.error && (fallback.data || []).length > 0) {
+        source = 'listings'
+        data = fallback.data || []
+      }
     }
 
     console.log('Loaded tours:', data?.length || 0)
-    tours.value = (data || []).map(t => {
-      const isListings = sourceTable.value === 'listings'
+    const isListingsSource = source === 'listings'
+    const mapped = (data || []).map(t => {
+      const isListings = isListingsSource
       return {
         id: t.id,
         name: isListings ? (t.title || 'Tour') : (t.name || 'Tour'),
@@ -139,12 +131,32 @@ const loadTours = async () => {
         duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '—',
         price: t.price ?? 0,
         bookings: 0,
+        rating: t.rating ?? 0,
         status: isListings
           ? (String(t.status || '').toLowerCase() === 'active' ? 'active' : 'inactive')
           : (t.available ? 'active' : 'inactive'),
         image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=100&h=100&fit=crop'
       }
     })
+
+    // If we are using canonical tours table, derive bookings count from bookings.tour_id
+    if (!isListingsSource && mapped.length > 0) {
+      const ids = mapped.map(t => t.id)
+      const { data: bookingIds, error: bookingsError } = await supabase
+        .from('bookings')
+        .select('tour_id')
+        .in('tour_id', ids)
+      if (!bookingsError && bookingIds) {
+        const counts = new Map()
+        for (const b of bookingIds) {
+          if (!b.tour_id) continue
+          counts.set(b.tour_id, (counts.get(b.tour_id) || 0) + 1)
+        }
+        for (const t of mapped) t.bookings = counts.get(t.id) || 0
+      }
+    }
+
+    tours.value = mapped
     
     if (tours.value.length === 0) {
       showToast('No tours found. Please add tours in the database.', 'warning')
@@ -168,15 +180,12 @@ const toggleStatus = async (tour) => {
   try {
     const newStatus = tour.status === 'active' ? false : true
 
-    const { error } = sourceTable.value === 'listings'
-      ? await supabase
-        .from('listings')
-        .update({ status: newStatus ? 'active' : 'inactive' })
-        .eq('id', tour.id)
-      : await supabase
-        .from('tours')
-        .update({ available: newStatus })
-        .eq('id', tour.id)
+    // Canonical: update tours.available
+    // If you're still using listings as a temporary data source, migrate those rows into tours.
+    const { error } = await supabase
+      .from('tours')
+      .update({ available: newStatus })
+      .eq('id', tour.id)
     
     if (error) throw error
     
