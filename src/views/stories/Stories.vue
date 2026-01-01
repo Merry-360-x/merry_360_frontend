@@ -330,13 +330,14 @@
                 <input 
                   v-model="newComment"
                   type="text" 
-                  placeholder="Add a comment..."
+                  :placeholder="userStore.isAuthenticated ? 'Add a comment...' : 'Login to comment'"
                   class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+                  :disabled="!userStore.isAuthenticated"
                   @keyup.enter="addComment"
                 />
                 <button 
                   @click="addComment"
-                  :disabled="!newComment.trim() || addingComment"
+                  :disabled="!userStore.isAuthenticated || !newComment.trim() || addingComment"
                   class="px-4 py-2 bg-brand-500 text-white rounded-full disabled:opacity-50"
                 >
                   Post
@@ -403,11 +404,7 @@ async function loadStories() {
   try {
     const { data, error } = await supabase
       .from('stories')
-      .select(`
-        *,
-        likes:story_likes(count),
-        comments:story_comments(count)
-      `)
+      .select('*, story_likes(count), story_comments(count)')
       .order('created_at', { ascending: false })
 
     if (error) {
@@ -417,9 +414,10 @@ async function loadStories() {
     } else {
       // Process stories with counts
       stories.value = (data || []).map(story => ({
+        // Support both embedded relation names and legacy aliased names.
         ...story,
-        likes_count: story.likes?.[0]?.count || 0,
-        comments_count: story.comments?.[0]?.count || 0
+        likes_count: (story.story_likes || story.likes)?.[0]?.count || 0,
+        comments_count: (story.story_comments || story.comments)?.[0]?.count || 0
       }))
 
       // Check which stories user has liked
@@ -581,22 +579,26 @@ async function toggleLike(story) {
   try {
     if (story.isLiked) {
       // Unlike
-      await supabase
+      const { error } = await supabase
         .from('story_likes')
         .delete()
         .eq('story_id', story.id)
         .eq('user_id', userStore.user.id)
 
+      if (error) throw error
+
       story.isLiked = false
       story.likes_count = Math.max(0, (story.likes_count || 1) - 1)
     } else {
       // Like
-      await supabase
+      const { error } = await supabase
         .from('story_likes')
-        .insert([{
-          story_id: story.id,
-          user_id: userStore.user.id
-        }])
+        .upsert(
+          [{ story_id: story.id, user_id: userStore.user.id }],
+          { onConflict: 'story_id,user_id', ignoreDuplicates: true }
+        )
+
+      if (error) throw error
 
       story.isLiked = true
       story.likes_count = (story.likes_count || 0) + 1
@@ -609,6 +611,7 @@ async function toggleLike(story) {
     }
   } catch (error) {
     console.error('Error toggling like:', error)
+    alert('Failed to update like. Please try again.')
   }
 }
 
