@@ -532,7 +532,6 @@ function isVideoUrl(url) {
 function canDeleteStory(story) {
   if (!story) return false
   if (!userStore.isAuthenticated) return false
-  if (userStore.isAdmin) return true
   return Boolean(userStore.user?.id) && story.user_id === userStore.user.id
 }
 
@@ -549,36 +548,13 @@ async function deleteStory(story) {
   deletingStoryId.value = story.id
 
   try {
-    // Best-effort: some schemas have FKs without cascade.
-    // Try delete story first, then clean up likes/comments and retry if needed.
-
-    let baseDelete = supabase
+    const { error } = await supabase
       .from('stories')
       .delete()
       .eq('id', story.id)
+      .eq('user_id', userStore.user.id)
 
-    if (!userStore.isAdmin) {
-      baseDelete = baseDelete.eq('user_id', userStore.user.id)
-    }
-
-    const { error: deleteError } = await baseDelete
-
-    if (deleteError) {
-      await supabase.from('story_likes').delete().eq('story_id', story.id)
-      await supabase.from('story_comments').delete().eq('story_id', story.id)
-
-      let retryDelete = supabase
-        .from('stories')
-        .delete()
-        .eq('id', story.id)
-
-      if (!userStore.isAdmin) {
-        retryDelete = retryDelete.eq('user_id', userStore.user.id)
-      }
-
-      const { error: retryError } = await retryDelete
-      if (retryError) throw retryError
-    }
+    if (error) throw error
 
     stories.value = stories.value.filter(s => s.id !== story.id)
     if (activeStory.value?.id === story.id) {
@@ -586,7 +562,7 @@ async function deleteStory(story) {
     }
   } catch (error) {
     console.error('Error deleting story:', error)
-    alert('Failed to delete story. Please try again.')
+    alert(`Failed to delete story: ${error?.message || 'Please try again.'}`)
   } finally {
     deletingStoryId.value = null
   }
