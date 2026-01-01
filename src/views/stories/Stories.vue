@@ -252,15 +252,30 @@
           <!-- Overlay -->
           <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
 
-          <!-- Close Button -->
-          <button
-            @click="closeStory"
-            class="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors z-10"
-          >
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+          <!-- Top Right Actions -->
+          <div class="absolute top-4 right-4 flex items-center gap-2 z-10">
+            <button
+              v-if="activeStory && canDeleteStory(activeStory)"
+              @click="deleteStory(activeStory)"
+              :disabled="deletingStoryId === activeStory.id"
+              class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
+              title="Delete story"
+            >
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0V5a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+              </svg>
+            </button>
+
+            <button
+              @click="closeStory"
+              class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors"
+              title="Close"
+            >
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
 
           <!-- User Header -->
           <div class="absolute top-4 left-4 right-16 flex items-center gap-3 z-10">
@@ -387,6 +402,7 @@ const storyComments = ref([])
 const newComment = ref('')
 const addingComment = ref(false)
 const uploadingMedia = ref(false)
+const deletingStoryId = ref(null)
 
 const newStory = ref({
   title: '',
@@ -511,6 +527,69 @@ function isVideoUrl(url) {
   const u = String(url).toLowerCase()
   if (u.startsWith('data:video/')) return true
   return /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/.test(u)
+}
+
+function canDeleteStory(story) {
+  if (!story) return false
+  if (!userStore.isAuthenticated) return false
+  if (userStore.isAdmin) return true
+  return Boolean(userStore.user?.id) && story.user_id === userStore.user.id
+}
+
+async function deleteStory(story) {
+  if (!story) return
+  if (!canDeleteStory(story)) {
+    alert('You can only delete your own story')
+    return
+  }
+
+  const ok = confirm('Delete this story? This cannot be undone.')
+  if (!ok) return
+
+  deletingStoryId.value = story.id
+
+  try {
+    // Best-effort: some schemas have FKs without cascade.
+    // Try delete story first, then clean up likes/comments and retry if needed.
+
+    let baseDelete = supabase
+      .from('stories')
+      .delete()
+      .eq('id', story.id)
+
+    if (!userStore.isAdmin) {
+      baseDelete = baseDelete.eq('user_id', userStore.user.id)
+    }
+
+    const { error: deleteError } = await baseDelete
+
+    if (deleteError) {
+      await supabase.from('story_likes').delete().eq('story_id', story.id)
+      await supabase.from('story_comments').delete().eq('story_id', story.id)
+
+      let retryDelete = supabase
+        .from('stories')
+        .delete()
+        .eq('id', story.id)
+
+      if (!userStore.isAdmin) {
+        retryDelete = retryDelete.eq('user_id', userStore.user.id)
+      }
+
+      const { error: retryError } = await retryDelete
+      if (retryError) throw retryError
+    }
+
+    stories.value = stories.value.filter(s => s.id !== story.id)
+    if (activeStory.value?.id === story.id) {
+      closeStory()
+    }
+  } catch (error) {
+    console.error('Error deleting story:', error)
+    alert('Failed to delete story. Please try again.')
+  } finally {
+    deletingStoryId.value = null
+  }
 }
 
 async function createStory() {

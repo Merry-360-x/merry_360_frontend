@@ -312,6 +312,23 @@ export const supabaseApiAdapter = {
 
       if (error) throw error
       return data
+    },
+
+    delete: async (storyId, opts = {}) => {
+      const { userId, isAdmin } = opts || {}
+
+      let q = supabase
+        .from('stories')
+        .delete()
+        .eq('id', storyId)
+
+      if (!isAdmin && userId) {
+        q = q.eq('user_id', userId)
+      }
+
+      const { error } = await q
+      if (error) throw error
+      return { ok: true }
     }
   }
 }
