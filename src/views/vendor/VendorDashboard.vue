@@ -7,9 +7,9 @@
         <div class="p-6 border-b border-gray-200">
           <div class="flex items-center space-x-2">
             <div class="w-10 h-10 bg-accent-blue rounded-xl flex items-center justify-center">
-              <span class="text-white font-bold text-xl">V</span>
+              <span class="text-white font-bold text-xl">{{ isHost ? 'H' : 'V' }}</span>
             </div>
-            <span class="text-xl font-bold">Vendor Portal</span>
+            <span class="text-xl font-bold">{{ portalTitle }}</span>
           </div>
         </div>
         <nav class="p-4 space-y-1">
@@ -51,7 +51,7 @@
       <main class="flex-1 p-8">
         <div class="mb-8 flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold mb-2">Vendor Dashboard</h1>
+            <h1 class="text-3xl font-bold mb-2">{{ pageTitle }}</h1>
             <p class="text-text-secondary">Manage your properties and bookings</p>
           </div>
           <div class="flex gap-3">
@@ -164,7 +164,15 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useUserStore } from '../../stores/userStore'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
+
+const userStore = useUserStore()
+
+const isHost = computed(() => userStore.user?.role === 'host')
+const portalTitle = computed(() => (isHost.value ? 'Host Portal' : 'Vendor Portal'))
+const pageTitle = computed(() => (isHost.value ? 'Host Dashboard' : 'Vendor Dashboard'))
 </script>

@@ -193,6 +193,12 @@ const routes = [
     component: BecomeHost
   },
   {
+    path: '/host',
+    name: 'host',
+    component: VendorDashboard,
+    meta: { requiresAuth: true, requiresHost: true }
+  },
+  {
     path: '/dashboard',
     redirect: '/profile'
   },
@@ -293,22 +299,26 @@ const routes = [
   {
     path: '/vendor',
     name: 'vendor',
-    component: VendorDashboard
+    component: VendorDashboard,
+    meta: { requiresAuth: true, requiresVendor: true }
   },
   {
     path: '/vendor/create-property',
     name: 'create-property',
-    component: CreateProperty
+    component: CreateProperty,
+    meta: { requiresAuth: true, requiresVendor: true }
   },
   {
     path: '/vendor/create-tour',
     name: 'create-tour',
-    component: CreateTour
+    component: CreateTour,
+    meta: { requiresAuth: true, requiresVendor: true }
   },
   {
     path: '/vendor/create-transport',
     name: 'create-transport',
-    component: CreateTransport
+    component: CreateTransport,
+    meta: { requiresAuth: true, requiresVendor: true }
   },
   {
     path: '/about',
@@ -358,9 +368,11 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
   const requiresStaff = to.matched.some(record => record.meta.requiresStaff)
+  const requiresHost = to.matched.some(record => record.meta.requiresHost)
+  const requiresVendor = to.matched.some(record => record.meta.requiresVendor)
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   
-  if (requiresAdmin || requiresStaff || requiresAuth) {
+  if (requiresAdmin || requiresStaff || requiresHost || requiresVendor || requiresAuth) {
     const store = useUserStore()
 
     // Ensure auth/profile loaded
@@ -385,6 +397,25 @@ router.beforeEach(async (to, from, next) => {
     // Check staff access (staff or admin can access)
     if (requiresStaff && store.user?.role !== 'staff' && store.user?.role !== 'admin') {
       alert('Access denied. Staff privileges required.')
+      next({ name: 'home' })
+      return
+    }
+
+    // Check host access (host or admin can access)
+    if (requiresHost && store.user?.role !== 'host' && store.user?.role !== 'admin') {
+      alert('Access denied. Host privileges required.')
+      next({ name: 'home' })
+      return
+    }
+
+    // Check vendor access (vendor, host, or admin can access)
+    if (
+      requiresVendor &&
+      store.user?.role !== 'vendor' &&
+      store.user?.role !== 'host' &&
+      store.user?.role !== 'admin'
+    ) {
+      alert('Access denied. Vendor privileges required.')
       next({ name: 'home' })
       return
     }
