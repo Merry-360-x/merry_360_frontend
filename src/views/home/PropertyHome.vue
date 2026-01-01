@@ -415,7 +415,18 @@ const searchForm = ref({
 const showAIConcierge = ref(false)
 
 const handleSearch = () => {
-  console.log('Search:', searchForm.value)
+  const guests = (Number(searchForm.value.adults) || 0) + (Number(searchForm.value.children) || 0)
+  const q = String(searchForm.value.location || '').trim()
+
+  router.push({
+    path: '/accommodations',
+    query: {
+      ...(q ? { q } : {}),
+      ...(guests ? { guests: String(guests) } : {}),
+      ...(searchForm.value.checkIn ? { checkIn: searchForm.value.checkIn } : {}),
+      ...(searchForm.value.checkOut ? { checkOut: searchForm.value.checkOut } : {})
+    }
+  })
 }
 
 const navigateTo = (path) => {
@@ -467,12 +478,14 @@ const loadFeaturedProperties = async () => {
         profiles:host_id(first_name, last_name)
       `)
       .eq('available', true)
-      .order('rating', { ascending: false })
-      .limit(8)
+      .order('created_at', { ascending: false })
+      // Pull more than we render so we can derive sections like Top Rated
+      // without excluding newly-added properties that start with rating=0.
+      .limit(50)
     
     if (error) throw error
     
-    featuredProperties.value = (data || []).map(p => ({
+    const mapped = (data || []).map(p => ({
       id: p.id,
       name: p.name,
       host: p.profiles ? `${p.profiles.first_name} ${p.profiles.last_name}` : 'Host',
@@ -486,11 +499,16 @@ const loadFeaturedProperties = async () => {
       bathrooms: p.bathrooms,
       maxGuests: p.max_guests
     }))
-    
-    // Also populate other property lists
-    latestProperties.value = featuredProperties.value.slice(0, 4)
-    topRatedProperties.value = featuredProperties.value.slice(0, 4)
-    nearbyProperties.value = featuredProperties.value.slice(0, 4)
+
+    // Latest/featured: show most recently created first
+    featuredProperties.value = mapped.slice(0, 8)
+    latestProperties.value = mapped.slice(0, 4)
+    nearbyProperties.value = mapped.slice(0, 4)
+
+    // Top rated: derive separately so new properties don't get starved out
+    topRatedProperties.value = [...mapped]
+      .sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0))
+      .slice(0, 4)
   } catch (err) {
     console.error('Error loading properties:', err)
   }

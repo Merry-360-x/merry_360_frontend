@@ -8,6 +8,7 @@ import WelcomeSlider from '../views/onboarding/WelcomeSlider.vue'
 import Login from '../views/onboarding/Login.vue'
 import Signup from '../views/onboarding/Signup.vue'
 import ForgotPassword from '../views/onboarding/ForgotPassword.vue'
+import ResetPassword from '../views/onboarding/ResetPassword.vue'
 import AuthCallback from '../views/onboarding/AuthCallback.vue'
 
 // Home
@@ -115,6 +116,11 @@ const routes = [
     path: '/forgot-password',
     name: 'forgot-password',
     component: ForgotPassword
+  },
+  {
+    path: '/reset-password',
+    name: 'reset-password',
+    component: ResetPassword
   },
   {
     path: '/stories',
@@ -377,7 +383,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     // Check staff access (staff or admin can access)
-    if (requiresStaff && store.user?.role !== 'staff' && store.user?.role !== 'admin' && store.user?.role !== 'vendor') {
+    if (requiresStaff && store.user?.role !== 'staff' && store.user?.role !== 'admin') {
       alert('Access denied. Staff privileges required.')
       next({ name: 'home' })
       return

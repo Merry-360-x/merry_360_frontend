@@ -1,12 +1,17 @@
+import 'dotenv/config'
 import pg from 'pg'
 const { Client } = pg
 
+const connectionString = process.env.SUPABASE_DB_URL
+
+if (!connectionString) {
+  console.error('❌ Missing SUPABASE_DB_URL in environment')
+  console.error('   Example: postgresql://USER:PASSWORD@HOST:5432/postgres?sslmode=require')
+  process.exit(1)
+}
+
 const client = new Client({
-  host: 'aws-0-eu-central-1.pooler.supabase.com',
-  port: 5432,
-  database: 'postgres',
-  user: 'postgres.gzmxelgcdpaeklmabszo',
-  password: 'HF8Q97jsSj0LS3n1',
+  connectionString,
   ssl: { rejectUnauthorized: false }
 })
 

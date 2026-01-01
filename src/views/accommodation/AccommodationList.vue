@@ -168,6 +168,18 @@
             </select>
           </div>
 
+          <p class="text-text-secondary text-xs sm:text-sm mb-5">
+            Listings are grouped by category (Hotel, Motel, Apartment, etc.) to make browsing clearer.
+          </p>
+
+          <div v-if="hasSearchSummary" class="mb-4 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-secondary">
+            <span>Searching for:</span>
+            <span v-if="searchQuery" class="px-2 py-1 bg-gray-100 rounded">{{ searchQuery }}</span>
+            <span v-if="guestCount" class="px-2 py-1 bg-gray-100 rounded">{{ guestCount }} guest{{ guestCount === 1 ? '' : 's' }}</span>
+            <span v-if="checkIn" class="px-2 py-1 bg-gray-100 rounded">Check-in: {{ checkIn }}</span>
+            <span v-if="checkOut" class="px-2 py-1 bg-gray-100 rounded">Check-out: {{ checkOut }}</span>
+          </div>
+
           <!-- Map View -->
           <div v-if="viewMode === 'map'" class="mb-6">
             <MapView 
@@ -179,107 +191,116 @@
 
           <!-- List View -->
           <div v-if="viewMode === 'list'" class="space-y-4 sm:space-y-6">
-            <div 
-              v-for="accommodation in sortedAccommodations" 
-              :key="accommodation.id"
-              @click="router.push(`/accommodation/${accommodation.id}`)"
-              class="bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1"
-            >
-              <div class="grid md:grid-cols-3 gap-0">
-                <!-- Image -->
-                <div class="relative h-56 sm:h-64 md:h-auto">
-                  <img loading="lazy" 
-                    :src="accommodation.image" 
-                    :alt="accommodation.name" 
-                    class="w-full h-full object-cover"
-                  />
-                  <button 
-                    @click.stop="toggleFavorite(accommodation.id)"
-                    class="absolute top-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                  >
-                    <svg 
-                      class="w-6 h-6" 
-                      :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400'"
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
+            <div v-for="group in groupedAccommodations" :key="group.type" class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-base sm:text-lg font-semibold text-text-brand-600">{{ group.type }}</h3>
+                <p class="text-xs sm:text-sm text-text-secondary">
+                  {{ group.items.length }} listing{{ group.items.length === 1 ? '' : 's' }}
+                </p>
+              </div>
+
+              <div 
+                v-for="accommodation in group.items" 
+                :key="accommodation.id"
+                @click="router.push(`/accommodation/${accommodation.id}`)"
+                class="bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1"
+              >
+                <div class="grid md:grid-cols-3 gap-0">
+                  <!-- Image -->
+                  <div class="relative h-56 sm:h-64 md:h-auto">
+                    <img loading="lazy" 
+                      :src="accommodation.image" 
+                      :alt="accommodation.name" 
+                      class="w-full h-full object-cover"
+                    />
+                    <button 
+                      @click.stop="toggleFavorite(accommodation.id)"
+                      class="absolute top-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
                     >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
-                  </button>
-                  <div v-if="accommodation.eco" class="absolute top-3 left-3 bg-success text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center">
-                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
-                    </svg>
-                    Eco
-                  </div>
-                </div>
-
-                <!-- Content -->
-                <div class="md:col-span-2 p-6">
-                  <div class="flex items-start justify-between mb-2">
-                    <div class="flex-1">
-                      <div class="flex items-center gap-2 mb-1">
-                        <h3 class="text-xl font-semibold text-text-brand-600">{{ accommodation.name }}</h3>
-                        <span class="inline-flex items-center px-2 py-1 bg-brand-500 bg-opacity-10 text-brand-600 text-xs font-semibold rounded">
-                          {{ accommodation.type }}
-                        </span>
-                      </div>
-                      <p class="text-text-secondary text-sm flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        {{ accommodation.location }}
-                      </p>
-                    </div>
-                    <div class="text-right">
-                      <div class="flex items-center gap-1 mb-1">
-                        <span class="text-lg font-bold text-text-brand-600">{{ accommodation.rating }}</span>
-                        <span class="text-yellow-500">⭐</span>
-                      </div>
-                      <p class="text-xs text-text-secondary">{{ accommodation.reviews }} reviews</p>
-                    </div>
-                  </div>
-
-                  <p class="text-text-secondary mb-4">{{ accommodation.description }}</p>
-
-                  <!-- Amenities -->
-                  <div class="flex flex-wrap gap-2 mb-4">
-                    <span 
-                      v-for="amenity in accommodation.amenities.slice(0, 4)" 
-                      :key="amenity"
-                      class="px-2 py-1 bg-gray-100 text-text-secondary text-xs rounded"
-                    >
-                      {{ amenity }}
-                    </span>
-                    <span v-if="accommodation.amenities.length > 4" class="px-2 py-1 text-text-secondary text-xs">
-                      +{{ accommodation.amenities.length - 4 }} more
-                    </span>
-                  </div>
-
-                  <!-- Price and CTA -->
-                  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-gray-100">
-                    <div>
-                      <div class="flex items-baseline gap-1 flex-wrap">
-                        <span class="text-xl sm:text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
-                        <span class="text-text-secondary text-sm sm:text-base whitespace-nowrap">/night</span>
-                      </div>
-                      <p class="text-xs text-text-secondary">Includes taxes and fees</p>
-                    </div>
-                    <div class="flex gap-2 w-full sm:w-auto">
-                      <button 
-                        @click.stop="addToCart(accommodation)"
-                        class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-2.5 border-2 border-brand-500 text-brand-600 rounded-lg hover:bg-brand-50 transition-all duration-200 font-medium text-sm sm:text-base flex items-center justify-center gap-1"
+                      <svg 
+                        class="w-6 h-6" 
+                        :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400'"
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
                       >
-                        {{ t('accommodation.addToCart') }}
-                      </button>
-                      <button 
-                        @click.stop="router.push(`/accommodation/${accommodation.id}`)"
-                        class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                      </svg>
+                    </button>
+                    <div v-if="accommodation.eco" class="absolute top-3 left-3 bg-success text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
+                      </svg>
+                      Eco
+                    </div>
+                  </div>
+
+                  <!-- Content -->
+                  <div class="md:col-span-2 p-6">
+                    <div class="flex items-start justify-between mb-2">
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                          <h3 class="text-xl font-semibold text-text-brand-600">{{ accommodation.name }}</h3>
+                          <span class="inline-flex items-center px-2 py-1 bg-brand-500 bg-opacity-10 text-brand-600 text-xs font-semibold rounded">
+                            {{ accommodation.type }}
+                          </span>
+                        </div>
+                        <p class="text-text-secondary text-sm flex items-center">
+                          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          </svg>
+                          {{ accommodation.location }}
+                        </p>
+                      </div>
+                      <div class="text-right">
+                        <div class="flex items-center gap-1 mb-1">
+                          <span class="text-lg font-bold text-text-brand-600">{{ accommodation.rating }}</span>
+                          <span class="text-yellow-500">⭐</span>
+                        </div>
+                        <p class="text-xs text-text-secondary">{{ accommodation.reviews }} reviews</p>
+                      </div>
+                    </div>
+
+                    <p class="text-text-secondary mb-4">{{ accommodation.description }}</p>
+
+                    <!-- Amenities -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                      <span 
+                        v-for="amenity in accommodation.amenities.slice(0, 4)" 
+                        :key="amenity"
+                        class="px-2 py-1 bg-gray-100 text-text-secondary text-xs rounded"
                       >
-                        {{ t('accommodation.details') }}
-                      </button>
+                        {{ amenity }}
+                      </span>
+                      <span v-if="accommodation.amenities.length > 4" class="px-2 py-1 text-text-secondary text-xs">
+                        +{{ accommodation.amenities.length - 4 }} more
+                      </span>
+                    </div>
+
+                    <!-- Price and CTA -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-gray-100">
+                      <div>
+                        <div class="flex items-baseline gap-1 flex-wrap">
+                          <span class="text-xl sm:text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
+                          <span class="text-text-secondary text-sm sm:text-base whitespace-nowrap">/night</span>
+                        </div>
+                        <p class="text-xs text-text-secondary">Includes taxes and fees</p>
+                      </div>
+                      <div class="flex gap-2 w-full sm:w-auto">
+                        <button 
+                          @click.stop="addToCart(accommodation)"
+                          class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-2.5 border-2 border-brand-500 text-brand-600 rounded-lg hover:bg-brand-50 transition-all duration-200 font-medium text-sm sm:text-base flex items-center justify-center gap-1"
+                        >
+                          {{ t('accommodation.addToCart') }}
+                        </button>
+                        <button 
+                          @click.stop="router.push(`/accommodation/${accommodation.id}`)"
+                          class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
+                        >
+                          {{ t('accommodation.details') }}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -306,7 +327,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import { useUserStore } from '../../stores/userStore'
 import { useTranslation } from '../../composables/useTranslation'
@@ -317,6 +338,7 @@ import MapView from '../../components/common/MapView.vue'
 import api from '../../services/api'
 
 const router = useRouter()
+const route = useRoute()
 const { success } = useToast()
 const currencyStore = useCurrencyStore()
 const userStore = useUserStore()
@@ -326,22 +348,75 @@ const viewMode = ref('list')
 const sortBy = ref('recommended')
 const searchQuery = ref('')
 const loading = ref(true)
+const guestCount = ref(null)
+const checkIn = ref('')
+const checkOut = ref('')
+
+const hasSearchSummary = computed(() => {
+  return Boolean(
+    String(searchQuery.value || '').trim() ||
+    guestCount.value ||
+    String(checkIn.value || '').trim() ||
+    String(checkOut.value || '').trim()
+  )
+})
+
+const computeMatchScore = (acc, term) => {
+  const q = String(term || '').trim().toLowerCase()
+  if (!q) return 0
+
+  const haystack = [acc?.name, acc?.location, acc?.type]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+
+  if (!haystack) return 0
+
+  // Lightweight ranking: phrase match > token match
+  let score = 0
+  if (haystack.includes(q)) score += 50
+
+  const tokens = q.split(/\s+/).filter(Boolean)
+  for (const token of tokens) {
+    if (token.length < 2) continue
+    if (haystack.includes(token)) score += 10
+  }
+
+  return score
+}
+
+const loadAccommodations = async (params = {}) => {
+  loading.value = true
+  try {
+    const response = await api.accommodations.getAll(params)
+    const term = String(params.q ?? params.search ?? '').trim()
+    accommodations.value = response.data.map(acc => ({
+      ...acc,
+      eco: acc.ecoFriendly,
+      isFavorite: false,
+      matchScore: computeMatchScore(acc, term)
+    }))
+  } catch (error) {
+    console.error('Failed to load accommodations:', error)
+  } finally {
+    loading.value = false
+  }
+}
 
 const performSearch = async () => {
   if (searchQuery.value.trim()) {
-    loading.value = true
-    try {
-      const response = await api.accommodations.getAll({ search: searchQuery.value })
-      accommodations.value = response.data.map(acc => ({
-        ...acc,
-        eco: acc.ecoFriendly,
-        isFavorite: false
-      }))
-    } catch (error) {
-      console.error('Search error:', error)
-    } finally {
-      loading.value = false
-    }
+    const q = String(searchQuery.value).trim()
+    const guests = guestCount.value
+
+    router.replace({
+      query: {
+        ...route.query,
+        q,
+        ...(guests ? { guests: String(guests) } : {})
+      }
+    })
+
+    await loadAccommodations({ q, guests })
   }
 }
 
@@ -353,25 +428,27 @@ const filters = ref({
   ecoFriendly: false
 })
 
-const propertyTypes = ['Hotel', 'Resort', 'Apartment', 'Villa', 'Lodge', 'Guesthouse']
+const propertyTypes = ['Hotel', 'Motel', 'Resort', 'Lodge', 'Apartment', 'Villa', 'Guesthouse']
 const amenities = ['WiFi', 'Pool', 'Parking', 'Restaurant', 'Spa', 'Gym', 'Air Conditioning', 'Pet Friendly']
 
 const accommodations = ref([])
 
 // Load accommodations on mount
 onMounted(async () => {
-  try {
-    const response = await api.accommodations.getAll()
-    accommodations.value = response.data.map(acc => ({
-      ...acc,
-      eco: acc.ecoFriendly,
-      isFavorite: false
-    }))
-  } catch (error) {
-    console.error('Failed to load accommodations:', error)
-  } finally {
-    loading.value = false
-  }
+  const q = route.query.q != null ? String(route.query.q).trim() : ''
+  const guests = route.query.guests != null && String(route.query.guests).trim()
+    ? Number(route.query.guests)
+    : null
+
+  const inDate = route.query.checkIn != null ? String(route.query.checkIn).trim() : ''
+  const outDate = route.query.checkOut != null ? String(route.query.checkOut).trim() : ''
+
+  searchQuery.value = q
+  guestCount.value = Number.isFinite(guests) && guests > 0 ? guests : null
+  checkIn.value = inDate
+  checkOut.value = outDate
+
+  await loadAccommodations({ q: q || undefined, guests: guestCount.value || undefined })
 })
 
 const filteredAccommodations = computed(() => {
@@ -390,19 +467,44 @@ const filteredAccommodations = computed(() => {
   })
 })
 
-const sortedAccommodations = computed(() => {
-  const sorted = [...filteredAccommodations.value]
-  
+const sortItems = (items) => {
+  const sorted = [...items]
+
   switch (sortBy.value) {
     case 'price-low':
-      return sorted.sort((a, b) => a.price - b.price)
+      return sorted.sort((a, b) => (a.price || 0) - (b.price || 0))
     case 'price-high':
-      return sorted.sort((a, b) => b.price - a.price)
+      return sorted.sort((a, b) => (b.price || 0) - (a.price || 0))
     case 'rating':
-      return sorted.sort((a, b) => b.rating - a.rating)
+      return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0))
     default:
-      return sorted
+      // Recommended: use matchScore when searching, else fall back to newest
+      return sorted.sort((a, b) => {
+        const score = (b.matchScore || 0) - (a.matchScore || 0)
+        if (score !== 0) return score
+        const aTime = a.createdAt ? Date.parse(a.createdAt) : 0
+        const bTime = b.createdAt ? Date.parse(b.createdAt) : 0
+        return bTime - aTime
+      })
   }
+}
+
+const groupedAccommodations = computed(() => {
+  const groups = new Map()
+
+  for (const type of propertyTypes) {
+    groups.set(type, [])
+  }
+  groups.set('Other', [])
+
+  for (const acc of filteredAccommodations.value) {
+    const type = propertyTypes.includes(acc.type) ? acc.type : 'Other'
+    groups.get(type).push(acc)
+  }
+
+  return Array.from(groups.entries())
+    .map(([type, list]) => ({ type, items: sortItems(list) }))
+    .filter(group => group.items.length > 0)
 })
 
 const resetFilters = () => {

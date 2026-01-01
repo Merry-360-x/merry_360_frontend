@@ -54,10 +54,12 @@
                   >
                     <option value="">{{ t('vendor.selectType') }}</option>
                     <option value="Hotel">{{ t('accommodation.hotel') }}</option>
+                    <option value="Motel">Motel</option>
                     <option value="Resort">{{ t('accommodation.resort') }}</option>
                     <option value="Lodge">{{ t('accommodation.lodge') }}</option>
                     <option value="Apartment">{{ t('accommodation.apartment') }}</option>
                     <option value="Guesthouse">{{ t('accommodation.guesthouse') }}</option>
+                    <option value="Villa">Villa</option>
                   </select>
                   <p v-if="errors.type" class="mt-1 text-sm text-red-600">{{ errors.type }}</p>
                 </div>

@@ -119,7 +119,7 @@
                   </div>
                   <div class="bg-gray-50 rounded-lg p-3">
                     <p class="text-xs text-gray-600 mb-1">Type</p>
-                    <p class="text-lg font-bold text-gray-900">{{ property.type || '—' }}</p>
+                    <p class="text-lg font-bold text-gray-900">{{ property.property_type || '—' }}</p>
                   </div>
                 </div>
 
@@ -239,14 +239,18 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
                   <select 
-                    v-model="editingProperty.type"
+                    v-model="editingProperty.property_type"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
                   >
-                    <option value="apartment">Apartment</option>
-                    <option value="house">House</option>
-                    <option value="villa">Villa</option>
-                    <option value="condo">Condo</option>
-                    <option value="hotel">Hotel</option>
+                    <option value="Hotel">Hotel</option>
+                    <option value="Motel">Motel</option>
+                    <option value="Resort">Resort</option>
+                    <option value="Lodge">Lodge</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Guesthouse">Guesthouse</option>
+                    <option value="Villa">Villa</option>
+                    <option value="House">House</option>
+                    <option value="Condo">Condo</option>
                   </select>
                 </div>
               </div>
@@ -509,13 +513,39 @@ const editingProperty = ref({
   price: '',
   bedrooms: 0,
   bathrooms: 0,
-  type: 'apartment',
+  property_type: 'Apartment',
   description: '',
   amenities: [],
   images: [],
   tour360: [],
   vrContent: []
 })
+
+function normalizePropertyType(rawType) {
+  const value = String(rawType || '').trim()
+  if (!value) return 'Accommodation'
+
+  const normalized = value
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  const map = {
+    hotel: 'Hotel',
+    motel: 'Motel',
+    resort: 'Resort',
+    lodge: 'Lodge',
+    apartment: 'Apartment',
+    villa: 'Villa',
+    guesthouse: 'Guesthouse',
+    'guest house': 'Guesthouse',
+    house: 'House',
+    condo: 'Condo'
+  }
+
+  return map[normalized] || value.charAt(0).toUpperCase() + value.slice(1)
+}
 
 const selectedProperty = ref(null)
 const amenitiesInput = ref('')
@@ -548,7 +578,10 @@ const loadProperties = async () => {
 
 // Edit property
 const editProperty = (property) => {
-  editingProperty.value = { ...property }
+  editingProperty.value = {
+    ...property,
+    property_type: normalizePropertyType(property.property_type || property.type)
+  }
   amenitiesInput.value = property.amenities?.join(', ') || ''
   imagesInput.value = property.images?.join(', ') || ''
   showEditModal.value = true
@@ -560,10 +593,14 @@ const saveProperty = async () => {
   try {
     const propertyData = {
       ...editingProperty.value,
+      property_type: normalizePropertyType(editingProperty.value.property_type),
       amenities: amenitiesInput.value.split(',').map(a => a.trim()).filter(Boolean),
       images: imagesInput.value.split(',').map(i => i.trim()).filter(Boolean),
       updated_at: new Date().toISOString()
     }
+
+    // Ensure we don't try to write legacy UI fields that are not DB columns.
+    delete propertyData.type
 
     if (propertyData.id) {
       // Update existing
@@ -676,7 +713,7 @@ const closeEditModal = () => {
     price: '',
     bedrooms: 0,
     bathrooms: 0,
-    type: 'apartment',
+    property_type: 'Apartment',
     description: '',
     amenities: [],
     images: []

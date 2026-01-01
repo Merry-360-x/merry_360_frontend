@@ -6,8 +6,14 @@
         <aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen sticky top-0 transition-colors duration-200">
           <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center space-x-2">
-              <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
-                <span class="text-white font-bold text-xl">S</span>
+              <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center overflow-hidden">
+                <img
+                  v-if="userStore.user?.avatar_url"
+                  :src="userStore.user.avatar_url"
+                  alt="Staff photo"
+                  class="w-full h-full object-cover"
+                />
+                <span v-else class="text-white font-bold text-xl">S</span>
               </div>
               <span class="text-xl font-bold text-gray-900 dark:text-gray-100">Staff Portal</span>
             </div>
@@ -214,13 +220,21 @@ async function loadStaffData() {
 
     // Load properties created by this staff member
     const { data: propertiesData, error: propertiesError } = await supabase
-      .from('listings')
+      .from('properties')
       .select('*')
-      .eq('vendor_id', userId)
+      .eq('host_id', userId)
       .order('created_at', { ascending: false })
 
     if (propertiesError) throw propertiesError
-    properties.value = propertiesData || []
+    properties.value = (propertiesData || []).map((row) => ({
+      id: row.id,
+      title: row.name || 'Untitled Property',
+      location: row.location || '',
+      price: row.price_per_night ?? 0,
+      images: row.images || [],
+      image: row.main_image || row.images?.[0] || null,
+      status: row.available === false ? 'inactive' : 'active'
+    }))
 
     // Load bookings for staff's properties
     const propertyIds = properties.value.map(p => p.id)
@@ -231,7 +245,7 @@ async function loadStaffData() {
       const { data: bookingsData } = await supabase
         .from('bookings')
         .select('total_price')
-        .in('listing_id', propertyIds)
+        .in('property_id', propertyIds)
         .eq('payment_status', 'paid')
 
       if (bookingsData) {

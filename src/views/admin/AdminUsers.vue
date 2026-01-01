@@ -26,6 +26,7 @@
                 'px-3 py-1 rounded-full text-sm font-medium inline-block mt-2': true,
                 'bg-red-100 text-red-800': selectedUser.role === 'admin',
                 'bg-blue-100 text-blue-800': selectedUser.role === 'host',
+                'bg-indigo-100 text-indigo-800': selectedUser.role === 'staff',
                 'bg-gray-100 text-gray-800': selectedUser.role === 'user'
               }">
                 {{ selectedUser.role }}
@@ -66,8 +67,40 @@
       <p class="text-text-secondary">Manage users and assign roles</p>
     </div>
 
+    <!-- Create Staff Account (Admin only) -->
+    <Card padding="lg" class="mb-8">
+      <h2 class="text-xl font-bold mb-4">Create Staff Account</h2>
+      <p class="text-text-secondary text-sm mb-4">
+        Staff accounts are created by admins only. Staff cannot self-register.
+      </p>
+      <form class="grid grid-cols-1 md:grid-cols-4 gap-4" @submit.prevent="createStaff">
+        <div>
+          <label class="block text-sm font-medium mb-1">First name</label>
+          <input v-model="staffForm.firstName" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="First" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Last name</label>
+          <input v-model="staffForm.lastName" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Last" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Email *</label>
+          <input v-model="staffForm.email" type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="staff@example.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Password *</label>
+          <input v-model="staffForm.password" type="password" minlength="6" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Min 6 chars" />
+        </div>
+
+        <div class="md:col-span-4 flex justify-end">
+          <Button type="submit" variant="primary" :loading="creatingStaff">
+            Create staff
+          </Button>
+        </div>
+      </form>
+    </Card>
+
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Total Users</p>
         <p class="text-3xl font-bold">{{ stats.total }}</p>
@@ -79,6 +112,10 @@
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Hosts</p>
         <p class="text-3xl font-bold text-brand-600">{{ stats.hosts }}</p>
+      </Card>
+      <Card padding="md">
+        <p class="text-text-secondary text-sm mb-1">Staff</p>
+        <p class="text-3xl font-bold text-indigo-600">{{ stats.staff }}</p>
       </Card>
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Regular Users</p>
@@ -122,6 +159,7 @@
                   >
                     <option value="user">User</option>
                     <option value="host">Host</option>
+                    <option value="staff">Staff</option>
                     <option value="admin">Admin</option>
                   </select>
                   <Button 
@@ -163,12 +201,61 @@ const selectedUser = ref(null)
 const changedUsers = ref(new Set())
 const originalRoles = ref(new Map())
 
+const creatingStaff = ref(false)
+const staffForm = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: ''
+})
+
 const stats = computed(() => ({
   total: users.value.length,
   admins: users.value.filter(u => u.role === 'admin').length,
   hosts: users.value.filter(u => u.role === 'host').length,
+  staff: users.value.filter(u => u.role === 'staff').length,
   users: users.value.filter(u => u.role === 'user').length
 }))
+
+const createStaff = async () => {
+  if (!staffForm.value.email || !staffForm.value.password) {
+    showToast('Email and password are required', 'error')
+    return
+  }
+
+  creatingStaff.value = true
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) {
+      showToast('You must be logged in as admin', 'error')
+      return
+    }
+
+    const { data, error } = await supabase.functions.invoke('create-staff-user', {
+      body: {
+        email: staffForm.value.email,
+        password: staffForm.value.password,
+        firstName: staffForm.value.firstName,
+        lastName: staffForm.value.lastName
+      },
+      headers: {
+        Authorization: `Bearer ${session.access_token}`
+      }
+    })
+
+    if (error) throw error
+    if (!data?.ok) throw new Error(data?.error || 'Failed to create staff account')
+
+    showToast(`✅ Staff created: ${data.staffUser?.email || staffForm.value.email}`, 'success')
+    staffForm.value = { firstName: '', lastName: '', email: '', password: '' }
+    await loadUsers()
+  } catch (err) {
+    console.error('Create staff error:', err)
+    showToast('Failed to create staff: ' + (err?.message || 'Unknown error'), 'error')
+  } finally {
+    creatingStaff.value = false
+  }
+}
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', { 

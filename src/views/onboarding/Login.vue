@@ -155,9 +155,13 @@ const handleLogin = async () => {
     console.log('User data:', userStore.user)
 
     // Navigate based on role
-    const isAdmin = data.user.email === 'admin@merry360x.com' || data.user.email === 'bebisdavy@gmail.com'
-    if (isAdmin) {
+    const role = profile?.role || 'user'
+    if (role === 'admin') {
       router.push('/admin')
+    } else if (role === 'staff') {
+      router.push('/staff')
+    } else if (role === 'vendor') {
+      router.push('/vendor')
     } else {
       router.push('/profile')
     }

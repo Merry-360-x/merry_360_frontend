@@ -51,6 +51,7 @@
                   >
                     <option value="">Select type</option>
                     <option value="hotel">Hotel</option>
+                    <option value="motel">Motel</option>
                     <option value="resort">Resort</option>
                     <option value="lodge">Lodge</option>
                     <option value="apartment">Apartment</option>
@@ -172,8 +173,8 @@
 
                 <!-- Uploaded Images Preview -->
                 <div v-if="uploadedImages.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-4">
-                  <div v-for="(img, index) in uploadedImages" :key="index" class="relative">
-                    <img :src="img" class="w-full h-24 object-cover rounded-lg" />
+                  <div v-for="(img, index) in uploadedImages" :key="img.id" class="relative">
+                    <img :src="img.url" class="w-full h-24 object-cover rounded-lg" />
                     <button 
                       type="button"
                       @click="removeImage(index)"
@@ -211,7 +212,7 @@
             <div class="flex gap-4">
               <button 
                 type="submit"
-                :disabled="isSubmitting"
+                :disabled="isSubmitting || uploading"
                 class="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {{ isSubmitting ? 'Adding Property...' : 'Add Property' }}
@@ -231,12 +232,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
+import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -256,7 +258,7 @@ const form = ref({
 const uploadedImages = ref([])
 const isSubmitting = ref(false)
 const showSuccess = ref(false)
-const uploading = ref(false)
+const uploading = computed(() => uploadedImages.value.some((img) => img.status === 'uploading'))
 
 const availableAmenities = [
   'WiFi', 'Pool', 'Restaurant', 'Spa', 'Gym', 'Room Service', 
@@ -264,38 +266,92 @@ const availableAmenities = [
   'Mountain Views', 'Bar', 'Laundry', 'Security', 'TV', 'Balcony'
 ]
 
+function normalizePropertyType(rawType) {
+  const value = String(rawType || '').trim()
+  if (!value) return 'Accommodation'
+
+  const normalized = value
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  const map = {
+    hotel: 'Hotel',
+    motel: 'Motel',
+    resort: 'Resort',
+    lodge: 'Lodge',
+    apartment: 'Apartment',
+    villa: 'Villa',
+    guesthouse: 'Guesthouse',
+    'guest house': 'Guesthouse'
+  }
+
+  return map[normalized] || value.charAt(0).toUpperCase() + value.slice(1)
+}
+
 async function handleImageUpload(event) {
-  const files = event.target.files
+  const files = Array.from(event.target.files || [])
   if (!files.length) return
 
-  uploading.value = true
+  // allow selecting the same files again
+  event.target.value = ''
 
-  for (const file of files) {
+  const isCloudinaryConfigured = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+
+  const runWithConcurrency = async (tasks, limit = 3) => {
+    const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
+      while (tasks.length) {
+        const task = tasks.shift()
+        if (task) await task()
+      }
+    })
+    await Promise.all(workers)
+  }
+
+  const tasks = files.map((file) => async () => {
+    const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`
+    const previewUrl = URL.createObjectURL(file)
+
+    uploadedImages.value.push({ id, url: previewUrl, status: 'uploading' })
+
+    const updateById = (patch) => {
+      const idx = uploadedImages.value.findIndex((img) => img.id === id)
+      if (idx === -1) {
+        if (previewUrl) URL.revokeObjectURL(previewUrl)
+        return
+      }
+      uploadedImages.value[idx] = { ...uploadedImages.value[idx], ...patch }
+    }
+
     try {
-      // Try Cloudinary upload
-      if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-        const result = await uploadToCloudinary(file, { folder: 'merry360x/properties' })
-        uploadedImages.value.push(result.secure_url)
+      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+
+      if (isCloudinaryConfigured) {
+        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
+        updateById({ url: result.secure_url, status: 'ready' })
       } else {
-        // Fallback to base64
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          uploadedImages.value.push(e.target.result)
-        }
-        reader.readAsDataURL(file)
+        const dataUrl = await fileToDataUrl(optimized)
+        updateById({ url: dataUrl, status: 'ready' })
       }
     } catch (error) {
       console.error('Upload error:', error)
-      // Fallback to base64
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        uploadedImages.value.push(e.target.result)
+      try {
+        const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+        const dataUrl = await fileToDataUrl(optimized)
+        updateById({ url: dataUrl, status: 'ready' })
+      } catch (fallbackError) {
+        console.error('Upload fallback error:', fallbackError)
+        updateById({ status: 'error' })
       }
-      reader.readAsDataURL(file)
+    } finally {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
-  }
+  })
 
-  uploading.value = false
+  await runWithConcurrency(tasks, 3)
 }
 
 function removeImage(index) {
@@ -308,6 +364,16 @@ async function handleSubmit() {
     return
   }
 
+  if (uploading.value) {
+    alert('Please wait for images to finish uploading')
+    return
+  }
+
+  if (uploadedImages.value.some((img) => img.status === 'error')) {
+    alert('One or more images failed to upload. Please remove and re-upload them.')
+    return
+  }
+
   if (!userStore.user?.id) {
     alert('Please login to add properties')
     router.push('/login')
@@ -317,19 +383,20 @@ async function handleSubmit() {
   isSubmitting.value = true
 
   try {
+    const imageUrls = uploadedImages.value.map((img) => img.url).filter(Boolean)
     const propertyRow = {
       host_id: userStore.user.id,
       name: form.value.title,
       description: form.value.description,
-      property_type: form.value.category || 'accommodation',
+      property_type: normalizePropertyType(form.value.category),
       location: form.value.location,
       price_per_night: form.value.price,
       bedrooms: form.value.beds || 1,
       bathrooms: form.value.baths || 1,
       max_guests: form.value.maxGuests || 2,
       amenities: form.value.amenities,
-      images: uploadedImages.value,
-      main_image: uploadedImages.value[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
+      images: imageUrls,
+      main_image: imageUrls[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
       available: true
     }
 

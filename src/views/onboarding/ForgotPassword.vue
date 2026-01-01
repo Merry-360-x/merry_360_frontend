@@ -80,6 +80,7 @@ import { useTranslation } from '../../composables/useTranslation'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
+import { supabase } from '../../services/supabase'
 
 const router = useRouter()
 
@@ -112,16 +113,24 @@ const handleSubmit = async () => {
   if (!validateEmail()) return
 
   loading.value = true
-  
-  // Simulate API call
-  setTimeout(() => {
-    loading.value = false
+
+  try {
+    await supabase.auth.resetPasswordForEmail(email.value, {
+      redirectTo: `${window.location.origin}/reset-password`
+    })
+
     emailSent.value = true
-  }, 1500)
+  } catch (err) {
+    console.error('Password reset error:', err)
+    error.value = err?.message || 'Failed to send password reset email'
+  } finally {
+    loading.value = false
+  }
 }
 
-const resendEmail = () => {
+const resendEmail = async () => {
   emailSent.value = false
+  await handleSubmit()
 }
 </script>
 

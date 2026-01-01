@@ -8,13 +8,38 @@
 
 import { supabase } from './supabase'
 
+function normalizePropertyType(rawType) {
+  const value = String(rawType || '').trim()
+  if (!value) return 'Accommodation'
+
+  const normalized = value
+    .toLowerCase()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  const map = {
+    hotel: 'Hotel',
+    motel: 'Motel',
+    resort: 'Resort',
+    lodge: 'Lodge',
+    apartment: 'Apartment',
+    villa: 'Villa',
+    guesthouse: 'Guesthouse',
+    'guest house': 'Guesthouse',
+    'guest-house': 'Guesthouse'
+  }
+
+  return map[normalized] || value.charAt(0).toUpperCase() + value.slice(1)
+}
+
 function mapPropertyRowToAccommodation(row) {
   if (!row) return null
 
   return {
     id: row.id,
     name: row.name,
-    type: row.property_type || 'Accommodation',
+    type: normalizePropertyType(row.property_type),
     location: row.city || row.location,
     price: row.price_per_night,
     rating: row.rating ?? 0,
@@ -23,14 +48,18 @@ function mapPropertyRowToAccommodation(row) {
     amenities: row.amenities || [],
     image: row.main_image || row.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
     images: row.images || (row.main_image ? [row.main_image] : []),
-    ecoFriendly: false
+    ecoFriendly: false,
+    createdAt: row.created_at || null
   }
 }
 
 export const supabaseApiAdapter = {
   accommodations: {
     getAll: async (params = {}) => {
-      const { search, limit } = params || {}
+      const { search, q, guests, limit } = params || {}
+      const termRaw = (q ?? search)
+      const term = termRaw != null ? String(termRaw).trim() : ''
+      const guestsCount = guests != null && String(guests).trim() ? Number(guests) : null
 
       let query = supabase
         .from('properties')
@@ -38,9 +67,12 @@ export const supabaseApiAdapter = {
         .eq('available', true)
         .order('created_at', { ascending: false })
 
-      if (search && String(search).trim()) {
-        const term = String(search).trim()
+      if (term) {
         query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+      }
+
+      if (Number.isFinite(guestsCount) && guestsCount > 0) {
+        query = query.gte('max_guests', guestsCount)
       }
 
       if (limit) {
@@ -88,7 +120,7 @@ export const supabaseApiAdapter = {
         host_id: user.id,
         name: propertyData.name,
         description: propertyData.description || null,
-        property_type: propertyData.type || propertyData.property_type || null,
+        property_type: normalizePropertyType(propertyData.type || propertyData.property_type),
         location: propertyData.location,
         price_per_night: propertyData.price,
         bedrooms: propertyData.beds ?? propertyData.bedrooms ?? 1,

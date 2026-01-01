@@ -761,7 +761,7 @@ const savePreferences = () => {
   alert('Preferences saved successfully!')
 }
 
-const changePassword = () => {
+const changePassword = async () => {
   if (passwordForm.value.new !== passwordForm.value.confirm) {
     alert('Passwords do not match!')
     return
@@ -772,10 +772,38 @@ const changePassword = () => {
     return
   }
   
-  // Simulate password change
-  showChangePassword.value = false
-  passwordForm.value = { current: '', new: '', confirm: '' }
-  alert('Password changed successfully!')
+  try {
+    // Verify current password by re-auth (keeps security expectations aligned with UI)
+    if (!userStore.user?.email) {
+      alert('Please login again to change your password.')
+      return
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: userStore.user.email,
+      password: passwordForm.value.current
+    })
+
+    if (signInError) {
+      alert('Current password is incorrect.')
+      return
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: passwordForm.value.new
+    })
+
+    if (updateError) {
+      throw updateError
+    }
+
+    showChangePassword.value = false
+    passwordForm.value = { current: '', new: '', confirm: '' }
+    alert('Password changed successfully!')
+  } catch (err) {
+    console.error('Password change error:', err)
+    alert(err?.message || 'Failed to change password')
+  }
 }
 
 const enable2FA = () => {
