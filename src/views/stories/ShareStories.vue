@@ -98,7 +98,7 @@
             <div>
               <label class="block text-sm font-semibold text-text-brand-600 mb-2">Upload Photos</label>
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-teal-500 transition-colors cursor-pointer">
-                <input type="file" accept="image/*" multiple class="hidden" id="photo-upload" @change="handlePhotoUpload" />
+                <input type="file" accept="image/*,video/*" multiple class="hidden" id="photo-upload" @change="handlePhotoUpload" />
                 <label for="photo-upload" class="cursor-pointer">
                   <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -109,7 +109,15 @@
               </div>
               <div v-if="storyForm.photos.length > 0" class="mt-3 flex flex-wrap gap-2">
                 <div v-for="(photo, index) in storyForm.photos" :key="index" class="relative">
-                  <img loading="lazy" :src="photo" class="w-20 h-20 object-cover rounded-lg" />
+                  <video
+                    v-if="isVideoUrl(photo)"
+                    :src="photo"
+                    class="w-20 h-20 object-cover rounded-lg"
+                    muted
+                    playsinline
+                    preload="metadata"
+                  />
+                  <img v-else loading="lazy" :src="photo" class="w-20 h-20 object-cover rounded-lg" />
                   <button 
                     type="button"
                     @click="removePhoto(index)"
@@ -162,7 +170,21 @@
           class="overflow-hidden group"
         >
           <div class="relative h-56 overflow-hidden">
-            <img loading="lazy" :src="story.image" :alt="story.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <video
+              v-if="isVideoUrl(storyPrimaryMedia(story))"
+              :src="storyPrimaryMedia(story)"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              muted
+              playsinline
+              preload="metadata"
+            />
+            <img
+              v-else
+              loading="lazy"
+              :src="storyPrimaryMedia(story)"
+              :alt="story.title"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
             <div class="absolute top-3 left-3">
               <span class="px-3 py-1 bg-teal-500 text-white text-xs font-semibold rounded-full">
@@ -274,6 +296,21 @@ const handlePhotoUpload = async (event) => {
 
 const removePhoto = (index) => {
   storyForm.value.photos.splice(index, 1)
+}
+
+function storyPrimaryMedia(story) {
+  return (
+    story?.image ||
+    story?.images?.[0] ||
+    'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600'
+  )
+}
+
+function isVideoUrl(url) {
+  if (!url) return false
+  const u = String(url).toLowerCase()
+  if (u.startsWith('data:video/')) return true
+  return /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/.test(u)
 }
 
 // Load stories from database on mount

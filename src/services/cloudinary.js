@@ -14,7 +14,8 @@ export async function uploadToCloudinary(file, options = {}) {
     formData.append('folder', options.folder)
   }
 
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+  // Use `auto/upload` so the same helper supports both images and videos.
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
     method: 'POST',
     body: formData
   })

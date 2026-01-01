@@ -41,8 +41,17 @@
             class="relative aspect-[9/16] rounded-2xl overflow-hidden cursor-pointer group shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <!-- Story Image -->
+            <video
+              v-if="isVideoUrl(storyPrimaryMedia(story))"
+              :src="storyPrimaryMedia(story)"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              muted
+              playsinline
+              preload="metadata"
+            />
             <img
-              :src="story.image || story.images?.[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400'"
+              v-else
+              :src="storyPrimaryMedia(story)"
               :alt="story.title"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
@@ -174,19 +183,27 @@
               <input 
                 ref="storyImageInput"
                 type="file" 
-                accept="image/*" 
+                accept="image/*,video/*" 
                 class="hidden" 
                 @change="handleStoryImage"
               />
               <div v-if="newStory.imagePreview">
-                <img :src="newStory.imagePreview" class="w-full h-40 object-cover rounded-lg mb-2" />
+                <video
+                  v-if="newStory.mediaType === 'video'"
+                  :src="newStory.imagePreview"
+                  class="w-full h-40 object-cover rounded-lg mb-2"
+                  muted
+                  playsinline
+                  preload="metadata"
+                />
+                <img v-else :src="newStory.imagePreview" class="w-full h-40 object-cover rounded-lg mb-2" />
                 <p class="text-sm text-gray-500 dark:text-gray-400">Click to change image</p>
               </div>
               <div v-else>
                 <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Click to upload a photo</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Click to upload a photo or video</p>
               </div>
             </div>
           </div>
@@ -216,8 +233,18 @@
       <div class="h-full max-w-lg mx-auto relative" @click.stop>
         <!-- Story Content -->
         <div class="relative h-full">
+          <video
+            v-if="isVideoUrl(storyPrimaryMedia(activeStory))"
+            :src="storyPrimaryMedia(activeStory)"
+            class="w-full h-full object-cover"
+            muted
+            playsinline
+            preload="metadata"
+            controls
+          />
           <img
-            :src="activeStory.image || activeStory.images?.[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800'"
+            v-else
+            :src="storyPrimaryMedia(activeStory)"
             :alt="activeStory.title"
             class="w-full h-full object-cover"
           />
@@ -364,7 +391,8 @@ const newStory = ref({
   location: '',
   content: '',
   image: null,
-  imagePreview: null
+  imagePreview: null,
+  mediaType: 'image'
 })
 
 onMounted(async () => {
@@ -425,12 +453,19 @@ async function handleStoryImage(event) {
   const file = event.target.files[0]
   if (!file) return
 
+  newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
+
   // Show preview
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    newStory.value.imagePreview = e.target.result
+  // Use an object URL for videos to avoid huge base64 strings.
+  if (newStory.value.mediaType === 'video') {
+    newStory.value.imagePreview = URL.createObjectURL(file)
+  } else {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      newStory.value.imagePreview = e.target.result
+    }
+    reader.readAsDataURL(file)
   }
-  reader.readAsDataURL(file)
 
   // Upload to Cloudinary if configured
   try {
@@ -444,6 +479,21 @@ async function handleStoryImage(event) {
     console.error('Upload error:', error)
     newStory.value.image = newStory.value.imagePreview
   }
+}
+
+function storyPrimaryMedia(story) {
+  return (
+    story?.image ||
+    story?.images?.[0] ||
+    'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800'
+  )
+}
+
+function isVideoUrl(url) {
+  if (!url) return false
+  const u = String(url).toLowerCase()
+  if (u.startsWith('data:video/')) return true
+  return /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/.test(u)
 }
 
 async function createStory() {
@@ -460,6 +510,7 @@ async function createStory() {
       location: newStory.value.location,
       content: newStory.value.content,
       image: newStory.value.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
+      images: newStory.value.image ? [newStory.value.image] : [],
       author: userStore.user?.name || `${userStore.user?.firstName || ''} ${userStore.user?.lastName || ''}`.trim() || 'Anonymous',
       user_id: userStore.user?.id,
       user_avatar: userStore.user?.avatar_url || null
