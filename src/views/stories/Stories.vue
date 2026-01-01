@@ -126,13 +126,13 @@
       </div>
     </section>
 
-    <!-- Create Story Modal -->
+    <!-- Create / Edit Story Modal -->
     <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Share Your Story</h2>
-            <button @click="showCreateModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ isEditing ? 'Edit Story' : 'Share Your Story' }}</h2>
+            <button @click="closeCreateModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -175,7 +175,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Photo</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Photo / Video</label>
             <div 
               class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500 transition-colors"
               @click="$refs.storyImageInput.click()"
@@ -218,10 +218,10 @@
             </button>
             <button 
               type="submit"
-              :disabled="creating"
+              :disabled="creating || uploadingMedia"
               class="flex-1 px-4 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
             >
-              {{ creating ? 'Sharing...' : 'Share Story' }}
+              {{ creating ? (isEditing ? 'Saving...' : 'Sharing...') : (isEditing ? 'Save Changes' : 'Share Story') }}
             </button>
           </div>
         </form>
@@ -250,13 +250,24 @@
           />
           
           <!-- Overlay -->
-          <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 pointer-events-none"></div>
 
           <!-- Top Right Actions -->
-          <div class="absolute top-4 right-4 flex items-center gap-2 z-10">
+          <div class="absolute top-4 right-4 flex items-center gap-2 z-20">
+            <button
+              v-if="activeStory && canEditStory(activeStory)"
+              @click.stop.prevent="startEditStory(activeStory)"
+              class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors"
+              title="Edit story"
+            >
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </button>
+
             <button
               v-if="activeStory && canDeleteStory(activeStory)"
-              @click="deleteStory(activeStory)"
+              @click.stop.prevent="deleteStory(activeStory)"
               :disabled="deletingStoryId === activeStory.id"
               class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
               title="Delete story"
@@ -267,7 +278,7 @@
             </button>
 
             <button
-              @click="closeStory"
+              @click.stop.prevent="closeStory"
               class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors"
               title="Close"
             >
@@ -403,6 +414,8 @@ const newComment = ref('')
 const addingComment = ref(false)
 const uploadingMedia = ref(false)
 const deletingStoryId = ref(null)
+const isEditing = ref(false)
+const editingStoryId = ref(null)
 
 const newStory = ref({
   title: '',
@@ -412,6 +425,17 @@ const newStory = ref({
   imagePreview: null,
   mediaType: 'image'
 })
+
+function resetStoryForm() {
+  newStory.value = { title: '', location: '', content: '', image: null, imagePreview: null, mediaType: 'image' }
+  isEditing.value = false
+  editingStoryId.value = null
+}
+
+function closeCreateModal() {
+  showCreateModal.value = false
+  resetStoryForm()
+}
 
 onMounted(async () => {
   await loadStories()
@@ -463,6 +487,7 @@ function openCreateStory() {
     alert('Please login to share your story')
     return
   }
+  resetStoryForm()
   showCreateModal.value = true
 }
 
@@ -529,6 +554,34 @@ function isVideoUrl(url) {
   return /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/.test(u)
 }
 
+function canEditStory(story) {
+  return canDeleteStory(story)
+}
+
+function startEditStory(story) {
+  if (!canEditStory(story)) {
+    alert('You can only edit your own story')
+    return
+  }
+
+  isEditing.value = true
+  editingStoryId.value = story.id
+
+  const primary = storyPrimaryMedia(story)
+  const mediaType = isVideoUrl(primary) ? 'video' : 'image'
+
+  newStory.value = {
+    title: story.title || '',
+    location: story.location || '',
+    content: story.content || '',
+    image: story.image || null,
+    imagePreview: primary || null,
+    mediaType
+  }
+
+  showCreateModal.value = true
+}
+
 function canDeleteStory(story) {
   if (!story) return false
   if (!userStore.isAuthenticated) return false
@@ -582,40 +635,72 @@ async function createStory() {
   creating.value = true
 
   try {
-    const storyData = {
-      title: newStory.value.title,
-      location: newStory.value.location,
-      content: newStory.value.content,
-      image: newStory.value.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-      images: newStory.value.image ? [newStory.value.image] : [],
-      author: userStore.user?.name || `${userStore.user?.firstName || ''} ${userStore.user?.lastName || ''}`.trim() || 'Anonymous',
-      user_id: userStore.user?.id,
-      user_avatar: userStore.user?.avatar_url || null
+    if (isEditing.value && editingStoryId.value) {
+      const updateData = {
+        title: newStory.value.title,
+        location: newStory.value.location,
+        content: newStory.value.content,
+        image: newStory.value.image || null,
+        images: newStory.value.image ? [newStory.value.image] : [],
+        updated_at: new Date().toISOString()
+      }
+
+      const { data, error } = await supabase
+        .from('stories')
+        .update(updateData)
+        .eq('id', editingStoryId.value)
+        .eq('user_id', userStore.user.id)
+        .select('*, story_likes(count), story_comments(count)')
+        .single()
+
+      if (error) throw error
+
+      const updated = {
+        ...data,
+        likes_count: (data.story_likes || data.likes)?.[0]?.count || 0,
+        comments_count: (data.story_comments || data.comments)?.[0]?.count || 0,
+        isLiked: Boolean(activeStory.value?.isLiked)
+      }
+
+      const idx = stories.value.findIndex(s => s.id === updated.id)
+      if (idx !== -1) stories.value[idx] = { ...stories.value[idx], ...updated }
+      if (activeStory.value?.id === updated.id) activeStory.value = { ...activeStory.value, ...updated }
+
+      closeCreateModal()
+    } else {
+      const storyData = {
+        title: newStory.value.title,
+        location: newStory.value.location,
+        content: newStory.value.content,
+        image: newStory.value.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
+        images: newStory.value.image ? [newStory.value.image] : [],
+        author: userStore.user?.name || `${userStore.user?.firstName || ''} ${userStore.user?.lastName || ''}`.trim() || 'Anonymous',
+        user_id: userStore.user?.id,
+        user_avatar: userStore.user?.avatar_url || null
+      }
+
+      const { data, error } = await supabase
+        .from('stories')
+        .insert([storyData])
+        .select()
+        .single()
+
+      if (error) throw error
+
+      // Add to local list
+      stories.value.unshift({
+        ...data,
+        likes_count: 0,
+        comments_count: 0,
+        isLiked: false
+      })
+
+      closeCreateModal()
     }
-
-    const { data, error } = await supabase
-      .from('stories')
-      .insert([storyData])
-      .select()
-      .single()
-
-    if (error) throw error
-
-    // Add to local list
-    stories.value.unshift({
-      ...data,
-      likes_count: 0,
-      comments_count: 0,
-      isLiked: false
-    })
-
-    // Reset form
-    newStory.value = { title: '', location: '', content: '', image: null, imagePreview: null, mediaType: 'image' }
-    showCreateModal.value = false
 
   } catch (error) {
     console.error('Error creating story:', error)
-    alert('Failed to share story. Please try again.')
+    alert(isEditing.value ? 'Failed to update story. Please try again.' : 'Failed to share story. Please try again.')
   } finally {
     creating.value = false
   }
