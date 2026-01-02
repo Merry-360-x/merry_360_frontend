@@ -38,10 +38,10 @@
         </div>
 
         <!-- Search Box -->
-        <div class="w-full max-w-4xl bg-white rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+        <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg p-4 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-0 px-2 md:px-6">
             <!-- Location -->
-            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300">
+            <div class="md:border-r md:pr-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-600">
               <label class="block text-xs font-bold mb-1.5 text-text-secondary" style="font-family: 'Montserrat', sans-serif;">{{ t('accommodation.location') }}</label>
               <input 
                 type="text" 
@@ -53,7 +53,7 @@
             </div>
 
             <!-- Check In -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 relative">
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-600 relative">
               <label class="block text-xs font-bold mb-1.5 text-text-secondary" style="font-family: 'Montserrat', sans-serif;">{{ t('search.checkIn') }}</label>
               <input 
                 type="date" 
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Check Out -->
-            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 relative">
+            <div class="md:border-r md:px-5 pb-3 md:pb-0 border-b md:border-b-0 border-gray-300 dark:border-gray-600 relative">
               <label class="block text-xs font-bold mb-1.5 text-text-secondary" style="font-family: 'Montserrat', sans-serif;">{{ t('search.checkOut') }}</label>
               <input 
                 type="date" 
@@ -92,19 +92,19 @@
               </button>
               
               <!-- Guest Selector Dropdown -->
-              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white rounded p-4 w-72 z-50 border border-gray-200">
+              <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded p-4 w-72 z-50 border border-gray-200 dark:border-gray-700">
                 <div class="space-y-4">
                   <!-- Adults -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900">{{ t('accommodation.adults') }}</div>
-                      <div class="text-xs text-gray-500">{{ t('accommodation.adultsDesc') }}</div>
+                      <div class="font-semibold text-text-primary">{{ t('accommodation.adults') }}</div>
+                      <div class="text-xs text-text-muted">{{ t('accommodation.adultsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
                         @click="decrementGuests('adults')"
                         :disabled="guestCounts.adults <= 1"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -113,7 +113,7 @@
                       <span class="w-8 text-center font-semibold">{{ guestCounts.adults }}</span>
                       <button 
                         @click="incrementGuests('adults')"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -125,14 +125,14 @@
                   <!-- Children -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900">{{ t('accommodation.children') }}</div>
-                      <div class="text-xs text-gray-500">{{ t('accommodation.childrenDesc') }}</div>
+                      <div class="font-semibold text-text-primary">{{ t('accommodation.children') }}</div>
+                      <div class="text-xs text-text-muted">{{ t('accommodation.childrenDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
                         @click="decrementGuests('children')"
                         :disabled="guestCounts.children <= 0"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -141,7 +141,7 @@
                       <span class="w-8 text-center font-semibold">{{ guestCounts.children }}</span>
                       <button 
                         @click="incrementGuests('children')"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -153,14 +153,14 @@
                   <!-- Infants -->
                   <div class="flex items-center justify-between">
                     <div>
-                      <div class="font-semibold text-gray-900">{{ t('accommodation.infants') }}</div>
-                      <div class="text-xs text-gray-500">{{ t('accommodation.infantsDesc') }}</div>
+                      <div class="font-semibold text-text-primary">{{ t('accommodation.infants') }}</div>
+                      <div class="text-xs text-text-muted">{{ t('accommodation.infantsDesc') }}</div>
                     </div>
                     <div class="flex items-center gap-3">
                       <button 
                         @click="decrementGuests('infants')"
                         :disabled="guestCounts.infants <= 0"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
@@ -169,7 +169,7 @@
                       <span class="w-8 text-center font-semibold">{{ guestCounts.infants }}</span>
                       <button 
                         @click="incrementGuests('infants')"
-                        class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-brand-500"
+                        class="w-8 h-8 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center hover:border-brand-500"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
