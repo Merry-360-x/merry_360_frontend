@@ -13,7 +13,7 @@
           <nav class="hidden lg:flex items-center gap-0">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
               exact
             >
@@ -21,35 +21,35 @@
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.accommodations') }}
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.tours') }}
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.transport') }}
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.services') }}
             </router-link>
             <router-link 
               to="/stories"
-              class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.stories') }}
@@ -78,7 +78,7 @@
               class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
               title="Toggle Dark Mode"
             >
-              <svg v-if="!themeStore.isDark" class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="!themeStore.isDark" class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
               </svg>
               <svg v-else class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@
             <select 
               v-model="currencyStore.currentCurrency" 
               @change="currencyStore.setCurrency(currencyStore.currentCurrency)" 
-              class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
+              class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
             >
               <option value="USD">$ USD</option>
               <option value="EUR">€ EUR</option>
@@ -99,7 +99,7 @@
               <option value="RWF">RWF</option>
             </select>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-gray-700 dark:text-gray-300 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
@@ -107,13 +107,13 @@
               <option value="SW">SW</option>
             </select>
 
-            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-full text-sm font-semibold text-gray-700 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-full text-sm font-semibold text-text-secondary hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
               {{ t('nav.tripCart') }}
               <span v-if="userStore.cartCount > 0" class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 inline-flex items-center justify-center">{{ userStore.cartCount }}</span>
             </router-link>
 
             <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" :title="t('nav.wishlist')">
-              <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
@@ -127,7 +127,7 @@
                 <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
                   <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'JO' }}</span>
                 </div>
-                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
@@ -136,8 +136,8 @@
               <transition name="dropdown">
                 <div v-if="showUserMenu" class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-1 z-50">
                   <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                    <p class="font-semibold text-sm text-gray-900 dark:text-gray-100">{{ userStore.user?.name || 'User' }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ userStore.user?.email || '' }}</p>
+                    <p class="font-semibold text-sm text-text-primary">{{ userStore.user?.name || 'User' }}</p>
+                    <p class="text-xs text-text-secondary">{{ userStore.user?.email || '' }}</p>
                   </div>
                   
                   <router-link 
@@ -510,27 +510,27 @@
             <div class="flex items-center space-x-3 mb-6">
               <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{{ t('footer.tagline') }}</p>
+            <p class="text-text-secondary text-sm leading-relaxed">{{ t('footer.tagline') }}</p>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.explore') }}</h4>
-            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+            <h4 class="font-bold mb-5 text-text-primary text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.explore') }}</h4>
+            <ul class="space-y-3 text-text-secondary text-sm">
               <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.accommodations') }}</router-link></li>
               <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.tours') }}</router-link></li>
               <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.transport') }}</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.company') }}</h4>
-            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+            <h4 class="font-bold mb-5 text-text-primary text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.company') }}</h4>
+            <ul class="space-y-3 text-text-secondary text-sm">
               <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.aboutUs') }}</router-link></li>
               <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.contact') }}</a></li>
               <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.becomeHost') }}</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.support') }}</h4>
-            <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
+            <h4 class="font-bold mb-5 text-text-primary text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.support') }}</h4>
+            <ul class="space-y-3 text-text-secondary text-sm">
               <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.helpCenter') }}</a></li>
               <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.safety') }}</a></li>
               <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.terms') }}</a></li>
@@ -538,11 +538,11 @@
           </div>
         </div>
         <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-600 dark:text-gray-400 text-sm">© 2025 Merry360X. All rights reserved.</p>
+          <p class="text-text-secondary text-sm">© 2025 Merry360X. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.privacy') }}</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.terms') }}</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.cookies') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.privacy') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.terms') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.cookies') }}</a>
           </div>
         </div>
       </div>
