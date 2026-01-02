@@ -202,7 +202,7 @@
               <div 
                 v-for="accommodation in group.items" 
                 :key="accommodation.id"
-                @click="router.push(`/accommodation/${accommodation.id}`)"
+                @click="goToDetails(accommodation.id)"
                 class="bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1"
               >
                 <div class="grid md:grid-cols-3 gap-0">
@@ -295,7 +295,7 @@
                           {{ t('accommodation.addToCart') }}
                         </button>
                         <button 
-                          @click.stop="router.push(`/accommodation/${accommodation.id}`)"
+                          @click.stop="goToDetails(accommodation.id)"
                           class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
                         >
                           {{ t('accommodation.details') }}
@@ -352,6 +352,24 @@ const guestCount = ref(null)
 const checkIn = ref('')
 const checkOut = ref('')
 
+const buildSearchQuery = () => {
+  const q = String(searchQuery.value || '').trim()
+  const guests = guestCount.value
+  const inDate = String(checkIn.value || '').trim()
+  const outDate = String(checkOut.value || '').trim()
+
+  return {
+    ...(q ? { q } : {}),
+    ...(Number.isFinite(guests) && guests > 0 ? { guests: String(guests) } : {}),
+    ...(inDate ? { checkIn: inDate } : {}),
+    ...(outDate ? { checkOut: outDate } : {})
+  }
+}
+
+const goToDetails = (id) => {
+  router.push({ path: `/accommodation/${id}`, query: buildSearchQuery() })
+}
+
 const hasSearchSummary = computed(() => {
   return Boolean(
     String(searchQuery.value || '').trim() ||
@@ -404,20 +422,30 @@ const loadAccommodations = async (params = {}) => {
 }
 
 const performSearch = async () => {
-  if (searchQuery.value.trim()) {
-    const q = String(searchQuery.value).trim()
-    const guests = guestCount.value
+  const q = String(searchQuery.value || '').trim()
+  const guests = guestCount.value
+  const inDate = String(checkIn.value || '').trim()
+  const outDate = String(checkOut.value || '').trim()
 
-    router.replace({
-      query: {
-        ...route.query,
-        q,
-        ...(guests ? { guests: String(guests) } : {})
-      }
-    })
+  const hasAnySearch = Boolean(
+    q ||
+    (Number.isFinite(guests) && guests > 0) ||
+    inDate ||
+    outDate
+  )
 
-    await loadAccommodations({ q, guests })
-  }
+  if (!hasAnySearch) return
+
+  router.replace({
+    query: buildSearchQuery()
+  })
+
+  await loadAccommodations({
+    q: q || undefined,
+    guests: Number.isFinite(guests) && guests > 0 ? guests : undefined,
+    checkIn: inDate || undefined,
+    checkOut: outDate || undefined
+  })
 }
 
 const filters = ref({
@@ -448,7 +476,12 @@ onMounted(async () => {
   checkIn.value = inDate
   checkOut.value = outDate
 
-  await loadAccommodations({ q: q || undefined, guests: guestCount.value || undefined })
+  await loadAccommodations({
+    q: q || undefined,
+    guests: guestCount.value || undefined,
+    checkIn: inDate || undefined,
+    checkOut: outDate || undefined
+  })
 })
 
 const filteredAccommodations = computed(() => {
@@ -525,7 +558,7 @@ const toggleFavorite = (id) => {
 }
 
 const handlePropertySelect = (property) => {
-  router.push(`/accommodation/${property.id}`)
+  goToDetails(property.id)
 }
 
 const handleLocationSearch = (location) => {

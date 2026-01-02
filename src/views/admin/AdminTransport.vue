@@ -54,7 +54,7 @@
               <td class="py-4 px-4">{{ vehicle.driver }}</td>
               <td class="py-4 px-4">{{ vehicle.type }}</td>
               <td class="py-4 px-4">{{ vehicle.capacity }} seats</td>
-              <td class="py-4 px-4">${{ vehicle.ratePerDay }}</td>
+              <td class="py-4 px-4">{{ currencyStore.formatPrice(vehicle.ratePerDay) }}</td>
               <td class="py-4 px-4">
                 <span :class="{
                   'px-2 py-1 bg-success text-white rounded text-sm': vehicle.status === 'available',
@@ -85,8 +85,10 @@ import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyStore } from '@/stores/currency'
 
 const { showToast } = useToast()
+const currencyStore = useCurrencyStore()
 const vehicles = ref([])
 const loading = ref(true)
 

@@ -26,9 +26,10 @@ module.exports = {
           900: '#B22222',
         },
         text: {
-          primary: '#484848',
-          secondary: '#9A9A9A',
-        },
+          primary: 'rgb(var(--text-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--text-secondary) / <alpha-value>)',
+          muted: 'rgb(var(--text-muted) / <alpha-value>)'
+        }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],

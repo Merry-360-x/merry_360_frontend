@@ -56,11 +56,11 @@
               </td>
               <td class="py-4 px-4">{{ tour.location }}</td>
               <td class="py-4 px-4">{{ tour.duration }}</td>
-              <td class="py-4 px-4">${{ tour.price }}</td>
+              <td class="py-4 px-4">{{ currencyStore.formatPrice(tour.price) }}</td>
               <td class="py-4 px-4">{{ tour.bookings }}</td>
               <td class="py-4 px-4">
                 <span :class="tour.status === 'active' ? 'px-2 py-1 bg-success text-white rounded text-sm' : 'px-2 py-1 bg-gray-400 text-white rounded text-sm'">
-                  {{ tour.status }}
+                  {{ t(tour.status === 'active' ? 'status.active' : 'status.inactive') }}
                 </span>
               </td>
               <td class="py-4 px-4">
@@ -86,8 +86,12 @@ import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyStore } from '@/stores/currency'
+import { useTranslation } from '@/composables/useTranslation'
 
 const { showToast } = useToast()
+const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 const tours = ref([])
 const loading = ref(true)
 

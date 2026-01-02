@@ -7,10 +7,10 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Back to Dashboard
+            {{ t('vendor.backToDashboard') }}
           </router-link>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ pageTitle }}</h1>
-          <p class="text-gray-600 dark:text-gray-400">Fill in the details to list a new property</p>
+          <h1 class="text-3xl font-bold text-text-primary mb-2">{{ pageTitle }}</h1>
+          <p class="text-text-secondary">{{ t('portal.addPropertyDescription') }}</p>
         </div>
 
         <!-- Success Message -->
@@ -19,7 +19,7 @@
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <span class="font-medium">Property added successfully!</span>
+            <span class="font-medium">{{ t('portal.propertyAddedSuccess') }}</span>
           </div>
         </div>
 
@@ -28,57 +28,57 @@
           <form @submit.prevent="handleSubmit">
             <!-- Basic Information -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Basic Information</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.basicInfo') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Property Title *</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.propertyName') }} *</label>
                   <input 
                     v-model="form.title"
                     type="text" 
                     required
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    placeholder="e.g., Luxury Lake View Villa"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary placeholder:text-text-muted"
+                    :placeholder="t('vendor.propertyNamePlaceholder')"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Property Type *</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.propertyType') }} *</label>
                   <select 
                     v-model="form.category"
                     required
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
                   >
-                    <option value="">Select type</option>
-                    <option value="hotel">Hotel</option>
-                    <option value="motel">Motel</option>
-                    <option value="resort">Resort</option>
-                    <option value="lodge">Lodge</option>
-                    <option value="apartment">Apartment</option>
-                    <option value="guesthouse">Guesthouse</option>
-                    <option value="villa">Villa</option>
+                    <option value="">{{ t('vendor.selectType') }}</option>
+                    <option value="hotel">{{ t('accommodation.hotel') }}</option>
+                    <option value="motel">{{ t('accommodation.motel') }}</option>
+                    <option value="resort">{{ t('accommodation.resort') }}</option>
+                    <option value="lodge">{{ t('accommodation.lodge') }}</option>
+                    <option value="apartment">{{ t('accommodation.apartment') }}</option>
+                    <option value="guesthouse">{{ t('accommodation.guesthouse') }}</option>
+                    <option value="villa">{{ t('accommodation.villa') }}</option>
                   </select>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location *</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('accommodation.location') }} *</label>
                   <input 
                     v-model="form.location"
                     type="text" 
                     required
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    placeholder="e.g., Kigali, Rwanda"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary placeholder:text-text-muted"
+                    :placeholder="t('vendor.locationPlaceholder')"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description *</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.description') }} *</label>
                   <textarea 
                     v-model="form.description"
                     required
                     rows="4"
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    placeholder="Describe your property..."
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary placeholder:text-text-muted"
+                    :placeholder="t('vendor.descriptionPlaceholder')"
                   ></textarea>
                 </div>
               </div>
@@ -86,38 +86,38 @@
 
             <!-- Property Details -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Property Details</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyDetails') }}</h2>
               
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bedrooms</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.beds') }}</label>
                   <input 
                     v-model.number="form.beds"
                     type="number" 
                     min="0"
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
                     placeholder="2"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bathrooms</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.baths') }}</label>
                   <input 
                     v-model.number="form.baths"
                     type="number" 
                     min="0"
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
                     placeholder="1"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Max Guests</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('portal.maxGuests') }}</label>
                   <input 
                     v-model.number="form.maxGuests"
                     type="number" 
                     min="1"
-                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
                     placeholder="4"
                   />
                 </div>
@@ -126,18 +126,20 @@
 
             <!-- Pricing -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Pricing</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.pricing') }}</h2>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price per Night (USD) *</label>
+                <label class="block text-sm font-medium text-text-secondary mb-2">
+                  {{ t('vendor.pricePerNight') }} ({{ currencyStore.currentCurrency }}) *
+                </label>
                 <div class="relative">
-                  <span class="absolute left-4 top-3 text-gray-500 dark:text-gray-400">$</span>
+                  <span class="absolute left-4 top-3 text-text-muted">{{ currencyStore.currencySymbol }}</span>
                   <input 
                     v-model.number="form.price"
                     type="number" 
                     min="1"
                     required
-                    class="w-full pl-8 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    class="w-full pl-8 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
                     placeholder="100"
                   />
                 </div>
@@ -146,11 +148,11 @@
 
             <!-- Images -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Property Images</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyImages') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Images</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('portal.uploadImages') }}</label>
                   <div 
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer"
                     @click="$refs.fileInput.click()"
@@ -163,11 +165,11 @@
                       class="hidden" 
                       @change="handleImageUpload"
                     />
-                    <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-12 h-12 text-text-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
-                    <p class="text-gray-600 dark:text-gray-400">Click to upload images</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-1">PNG, JPG up to 10MB each</p>
+                    <p class="text-text-secondary">{{ t('portal.clickToUploadImages') }}</p>
+                    <p class="text-sm text-text-muted mt-1">{{ t('portal.imageUploadHelp') }}</p>
                   </div>
                 </div>
 
@@ -187,13 +189,13 @@
                   </div>
                 </div>
 
-                <p v-if="uploading" class="text-sm text-blue-600 dark:text-blue-400">Uploading images...</p>
+                <p v-if="uploading" class="text-sm text-blue-600 dark:text-blue-400">{{ t('portal.uploadingImages') }}</p>
               </div>
             </div>
 
             <!-- Amenities -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Amenities</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.amenities') }}</h2>
               
               <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <label v-for="amenity in availableAmenities" :key="amenity" class="flex items-center gap-2 cursor-pointer">
@@ -203,7 +205,7 @@
                     v-model="form.amenities"
                     class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                   />
-                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ amenity }}</span>
+                  <span class="text-sm text-text-secondary">{{ amenity }}</span>
                 </label>
               </div>
             </div>
@@ -215,13 +217,13 @@
                 :disabled="isSubmitting || uploading"
                 class="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {{ isSubmitting ? 'Adding Property...' : 'Add Property' }}
+                {{ isSubmitting ? t('portal.addingProperty') : t('portal.addProperty') }}
               </button>
               <router-link 
                 :to="dashboardPath"
-                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors text-center"
+                class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-text-secondary font-semibold rounded-lg transition-colors text-center"
               >
-                Cancel
+                {{ t('common.cancel') }}
               </router-link>
             </div>
           </form>
@@ -239,17 +241,23 @@ import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
 import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
+import { useTranslation } from '../../composables/useTranslation'
+import { useToast } from '../../composables/useToast'
+import { useCurrencyStore } from '../../stores/currency'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
+const { showToast } = useToast()
 
 const isHostPortal = computed(() => String(route.path || '').startsWith('/host'))
 const basePath = computed(() => (isHostPortal.value ? '/host' : '/staff'))
 const dashboardPath = computed(() => basePath.value)
 const propertiesPath = computed(() => `${basePath.value}/properties`)
 
-const pageTitle = computed(() => (isHostPortal.value ? 'Add New Listing' : 'Add New Property'))
+const pageTitle = computed(() => t('portal.addNewProperty'))
 
 const form = ref({
   title: '',
@@ -367,23 +375,52 @@ function removeImage(index) {
 }
 
 async function handleSubmit() {
-  if (!form.value.title || !form.value.location || !form.value.price) {
-    alert('Please fill in all required fields')
+  const title = String(form.value.title || '').trim()
+  const category = String(form.value.category || '').trim()
+  const location = String(form.value.location || '').trim()
+  const description = String(form.value.description || '').trim()
+  const price = Number(form.value.price)
+  const bedrooms = Number(form.value.beds)
+  const bathrooms = Number(form.value.baths)
+  const maxGuests = Number(form.value.maxGuests)
+
+  if (!title || !category || !location || !description || !Number.isFinite(price) || price <= 0) {
+    showToast(t('portal.fillRequiredFields'), 'error')
+    return
+  }
+
+  if (!Number.isFinite(bedrooms) || bedrooms < 0 || !Number.isFinite(bathrooms) || bathrooms < 0) {
+    showToast(t('portal.enterValidBedroomsBathrooms'), 'error')
+    return
+  }
+
+  if (!Number.isFinite(maxGuests) || maxGuests <= 0) {
+    showToast(t('portal.enterValidMaxGuests'), 'error')
+    return
+  }
+
+  if (!Array.isArray(form.value.amenities) || form.value.amenities.length === 0) {
+    showToast(t('portal.selectAtLeastOneAmenity'), 'error')
     return
   }
 
   if (uploading.value) {
-    alert('Please wait for images to finish uploading')
+    showToast(t('portal.waitForUploads'), 'error')
     return
   }
 
   if (uploadedImages.value.some((img) => img.status === 'error')) {
-    alert('One or more images failed to upload. Please remove and re-upload them.')
+    showToast(t('portal.imageUploadFailed'), 'error')
+    return
+  }
+
+  if (uploadedImages.value.length === 0) {
+    showToast(t('portal.uploadAtLeastOneImage'), 'error')
     return
   }
 
   if (!userStore.user?.id) {
-    alert('Please login to add properties')
+    showToast(t('portal.loginToAddProperties'), 'error')
     router.push('/login')
     return
   }
@@ -392,16 +429,20 @@ async function handleSubmit() {
 
   try {
     const imageUrls = uploadedImages.value.map((img) => img.url).filter(Boolean)
+    if (!imageUrls.length) {
+      showToast(t('portal.uploadAtLeastOneImage'), 'error')
+      return
+    }
     const propertyRow = {
       host_id: userStore.user.id,
-      name: form.value.title,
-      description: form.value.description,
-      property_type: normalizePropertyType(form.value.category),
-      location: form.value.location,
-      price_per_night: form.value.price,
-      bedrooms: form.value.beds || 1,
-      bathrooms: form.value.baths || 1,
-      max_guests: form.value.maxGuests || 2,
+      name: title,
+      description,
+      property_type: normalizePropertyType(category),
+      location,
+      price_per_night: price,
+      bedrooms: Number.isFinite(bedrooms) ? bedrooms : 1,
+      bathrooms: Number.isFinite(bathrooms) ? bathrooms : 1,
+      max_guests: maxGuests,
       amenities: form.value.amenities,
       images: imageUrls,
       main_image: imageUrls[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
@@ -435,7 +476,7 @@ async function handleSubmit() {
 
   } catch (error) {
     console.error('Error adding property:', error)
-    alert('Failed to add property. Please try again.')
+    showToast(t('portal.addPropertyFailed'), 'error')
   } finally {
     isSubmitting.value = false
   }

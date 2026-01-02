@@ -1,78 +1,18 @@
 <template>
-  <MainLayout>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Admin Sidebar -->
-    <div class="flex">
-      <aside class="w-64 bg-white border-r border-gray-200 min-h-screen sticky top-0">
-        <div class="p-6 border-b border-gray-200">
-          <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center">
-              <span class="text-white font-bold text-xl">M</span>
-            </div>
-            <span class="text-xl font-bold">Admin Panel</span>
-          </div>
-        </div>
-        <nav class="p-4 space-y-1">
-          <router-link to="/admin" class="flex items-center px-4 py-3 bg-brand-500 text-white rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-            Dashboard
-          </router-link>
-          <router-link to="/admin/accommodations" class="flex items-center px-4 py-3 text-text-secondary hover:bg-gray-50 rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
-            Accommodations
-          </router-link>
-          <router-link to="/admin/tours" class="flex items-center px-4 py-3 text-text-secondary hover:bg-gray-50 rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            Tours
-          </router-link>
-          <router-link to="/admin/transport" class="flex items-center px-4 py-3 text-text-secondary hover:bg-gray-50 rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-            </svg>
-            Transport
-          </router-link>
-          <router-link to="/admin/payments" class="flex items-center px-4 py-3 text-text-secondary hover:bg-gray-50 rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-            Payments
-          </router-link>
-          <router-link to="/admin/users" class="flex items-center px-4 py-3 text-text-secondary hover:bg-gray-50 rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-            </svg>
-            Users
-          </router-link>
-          <router-link to="/admin/analytics" class="flex items-center px-4 py-3 text-text-secondary hover:bg-gray-50 rounded-button">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            Analytics
-          </router-link>
-        </nav>
-      </aside>
+  <AdminLayout>
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold mb-2 text-text-primary">{{ t('adminDashboard.title') }}</h1>
+      <p class="text-text-secondary">{{ t('adminDashboard.subtitle') }}</p>
+    </div>
 
-      <!-- Main Content -->
-      <main class="flex-1 p-8">
-        <div class="mb-8">
-          <h1 class="text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p class="text-text-secondary">Platform overview and management</p>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card padding="md">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-text-secondary text-sm mb-1">Total Bookings</p>
+                <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.totalBookings') }}</p>
                 <p class="text-3xl font-bold">{{ stats.bookings }}</p>
-                <p class="text-success text-sm mt-1">Real-time from Supabase</p>
+                <p class="text-success text-sm mt-1">{{ t('adminDashboard.stats.realTimeFromSupabase') }}</p>
               </div>
               <div class="w-12 h-12 bg-brand-500 bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,9 +25,9 @@
           <Card padding="md">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-text-secondary text-sm mb-1">Revenue</p>
-                <p class="text-3xl font-bold">${{ (stats.revenue / 1000).toFixed(1) }}K</p>
-                <p class="text-success text-sm mt-1">From paid bookings</p>
+                <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.revenue') }}</p>
+                <p class="text-3xl font-bold">{{ currencyStore.formatPrice(stats.revenue) }}</p>
+                <p class="text-success text-sm mt-1">{{ t('adminDashboard.stats.fromPaidBookings') }}</p>
               </div>
               <div class="w-12 h-12 bg-accent-blue bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,9 +40,9 @@
           <Card padding="md">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-text-secondary text-sm mb-1">Active Users</p>
+                <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.activeUsers') }}</p>
                 <p class="text-3xl font-bold">{{ stats.users }}</p>
-                <p class="text-text-secondary text-sm mt-1">Registered accounts</p>
+                <p class="text-text-secondary text-sm mt-1">{{ t('adminDashboard.stats.registeredAccounts') }}</p>
               </div>
               <div class="w-12 h-12 bg-success bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,9 +55,9 @@
           <Card padding="md">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-text-secondary text-sm mb-1">Properties</p>
+                <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.properties') }}</p>
                 <p class="text-3xl font-bold">{{ stats.properties }}</p>
-                <p class="text-text-secondary text-sm mt-1">Active listings</p>
+                <p class="text-text-secondary text-sm mt-1">{{ t('adminDashboard.stats.activeListings') }}</p>
               </div>
               <div class="w-12 h-12 bg-warning bg-opacity-10 rounded-full flex items-center justify-center">
                 <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,56 +68,56 @@
           </Card>
         </div>
 
-        <div class="mb-8">
-          <Card padding="md">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-text-secondary text-sm mb-1">Host Applications</p>
-                <p class="text-3xl font-bold">{{ stats.pendingHostApplications }}</p>
-                <p class="text-text-secondary text-sm mt-1">Pending review</p>
-              </div>
-              <router-link
-                to="/admin/host-applications"
-                class="px-4 py-2 bg-brand-500 text-white rounded-button text-sm"
-              >
-                View
-              </router-link>
-            </div>
-          </Card>
+    <div class="mb-8">
+      <Card padding="md">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-text-secondary text-sm mb-1">{{ t('admin.hostApplications') }}</p>
+            <p class="text-3xl font-bold text-text-primary">{{ stats.pendingHostApplications }}</p>
+            <p class="text-text-secondary text-sm mt-1">{{ t('adminDashboard.pendingReview') }}</p>
+          </div>
+          <router-link
+            to="/admin/host-applications"
+            class="px-4 py-2 bg-brand-500 text-white rounded-button text-sm"
+          >
+            {{ t('common.view') }}
+          </router-link>
         </div>
+      </Card>
+    </div>
 
-        <!-- Recent Activity -->
-        <Card padding="lg">
-          <h2 class="text-2xl font-bold mb-6">Recent Bookings</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full">
+    <!-- Recent Activity -->
+    <Card padding="lg">
+      <h2 class="text-2xl font-bold mb-6 text-text-primary">{{ t('adminDashboard.recentBookings') }}</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full">
               <thead>
                 <tr class="border-b border-gray-200 text-left">
-                  <th class="pb-3 font-semibold text-text-secondary">Booking ID</th>
-                  <th class="pb-3 font-semibold text-text-secondary">Customer</th>
-                  <th class="pb-3 font-semibold text-text-secondary">Property</th>
-                  <th class="pb-3 font-semibold text-text-secondary">Date</th>
-                  <th class="pb-3 font-semibold text-text-secondary">Amount</th>
-                  <th class="pb-3 font-semibold text-text-secondary">Status</th>
+                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.bookingId') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.customer') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.property') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.date') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.amount') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.status') }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-if="loading">
                   <td colspan="6" class="py-6 text-center text-text-secondary text-sm">
-                    Loading bookings...
+                    {{ t('adminDashboard.loadingBookings') }}
                   </td>
                 </tr>
                 <tr v-else-if="recentBookings.length === 0">
                   <td colspan="6" class="py-6 text-center text-text-secondary text-sm">
-                    No bookings yet. New bookings will appear here as guests check out.
+                    {{ t('adminDashboard.noBookingsYet') }}
                   </td>
                 </tr>
-                <tr v-else v-for="booking in recentBookings" :key="booking.id" class="border-b border-gray-100">
+                <tr v-else v-for="booking in recentBookings" :key="booking.id" class="border-b border-gray-100 dark:border-gray-700">
                   <td class="py-4 text-sm">{{ booking.id.substring(0, 8) }}...</td>
-                  <td class="py-4 text-sm">{{ booking.profiles?.first_name }} {{ booking.profiles?.last_name }}</td>
-                  <td class="py-4 text-sm">{{ booking.listings?.title || 'N/A' }}</td>
+                  <td class="py-4 text-sm">{{ buildDisplayName(booking.profiles) }}</td>
+                  <td class="py-4 text-sm">{{ booking.listings?.title || t('common.na') }}</td>
                   <td class="py-4 text-sm">{{ new Date(booking.check_in).toLocaleDateString() }}</td>
-                  <td class="py-4 text-sm font-semibold">${{ booking.total_price }}</td>
+                  <td class="py-4 text-sm font-semibold">{{ currencyStore.formatPrice(booking.total_price) }}</td>
                   <td class="py-4">
                     <span :class="[
                       'px-3 py-1 rounded-full text-xs font-medium',
@@ -185,25 +125,27 @@
                       booking.status === 'pending' ? 'bg-warning bg-opacity-10 text-warning' :
                       'bg-gray-100 text-text-secondary'
                     ]">
-                      {{ booking.status }}
+                      {{ formatBookingStatus(booking.status) }}
                     </span>
                   </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      </main>
-    </div>
-  </div>
-  </MainLayout>
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import MainLayout from '../../components/layout/MainLayout.vue'
+import AdminLayout from '../../components/layout/AdminLayout.vue'
 import Card from '../../components/common/Card.vue'
 import { supabase } from '../../services/supabase'
+import { useCurrencyStore } from '@/stores/currency'
+import { useTranslation } from '../../composables/useTranslation'
+
+const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 
 const stats = ref({
   bookings: 0,
@@ -217,11 +159,21 @@ const recentBookings = ref([])
 const loading = ref(true)
 
 function buildDisplayName(profile) {
-  if (!profile) return 'Guest'
+  if (!profile) return t('adminDashboard.guest')
   const first = String(profile.first_name || '').trim()
   const last = String(profile.last_name || '').trim()
   const full = `${first} ${last}`.trim()
-  return full || profile.email || 'Guest'
+  return full || profile.email || t('adminDashboard.guest')
+}
+
+function formatBookingStatus(status) {
+  const raw = String(status || '').trim().toLowerCase()
+  if (!raw) return t('common.na')
+
+  const known = ['confirmed', 'pending', 'cancelled', 'completed']
+  if (known.includes(raw)) return t(`bookingStatus.${raw}`)
+
+  return raw
 }
 
 function safeNumber(value) {

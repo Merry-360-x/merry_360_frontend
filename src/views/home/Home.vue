@@ -461,8 +461,25 @@ const featuredProperties = ref([])
 
 const guides = ref([])
 
+const buildSearchQuery = () => {
+  const q = String(searchQuery.value.location || '').trim()
+  const guests = (Number(guestCounts.value.adults) || 0) + (Number(guestCounts.value.children) || 0)
+  const checkIn = String(searchQuery.value.checkIn || '').trim()
+  const checkOut = String(searchQuery.value.checkOut || '').trim()
+
+  return {
+    ...(q ? { q } : {}),
+    ...(guests ? { guests: String(guests) } : {}),
+    ...(checkIn ? { checkIn } : {}),
+    ...(checkOut ? { checkOut } : {})
+  }
+}
+
 const handleSearch = () => {
-  router.push('/accommodations')
+  router.push({
+    path: '/accommodations',
+    query: buildSearchQuery()
+  })
 }
 
 // Hero Video Carousel

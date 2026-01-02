@@ -1,7 +1,6 @@
 <template>
-  <MainLayout>
-    <div class="min-h-screen bg-gray-50 py-8">
-      <div class="container mx-auto px-4 lg:px-8">
+  <AdminLayout>
+    <div class="container mx-auto px-4 lg:px-8">
         <!-- Header -->
         <div class="mb-8 flex items-center justify-between">
           <div>
@@ -157,7 +156,6 @@
           <p class="text-gray-600 mb-4">Start by adding your first property</p>
           <Button @click="showAddModal = true" variant="primary">Add Property</Button>
         </div>
-      </div>
     </div>
 
     <!-- Edit Property Modal -->
@@ -485,13 +483,13 @@
       :type="toast.type"
       @close="toast.show = false"
     />
-  </MainLayout>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { supabase } from '../../services/supabase'
-import MainLayout from '../../components/layout/MainLayout.vue'
+import AdminLayout from '../../components/layout/AdminLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import LoadingSpinner from '../../components/common/LoadingSpinner.vue'

@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1 border border-transparent"
+    class="bg-white dark:bg-gray-800 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1 border border-transparent dark:border-gray-700"
     @click="goToDetail"
   >
     <!-- Image Gallery -->
@@ -91,7 +91,7 @@
       </p>
 
       <!-- Details -->
-      <div class="flex items-center justify-between text-xs sm:text-sm text-text-secondary mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100">
+      <div class="flex items-center justify-between text-xs sm:text-sm text-text-secondary mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center">
           <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>

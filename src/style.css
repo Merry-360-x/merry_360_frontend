@@ -8,6 +8,16 @@
 
 :root {
   --font-sans: 'Montserrat', Inter, system-ui, -apple-system, sans-serif;
+  /* Theme-aware semantic text colors (Tailwind: text-text-*) */
+  --text-primary: 17 24 39;
+  --text-secondary: 17 24 39;
+  --text-muted: 17 24 39;
+}
+
+html.dark {
+  --text-primary: 255 255 255;
+  --text-secondary: 255 255 255;
+  --text-muted: 255 255 255;
 }
 
 html, body, #app {
@@ -19,7 +29,7 @@ html, body, #app {
 
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-gray-200 dark:border-gray-700;
   }
   
   html {
@@ -28,7 +38,7 @@ html, body, #app {
   }
   
   body {
-    @apply text-text-primary font-sans antialiased bg-white;
+    @apply text-text-primary font-sans antialiased bg-white dark:bg-gray-900;
     position: relative;
     overflow-x: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -41,11 +51,11 @@ html, body, #app {
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-gray-100 dark:bg-gray-800;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 rounded-full;
+    @apply bg-gray-400 dark:bg-gray-600 rounded-full;
     transition: background-color 0.2s;
   }
 

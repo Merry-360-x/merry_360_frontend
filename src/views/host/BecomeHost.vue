@@ -4,10 +4,10 @@
     <section class="relative bg-white dark:from-gray-800 via-orange-50 dark:via-gray-700 to-white dark:to-gray-900 py-16 md:py-24 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-3xl md:text-4xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+          <h1 class="text-3xl md:text-4xl font-bold mb-6 text-text-primary">
             Become a Host on Merry360
           </h1>
-          <p class="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8">
+          <p class="text-base md:text-lg text-text-secondary mb-8">
             Share your unique space, experiences, or services with travelers from around the world and earn extra income.
           </p>
           <button 
@@ -25,8 +25,8 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Start Your Hosting Journey</h2>
-            <p class="text-lg text-gray-600 dark:text-gray-400">
+            <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">Start Your Hosting Journey</h2>
+            <p class="text-lg text-text-secondary">
               Complete the 3-step registration process
             </p>
           </div>
@@ -38,14 +38,14 @@
               <div class="flex flex-col items-center flex-1">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'"
+                  :class="currentStep >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 1" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>1</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Personal Info</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Personal Info</span>
               </div>
 
               <!-- Connector Line 1 -->
@@ -55,14 +55,14 @@
               <div class="flex flex-col items-center flex-1">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'"
+                  :class="currentStep >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 2" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>2</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Business Info</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Business Info</span>
               </div>
 
               <!-- Connector Line 2 -->
@@ -72,14 +72,14 @@
               <div class="flex flex-col items-center flex-1">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'"
+                  :class="currentStep >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 3" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>3</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Property Details</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Property Details</span>
               </div>
             </div>
           </div>
@@ -89,26 +89,26 @@
             <form @submit.prevent="handleSubmit">
               <!-- Step 1: Personal Information -->
               <div v-show="currentStep === 1" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Personal Information</h3>
+                <h3 class="text-2xl font-bold text-text-primary mb-6">Personal Information</h3>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">First Name *</label>
                       <input 
                         v-model="formData.firstName"
                         type="text" 
                         required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         placeholder="John"
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">Last Name *</label>
                       <input 
                         v-model="formData.lastName"
                         type="text" 
                         required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         placeholder="Doe"
                       />
                     </div>
@@ -116,45 +116,45 @@
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">Email Address *</label>
                       <input 
                         v-model="formData.email"
                         type="email" 
                         required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         placeholder="your.email@example.com"
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">Phone Number *</label>
                       <input 
                         v-model="formData.phone"
                         type="tel" 
                         required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         placeholder="+250 788 123 456"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Address *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">Address *</label>
                     <input 
                       v-model="formData.address"
                       type="text" 
                       required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                       placeholder="Street address, City"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nationality *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">Nationality *</label>
                     <input 
                       v-model="formData.nationality"
                       type="text" 
                       required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                       placeholder="e.g., Rwandan, Kenyan, etc."
                     />
                   </div>
@@ -163,25 +163,25 @@
 
               <!-- Step 2: Business Information -->
               <div v-show="currentStep === 2" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Business Information</h3>
+                <h3 class="text-2xl font-bold text-text-primary mb-6">Business Information</h3>
                 <div class="space-y-4">
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Business Name *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">Business Name *</label>
                     <input 
                       v-model="formData.businessName"
                       type="text" 
                       required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                       placeholder="Your company or individual business name"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Business Type *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">Business Type *</label>
                     <select 
                       v-model="formData.businessType"
                       required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                     >
                       <option value="">Select business type</option>
                       <option value="individual">Individual/Sole Proprietor</option>

@@ -12,11 +12,11 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Total Revenue</p>
-        <p class="text-3xl font-bold">${{ stats.totalRevenue.toLocaleString() }}</p>
+        <p class="text-3xl font-bold">{{ currencyStore.formatPrice(stats.totalRevenue) }}</p>
       </Card>
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Pending</p>
-        <p class="text-3xl font-bold text-warning">${{ stats.pendingPayments.toLocaleString() }}</p>
+        <p class="text-3xl font-bold text-warning">{{ currencyStore.formatPrice(stats.pendingPayments) }}</p>
       </Card>
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Transactions</p>
@@ -65,7 +65,7 @@
                 </div>
               </td>
               <td class="py-4 px-4">{{ payment.service }}</td>
-              <td class="py-4 px-4 font-semibold">${{ payment.amount }}</td>
+              <td class="py-4 px-4 font-semibold">{{ currencyStore.formatPrice(payment.amount) }}</td>
               <td class="py-4 px-4">{{ payment.paymentMethod }}</td>
               <td class="py-4 px-4">{{ payment.date }}</td>
               <td class="py-4 px-4">
@@ -98,8 +98,10 @@ import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyStore } from '@/stores/currency'
 
 const { showToast } = useToast()
+const currencyStore = useCurrencyStore()
 const payments = ref([])
 const loading = ref(true)
 

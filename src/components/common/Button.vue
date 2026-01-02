@@ -90,8 +90,8 @@ const buttonClasses = computed(() => {
   
   const variantClasses = {
     primary: 'bg-brand-500 text-white shadow-card hover:shadow-card-hover focus:ring-brand-500',
-    secondary: 'bg-white text-text-primary border border-gray-200 hover:bg-gray-50',
-    outline: 'border-2 border-brand-500 text-brand-500 hover:bg-brand-50',
+    secondary: 'bg-white dark:bg-gray-800 text-text-primary border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+    outline: 'border-2 border-brand-500 text-brand-500 hover:bg-brand-50 dark:hover:bg-gray-800',
     text: 'text-brand-500 hover:text-brand-600',
     success: 'bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-600'
   }

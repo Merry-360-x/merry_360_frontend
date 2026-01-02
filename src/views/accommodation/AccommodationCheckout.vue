@@ -308,14 +308,14 @@ function toDateInputValue(date) {
 async function loadProperty() {
   const { id } = route.params
   if (!id) {
-    router.push('/accommodation')
+    router.push('/accommodations')
     return
   }
 
   const response = await api.accommodations.getById(id)
   const data = response?.data
   if (!data) {
-    router.push('/accommodation')
+    router.push('/accommodations')
     return
   }
 
@@ -338,13 +338,26 @@ onMounted(async () => {
 
   await loadProperty()
 
-  // Default stay dates
-  const checkIn = new Date()
-  checkIn.setDate(checkIn.getDate() + 7)
-  const checkOut = new Date()
-  checkOut.setDate(checkOut.getDate() + 10)
-  stay.value.checkIn = toDateInputValue(checkIn)
-  stay.value.checkOut = toDateInputValue(checkOut)
+  // Hydrate stay details from URL (or apply defaults)
+  const qCheckIn = route.query.checkIn != null ? String(route.query.checkIn).trim() : ''
+  const qCheckOut = route.query.checkOut != null ? String(route.query.checkOut).trim() : ''
+  const qGuests = route.query.guests != null && String(route.query.guests).trim()
+    ? Number(route.query.guests)
+    : null
+
+  if (qCheckIn) stay.value.checkIn = qCheckIn
+  if (qCheckOut) stay.value.checkOut = qCheckOut
+  if (Number.isFinite(qGuests) && qGuests > 0) stay.value.guests = qGuests
+
+  if (!stay.value.checkIn || !stay.value.checkOut) {
+    const checkIn = new Date()
+    checkIn.setDate(checkIn.getDate() + 7)
+    const checkOut = new Date()
+    checkOut.setDate(checkOut.getDate() + 10)
+
+    stay.value.checkIn = stay.value.checkIn || toDateInputValue(checkIn)
+    stay.value.checkOut = stay.value.checkOut || toDateInputValue(checkOut)
+  }
 })
 
 const paymentMethod = ref('free')

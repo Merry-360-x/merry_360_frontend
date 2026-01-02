@@ -26,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 const cardClasses = computed(() => {
-  const baseClasses = 'bg-white rounded-card transition-all duration-300 ease-out backdrop-blur-xl border border-gray-100'
+  const baseClasses = 'bg-white dark:bg-gray-800 rounded-card transition-all duration-300 ease-out backdrop-blur-xl border border-gray-100 dark:border-gray-700 text-text-primary'
   
   const paddingClasses = {
     none: '',

@@ -17,56 +17,56 @@
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
               exact
             >
-              Home
+              {{ t('nav.home') }}
             </router-link>
             <router-link 
               to="/accommodations"
               class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
-              Accommodations
+              {{ t('nav.accommodations') }}
             </router-link>
             <router-link 
               to="/tours"
               class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
-              Tours
+              {{ t('nav.tours') }}
             </router-link>
             <router-link 
               to="/transport"
               class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
-              Transport
+              {{ t('nav.transport') }}
             </router-link>
             <router-link 
               to="/services"
               class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
-              Services
+              {{ t('nav.services') }}
             </router-link>
             <router-link 
               to="/stories"
               class="text-sm text-gray-700 dark:text-gray-300 font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
-              Stories
+              {{ t('nav.stories') }}
             </router-link>
             <router-link
               v-if="canSeeHostPortal"
               to="/host"
               class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px] ml-4"
             >
-              Host Dashboard
+              {{ t('nav.hostDashboard') }}
             </router-link>
             <router-link
               v-else
               to="/become-host"
               class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px] ml-4"
             >
-              Become a Host
+              {{ t('nav.becomeHost') }}
             </router-link>
           </nav>
 
@@ -108,11 +108,11 @@
             </select>
 
             <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-full text-sm font-semibold text-gray-700 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
-              Trip Cart
+              {{ t('nav.tripCart') }}
               <span v-if="userStore.cartCount > 0" class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 inline-flex items-center justify-center">{{ userStore.cartCount }}</span>
             </router-link>
 
-            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" title="Wishlist">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" :title="t('nav.wishlist')">
               <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
@@ -148,7 +148,7 @@
                     <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span class="text-sm">My Profile</span>
+                      <span class="text-sm">{{ t('nav.myProfile') }}</span>
                   </router-link>
 
                   <router-link 
@@ -159,7 +159,7 @@
                     <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h8m-5 8h5a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2h3"></path>
                     </svg>
-                    <span class="text-sm">Messages</span>
+                      <span class="text-sm">{{ t('nav.messages') }}</span>
                   </router-link>
 
                   <router-link 
@@ -171,7 +171,7 @@
                     <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
-                    <span class="text-sm">Staff Portal</span>
+                      <span class="text-sm">{{ t('nav.staffPortal') }}</span>
                   </router-link>
 
                   <router-link
@@ -183,7 +183,7 @@
                     <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
-                    <span class="text-sm">Host Dashboard</span>
+                      <span class="text-sm">{{ t('nav.hostDashboard') }}</span>
                   </router-link>
 
                   <router-link 
@@ -194,7 +194,7 @@
                     <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    <span class="text-sm">Wishlist</span>
+                      <span class="text-sm">{{ t('nav.wishlist') }}</span>
                   </router-link>
 
                   <div class="border-t border-gray-100 dark:border-gray-700 mt-1 pt-1">
@@ -205,7 +205,7 @@
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                       </svg>
-                      <span class="text-sm font-medium">Logout</span>
+                      <span class="text-sm font-medium">{{ t('auth.logout') }}</span>
                     </button>
                   </div>
                 </div>
@@ -265,7 +265,7 @@
         <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto transition-colors duration-200">
           <!-- Header -->
           <div class="sticky top-0 bg-white dark:bg-gray-800 px-6 py-4 flex items-center justify-between border-b border-gray-100 dark:border-gray-700">
-            <h3 class="font-semibold text-gray-900 dark:text-gray-100">Menu</h3>
+            <h3 class="font-semibold text-gray-900 dark:text-gray-100">{{ t('nav.menu') }}</h3>
             <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 transition-colors">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -294,7 +294,7 @@
                 @click="mobileMenuOpen = false"
                 class="block w-full py-2.5 px-4 bg-brand-500 text-white text-center rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
               >
-                Sign In
+                {{ t('auth.login') }}
               </router-link>
             </div>
 
@@ -308,7 +308,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                Home
+                {{ t('nav.home') }}
               </router-link>
               <router-link 
                 to="/accommodations"
@@ -318,7 +318,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
-                Accommodations
+                {{ t('nav.accommodations') }}
               </router-link>
               <router-link 
                 to="/tours"
@@ -328,7 +328,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                Tours
+                {{ t('nav.tours') }}
               </router-link>
               <router-link 
                 to="/transport"
@@ -338,7 +338,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                 </svg>
-                Transport
+                {{ t('nav.transport') }}
               </router-link>
               <router-link 
                 to="/services"
@@ -348,7 +348,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
-                Services
+                {{ t('nav.services') }}
               </router-link>
               <router-link 
                 to="/stories"
@@ -358,7 +358,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
-                Stories
+                {{ t('nav.stories') }}
               </router-link>
               <router-link 
                 to="/become-host"
@@ -368,7 +368,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                Become a Host
+                {{ t('nav.becomeHost') }}
               </router-link>
 
               <router-link
@@ -380,7 +380,7 @@
                 <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
-                Host Dashboard
+                {{ t('nav.hostDashboard') }}
               </router-link>
             </nav>
 
@@ -400,7 +400,7 @@
                 <svg v-else class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                 </svg>
-                <span>{{ themeStore.isDark ? 'Light Mode' : 'Dark Mode' }}</span>
+                <span>{{ themeStore.isDark ? t('theme.lightMode') : t('theme.darkMode') }}</span>
               </button>
 
               <select 
@@ -434,7 +434,7 @@
                 @click="handleLogout"
                 class="w-full px-3 py-2.5 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors text-center"
               >
-                Sign Out
+                {{ t('auth.logout') }}
               </button>
             </div>
           </div>
@@ -510,39 +510,39 @@
             <div class="flex items-center space-x-3 mb-6">
               <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Discover the warmth of African hospitality with modern travel solutions.</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{{ t('footer.tagline') }}</p>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Explore</h4>
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.explore') }}</h4>
             <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
-              <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Accommodations</router-link></li>
-              <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Tours</router-link></li>
-              <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Transport</router-link></li>
+              <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.accommodations') }}</router-link></li>
+              <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.tours') }}</router-link></li>
+              <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.transport') }}</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Company</h4>
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.company') }}</h4>
             <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
-              <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">About Us</router-link></li>
-              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Contact</a></li>
-              <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Become a Host</router-link></li>
+              <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.aboutUs') }}</router-link></li>
+              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.contact') }}</a></li>
+              <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.becomeHost') }}</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">Support</h4>
+            <h4 class="font-bold mb-5 text-gray-900 dark:text-gray-100 text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.support') }}</h4>
             <ul class="space-y-3 text-gray-600 dark:text-gray-400 text-sm">
-              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Help Center</a></li>
-              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Safety</a></li>
-              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">Terms</a></li>
+              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.helpCenter') }}</a></li>
+              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.safety') }}</a></li>
+              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.terms') }}</a></li>
             </ul>
           </div>
         </div>
         <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-600 dark:text-gray-400 text-sm">© 2025 Merry360X. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Privacy</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Terms</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">Cookies</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.privacy') }}</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.terms') }}</a>
+            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.cookies') }}</a>
           </div>
         </div>
       </div>
@@ -558,6 +558,7 @@ import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useLanguageStore } from '../../stores/language'
 import { useThemeStore } from '../../stores/theme'
+import { useTranslation } from '../../composables/useTranslation'
 import AIConcierge from '../ai/AIConcierge.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 
@@ -567,6 +568,7 @@ const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const languageStore = useLanguageStore()
 const themeStore = useThemeStore()
+const { t } = useTranslation()
 
 // Initialize theme on mount
 onMounted(() => {
@@ -606,10 +608,10 @@ const closeUserMenu = () => {
 }
 
 const handleLogout = async () => {
-  const ok = await confirmDialog('Are you sure you want to logout?', {
-    title: 'Logout',
-    confirmText: 'Logout',
-    cancelText: 'Cancel'
+  const ok = await confirmDialog(t('auth.logoutConfirm'), {
+    title: t('auth.logout'),
+    confirmText: t('auth.logout'),
+    cancelText: t('common.cancel')
   })
 
   if (!ok) return

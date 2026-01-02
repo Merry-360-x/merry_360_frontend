@@ -11,7 +11,11 @@ import { mockApiService } from './mockApi'
 
 // Base API URL - should be from environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
-const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true' // Use Supabase if enabled
+const HAS_SUPABASE_CONFIG = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY)
+// Use Supabase if explicitly enabled, or default to Supabase when configured.
+const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE != null
+  ? import.meta.env.VITE_USE_SUPABASE === 'true'
+  : HAS_SUPABASE_CONFIG
 const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true' // Only use mock if explicitly enabled
 
 /**

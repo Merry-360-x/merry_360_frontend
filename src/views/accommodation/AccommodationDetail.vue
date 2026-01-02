@@ -267,20 +267,20 @@
             <div class="space-y-3 mb-6">
               <div>
                 <label class="block text-xs font-medium mb-1.5">Check-in</label>
-                <input type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900" />
+                <input v-model="stay.checkIn" type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900" />
               </div>
               <div>
                 <label class="block text-xs font-medium mb-1.5">Check-out</label>
-                <input type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900" />
+                <input v-model="stay.checkOut" type="date" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900" />
               </div>
               <div>
                 <label class="block text-xs font-medium mb-1.5">Guests</label>
-                <select class="w-full px-3 py-2 text-sm border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900">
-                  <option>1 Guest</option>
-                  <option>2 Guests</option>
-                  <option>3 Guests</option>
-                  <option>4 Guests</option>
-                  <option>5+ Guests</option>
+                <select v-model.number="stay.guests" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-button focus:outline-none focus:ring-2 focus:ring-accent-blue bg-white text-gray-900">
+                  <option :value="1">1 Guest</option>
+                  <option :value="2">2 Guests</option>
+                  <option :value="3">3 Guests</option>
+                  <option :value="4">4 Guests</option>
+                  <option :value="5">5+ Guests</option>
                 </select>
               </div>
             </div>
@@ -289,7 +289,7 @@
               <Button variant="outline" size="sm" @click="addToCart">
                 Add to Trip Cart
               </Button>
-              <Button variant="primary" size="sm" @click="router.push(`/accommodation/${accommodation.id}/checkout`)">
+              <Button variant="primary" size="sm" @click="goToCheckout">
                 Reserve Now
               </Button>
             </div>
@@ -297,16 +297,20 @@
 
             <div class="mt-4 pt-4 border-t border-gray-200 space-y-2">
               <div class="flex justify-between text-xs">
-                <span class="text-text-secondary">{{ currencyStore.formatPrice(accommodation.price) }} × 3 nights</span>
-                <span class="font-semibold">{{ currencyStore.formatPrice(accommodation.price * 3) }}</span>
+                <span class="text-text-secondary">{{ currencyStore.formatPrice(accommodation.price) }} × {{ nights }} night{{ nights === 1 ? '' : 's' }}</span>
+                <span class="font-semibold">{{ currencyStore.formatPrice(subtotal) }}</span>
               </div>
               <div class="flex justify-between text-xs">
                 <span class="text-text-secondary">Service fee</span>
-                <span class="font-semibold">{{ currencyStore.formatPrice(25) }}</span>
+                <span class="font-semibold">{{ currencyStore.formatPrice(serviceFee) }}</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-text-secondary">Taxes</span>
+                <span class="font-semibold">{{ currencyStore.formatPrice(taxes) }}</span>
               </div>
               <div class="flex justify-between pt-2 border-t border-gray-200">
                 <span class="text-sm font-semibold">Total</span>
-                <span class="text-lg font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price * 3 + 25) }}</span>
+                <span class="text-lg font-bold text-brand-600">{{ currencyStore.formatPrice(total) }}</span>
               </div>
             </div>
           </Card>
@@ -323,7 +327,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import { useUserStore } from '../../stores/userStore'
@@ -340,6 +344,51 @@ const route = useRoute()
 const currencyStore = useCurrencyStore()
 const userStore = useUserStore()
 const { t } = useTranslation()
+
+const stay = ref({
+  checkIn: '',
+  checkOut: '',
+  guests: 2
+})
+
+function toDateInputValue(date) {
+  return date.toISOString().split('T')[0]
+}
+
+const nights = computed(() => {
+  if (!stay.value.checkIn || !stay.value.checkOut) return 1
+  const inDate = new Date(stay.value.checkIn)
+  const outDate = new Date(stay.value.checkOut)
+  const diffTime = Math.abs(outDate - inDate)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays || 1
+})
+
+const subtotal = computed(() => (accommodation.value.price || 0) * nights.value)
+const serviceFee = computed(() => Math.round(subtotal.value * 0.05))
+const taxes = computed(() => Math.round(subtotal.value * 0.03))
+const total = computed(() => subtotal.value + serviceFee.value + taxes.value)
+
+const buildBookingQuery = () => {
+  const q = route.query.q != null ? String(route.query.q).trim() : ''
+  const guests = Number(stay.value.guests)
+  const inDate = String(stay.value.checkIn || '').trim()
+  const outDate = String(stay.value.checkOut || '').trim()
+
+  return {
+    ...(q ? { q } : {}),
+    ...(Number.isFinite(guests) && guests > 0 ? { guests: String(guests) } : {}),
+    ...(inDate ? { checkIn: inDate } : {}),
+    ...(outDate ? { checkOut: outDate } : {})
+  }
+}
+
+const goToCheckout = () => {
+  router.push({
+    path: `/accommodation/${accommodation.value.id}/checkout`,
+    query: buildBookingQuery()
+  })
+}
 
 const openDirections = () => {
   // Get the property location and open in Google Maps
@@ -425,11 +474,28 @@ const accommodation = ref({
   reviewsList: []
 })
 
-// Load accommodation details on mount
-import { onMounted } from 'vue'
 import api from '../../services/api'
 
 onMounted(async () => {
+  // Hydrate booking sidebar from URL (or use sensible defaults)
+  const qCheckIn = route.query.checkIn != null ? String(route.query.checkIn).trim() : ''
+  const qCheckOut = route.query.checkOut != null ? String(route.query.checkOut).trim() : ''
+  const qGuests = route.query.guests != null && String(route.query.guests).trim() ? Number(route.query.guests) : null
+
+  if (qCheckIn) stay.value.checkIn = qCheckIn
+  if (qCheckOut) stay.value.checkOut = qCheckOut
+  if (Number.isFinite(qGuests) && qGuests > 0) stay.value.guests = qGuests
+
+  if (!stay.value.checkIn || !stay.value.checkOut) {
+    const checkIn = new Date()
+    checkIn.setDate(checkIn.getDate() + 7)
+    const checkOut = new Date()
+    checkOut.setDate(checkOut.getDate() + 10)
+
+    stay.value.checkIn = stay.value.checkIn || toDateInputValue(checkIn)
+    stay.value.checkOut = stay.value.checkOut || toDateInputValue(checkOut)
+  }
+
   try {
     const response = await api.accommodations.getById(route.params.id)
     accommodation.value = {

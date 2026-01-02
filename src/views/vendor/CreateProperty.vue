@@ -1,16 +1,16 @@
 <template>
   <MainLayout>
-    <div class="min-h-screen bg-gray-50 py-8">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
         <div class="mb-8">
           <router-link to="/vendor" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Back to Dashboard
+            {{ t('vendor.backToDashboard') }}
           </router-link>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ t('vendor.createListing') }}</h1>
-          <p class="text-gray-600">{{ t('vendor.createListingDesc') }}</p>
+          <h1 class="text-3xl font-bold text-text-primary mb-2">{{ t('vendor.createListing') }}</h1>
+          <p class="text-text-secondary">{{ t('vendor.createListingDesc') }}</p>
         </div>
 
         <!-- Success Message -->
@@ -28,11 +28,11 @@
           <form @submit.prevent="handleSubmit">
             <!-- Basic Information -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">{{ t('vendor.basicInfo') }}</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.basicInfo') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.propertyName') }}
                   </label>
                   <Input 
@@ -44,28 +44,28 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.propertyType') }}
                   </label>
                   <select 
                     v-model="form.type"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary"
                     :class="errors.type ? 'border-red-500' : ''"
                   >
                     <option value="">{{ t('vendor.selectType') }}</option>
                     <option value="Hotel">{{ t('accommodation.hotel') }}</option>
-                    <option value="Motel">Motel</option>
+                    <option value="Motel">{{ t('accommodation.motel') }}</option>
                     <option value="Resort">{{ t('accommodation.resort') }}</option>
                     <option value="Lodge">{{ t('accommodation.lodge') }}</option>
                     <option value="Apartment">{{ t('accommodation.apartment') }}</option>
                     <option value="Guesthouse">{{ t('accommodation.guesthouse') }}</option>
-                    <option value="Villa">Villa</option>
+                    <option value="Villa">{{ t('accommodation.villa') }}</option>
                   </select>
                   <p v-if="errors.type" class="mt-1 text-sm text-red-600">{{ errors.type }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('accommodation.location') }}
                   </label>
                   <Input 
@@ -77,13 +77,13 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.description') }}
                   </label>
                   <textarea 
                     v-model="form.description"
                     rows="4"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary placeholder:text-text-muted"
                     :placeholder="t('vendor.descriptionPlaceholder')"
                     :class="errors.description ? 'border-red-500' : ''"
                   ></textarea>
@@ -94,11 +94,11 @@
 
             <!-- Property Details -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">{{ t('vendor.propertyDetails') }}</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyDetails') }}</h2>
               
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.beds') }}
                   </label>
                   <Input 
@@ -110,7 +110,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.baths') }}
                   </label>
                   <Input 
@@ -122,7 +122,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.area') }}
                   </label>
                   <Input 
@@ -137,14 +137,14 @@
 
             <!-- Pricing -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">{{ t('vendor.pricing') }}</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.pricing') }}</h2>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+                <label class="block text-sm font-medium text-text-secondary mb-2">
                   {{ t('vendor.pricePerNight') }}
                 </label>
                 <div class="relative">
-                  <span class="absolute left-4 top-3 text-gray-500">$</span>
+                  <span class="absolute left-4 top-3 text-text-muted">{{ currencyStore.currencySymbol }}</span>
                   <Input 
                     v-model.number="form.price" 
                     type="number"
@@ -160,11 +160,11 @@
 
             <!-- Images -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">{{ t('vendor.propertyImages') }}</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyImages') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
                     {{ t('vendor.mainImage') }}
                   </label>
                   <Input 
@@ -172,7 +172,7 @@
                     :placeholder="t('vendor.imageUrlPlaceholder')"
                     :class="errors.image ? 'border-red-500' : ''"
                   />
-                  <p class="mt-1 text-sm text-gray-500">{{ t('vendor.imageUrlHelper') }}</p>
+                  <p class="mt-1 text-sm text-text-muted">{{ t('vendor.imageUrlHelper') }}</p>
                   <p v-if="errors.image" class="mt-1 text-sm text-red-600">{{ errors.image }}</p>
                 </div>
 
@@ -208,7 +208,7 @@
 
             <!-- Amenities -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">{{ t('vendor.amenities') }}</h2>
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.amenities') }}</h2>
               
               <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <label v-for="amenity in availableAmenities" :key="amenity" class="flex items-center gap-2 cursor-pointer">
@@ -218,7 +218,7 @@
                     v-model="form.amenities"
                     class="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                   />
-                  <span class="text-sm text-gray-700">{{ amenity }}</span>
+                  <span class="text-sm text-text-secondary">{{ amenity }}</span>
                 </label>
               </div>
             </div>
@@ -232,8 +232,8 @@
                   class="mt-1 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
                 />
                 <div>
-                  <span class="text-sm font-medium text-gray-700">{{ t('vendor.ecoFriendly') }}</span>
-                  <p class="text-sm text-gray-500">{{ t('vendor.ecoFriendlyDesc') }}</p>
+                  <span class="text-sm font-medium text-text-secondary">{{ t('vendor.ecoFriendly') }}</span>
+                  <p class="text-sm text-text-muted">{{ t('vendor.ecoFriendlyDesc') }}</p>
                 </div>
               </label>
             </div>
@@ -263,6 +263,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast'
+import { useCurrencyStore } from '../../stores/currency'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -272,6 +273,7 @@ import api from '../../services/api'
 const { t } = useTranslation()
 const router = useRouter()
 const { showToast } = useToast()
+const currencyStore = useCurrencyStore()
 
 const form = ref({
   name: '',

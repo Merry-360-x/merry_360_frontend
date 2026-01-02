@@ -12,7 +12,7 @@ export async function getAccommodationsContext() {
   try {
     const { data, error } = await supabase
       .from('properties')
-      .select('id, name, type, location, price, bedrooms, bathrooms, amenities, available')
+      .select('id, name, property_type, location, city, price_per_night, bedrooms, bathrooms, max_guests, amenities, images, main_image, available')
       .eq('available', true)
       .limit(20)
 
@@ -28,7 +28,12 @@ export async function getAccommodationsContext() {
     // Format for AI context
     const summary = data.map(prop => {
       const amenitiesList = Array.isArray(prop.amenities) ? prop.amenities.slice(0, 3).join(', ') : ''
-      return `${prop.name} (${prop.type || 'Property'}) in ${prop.location} - ${prop.price}, ${prop.bedrooms || 0} bed, ${prop.bathrooms || 0} bath${amenitiesList ? ` - ${amenitiesList}` : ''}`
+      const typeLabel = prop.property_type || 'Property'
+      const where = prop.city || prop.location || 'Unknown location'
+      const price = prop.price_per_night != null ? `$${prop.price_per_night}/night` : 'Price on request'
+      const guests = prop.max_guests != null ? `${prop.max_guests} guests` : null
+
+      return `${prop.name} (${typeLabel}) in ${where} - ${price}, ${prop.bedrooms || 0} bed, ${prop.bathrooms || 0} bath${guests ? `, ${guests}` : ''}${amenitiesList ? ` - ${amenitiesList}` : ''}`
     }).join('\n')
 
     return `Available Accommodations (${data.length} properties):\n${summary}`

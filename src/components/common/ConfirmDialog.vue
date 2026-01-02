@@ -15,13 +15,13 @@
     <div class="relative w-full max-w-md mx-4">
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-          <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">
+          <h3 class="text-base font-semibold text-text-primary">
             {{ confirmState.title }}
           </h3>
         </div>
 
         <div class="px-5 py-4">
-          <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          <p class="text-sm text-text-secondary whitespace-pre-wrap">
             {{ confirmState.message }}
           </p>
         </div>
@@ -29,7 +29,7 @@
         <div class="px-5 py-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-end gap-2">
           <button
             type="button"
-            class="px-4 py-2 rounded-full text-sm font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            class="px-4 py-2 rounded-full text-sm font-semibold border border-gray-300 dark:border-gray-600 text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             @click="onCancel"
           >
             {{ confirmState.cancelText }}

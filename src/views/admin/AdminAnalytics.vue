@@ -17,7 +17,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
       <Card padding="md">
         <p class="text-text-secondary text-sm mb-1">Total Revenue</p>
-        <p class="text-3xl font-bold">${{ metrics.totalRevenue.toLocaleString() }}</p>
+        <p class="text-3xl font-bold">{{ currencyStore.formatPrice(metrics.totalRevenue) }}</p>
         <p class="text-success text-sm mt-1">+12% from last month</p>
       </Card>
       <Card padding="md">
@@ -49,7 +49,7 @@
                  :style="`height: ${(month.value / maxRevenue) * 100}%`">
             </div>
             <div class="mt-2 text-xs text-text-secondary">{{ month.name }}</div>
-            <div class="text-xs font-semibold">${{ month.value }}k</div>
+            <div class="text-xs font-semibold">{{ currencyStore.formatPrice(month.value * 1000) }}</div>
           </div>
         </div>
       </Card>
@@ -129,8 +129,10 @@ import AdminLayout from '@/components/layout/AdminLayout.vue'
 import Card from '@/components/common/Card.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyStore } from '@/stores/currency'
 
 const { showToast } = useToast()
+const currencyStore = useCurrencyStore()
 const loading = ref(true)
 
 const metrics = ref({

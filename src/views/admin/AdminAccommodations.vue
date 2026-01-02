@@ -52,15 +52,15 @@
                   </td>
                   <td class="py-4 px-4">{{ property.host }}</td>
                   <td class="py-4 px-4">{{ property.location }}</td>
-                  <td class="py-4 px-4">${{ property.price }}/night</td>
+                  <td class="py-4 px-4">{{ currencyStore.formatPrice(property.price) }}/{{ t('accommodation.perNight') }}</td>
                   <td class="py-4 px-4">
-                    <span :class="statusClass(property.status)">{{ property.status }}</span>
+                    <span :class="statusClass(property.status)">{{ t(property.status === 'active' ? 'status.active' : 'status.inactive') }}</span>
                   </td>
                   <td class="py-4 px-4">
                     <div class="flex gap-2">
-                      <Button variant="outline" size="sm">Edit</Button>
+                      <Button variant="outline" size="sm">{{ t('common.edit') }}</Button>
                       <Button variant="outline" size="sm" @click="toggleStatus(property)">
-                        {{ property.status === 'active' ? 'Deactivate' : 'Activate' }}
+                        {{ property.status === 'active' ? t('status.inactive') : t('status.active') }}
                       </Button>
                     </div>
                   </td>
@@ -79,8 +79,12 @@ import Card from '@/components/common/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
+import { useCurrencyStore } from '@/stores/currency'
+import { useTranslation } from '@/composables/useTranslation'
 
 const { showToast } = useToast()
+const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 const properties = ref([])
 const loading = ref(true)
 
