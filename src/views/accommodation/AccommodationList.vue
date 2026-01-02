@@ -1,17 +1,17 @@
 <template>
   <MainLayout>
     <!-- Search Bar Section -->
-    <div class="w-full py-12 bg-white" style="margin-top: 80px;">
+    <div class="w-full py-12 bg-white dark:bg-gray-900" style="margin-top: 80px;">
       <div class="container mx-auto px-4 max-w-4xl">
-        <div class="bg-white rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
+        <div class="bg-white dark:bg-gray-800 rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
           <div class="flex-1 px-2 md:px-6">
-            <label class="block text-xs font-bold mb-1.5" style="font-family: Montserrat, sans-serif; color: #484848; font-size: 12px;">{{ t('nav.accommodations') }}</label>
+            <label class="block text-xs font-bold mb-1.5 text-text-secondary" style="font-family: Montserrat, sans-serif; font-size: 12px;">{{ t('nav.accommodations') }}</label>
             <input 
               v-model="searchQuery"
               type="text" 
               :placeholder="t('home.search')"
-              class="w-full text-sm font-semibold focus:outline-none placeholder-gray-400 bg-transparent"
-              style="font-family: Montserrat, sans-serif; color: #484848; font-size: 14px;"
+              class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary"
+              style="font-family: Montserrat, sans-serif; font-size: 14px;"
               @keyup.enter="performSearch"
             />
           </div>
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white min-h-screen">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white dark:bg-gray-900 min-h-screen">
       <!-- Header -->
       <div class="mb-6 sm:mb-8">
         <h1 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-2">Find Your Perfect Stay</h1>
@@ -39,15 +39,15 @@
       <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         <!-- Filters Sidebar -->
         <div class="lg:col-span-1">
-          <div class="bg-white rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
-            <h3 class="font-semibold text-base sm:text-lg mb-4">Filters</h3>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
+            <h3 class="font-semibold text-base sm:text-lg mb-4 text-text-primary">Filters</h3>
             
             <!-- View Toggle -->
             <div class="mb-4 sm:mb-6">
               <div class="flex gap-2">
                 <button 
                   @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'"
+                  :class="viewMode === 'list' ? 'bg-red-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
                   class="flex-1 py-2 rounded-lg transition-all duration-200 transform hover:scale-105"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
                 </button>
                 <button 
                   @click="viewMode = 'map'"
-                  :class="viewMode === 'map' ? 'bg-brand-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'"
+                  :class="viewMode === 'map' ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
                   class="flex-1 py-2 rounded-button transition-colors"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@
 
             <!-- Price Range -->
             <div class="mb-4 sm:mb-6">
-              <label class="block text-xs sm:text-sm font-medium mb-3">Price Range (per night)</label>
+              <label class="block text-xs sm:text-sm font-medium mb-3 text-text-primary">Price Range (per night)</label>
               <div class="space-y-2">
                 <input 
                   type="range" 
@@ -86,7 +86,7 @@
 
             <!-- Property Type -->
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-3">Property Type</label>
+              <label class="block text-sm font-medium mb-3 text-text-primary">Property Type</label>
               <div class="space-y-2">
                 <label v-for="type in propertyTypes" :key="type" class="flex items-center">
                   <input 
@@ -95,20 +95,20 @@
                     v-model="filters.propertyTypes"
                     class="rounded border-gray-300 text-brand-600 focus:ring-brand-500 mr-2"
                   />
-                  <span class="text-sm">{{ type }}</span>
+                  <span class="text-sm text-text-secondary">{{ type }}</span>
                 </label>
               </div>
             </div>
 
             <!-- Rating -->
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-3">Minimum Rating</label>
+              <label class="block text-sm font-medium mb-3 text-text-primary">Minimum Rating</label>
               <div class="flex gap-2">
                 <button
                   v-for="rating in [3, 4, 4.5]"
                   :key="rating"
                   @click="filters.minRating = rating"
-                  :class="filters.minRating === rating ? 'bg-brand-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'"
+                  :class="filters.minRating === rating ? 'bg-brand-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
                   class="flex-1 py-2 px-3 rounded-button text-sm transition-colors"
                 >
                   {{ rating }}+⭐
@@ -118,7 +118,7 @@
 
             <!-- Amenities -->
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-3">Amenities</label>
+              <label class="block text-sm font-medium mb-3 text-text-primary">Amenities</label>
               <div class="space-y-2">
                 <label v-for="amenity in amenities" :key="amenity" class="flex items-center">
                   <input 
@@ -127,7 +127,7 @@
                     v-model="filters.amenities"
                     class="rounded border-gray-300 text-brand-600 focus:ring-brand-500 mr-2"
                   />
-                  <span class="text-sm">{{ amenity }}</span>
+                  <span class="text-sm text-text-secondary">{{ amenity }}</span>
                 </label>
               </div>
             </div>
@@ -146,7 +146,7 @@
 
             <button 
               @click="resetFilters"
-              class="w-full px-4 py-2 border-2 border-gray-300 text-text-brand-600 rounded-lg hover:border-brand-500 hover:text-brand-600 transition-all duration-200 font-medium text-sm"
+              class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-700 text-text-brand-600 rounded-lg hover:border-brand-500 hover:text-brand-600 transition-all duration-200 font-medium text-sm"
             >
               Reset Filters
             </button>
@@ -160,7 +160,7 @@
             <p class="text-text-secondary text-sm sm:text-base">
               <span class="font-semibold text-text-brand-600">{{ filteredAccommodations.length }}</span> properties found
             </p>
-            <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900 text-sm sm:text-base">
+            <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary text-sm sm:text-base">
               <option value="recommended">Recommended</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
@@ -174,10 +174,10 @@
 
           <div v-if="hasSearchSummary" class="mb-4 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-secondary">
             <span>Searching for:</span>
-            <span v-if="searchQuery" class="px-2 py-1 bg-gray-100 rounded">{{ searchQuery }}</span>
-            <span v-if="guestCount" class="px-2 py-1 bg-gray-100 rounded">{{ guestCount }} guest{{ guestCount === 1 ? '' : 's' }}</span>
-            <span v-if="checkIn" class="px-2 py-1 bg-gray-100 rounded">Check-in: {{ checkIn }}</span>
-            <span v-if="checkOut" class="px-2 py-1 bg-gray-100 rounded">Check-out: {{ checkOut }}</span>
+            <span v-if="searchQuery" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ searchQuery }}</span>
+            <span v-if="guestCount" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ guestCount }} guest{{ guestCount === 1 ? '' : 's' }}</span>
+            <span v-if="checkIn" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">Check-in: {{ checkIn }}</span>
+            <span v-if="checkOut" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">Check-out: {{ checkOut }}</span>
           </div>
 
           <!-- Map View -->
@@ -203,7 +203,7 @@
                 v-for="accommodation in group.items" 
                 :key="accommodation.id"
                 @click="goToDetails(accommodation.id)"
-                class="bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1"
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1"
               >
                 <div class="grid md:grid-cols-3 gap-0">
                   <!-- Image -->
@@ -215,11 +215,11 @@
                     />
                     <button 
                       @click.stop="toggleFavorite(accommodation.id)"
-                      class="absolute top-3 right-3 w-10 h-10 bg-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                      class="absolute top-3 right-3 w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
                     >
                       <svg 
                         class="w-6 h-6" 
-                        :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-gray-400'"
+                        :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-text-muted'"
                         fill="none" 
                         stroke="currentColor" 
                         viewBox="0 0 24 24"
@@ -269,7 +269,7 @@
                       <span 
                         v-for="amenity in accommodation.amenities.slice(0, 4)" 
                         :key="amenity"
-                        class="px-2 py-1 bg-gray-100 text-text-secondary text-xs rounded"
+                        class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-text-secondary text-xs rounded"
                       >
                         {{ amenity }}
                       </span>
@@ -279,7 +279,7 @@
                     </div>
 
                     <!-- Price and CTA -->
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-gray-100">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-gray-100 dark:border-gray-700">
                       <div>
                         <div class="flex items-baseline gap-1 flex-wrap">
                           <span class="text-xl sm:text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
@@ -310,7 +310,7 @@
 
           <!-- Empty State -->
           <div v-if="filteredAccommodations.length === 0" class="text-center py-12 sm:py-16">
-            <svg class="w-20 h-20 sm:w-24 sm:h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-20 h-20 sm:w-24 sm:h-24 text-text-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             <h3 class="text-lg sm:text-xl font-semibold text-text-brand-600 mb-2">No properties found</h3>

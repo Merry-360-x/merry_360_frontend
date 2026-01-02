@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-xl shadow-card overflow-hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card overflow-hidden">
     <div class="p-4 bg-gradient-to-r from-teal-500 to-cyan-600">
       <h3 class="text-white font-bold text-lg flex items-center">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -11,7 +11,7 @@
     </div>
     
     <!-- Placeholder Map -->
-    <div class="relative h-96 bg-gray-100">
+    <div class="relative h-96 bg-gray-100 dark:bg-gray-900">
       <!-- Mock map with markers -->
       <div class="absolute inset-0 bg-gradient-to-br from-teal-100 to-cyan-100">
         <!-- Grid pattern to simulate map -->
@@ -41,9 +41,9 @@
             
             <!-- Tooltip -->
             <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <div class="bg-white rounded-lg shadow-xl p-3 min-w-[200px]">
-                <p class="font-bold text-sm text-gray-900 mb-1">{{ property.title }}</p>
-                <p class="text-xs text-gray-600 mb-2">{{ property.location }}</p>
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-3 min-w-[200px]">
+                <p class="font-bold text-sm text-text-primary mb-1">{{ property.title }}</p>
+                <p class="text-xs text-text-secondary mb-2">{{ property.location }}</p>
                 <p class="text-teal-600 font-bold text-sm">{{ formatPrice(property.price) }}/night</p>
               </div>
             </div>
@@ -52,13 +52,13 @@
 
         <!-- Map Controls -->
         <div class="absolute top-4 right-4 flex flex-col gap-2">
-          <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 bg-gray-600 transition-colors">
-            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button class="w-10 h-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <svg class="w-5 h-5 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
           </button>
-          <button class="w-10 h-10 bg-white rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 bg-gray-600 transition-colors">
-            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button class="w-10 h-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <svg class="w-5 h-5 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
             </svg>
           </button>
@@ -66,15 +66,15 @@
 
         <!-- Location Search -->
         <div class="absolute top-4 left-4 right-20">
-          <div class="bg-white rounded-lg shadow-lg p-3 flex items-center gap-2">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             <input 
               v-model="searchLocation"
               type="text" 
               placeholder="Search location..."
-              class="flex-1 outline-none text-sm"
+              class="flex-1 outline-none text-sm bg-transparent text-text-primary placeholder:text-text-muted"
               @input="handleLocationSearch"
             />
           </div>
@@ -83,8 +83,8 @@
 
       <!-- Note about map integration -->
       <div class="absolute bottom-4 left-4 right-4">
-        <div class="bg-white/95 backdrop-blur-sm rounded-lg p-3 shadow-lg">
-          <p class="text-xs text-gray-600">
+        <div class="bg-white/95 dark:bg-gray-900/80 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+          <p class="text-xs text-text-secondary">
             <span class="font-semibold">💡 Tip:</span> Click on markers to view property details. Integration with Google Maps/Mapbox can be added.
           </p>
         </div>

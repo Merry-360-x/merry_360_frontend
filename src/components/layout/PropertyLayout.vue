@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-white font-sans">
+  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans">
     <!-- Header -->
-    <header class="bg-white/70 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20">
+    <header class="bg-white/70 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-white/20 dark:border-gray-800">
       <div class="px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20 md:h-24">
           <!-- Logo -->
@@ -15,7 +15,7 @@
               v-for="item in navigation"
               :key="item.name"
               :to="item.to" 
-              class="text-sm text-gray-700 font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 transition-all px-4 py-2 border border-transparent rounded-[25px]"
               active-class="!border-brand-500 !text-brand-600"
             >
               {{ item.name }}
@@ -27,7 +27,7 @@
             <!-- Currency Toggle -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 hover:text-brand-600 transition-all bg-transparent flex items-center gap-2"
+              class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-text-secondary hover:text-brand-600 transition-all bg-transparent flex items-center gap-2"
               :title="'Switch to ' + (currencyStore.currentCurrency === 'USD' ? 'RWF' : 'USD')"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
               {{ currencyStore.currentCurrency }}
             </button>
 
-            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
+            <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-4 py-2 border border-brand-500 rounded-[20px] text-sm font-medium text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-transparent cursor-pointer transition-all">
               <option value="EN">EN</option>
               <option value="RW">RW</option>
               <option value="FR">FR</option>
@@ -44,7 +44,7 @@
             </select>
 
             <router-link to="/dashboard/watchlist" class="relative p-1.5 hover:bg-transparent rounded" title="Wishlist">
-              <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
               <span v-if="watchlistCount > 0" class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-white text-[10px] rounded-full flex items-center justify-center font-bold">{{ watchlistCount }}</span>
@@ -52,14 +52,14 @@
 
             <router-link 
               to="/login"
-              class="relative flex items-center gap-2 bg-transparent border border-gray-200 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
+              class="relative flex items-center gap-2 bg-transparent border border-gray-200 dark:border-gray-700 rounded-[20px] px-2 py-1 hover:shadow-md transition-all"
             >
-              <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
                 <rect x="2" y="5" width="20" height="2" rx="1"/>
                 <rect x="2" y="11" width="20" height="2" rx="1"/>
                 <rect x="2" y="17" width="20" height="2" rx="1"/>
               </svg>
-              <svg class="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-8 h-8 text-text-muted" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
               </svg>
             </router-link>
@@ -70,13 +70,13 @@
             <!-- Currency Toggle Mobile -->
             <button 
               @click="currencyStore.toggleCurrency()"
-              class="px-3 py-1.5 border border-brand-500 rounded-[15px] text-xs font-semibold text-gray-700 hover:text-brand-600 transition-all bg-transparent"
+              class="px-3 py-1.5 border border-brand-500 rounded-[15px] text-xs font-semibold text-text-secondary hover:text-brand-600 transition-all bg-transparent"
             >
               {{ currencyStore.currentCurrency }}
             </button>
 
             <router-link to="/dashboard/watchlist" class="relative p-1.5">
-              <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
               <span v-if="watchlistCount > 0" class="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] rounded-full flex items-center justify-center font-bold">{{ watchlistCount }}</span>
@@ -84,7 +84,7 @@
 
             <button 
               @click="mobileMenuOpen = !mobileMenuOpen"
-              class="p-1.5 text-gray-900"
+              class="p-1.5 text-text-primary"
               aria-label="Menu"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,13 +105,13 @@
         leave-from-class="translate-x-0"
         leave-to-class="translate-x-full"
       >
-        <div v-if="mobileMenuOpen" class="fixed inset-y-0 right-0 w-64 bg-white shadow-2xl lg:hidden z-50">
+        <div v-if="mobileMenuOpen" class="fixed inset-y-0 right-0 w-64 bg-white dark:bg-gray-900 shadow-2xl lg:hidden z-50">
           <div class="h-full flex flex-col">
             <!-- Menu Header -->
-            <div class="flex items-center justify-between p-4 border-b">
-              <span class="font-bold text-gray-900">Menu</span>
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+              <span class="font-bold text-text-primary">Menu</span>
               <button @click="mobileMenuOpen = false" class="p-1">
-                <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
               </button>
@@ -124,13 +124,13 @@
                 :key="item.name"
                 :to="item.to" 
                 @click="mobileMenuOpen = false"
-                class="block py-2.5 px-3 text-sm text-gray-900 hover:bg-gray-50 rounded transition-colors"
+                class="block py-2.5 px-3 text-sm text-text-primary hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors"
               >
                 {{ item.name }}
               </router-link>
               
-              <div class="pt-4 mt-4 border-t">
-                <select v-model="selectedLanguage" @change="changeLanguage" class="w-full px-3 py-2 border border-gray-200 rounded text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-primary bg-white">
+              <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+                <select v-model="selectedLanguage" @change="changeLanguage" class="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-primary bg-white dark:bg-gray-800">
                   <option value="EN">English</option>
                   <option value="RW">Kinyarwanda</option>
                   <option value="FR">Français</option>
