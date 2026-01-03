@@ -150,6 +150,9 @@
             <div class="mb-8">
               <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyImages') }}</h2>
               
+              <!-- Image Size Guidelines -->
+              <ImageSizeValidator :showWarning="false" class="mb-4" />
+              
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('portal.uploadImages') }}</label>
@@ -160,7 +163,7 @@
                     <input 
                       ref="fileInput"
                       type="file" 
-                      accept="image/*" 
+                      accept="image/jpeg,image/png,image/webp" 
                       multiple 
                       class="hidden" 
                       @change="handleImageUpload"
@@ -169,7 +172,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                     <p class="text-text-secondary">{{ t('portal.clickToUploadImages') }}</p>
-                    <p class="text-sm text-text-muted mt-1">{{ t('portal.imageUploadHelp') }}</p>
+                    <p class="text-sm text-text-muted mt-1">{{ t('portal.imageUploadHelp') }} (Max 2MB per image)</p>
                   </div>
                 </div>
 
@@ -237,6 +240,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
+import ImageSizeValidator from '../../components/common/ImageSizeValidator.vue'
 import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
@@ -309,6 +313,21 @@ function normalizePropertyType(rawType) {
 async function handleImageUpload(event) {
   const files = Array.from(event.target.files || [])
   if (!files.length) return
+
+  // Validate file sizes BEFORE processing
+  const maxSize = 2 * 1024 * 1024 // 2MB
+  const oversizedFiles = files.filter(file => file.size > maxSize)
+  
+  if (oversizedFiles.length > 0) {
+    const fileNames = oversizedFiles.map(f => {
+      const sizeMB = (f.size / (1024 * 1024)).toFixed(2)
+      return `${f.name} (${sizeMB}MB)`
+    }).join(', ')
+    
+    error(`The following images exceed 2MB: ${fileNames}. Please compress them before uploading.`)
+    event.target.value = '' // Reset input
+    return
+  }
 
   // allow selecting the same files again
   event.target.value = ''

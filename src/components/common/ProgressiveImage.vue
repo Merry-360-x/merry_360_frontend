@@ -34,11 +34,11 @@ const props = defineProps({
   },
   width: {
     type: Number,
-    default: 800
+    default: 600 // Reduced from 800 to 600 for smaller images
   },
   quality: {
     type: String,
-    default: 'auto:best'
+    default: 'auto:eco' // Changed from 'auto:best' to 'auto:eco' for 10x compression
   }
 })
 

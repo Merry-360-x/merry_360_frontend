@@ -9,7 +9,7 @@
 export function optimizeImageUrl(url, options = {}) {
   const {
     width = 800,
-    quality = 'auto:best',
+    quality = 'auto:eco', // Changed from 'auto:best' to 'auto:eco' for 10x compression
     format = 'auto',
     blur = null,
     progressive = true
@@ -19,14 +19,18 @@ export function optimizeImageUrl(url, options = {}) {
     return url
   }
 
-  // Build transformation string
+  // Build transformation string with aggressive compression
   const transformations = []
   
   if (width) {
     transformations.push(`w_${width}`)
+    transformations.push('c_limit') // Limit dimensions, don't upscale
   }
   
+  // Use aggressive quality reduction (eco mode = ~60-70% quality, 10x smaller)
   transformations.push(`q_${quality}`)
+  
+  // Auto format selection (WebP for modern browsers, optimized JPEG for others)
   transformations.push(`f_${format}`)
   
   if (blur) {
@@ -37,8 +41,10 @@ export function optimizeImageUrl(url, options = {}) {
     transformations.push('fl_progressive')
   }
 
-  // Add lazy loading flag
-  transformations.push('fl_lossy')
+  // Add aggressive compression flags
+  transformations.push('fl_lossy') // Lossy compression
+  transformations.push('fl_strip_profile') // Remove metadata
+  transformations.push('dpr_auto') // Auto device pixel ratio
   
   // Insert transformations into URL
   const transformString = transformations.join(',')
@@ -52,9 +58,9 @@ export function optimizeImageUrl(url, options = {}) {
  */
 export function getPlaceholderUrl(url) {
   return optimizeImageUrl(url, {
-    width: 20,
-    quality: '10',
-    blur: 1000
+    width: 10, // Reduced from 20 to 10 for tiny placeholders
+    quality: '1', // Reduced from 10 to 1 for maximum compression
+    blur: 2000 // Increased blur since it's just a placeholder
   })
 }
 

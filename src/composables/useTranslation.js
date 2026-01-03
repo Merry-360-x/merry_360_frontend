@@ -40,6 +40,13 @@ const translations = {
     'accommodation.villa': 'Villa',
     'accommodation.other': 'Other',
 
+    // Image Validator
+    'imageValidator.sizeWarningTitle': 'Image Size Warning',
+    'imageValidator.sizeExceeded': 'Image size ({size}MB) exceeds the maximum allowed size of {maxSize}MB',
+    'imageValidator.sizeLarge': 'This image ({size}MB) is quite large and may cause slow loading',
+    'imageValidator.defaultWarning': 'Large images can slow down your website. Please keep images under 2MB.',
+    'imageValidator.guidelinesTitle': 'Image Upload Guidelines',
+
     'accommodationList.title': 'Find Your Perfect Stay',
     'accommodationList.subtitle': 'Browse handpicked properties across Rwanda',
     'accommodationList.filters': 'Filters',

@@ -9,9 +9,9 @@
       @mouseenter="startAutoScroll"
       @mouseleave="stopAutoScroll"
     >
-      <!-- Main Image -->
+      <!-- Main Image with Cloudinary Optimization -->
       <img loading="lazy" 
-        :src="currentImage" 
+        :src="optimizeImage(currentImage)" 
         :alt="property.title"
         class="w-full h-full object-cover transform transition-all duration-500 group-hover:scale-110"
       />
@@ -139,6 +139,7 @@ import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '@/stores/currency'
 import { useUserStore } from '@/stores/userStore'
 import { useToast } from '../../composables/useToast.js'
+import { optimizeImageUrl } from '@/services/imageOptimization'
 
 const props = defineProps({
   property: {
@@ -173,6 +174,15 @@ const propertyImages = computed(() => {
 const currentImage = computed(() => {
   return propertyImages.value[currentImageIndex.value] || props.property.image
 })
+
+// Optimize images with Cloudinary for 10x size reduction
+const optimizeImage = (url) => {
+  if (!url) return url
+  return optimizeImageUrl(url, {
+    width: 600, // Resize to 600px width (sufficient for card display)
+    quality: 'auto:eco' // Eco quality for 10x compression
+  })
+}
 
 const previousImage = () => {
   if (currentImageIndex.value > 0) {
