@@ -17,25 +17,48 @@ export const supabaseApiAdapter = {
       const term = termRaw != null ? String(termRaw).trim() : ''
       const guestsCount = guests != null && String(guests).trim() ? Number(guests) : null
 
-      let query = supabase
-        .from('properties')
-        .select('*')
-        .eq('available', true)
-        .order('created_at', { ascending: false })
+      const buildQuery = ({ includeAvailabilityFilter } = { includeAvailabilityFilter: true }) => {
+        let query = supabase
+          .from('properties')
+          .select('*')
+          .order('created_at', { ascending: false })
 
-      if (term) {
-        query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+        // Public pages should only show active listings, but some environments
+        // store legacy rows with NULL availability (or lack the column).
+        if (includeAvailabilityFilter) {
+          query = query.or('available.is.null,available.eq.true')
+        }
+
+        if (term) {
+          query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+        }
+
+        if (Number.isFinite(guestsCount) && guestsCount > 0) {
+          query = query.gte('max_guests', guestsCount)
+        }
+
+        if (limit) {
+          query = query.limit(limit)
+        }
+
+        return query
       }
 
-      if (Number.isFinite(guestsCount) && guestsCount > 0) {
-        query = query.gte('max_guests', guestsCount)
+      let data
+      let error
+
+      ;({ data, error } = await buildQuery({ includeAvailabilityFilter: true }))
+
+      if (error) {
+        const msg = String(error.message || '')
+        const code = String(error.code || '')
+        const looksLikeMissingColumn = code === '42703' || msg.toLowerCase().includes('column') && msg.toLowerCase().includes('available')
+
+        if (looksLikeMissingColumn) {
+          ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
+        }
       }
 
-      if (limit) {
-        query = query.limit(limit)
-      }
-
-      const { data, error } = await query
       if (error) throw error
 
       return { data: (data || []).map(mapPropertyRowToAccommodation) }

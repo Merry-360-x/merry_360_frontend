@@ -1,32 +1,36 @@
 <template>
   <MainLayout>
-    <!-- Search Bar Section -->
-    <div class="w-full py-12 bg-white dark:bg-gray-900" style="margin-top: 80px;">
-      <div class="container mx-auto px-4 max-w-4xl">
-        <div class="bg-white dark:bg-gray-800 rounded-[20px] md:rounded-[35px] shadow-2xl p-3 md:p-2 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-0" style="min-height: 70px;">
-          <div class="flex-1 px-2 md:px-6">
-            <label class="block text-xs font-bold mb-1.5 text-text-secondary" style="font-family: Montserrat, sans-serif; font-size: 12px;">{{ t('nav.accommodations') }}</label>
-            <input 
-              v-model="searchQuery"
-              type="text" 
-              :placeholder="t('home.search')"
-              class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary"
-              style="font-family: Montserrat, sans-serif; font-size: 14px;"
-              @keyup.enter="performSearch"
-            />
+    <!-- Header Search (aligned with Home) -->
+    <section class="bg-gray-50 dark:bg-gray-900 pt-10 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur rounded-2xl shadow-card border border-gray-200/60 dark:border-gray-700 p-3">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+              <div class="flex-1 px-2 md:px-4">
+                <label class="block text-xs font-semibold mb-1 text-text-secondary">{{ t('nav.accommodations') }}</label>
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  :placeholder="t('home.search')"
+                  class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary"
+                  @keyup.enter="performSearch"
+                />
+              </div>
+              <button
+                type="button"
+                @click="performSearch"
+                class="w-full md:w-11 h-11 rounded-xl bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors flex-shrink-0"
+                :aria-label="t('home.search')"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <button 
-            @click="performSearch"
-            class="w-full md:w-[54px] h-[54px] rounded-full flex items-center justify-center hover:scale-105 transition-all duration-200 flex-shrink-0 md:mr-2 shadow-lg"
-            style="background: #FE4F4F;"
-          >
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
         </div>
       </div>
-    </div>
+    </section>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white dark:bg-gray-900 min-h-screen">
       <!-- Header -->
@@ -47,7 +51,7 @@
               <div class="flex gap-2">
                 <button 
                   @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'bg-red-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
+                  :class="viewMode === 'list' ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
                   class="flex-1 py-2 rounded-lg transition-all duration-200 transform hover:scale-105"
                 >
                   <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,7 +324,7 @@
                         </button>
                         <button 
                           @click.stop="goToDetails(accommodation.id)"
-                          class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
+                          class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
                         >
                           {{ t('accommodation.details') }}
                         </button>
@@ -339,7 +343,7 @@
             </svg>
             <h3 class="text-lg sm:text-xl font-semibold text-text-brand-600 mb-2">{{ t('accommodationList.noPropertiesFound') }}</h3>
             <p class="text-text-secondary mb-4 text-sm sm:text-base">{{ t('accommodationList.adjustFilters') }}</p>
-            <button @click="resetFilters" class="px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium transform hover:scale-105">
+            <button @click="resetFilters" class="px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 font-medium transform hover:scale-105">
               {{ t('accommodationList.resetFilters') }}
             </button>
           </div>

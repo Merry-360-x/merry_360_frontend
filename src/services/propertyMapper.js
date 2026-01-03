@@ -35,18 +35,34 @@ export function normalizePropertyType(rawType) {
 export function mapPropertyRowToAccommodation(row) {
   if (!row) return null
 
+  const normalizedType = normalizePropertyType(row.property_type ?? row.type ?? row.category)
+  const location = row.city || row.location || row.address || ''
+  const price = row.price_per_night ?? row.price ?? row.pricePerNight ?? 0
+  const mainImage = row.main_image || row.image || row.mainImage || null
+  const images = Array.isArray(row.images) ? row.images : (Array.isArray(row.additional_images) ? row.additional_images : [])
+  const fallbackImage = mainImage || images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600'
+
+  const beds = row.bedrooms ?? row.beds ?? row.bed_count ?? 1
+  const baths = row.bathrooms ?? row.baths ?? row.bath_count ?? 1
+  const area = row.area ?? row.square_feet ?? row.size_sqft ?? row.size ?? 0
+
   return {
     id: row.id,
     name: row.name,
-    type: normalizePropertyType(row.property_type),
-    location: row.city || row.location,
-    price: row.price_per_night,
+    // UI components in the codebase sometimes expect `title`
+    title: row.name,
+    type: normalizedType,
+    location,
+    price,
     rating: row.rating ?? 0,
     reviews: row.reviews_count ?? 0,
     description: row.description || '',
     amenities: row.amenities || [],
-    image: row.main_image || row.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
-    images: row.images || (row.main_image ? [row.main_image] : []),
+    image: fallbackImage,
+    images: images?.length ? images : (mainImage ? [mainImage] : [fallbackImage]),
+    beds,
+    baths,
+    area,
     ecoFriendly: false,
     createdAt: row.created_at || null
   }

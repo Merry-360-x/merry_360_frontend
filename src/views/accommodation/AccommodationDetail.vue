@@ -36,7 +36,7 @@
                   <h1 class="text-2xl font-bold text-text-brand-600">{{ accommodation.name }}</h1>
                   <button 
                     @click="openDirections"
-                    class="inline-flex items-center px-2.5 py-1 bg-blue-500 hover:bg-blue-600 bg-blue-700 text-white text-xs font-semibold rounded-full transition-colors shadow-sm"
+                    class="inline-flex items-center px-2.5 py-1 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-full transition-colors shadow-sm"
                     :title="t('accommodation.getDirections')"
                   >
                     <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@
                 ]">
                 <div class="flex items-start gap-3">
                   <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-red-100 transition-colors">
-                    <svg v-if="!transport.justAdded" class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-if="!transport.justAdded" class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
                     <svg v-else class="w-5 h-5 text-green-500 animate-bounce-once" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@
                     <h3 class="text-sm font-semibold text-text-brand-600 mb-1">{{ transport.name }}</h3>
                     <p class="text-xs text-text-secondary mb-2">{{ transport.description }}</p>
                     <div class="flex items-center justify-between">
-                      <span class="text-base font-bold text-red-500">{{ formatPrice(transport.price) }}</span>
+                      <span class="text-base font-bold text-brand-600">{{ formatPrice(transport.price) }}</span>
                       <button 
                         @click="addTransportToCart(transport)" 
                         :disabled="transport.justAdded"
@@ -139,7 +139,7 @@
                           'text-xs font-semibold transition-all',
                           transport.justAdded 
                             ? 'text-green-500 cursor-not-allowed' 
-                            : 'text-red-500 hover:text-red-600 hover:scale-105'
+                            : 'text-brand-600 hover:text-brand-700 hover:scale-105'
                         ]">
                         <span v-if="!transport.justAdded">Add to Trip Cart</span>
                         <span v-else class="flex items-center gap-1">

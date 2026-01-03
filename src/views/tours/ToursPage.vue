@@ -1,11 +1,11 @@
 <template>
   <MainLayout>
     <!-- Hero Section with Search -->
-    <section class="relative bg-gradient-to-br from-green-50 to-white py-12 md:py-16">
+    <section class="relative bg-gradient-to-br from-brand-50 to-white dark:from-gray-900 dark:to-gray-900 py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-gray-900">{{ t('tours.title') }}</h1>
-          <p class="text-base md:text-lg text-gray-600">{{ t('tours.subtitle') }}</p>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-text-primary">{{ t('tours.title') }}</h1>
+          <p class="text-base md:text-lg text-text-secondary">{{ t('tours.subtitle') }}</p>
         </div>
 
         <!-- Search Bar -->
@@ -38,7 +38,7 @@
             <!-- Search Button -->
             <button 
               @click="applySearch"
-              class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+              class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -62,8 +62,8 @@
             :class="[
               'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
               selectedCategory === category 
-                ? 'bg-green-500 text-white' 
-                : 'bg-white text-gray-700 hover:bg-green-50 border border-gray-200'
+                ? 'bg-brand-500 text-white' 
+                : 'bg-white text-text-secondary hover:bg-brand-50 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'
             ]"
           >
             {{ category }}
@@ -120,12 +120,12 @@
               </div>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-lg font-bold text-green-600">{{ currencyStore.formatPrice(parseFloat(tour.price.replace(/,/g, ''))) }}</span>
+                  <span class="text-lg font-bold text-brand-600">{{ currencyStore.formatPrice(parseFloat(tour.price.replace(/,/g, ''))) }}</span>
                   <span class="text-text-muted text-xs">/person</span>
                 </div>
                 <button 
                   @click.stop="addToCart(tour)" 
-                  class="px-4 py-2 bg-green-500 text-sm text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
+                  class="px-4 py-2 bg-brand-500 text-sm text-white rounded-lg font-semibold hover:bg-brand-600 transition-colors"
                 >
                   Book Now
                 </button>
