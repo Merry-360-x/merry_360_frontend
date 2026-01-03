@@ -3,18 +3,18 @@
     <section class="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
-          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">Checkout</h1>
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">{{ t('checkout.title') }}</h1>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Checkout Form -->
             <div class="lg:col-span-2 space-y-6">
               <!-- Guest Information -->
               <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Guest Information</h2>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('checkout.guestInfo') }}</h2>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.firstName') }} *</label>
                       <input 
                         v-model="guestInfo.firstName"
                         type="text" 
@@ -23,7 +23,7 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.lastName') }} *</label>
                       <input 
                         v-model="guestInfo.lastName"
                         type="text" 
@@ -34,7 +34,7 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.email') }} *</label>
                     <input 
                       v-model="guestInfo.email"
                       type="email" 
@@ -44,7 +44,7 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.phone') }} *</label>
                     <input 
                       v-model="guestInfo.phone"
                       type="tel" 
@@ -54,12 +54,12 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Special Requests (Optional)</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.specialRequests') }} ({{ t('common.optional') }})</label>
                     <textarea 
                       v-model="guestInfo.specialRequests"
                       rows="3"
                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                      placeholder="Any special requirements or requests..."
+                      :placeholder="t('checkout.specialRequestsPlaceholder')"
                     ></textarea>
                   </div>
                 </div>
@@ -67,11 +67,11 @@
 
               <!-- Booking Details -->
               <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Booking Details</h2>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('checkout.bookingDetails') }}</h2>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-in Date *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.checkInDate') }} *</label>
                       <input 
                         v-model="bookingDetails.checkIn"
                         type="date" 
@@ -81,7 +81,7 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-out Date *</label>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.checkOutDate') }} *</label>
                       <input 
                         v-model="bookingDetails.checkOut"
                         type="date" 
@@ -93,7 +93,7 @@
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of Guests *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('checkout.numberOfGuests') }} *</label>
                     <input 
                       v-model.number="bookingDetails.guests"
                       type="number" 
@@ -107,7 +107,7 @@
 
               <!-- Payment Method Selection -->
               <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Payment Method</h2>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('checkout.paymentMethod') }}</h2>
                 
                 <div class="space-y-3">
                   <label 
@@ -123,8 +123,8 @@
                           <component :is="method.icon" class="w-5 h-5" :class="method.iconColor" />
                         </div>
                         <div>
-                          <p class="font-semibold text-gray-900 dark:text-gray-100">{{ method.name }}</p>
-                          <p class="text-sm text-gray-500 dark:text-gray-400">{{ method.description }}</p>
+                          <p class="font-semibold text-gray-900 dark:text-gray-100">{{ t(method.nameKey) }}</p>
+                          <p class="text-sm text-gray-500 dark:text-gray-400">{{ t(method.descriptionKey) }}</p>
                         </div>
                       </div>
                     </div>
@@ -136,14 +136,14 @@
             <!-- Order Summary -->
             <div class="lg:col-span-1">
               <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-24 transition-colors duration-200">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Order Summary</h3>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('cart.orderSummary') }}</h3>
                 
                 <div class="space-y-3 mb-4">
                   <div v-for="item in tripCart" :key="`${item.type}-${item.id}`" class="flex gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
                     <img :src="item.image" :alt="item.name || item.title" class="w-16 h-16 object-cover rounded-lg" />
                     <div class="flex-1">
                       <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ item.name || item.title }}</p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">{{ item.type }}</p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">{{ t(itemTypeLabelKey[item.type] || item.type) }}</p>
                       <p class="text-sm font-bold text-brand-600 dark:text-brand-400 mt-1">
                         {{ currencyStore.formatPrice(typeof item.price === 'string' ? parseInt(item.price.replace(/[^0-9]/g, '')) : item.price) }}
                       </p>
@@ -153,17 +153,17 @@
 
                 <div class="space-y-2 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                   <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <span>Subtotal</span>
+                    <span>{{ t('cart.subtotal') }}</span>
                     <span class="font-semibold text-gray-900 dark:text-gray-100">{{ currencyStore.formatPrice(subtotal) }}</span>
                   </div>
                   <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                    <span>Service Fee</span>
+                    <span>{{ t('checkout.serviceFee') }}</span>
                     <span class="font-semibold text-gray-900 dark:text-gray-100">{{ currencyStore.formatPrice(serviceFee) }}</span>
                   </div>
                 </div>
 
                 <div class="flex justify-between text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-                  <span>Total</span>
+                  <span>{{ t('cart.total') }}</span>
                   <span class="text-brand-600 dark:text-brand-400">{{ currencyStore.formatPrice(total) }}</span>
                 </div>
 
@@ -172,12 +172,12 @@
                   :disabled="isProcessing || !isFormValid"
                   class="w-full px-6 py-4 bg-brand-500 text-white rounded-xl font-bold text-lg hover:bg-brand-600 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span v-if="isProcessing">Processing...</span>
-                  <span v-else>Proceed to Payment</span>
+                  <span v-if="isProcessing">{{ t('checkout.processing') }}</span>
+                  <span v-else>{{ t('checkout.proceedToPayment') }}</span>
                 </button>
 
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center">
-                  By confirming, you agree to our Terms of Service and Privacy Policy
+                  {{ t('checkout.termsNotice') }}
                 </p>
               </div>
             </div>
@@ -213,6 +213,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { createBooking, supabase } from '../../services/supabase'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import PaymentModal from '../../components/payment/PaymentModal.vue'
 import BookingSuccessModal from '../../components/payment/BookingSuccessModal.vue'
@@ -220,6 +221,7 @@ import BookingSuccessModal from '../../components/payment/BookingSuccessModal.vu
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 
 const isProcessing = ref(false)
 const showPaymentModal = ref(false)
@@ -281,19 +283,26 @@ const MobileIcon = () => h('svg', { fill: 'none', stroke: 'currentColor', viewBo
 ])
 
 const paymentMethods = [
-  { id: 'card', name: 'Bank Card', description: 'Visa, Mastercard, etc.', icon: CardIcon, bgColor: 'bg-blue-100 dark:bg-blue-900', iconColor: 'text-blue-600 dark:text-blue-400' },
-  { id: 'mtn', name: 'MTN Mobile Money', description: 'Pay with MTN MoMo', icon: MobileIcon, bgColor: 'bg-yellow-100 dark:bg-yellow-900', iconColor: 'text-yellow-600 dark:text-yellow-400' },
-  { id: 'airtel', name: 'Airtel Money', description: 'Pay with Airtel Money', icon: MobileIcon, bgColor: 'bg-red-100 dark:bg-red-900', iconColor: 'text-red-600 dark:text-red-400' }
+  { id: 'card', nameKey: 'checkout.bankCard', descriptionKey: 'checkout.bankCardDesc', icon: CardIcon, bgColor: 'bg-blue-100 dark:bg-blue-900', iconColor: 'text-blue-600 dark:text-blue-400' },
+  { id: 'mtn', nameKey: 'checkout.mtnMobileMoney', descriptionKey: 'checkout.mtnMobileMoneyDesc', icon: MobileIcon, bgColor: 'bg-yellow-100 dark:bg-yellow-900', iconColor: 'text-yellow-600 dark:text-yellow-400' },
+  { id: 'airtel', nameKey: 'checkout.airtelMoney', descriptionKey: 'checkout.airtelMoneyDesc', icon: MobileIcon, bgColor: 'bg-red-100 dark:bg-red-900', iconColor: 'text-red-600 dark:text-red-400' }
 ]
+
+const itemTypeLabelKey = {
+  accommodation: 'nav.accommodations',
+  tour: 'nav.tours',
+  transport: 'nav.transport',
+  service: 'nav.services'
+}
 
 function proceedToPayment() {
   if (!isFormValid.value) {
-    alert('Please fill in all required fields')
+    alert(t('checkout.fillRequiredFields'))
     return
   }
 
   if (!userStore.user) {
-    alert('Please login to complete your booking')
+    alert(t('auth.loginToCompleteBooking'))
     router.push('/login')
     return
   }
@@ -341,10 +350,10 @@ async function handlePaymentSuccess(paymentResult) {
     // Set completed booking data for success modal
     const firstItem = tripCart.value[0] || {}
     completedBooking.value = {
-      id: created[0]?.id?.substring(0, 8) || 'N/A',
-      propertyName: firstItem.name || firstItem.title || 'Property',
+      id: created[0]?.id?.substring(0, 8) || t('common.na'),
+      propertyName: firstItem.name || firstItem.title || t('common.property'),
       propertyImage: firstItem.image,
-      location: firstItem.location || 'Location',
+      location: firstItem.location || t('accommodation.location'),
       rating: firstItem.rating || 4.8,
       checkIn: bookingDetails.value.checkIn,
       checkOut: bookingDetails.value.checkOut,
@@ -359,7 +368,7 @@ async function handlePaymentSuccess(paymentResult) {
 
   } catch (error) {
     console.error('Booking error:', error)
-    alert('Failed to create booking. Please try again or contact support.')
+    alert(t('checkout.bookingFailed'))
   } finally {
     isProcessing.value = false
   }
@@ -367,7 +376,7 @@ async function handlePaymentSuccess(paymentResult) {
 
 function handlePaymentError(error) {
   showPaymentModal.value = false
-  alert('Payment failed. Please try again.')
+  alert(t('checkout.paymentFailed'))
 }
 
 function handleSuccessClose() {

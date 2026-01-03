@@ -9,13 +9,13 @@
       
       <div class="container mx-auto max-w-4xl relative z-10 text-center pt-16">
         <div class="inline-block bg-white/20 backdrop-blur-lg px-6 py-3 rounded-full mb-6 border border-white/30">
-          <span class="text-white font-bold text-sm" style="font-family: 'Montserrat', sans-serif;">✨ Community Stories</span>
+          <span class="text-white font-bold text-sm" style="font-family: 'Montserrat', sans-serif;">✨ {{ t('stories.communityStoriesBadge') }}</span>
         </div>
         <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg" style="font-family: 'Montserrat', sans-serif; font-weight: 800;">
-          Share Your Travel Story
+          {{ t('stories.shareYourTravelStory') }}
         </h1>
         <p class="text-lg md:text-xl text-white/95 max-w-2xl mx-auto leading-relaxed mb-10" style="font-family: 'Montserrat', sans-serif; font-weight: 500;">
-          Inspire fellow travelers by sharing your unforgettable experiences across Africa
+          {{ t('stories.shareYourTravelStorySubtitle') }}
         </p>
         <Button 
           variant="primary" 
@@ -27,7 +27,7 @@
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
-          Share Your Story
+          {{ t('stories.shareYourStory') }}
         </Button>
       </div>
     </section>
@@ -42,7 +42,7 @@
       <div v-if="showShareForm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" @click.self="showShareForm = false">
         <Card class="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-text-brand-600">Share Your Story</h2>
+            <h2 class="text-2xl font-bold text-text-brand-600">{{ t('stories.shareYourStory') }}</h2>
             <button @click="showShareForm = false" class="text-gray-400 hover:text-gray-600 text-gray-400">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -52,59 +52,59 @@
 
           <form @submit.prevent="submitStory" class="space-y-6">
             <div>
-              <label class="block text-sm font-semibold text-text-brand-600 mb-2">Your Name</label>
+              <label class="block text-sm font-semibold text-text-brand-600 mb-2">{{ t('stories.form.yourNameLabel') }}</label>
               <input 
                 v-model="storyForm.name"
                 type="text" 
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                placeholder="Enter your name"
+                :placeholder="t('stories.form.yourNamePlaceholder')"
               />
             </div>
 
             <div>
-              <label class="block text-sm font-semibold text-text-brand-600 mb-2">Story Title</label>
+              <label class="block text-sm font-semibold text-text-brand-600 mb-2">{{ t('stories.form.storyTitleLabel') }}</label>
               <input 
                 v-model="storyForm.title"
                 type="text" 
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                placeholder="Give your story a catchy title"
+                :placeholder="t('stories.form.storyTitlePlaceholder')"
               />
             </div>
 
             <div>
-              <label class="block text-sm font-semibold text-text-brand-600 mb-2">Location</label>
+              <label class="block text-sm font-semibold text-text-brand-600 mb-2">{{ t('stories.form.locationLabel') }}</label>
               <input 
                 v-model="storyForm.location"
                 type="text" 
                 required
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                placeholder="Where did this happen?"
+                :placeholder="t('stories.form.locationPlaceholder')"
               />
             </div>
 
             <div>
-              <label class="block text-sm font-semibold text-text-brand-600 mb-2">Your Story</label>
+              <label class="block text-sm font-semibold text-text-brand-600 mb-2">{{ t('stories.form.contentLabel') }}</label>
               <textarea 
                 v-model="storyForm.story"
                 required
                 rows="6"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                placeholder="Tell us about your amazing experience..."
+                :placeholder="t('stories.form.shareContentPlaceholder')"
               ></textarea>
             </div>
 
             <div>
-              <label class="block text-sm font-semibold text-text-brand-600 mb-2">Upload Photos</label>
+              <label class="block text-sm font-semibold text-text-brand-600 mb-2">{{ t('stories.form.uploadPhotosLabel') }}</label>
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-teal-500 transition-colors cursor-pointer">
                 <input type="file" accept="image/*,video/*" multiple class="hidden" id="photo-upload" @change="handlePhotoUpload" />
                 <label for="photo-upload" class="cursor-pointer">
                   <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
-                  <p class="text-sm text-gray-600">Click to upload photos or drag and drop</p>
-                  <p class="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+                  <p class="text-sm text-gray-600">{{ t('stories.uploadHint') }}</p>
+                  <p class="text-xs text-gray-400 mt-1">{{ t('stories.uploadFormatsNote') }}</p>
                 </label>
               </div>
               <div v-if="storyForm.photos.length > 0" class="mt-3 flex flex-wrap gap-2">
@@ -133,10 +133,10 @@
 
             <div class="flex gap-3">
               <Button type="button" variant="secondary" full-width @click="showShareForm = false">
-                Cancel
+                {{ t('common.cancel') }}
               </Button>
               <Button type="submit" variant="primary" full-width class="bg-gradient-to-r from-teal-500 to-cyan-600" :disabled="isSubmitting">
-                {{ isSubmitting ? 'Sharing...' : 'Share Story' }}
+                {{ isSubmitting ? t('stories.sharing') : t('stories.shareStory') }}
               </Button>
             </div>
           </form>
@@ -148,15 +148,15 @@
     <section class="container mx-auto px-4 lg:px-8 py-16">
       <div class="flex items-center justify-between mb-8">
         <div>
-          <h2 class="text-2xl md:text-3xl font-bold text-text-brand-600 mb-2">Community Stories</h2>
-          <p class="text-text-secondary">Real experiences from real travelers</p>
+          <h2 class="text-2xl md:text-3xl font-bold text-text-brand-600 mb-2">{{ t('stories.communityStoriesTitle') }}</h2>
+          <p class="text-text-secondary">{{ t('stories.communityStoriesSubtitle') }}</p>
         </div>
         <select v-model="filterCategory" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500">
-          <option value="all">All Stories</option>
-          <option value="adventure">Adventure</option>
-          <option value="culture">Culture</option>
-          <option value="wildlife">Wildlife</option>
-          <option value="relaxation">Relaxation</option>
+          <option value="all">{{ t('stories.filterAll') }}</option>
+          <option value="adventure">{{ t('stories.category.adventure') }}</option>
+          <option value="culture">{{ t('stories.category.culture') }}</option>
+          <option value="wildlife">{{ t('stories.category.wildlife') }}</option>
+          <option value="relaxation">{{ t('stories.category.relaxation') }}</option>
         </select>
       </div>
 
@@ -188,7 +188,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
             <div class="absolute top-3 left-3">
               <span class="px-3 py-1 bg-teal-500 text-white text-xs font-semibold rounded-full">
-                {{ story.category }}
+                {{ t(`stories.category.${story.category}`) }}
               </span>
             </div>
             <div class="absolute bottom-3 left-3 right-3">
@@ -229,7 +229,7 @@
       <!-- Load More -->
       <div class="text-center mt-12">
         <Button variant="secondary" size="lg">
-          Load More Stories
+          {{ t('stories.loadMoreStories') }}
         </Button>
       </div>
     </section>
@@ -244,8 +244,19 @@ import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
 import api from '../../services/api'
+import { useTranslation } from '@/composables/useTranslation'
 
 const router = useRouter()
+const { t, currentLanguage } = useTranslation()
+
+const dateLocale = computed(() => {
+  const lang = currentLanguage.value
+  if (lang === 'FR') return 'fr-FR'
+  if (lang === 'RW') return 'rw-RW'
+  if (lang === 'ZH') return 'zh-CN'
+  if (lang === 'SW') return 'sw-KE'
+  return 'en-US'
+})
 const showShareForm = ref(false)
 const filterCategory = ref('all')
 const isSubmitting = ref(false)
@@ -347,7 +358,7 @@ const submitStory = async () => {
     // Add to local array for immediate display
     stories.value.unshift({
       ...newStory,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      date: new Date().toLocaleDateString(dateLocale.value, { month: 'short', day: 'numeric', year: 'numeric' })
     })
     
     // Reset form
@@ -360,11 +371,11 @@ const submitStory = async () => {
     }
     
     showShareForm.value = false
-    alert('Your story has been shared successfully!')
+    alert(t('stories.shareSuccess'))
     
   } catch (error) {
     console.error('Story submission error:', error)
-    alert('Failed to share your story. Please try again.')
+    alert(t('stories.shareFailed'))
   } finally {
     isSubmitting.value = false
   }

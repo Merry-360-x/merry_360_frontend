@@ -4,8 +4,8 @@
     <section class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 dark:from-purple-900 dark:via-pink-800 dark:to-orange-700 py-12 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-white">Travel Stories</h1>
-          <p class="text-base md:text-lg text-white/90">Share your adventures and discover amazing experiences from fellow travelers</p>
+          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-white">{{ t('stories.travelStoriesTitle') }}</h1>
+          <p class="text-base md:text-lg text-white/90">{{ t('stories.travelStoriesSubtitle') }}</p>
         </div>
         
         <!-- Add Story Button -->
@@ -17,7 +17,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
-            Share Your Story
+            {{ t('stories.shareYourStory') }}
           </button>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <!-- Loading State -->
         <div v-if="loading" class="text-center py-20">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500 mx-auto"></div>
-          <p class="text-gray-600 dark:text-gray-400 mt-4">Loading stories...</p>
+          <p class="text-gray-600 dark:text-gray-400 mt-4">{{ t('stories.loadingStories') }}</p>
         </div>
 
         <!-- Stories Grid -->
@@ -73,7 +73,7 @@
                 </span>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-white font-semibold text-sm truncate">{{ story.author || 'Anonymous' }}</p>
+                <p class="text-white font-semibold text-sm truncate">{{ story.author || t('common.anonymous') }}</p>
                 <p class="text-white/80 text-xs">{{ formatTimeAgo(story.created_at) }}</p>
               </div>
             </div>
@@ -86,7 +86,7 @@
                   <svg class="w-3 h-3 text-brand-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span class="text-xs font-semibold text-gray-800 truncate">{{ story.location || 'Unknown' }}</span>
+                  <span class="text-xs font-semibold text-gray-800 truncate">{{ story.location || t('common.unknown') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                   <div class="flex items-center gap-1 text-white">
@@ -114,13 +114,13 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">No stories yet</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-6">Be the first to share your travel experience!</p>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{{ t('stories.noStories') }}</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">{{ t('stories.noStoriesDesc') }}</p>
           <button 
             @click="openCreateStory"
             class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-full transition-colors"
           >
-            Share Your Story
+            {{ t('stories.shareYourStory') }}
           </button>
         </div>
       </div>
@@ -131,7 +131,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ isEditing ? 'Edit Story' : 'Share Your Story' }}</h2>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ isEditing ? t('stories.editStory') : t('stories.shareYourStory') }}</h2>
             <button @click="closeCreateModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -142,40 +142,40 @@
 
         <form @submit.prevent="createStory" class="p-6 space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Title *</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('stories.form.titleLabel') }} *</label>
             <input 
               v-model="newStory.title"
               type="text" 
               required
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              placeholder="Give your story a title"
+              :placeholder="t('stories.form.titlePlaceholder')"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location *</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('stories.form.locationLabel') }} *</label>
             <input 
               v-model="newStory.location"
               type="text" 
               required
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              placeholder="Where did this happen?"
+              :placeholder="t('stories.form.locationPlaceholder')"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Story *</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('stories.form.contentLabel') }} *</label>
             <textarea 
               v-model="newStory.content"
               required
               rows="4"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              placeholder="Share your experience..."
+              :placeholder="t('stories.form.contentPlaceholder')"
             ></textarea>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Photo / Video</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('stories.form.mediaLabel') }}</label>
             <div 
               class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500 transition-colors"
               @click="$refs.storyImageInput.click()"
@@ -197,13 +197,13 @@
                   preload="metadata"
                 />
                 <img v-else :src="newStory.imagePreview" class="w-full h-40 object-cover rounded-lg mb-2" />
-                <p class="text-sm text-gray-500 dark:text-gray-400">Click to change image</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('stories.clickToChangeMedia') }}</p>
               </div>
               <div v-else>
                 <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Click to upload a photo or video</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('stories.clickToUploadMedia') }}</p>
               </div>
             </div>
           </div>
@@ -214,14 +214,14 @@
               @click="showCreateModal = false"
               class="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors"
             >
-              Cancel
+              {{ t('common.cancel') }}
             </button>
             <button 
               type="submit"
               :disabled="creating || uploadingMedia"
               class="flex-1 px-4 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50"
             >
-              {{ creating ? (isEditing ? 'Saving...' : 'Sharing...') : (isEditing ? 'Save Changes' : 'Share Story') }}
+              {{ creating ? (isEditing ? t('stories.saving') : t('stories.sharing')) : (isEditing ? t('common.saveChanges') : t('stories.shareStory')) }}
             </button>
           </div>
         </form>
@@ -258,7 +258,7 @@
               v-if="activeStory && canEditStory(activeStory)"
               @click.stop.prevent="startEditStory(activeStory)"
               class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors"
-              title="Edit story"
+              :title="t('stories.editStory')"
             >
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -270,7 +270,7 @@
               @click.stop.prevent="deleteStory(activeStory)"
               :disabled="deletingStoryId === activeStory.id"
               class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
-              title="Delete story"
+              :title="t('stories.deleteStory')"
             >
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0V5a2 2 0 012-2h4a2 2 0 012 2v2"></path>
@@ -280,7 +280,7 @@
             <button
               @click.stop.prevent="closeStory"
               class="w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors"
-              title="Close"
+              :title="t('common.close')"
             >
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -302,7 +302,7 @@
               </span>
             </div>
             <div>
-              <p class="text-white font-semibold">{{ activeStory.author || 'Anonymous' }}</p>
+              <p class="text-white font-semibold">{{ activeStory.author || t('common.anonymous') }}</p>
               <p class="text-white/80 text-sm">{{ activeStory.location }} • {{ formatTimeAgo(activeStory.created_at) }}</p>
             </div>
           </div>
@@ -349,14 +349,14 @@
 
             <!-- Comments Section -->
             <div v-if="showComments" class="bg-black/60 backdrop-blur-md rounded-xl p-4 max-h-60 overflow-y-auto">
-              <h4 class="text-white font-semibold mb-3">Comments</h4>
+              <h4 class="text-white font-semibold mb-3">{{ t('stories.comments') }}</h4>
               
               <!-- Comment Input -->
               <div class="flex gap-2 mb-4">
                 <input 
                   v-model="newComment"
                   type="text" 
-                  :placeholder="userStore.isAuthenticated ? 'Add a comment...' : 'Login to comment'"
+                  :placeholder="userStore.isAuthenticated ? t('stories.addCommentPlaceholder') : t('stories.loginToCommentPlaceholder')"
                   class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white placeholder-white/50 focus:outline-none focus:border-white/40"
                   :disabled="!userStore.isAuthenticated"
                   @keyup.enter="addComment"
@@ -366,7 +366,7 @@
                   :disabled="!userStore.isAuthenticated || !newComment.trim() || addingComment"
                   class="px-4 py-2 bg-brand-500 text-white rounded-full disabled:opacity-50"
                 >
-                  Post
+                  {{ t('common.post') }}
                 </button>
               </div>
 
@@ -385,7 +385,7 @@
                   </div>
                 </div>
               </div>
-              <p v-else class="text-white/60 text-sm text-center py-4">No comments yet. Be the first!</p>
+              <p v-else class="text-white/60 text-sm text-center py-4">{{ t('stories.noComments') }}</p>
             </div>
           </div>
         </div>
@@ -395,14 +395,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
 import { confirmDialog } from '../../composables/useConfirm'
+import { useTranslation } from '@/composables/useTranslation'
 
 const userStore = useUserStore()
+const { t, currentLanguage } = useTranslation()
+
+const dateLocale = computed(() => {
+  const lang = currentLanguage.value
+  if (lang === 'FR') return 'fr-FR'
+  if (lang === 'RW') return 'rw-RW'
+  if (lang === 'ZH') return 'zh-CN'
+  if (lang === 'SW') return 'sw-KE'
+  return 'en-US'
+})
 
 const loading = ref(true)
 const stories = ref([])
@@ -485,7 +496,7 @@ async function loadStories() {
 
 function openCreateStory() {
   if (!userStore.isAuthenticated) {
-    alert('Please login to share your story')
+    alert(t('stories.loginToShare'))
     return
   }
   resetStoryForm()
@@ -521,7 +532,7 @@ async function handleStoryImage(event) {
     } else {
       // Without Cloudinary, videos cannot be stored reliably (object URLs won't work for others).
       if (newStory.value.mediaType === 'video') {
-        alert('Video uploads require Cloudinary configuration. Please upload an image instead.')
+        alert(t('stories.videoRequiresCloudinary'))
         newStory.value.image = null
         newStory.value.imagePreview = null
         newStory.value.mediaType = 'image'
@@ -561,7 +572,7 @@ function canEditStory(story) {
 
 function startEditStory(story) {
   if (!canEditStory(story)) {
-    alert('You can only edit your own story')
+    alert(t('stories.editOwnStoryOnly'))
     return
   }
 
@@ -592,14 +603,14 @@ function canDeleteStory(story) {
 async function deleteStory(story) {
   if (!story) return
   if (!canDeleteStory(story)) {
-    alert('You can only delete your own story')
+    alert(t('stories.deleteOwnStoryOnly'))
     return
   }
 
-  const ok = await confirmDialog('Delete this story? This cannot be undone.', {
-    title: 'Delete Story',
-    confirmText: 'Delete',
-    cancelText: 'Cancel'
+  const ok = await confirmDialog(t('stories.deleteConfirmMessage'), {
+    title: t('stories.deleteConfirmTitle'),
+    confirmText: t('common.delete'),
+    cancelText: t('common.cancel')
   })
   if (!ok) return
 
@@ -620,7 +631,7 @@ async function deleteStory(story) {
     }
   } catch (error) {
     console.error('Error deleting story:', error)
-    alert(`Failed to delete story: ${error?.message || 'Please try again.'}`)
+    alert(t('stories.deleteFailed', { error: error?.message || '' }))
   } finally {
     deletingStoryId.value = null
   }
@@ -628,12 +639,12 @@ async function deleteStory(story) {
 
 async function createStory() {
   if (!newStory.value.title || !newStory.value.content) {
-    alert('Please fill in all required fields')
+    alert(t('stories.fillRequiredFields'))
     return
   }
 
   if (uploadingMedia.value) {
-    alert('Please wait for your media to finish uploading')
+    alert(t('stories.waitForUpload'))
     return
   }
 
@@ -705,7 +716,7 @@ async function createStory() {
 
   } catch (error) {
     console.error('Error creating story:', error)
-    alert(isEditing.value ? 'Failed to update story. Please try again.' : 'Failed to share story. Please try again.')
+    alert(isEditing.value ? t('stories.updateFailed') : t('stories.shareFailed'))
   } finally {
     creating.value = false
   }
@@ -741,7 +752,7 @@ async function loadComments(storyId) {
 
 async function toggleLike(story) {
   if (!userStore.isAuthenticated) {
-    alert('Please login to like stories')
+    alert(t('stories.loginToLike'))
     return
   }
 
@@ -780,13 +791,13 @@ async function toggleLike(story) {
     }
   } catch (error) {
     console.error('Error toggling like:', error)
-    alert('Failed to update like. Please try again.')
+    alert(t('stories.likeUpdateFailed'))
   }
 }
 
 async function addComment() {
   if (!newComment.value.trim() || !userStore.isAuthenticated) {
-    if (!userStore.isAuthenticated) alert('Please login to comment')
+    if (!userStore.isAuthenticated) alert(t('stories.loginToCommentAlert'))
     return
   }
 
@@ -819,14 +830,14 @@ async function addComment() {
     }
   } catch (error) {
     console.error('Error adding comment:', error)
-    alert('Failed to add comment. Please try again.')
+    alert(t('stories.addCommentFailed'))
   } finally {
     addingComment.value = false
   }
 }
 
 function formatTimeAgo(dateStr) {
-  if (!dateStr) return 'just now'
+  if (!dateStr) return t('time.justNow')
   const date = new Date(dateStr)
   const now = new Date()
   const diffMs = now - date
@@ -834,10 +845,10 @@ function formatTimeAgo(dateStr) {
   const diffHours = Math.floor(diffMs / 3600000)
   const diffDays = Math.floor(diffMs / 86400000)
 
-  if (diffMins < 1) return 'just now'
-  if (diffMins < 60) return `${diffMins}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
-  if (diffDays < 7) return `${diffDays}d ago`
-  return date.toLocaleDateString()
+  if (diffMins < 1) return t('time.justNow')
+  if (diffMins < 60) return t('time.minutesAgo', { count: diffMins })
+  if (diffHours < 24) return t('time.hoursAgo', { count: diffHours })
+  if (diffDays < 7) return t('time.daysAgo', { count: diffDays })
+  return date.toLocaleDateString(dateLocale.value)
 }
 </script>

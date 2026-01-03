@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { supabase } from '@/services/supabase'
 import { useUserStore } from '@/stores/userStore'
+import { useTranslation } from '@/composables/useTranslation'
 
 // Onboarding
 import SplashScreen from '../views/onboarding/SplashScreen.vue'
@@ -384,6 +385,7 @@ const router = createRouter({
 
 // Navigation guard for admin routes
 router.beforeEach(async (to, from, next) => {
+  const { t } = useTranslation()
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
   const requiresStaff = to.matched.some(record => record.meta.requiresStaff)
   const requiresHost = to.matched.some(record => record.meta.requiresHost)
@@ -407,21 +409,21 @@ router.beforeEach(async (to, from, next) => {
 
     // Check admin access
     if (requiresAdmin && store.user?.role !== 'admin') {
-      alert('Access denied. Admin privileges required.')
+      alert(t('auth.accessDeniedAdmin'))
       next({ name: 'home' })
       return
     }
 
     // Check staff access (staff or admin can access)
     if (requiresStaff && store.user?.role !== 'staff' && store.user?.role !== 'admin') {
-      alert('Access denied. Staff privileges required.')
+      alert(t('auth.accessDeniedStaff'))
       next({ name: 'home' })
       return
     }
 
     // Check host access (host or admin can access)
     if (requiresHost && store.user?.role !== 'host' && store.user?.role !== 'admin') {
-      alert('Access denied. Host privileges required.')
+      alert(t('auth.accessDeniedHost'))
       next({ name: 'home' })
       return
     }
@@ -433,7 +435,7 @@ router.beforeEach(async (to, from, next) => {
       store.user?.role !== 'host' &&
       store.user?.role !== 'admin'
     ) {
-      alert('Access denied. Vendor privileges required.')
+      alert(t('auth.accessDeniedVendor'))
       next({ name: 'home' })
       return
     }

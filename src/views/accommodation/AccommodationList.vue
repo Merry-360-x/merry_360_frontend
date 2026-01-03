@@ -31,8 +31,8 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white dark:bg-gray-900 min-h-screen">
       <!-- Header -->
       <div class="mb-6 sm:mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-2">Find Your Perfect Stay</h1>
-        <p class="text-text-secondary text-sm sm:text-base md:text-lg">Discover amazing accommodations across Rwanda and Africa</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-2">{{ t('accommodationList.title') }}</h1>
+        <p class="text-text-secondary text-sm sm:text-base md:text-lg">{{ t('accommodationList.subtitle') }}</p>
       </div>
 
       <!-- Filters and Search -->
@@ -40,7 +40,7 @@
         <!-- Filters Sidebar -->
         <div class="lg:col-span-1">
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
-            <h3 class="font-semibold text-base sm:text-lg mb-4 text-text-primary">Filters</h3>
+            <h3 class="font-semibold text-base sm:text-lg mb-4 text-text-primary">{{ t('accommodationList.filters') }}</h3>
             
             <!-- View Toggle -->
             <div class="mb-4 sm:mb-6">
@@ -68,7 +68,7 @@
 
             <!-- Price Range -->
             <div class="mb-4 sm:mb-6">
-              <label class="block text-xs sm:text-sm font-medium mb-3 text-text-primary">Price Range (per night)</label>
+              <label class="block text-xs sm:text-sm font-medium mb-3 text-text-primary">{{ t('accommodationList.priceRangePerNight') }}</label>
               <div class="space-y-2">
                 <input 
                   type="range" 
@@ -86,7 +86,7 @@
 
             <!-- Property Type -->
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-3 text-text-primary">Property Type</label>
+              <label class="block text-sm font-medium mb-3 text-text-primary">{{ t('accommodationList.propertyType') }}</label>
               <div class="space-y-2">
                 <label v-for="type in propertyTypes" :key="type" class="flex items-center">
                   <input 
@@ -95,14 +95,14 @@
                     v-model="filters.propertyTypes"
                     class="rounded border-gray-300 text-brand-600 focus:ring-brand-500 mr-2"
                   />
-                  <span class="text-sm text-text-secondary">{{ type }}</span>
+                  <span class="text-sm text-text-secondary">{{ t(propertyTypeLabelKey[type] || type) }}</span>
                 </label>
               </div>
             </div>
 
             <!-- Rating -->
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-3 text-text-primary">Minimum Rating</label>
+              <label class="block text-sm font-medium mb-3 text-text-primary">{{ t('accommodationList.minimumRating') }}</label>
               <div class="flex items-center gap-1">
                 <button
                   v-for="i in 5"
@@ -111,8 +111,8 @@
                   @click="filters.minRating = i"
                   class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   :class="i <= filters.minRating ? 'text-yellow-500' : 'text-text-muted'"
-                  :aria-label="`Minimum rating ${i} stars`"
-                  :title="`Minimum rating ${i} stars`"
+                  :aria-label="t('accommodationList.minimumRatingStars', { stars: i })"
+                  :title="t('accommodationList.minimumRatingStars', { stars: i })"
                 >
                   <svg
                     v-if="i <= filters.minRating"
@@ -140,7 +140,7 @@
 
             <!-- Amenities -->
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-3 text-text-primary">Amenities</label>
+              <label class="block text-sm font-medium mb-3 text-text-primary">{{ t('accommodation.amenities') }}</label>
               <div class="space-y-2">
                 <label v-for="amenity in amenities" :key="amenity" class="flex items-center">
                   <input 
@@ -162,7 +162,7 @@
                   v-model="filters.ecoFriendly"
                   class="rounded border-gray-300 text-brand-500 focus:ring-brand-500 mr-2"
                 />
-                <span class="text-sm font-medium text-brand-600">Eco-Friendly Only</span>
+                <span class="text-sm font-medium text-brand-600">{{ t('accommodationList.ecoFriendlyOnly') }}</span>
               </label>
             </div>
 
@@ -170,7 +170,7 @@
               @click="resetFilters"
               class="w-full px-4 py-2 border-2 border-gray-300 dark:border-gray-700 text-text-brand-600 rounded-lg hover:border-brand-500 hover:text-brand-600 transition-all duration-200 font-medium text-sm"
             >
-              Reset Filters
+              {{ t('accommodationList.resetFilters') }}
             </button>
           </div>
         </div>
@@ -180,26 +180,26 @@
           <!-- Results Header -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
             <p class="text-text-secondary text-sm sm:text-base">
-              <span class="font-semibold text-text-brand-600">{{ filteredAccommodations.length }}</span> properties found
+              <span class="font-semibold text-text-brand-600">{{ filteredAccommodations.length }}</span> {{ t('accommodationList.propertiesFound') }}
             </p>
             <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary text-sm sm:text-base">
-              <option value="recommended">Recommended</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Highest Rated</option>
+              <option value="recommended">{{ t('accommodationList.sortRecommended') }}</option>
+              <option value="price-low">{{ t('accommodationList.sortPriceLow') }}</option>
+              <option value="price-high">{{ t('accommodationList.sortPriceHigh') }}</option>
+              <option value="rating">{{ t('accommodationList.sortHighestRated') }}</option>
             </select>
           </div>
 
           <p class="text-text-secondary text-xs sm:text-sm mb-5">
-            Listings are grouped by category (Hotel, Motel, Apartment, etc.) to make browsing clearer.
+            {{ t('accommodationList.groupingNote') }}
           </p>
 
           <div v-if="hasSearchSummary" class="mb-4 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-text-secondary">
-            <span>Searching for:</span>
+            <span>{{ t('accommodationList.searchingFor') }}</span>
             <span v-if="searchQuery" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ searchQuery }}</span>
-            <span v-if="guestCount" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ guestCount }} guest{{ guestCount === 1 ? '' : 's' }}</span>
-            <span v-if="checkIn" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">Check-in: {{ checkIn }}</span>
-            <span v-if="checkOut" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">Check-out: {{ checkOut }}</span>
+            <span v-if="guestCount" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ guestCount }} {{ t(guestCount === 1 ? 'accommodationList.guestSingular' : 'accommodationList.guestPlural') }}</span>
+            <span v-if="checkIn" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ t('accommodationList.checkInLabel') }} {{ checkIn }}</span>
+            <span v-if="checkOut" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ t('accommodationList.checkOutLabel') }} {{ checkOut }}</span>
           </div>
 
           <!-- Map View -->
@@ -215,9 +215,9 @@
           <div v-if="viewMode === 'list'" class="space-y-4 sm:space-y-6">
             <div v-for="group in groupedAccommodations" :key="group.type" class="space-y-3">
               <div class="flex items-center justify-between">
-                <h3 class="text-base sm:text-lg font-semibold text-text-brand-600">{{ group.type }}</h3>
+                <h3 class="text-base sm:text-lg font-semibold text-text-brand-600">{{ t(propertyTypeLabelKey[group.type] || group.type) }}</h3>
                 <p class="text-xs sm:text-sm text-text-secondary">
-                  {{ group.items.length }} listing{{ group.items.length === 1 ? '' : 's' }}
+                  {{ group.items.length }} {{ t(group.items.length === 1 ? 'accommodationList.listingSingular' : 'accommodationList.listingPlural') }}
                 </p>
               </div>
 
@@ -253,7 +253,7 @@
                       <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
                       </svg>
-                      Eco
+                      {{ t('accommodationList.eco') }}
                     </div>
                   </div>
 
@@ -264,7 +264,7 @@
                         <div class="flex items-center gap-2 mb-1">
                           <h3 class="text-xl font-semibold text-text-brand-600">{{ accommodation.name }}</h3>
                           <span class="inline-flex items-center px-2 py-1 bg-brand-500 bg-opacity-10 text-brand-600 text-xs font-semibold rounded">
-                            {{ accommodation.type }}
+                            {{ t(propertyTypeLabelKey[accommodation.type] || accommodation.type) }}
                           </span>
                         </div>
                         <p class="text-text-secondary text-sm flex items-center">
@@ -282,7 +282,7 @@
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
                         </div>
-                        <p class="text-xs text-text-secondary">{{ accommodation.reviews }} reviews</p>
+                        <p class="text-xs text-text-secondary">{{ t('accommodationList.reviewsCount', { count: accommodation.reviews }) }}</p>
                       </div>
                     </div>
 
@@ -298,7 +298,7 @@
                         {{ amenity }}
                       </span>
                       <span v-if="accommodation.amenities.length > 4" class="px-2 py-1 text-text-secondary text-xs">
-                        +{{ accommodation.amenities.length - 4 }} more
+                        {{ t('accommodationList.moreAmenities', { count: accommodation.amenities.length - 4 }) }}
                       </span>
                     </div>
 
@@ -307,9 +307,9 @@
                       <div>
                         <div class="flex items-baseline gap-1 flex-wrap">
                           <span class="text-xl sm:text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
-                          <span class="text-text-secondary text-sm sm:text-base whitespace-nowrap">/night</span>
+                          <span class="text-text-secondary text-sm sm:text-base whitespace-nowrap">{{ t('accommodationList.perNightShort') }}</span>
                         </div>
-                        <p class="text-xs text-text-secondary">Includes taxes and fees</p>
+                        <p class="text-xs text-text-secondary">{{ t('accommodationList.includesTaxesAndFees') }}</p>
                       </div>
                       <div class="flex gap-2 w-full sm:w-auto">
                         <button 
@@ -337,10 +337,10 @@
             <svg class="w-20 h-20 sm:w-24 sm:h-24 text-text-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
-            <h3 class="text-lg sm:text-xl font-semibold text-text-brand-600 mb-2">No properties found</h3>
-            <p class="text-text-secondary mb-4 text-sm sm:text-base">Try adjusting your filters to see more results</p>
+            <h3 class="text-lg sm:text-xl font-semibold text-text-brand-600 mb-2">{{ t('accommodationList.noPropertiesFound') }}</h3>
+            <p class="text-text-secondary mb-4 text-sm sm:text-base">{{ t('accommodationList.adjustFilters') }}</p>
             <button @click="resetFilters" class="px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-red-600 transition-all duration-200 font-medium transform hover:scale-105">
-              Reset Filters
+              {{ t('accommodationList.resetFilters') }}
             </button>
           </div>
         </div>
@@ -481,6 +481,16 @@ const filters = ref({
 })
 
 const propertyTypes = ['Hotel', 'Motel', 'Resort', 'Lodge', 'Apartment', 'Villa', 'Guesthouse']
+const propertyTypeLabelKey = {
+  Hotel: 'accommodation.hotel',
+  Motel: 'accommodation.motel',
+  Resort: 'accommodation.resort',
+  Lodge: 'accommodation.lodge',
+  Apartment: 'accommodation.apartment',
+  Villa: 'accommodation.villa',
+  Guesthouse: 'accommodation.guesthouse',
+  Other: 'accommodation.other'
+}
 const amenities = ['WiFi', 'Pool', 'Parking', 'Restaurant', 'Spa', 'Gym', 'Air Conditioning', 'Pet Friendly']
 
 const accommodations = ref([])
@@ -601,6 +611,6 @@ const addToCart = (accommodation) => {
     rating: accommodation.rating
   }
   userStore.addToCart(cartItem)
-  success(`${accommodation.name} added to cart!`)
+  success(t('common.addedToCart', { item: accommodation.name }))
 }
 </script>

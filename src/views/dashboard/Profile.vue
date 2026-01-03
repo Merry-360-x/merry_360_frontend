@@ -3,8 +3,8 @@
     <div class="container mx-auto px-4 lg:px-8 py-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2 text-gray-900">My Profile</h1>
-        <p class="text-text-secondary">Manage your account information and preferences</p>
+        <h1 class="text-3xl font-bold mb-2 text-gray-900">{{ t('profile.title') }}</h1>
+        <p class="text-text-secondary">{{ t('profile.subtitle') }}</p>
       </div>
 
       <!-- Profile Completion Alert -->
@@ -16,12 +16,12 @@
             </svg>
           </div>
           <div class="flex-1">
-            <h3 class="font-semibold text-amber-900 mb-1">Complete Your Profile</h3>
+            <h3 class="font-semibold text-amber-900 mb-1">{{ t('profile.completeYourProfile') }}</h3>
             <p class="text-sm text-amber-800 mb-3">
-              Please add your phone number and date of birth to help us serve you better and unlock all features.
+              {{ t('profile.completeYourProfileDesc') }}
             </p>
             <Button variant="primary" size="sm" @click="activeProfileTab = 'personal'">
-              Complete Profile
+              {{ t('profile.completeProfile') }}
             </Button>
           </div>
           <button @click="dismissProfileAlert" class="flex-shrink-0 text-amber-600 hover:text-amber-800 text-amber-200">
@@ -61,25 +61,25 @@
                 </button>
                 <input ref="avatarInput" type="file" accept="image/*" class="hidden" @change="onAvatarChange" />
               </div>
-              <h2 class="text-xl font-bold mb-1">{{ userStore.user?.name || 'Guest User' }}</h2>
-              <p class="text-text-secondary text-sm">{{ userStore.user?.email || 'guest@example.com' }}</p>
+              <h2 class="text-xl font-bold mb-1">{{ userStore.user?.name || t('profile.guestUser') }}</h2>
+              <p class="text-text-secondary text-sm">{{ userStore.user?.email || t('profile.guestEmail') }}</p>
             </div>
 
             <!-- Membership -->
             <div class="p-4 bg-gradient-to-br from-brand-50 to-red-50 rounded-xl mb-4">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-sm text-text-secondary">Membership</span>
+                <span class="text-sm text-text-secondary">{{ t('profile.membership') }}</span>
                 <span class="px-2 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full">
                   {{ userStore.loyaltyTier.toUpperCase() }}
                 </span>
               </div>
               <div class="flex items-baseline gap-1">
                 <span class="text-2xl font-bold text-brand-600">{{ userStore.loyaltyPoints }}</span>
-                <span class="text-text-secondary text-sm">points</span>
+                <span class="text-text-secondary text-sm">{{ t('profile.points') }}</span>
               </div>
               <div class="mt-3">
                 <div class="flex justify-between text-xs mb-1">
-                  <span class="text-text-secondary">Next tier</span>
+                  <span class="text-text-secondary">{{ t('profile.nextTier') }}</span>
                   <span class="font-semibold">{{ userStore.nextTierPoints }} pts</span>
                 </div>
                 <div class="w-full bg-white rounded-full h-2">
@@ -91,15 +91,15 @@
             <!-- Stats -->
             <div class="space-y-3">
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary">Trips Completed</span>
+                <span class="text-sm text-text-secondary">{{ t('profile.tripsCompleted') }}</span>
                 <span class="font-semibold">{{ userStore.pastBookings.length }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary">Saved Items</span>
+                <span class="text-sm text-text-secondary">{{ t('profile.savedItems') }}</span>
                 <span class="font-semibold">{{ userStore.watchlistCount }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
-                <span class="text-sm text-text-secondary">Member Since</span>
+                <span class="text-sm text-text-secondary">{{ t('profile.memberSince') }}</span>
                 <span class="font-semibold">{{ memberSince }}</span>
               </div>
             </div>
@@ -117,14 +117,14 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
-                Admin Panel
+                {{ t('admin.panel') }}
               </Button>
             </div>
 
             <!-- Logout Button -->
             <div :class="userStore.user?.role === 'admin' ? '' : 'mt-6 pt-6 border-t border-gray-200'">
               <Button variant="outline" size="md" full-width @click="handleLogout" class="text-red-600 border-red-600 hover:bg-red-50">
-                Logout
+                {{ t('auth.logout') }}
               </Button>
             </div>
           </Card>
@@ -158,7 +158,7 @@
               <Card padding="md">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-text-muted text-xs mb-1">Upcoming Trips</p>
+                    <p class="text-text-muted text-xs mb-1">{{ t('profile.upcomingTrips') }}</p>
                     <p class="text-2xl font-bold text-brand-600">{{ upcomingBookings.length }}</p>
                   </div>
                   <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -172,7 +172,7 @@
               <Card padding="md">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-text-muted text-xs mb-1">Cart Items</p>
+                    <p class="text-text-muted text-xs mb-1">{{ t('cart.items') }}</p>
                     <p class="text-2xl font-bold text-gray-900">{{ userStore.cartCount }}</p>
                   </div>
                   <div class="px-2 py-1 bg-brand-500 text-white rounded-lg flex items-center justify-center">
@@ -184,7 +184,7 @@
               <Card padding="md">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-text-muted text-xs mb-1">Loyalty Points</p>
+                    <p class="text-text-muted text-xs mb-1">{{ t('profile.loyaltyPoints') }}</p>
                     <p class="text-2xl font-bold text-brand-600">{{ userStore.loyaltyPoints }}</p>
                   </div>
                   <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
@@ -220,10 +220,10 @@
                 <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
-                <h3 class="text-lg font-semibold text-text-brand-600 mb-2">No upcoming trips</h3>
-                <p class="text-text-secondary mb-4">Start planning your next adventure!</p>
+                <h3 class="text-lg font-semibold text-text-brand-600 mb-2">{{ t('profile.noUpcomingTrips') }}</h3>
+                <p class="text-text-secondary mb-4">{{ t('profile.startPlanningNextAdventure') }}</p>
                 <Button variant="primary" size="md" @click="router.push('/home')">
-                  Explore Destinations
+                  {{ t('profile.exploreDestinations') }}
                 </Button>
               </div>
               <Card v-else v-for="booking in upcomingBookings" :key="booking.id" padding="md" class="hover:shadow-lg transition-shadow">
@@ -235,23 +235,23 @@
                         <h3 class="text-lg font-bold text-text-brand-600 mb-1">{{ booking.name }}</h3>
                         <p class="text-text-secondary text-sm">{{ booking.location }}</p>
                       </div>
-                      <span class="px-2 py-1 bg-brand-100 text-brand-700 rounded-full text-xs font-semibold">Confirmed</span>
+                      <span class="px-2 py-1 bg-brand-100 text-brand-700 rounded-full text-xs font-semibold">{{ t('booking.confirmed') }}</span>
                     </div>
                     <div class="grid grid-cols-2 gap-3 mb-3">
                       <div>
-                        <p class="text-text-muted text-xs">Check-in</p>
+                        <p class="text-text-muted text-xs">{{ t('accommodationList.checkInLabel') }}</p>
                         <p class="font-semibold text-sm">{{ booking.checkIn }}</p>
                       </div>
                       <div>
-                        <p class="text-text-muted text-xs">Check-out</p>
+                        <p class="text-text-muted text-xs">{{ t('accommodationList.checkOutLabel') }}</p>
                         <p class="font-semibold text-sm">{{ booking.checkOut }}</p>
                       </div>
                     </div>
                     <div class="flex items-center justify-between">
                       <span class="text-xl font-bold text-brand-600">{{ formatPrice(booking.price) }}</span>
                       <div class="flex gap-2">
-                        <Button variant="outline" size="sm">View Details</Button>
-                        <Button variant="primary" size="sm">Manage</Button>
+                        <Button variant="outline" size="sm">{{ t('common.viewDetails') }}</Button>
+                        <Button variant="primary" size="sm">{{ t('common.manage') }}</Button>
                       </div>
                     </div>
                   </div>
@@ -264,8 +264,8 @@
               <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              <h3 class="text-lg font-semibold text-text-brand-600 mb-2">No past trips</h3>
-              <p class="text-text-secondary">Your travel history will appear here</p>
+              <h3 class="text-lg font-semibold text-text-brand-600 mb-2">{{ t('profile.noPastTrips') }}</h3>
+              <p class="text-text-secondary">{{ t('profile.travelHistoryWillAppearHere') }}</p>
             </div>
 
             <!-- Saved -->
@@ -274,10 +274,10 @@
                 <svg class="w-20 h-20 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                 </svg>
-                <h3 class="text-lg font-semibold text-text-brand-600 mb-2">No saved items</h3>
-                <p class="text-text-secondary mb-4">Save your favorite places to visit them later</p>
+                <h3 class="text-lg font-semibold text-text-brand-600 mb-2">{{ t('profile.noSavedItems') }}</h3>
+                <p class="text-text-secondary mb-4">{{ t('profile.saveFavoritesToVisitLater') }}</p>
                 <Button variant="primary" size="md" @click="router.push('/home')">
-                  Discover Places
+                  {{ t('profile.discoverPlaces') }}
                 </Button>
               </div>
             </div>
@@ -286,16 +286,16 @@
           <!-- Personal Information Tab -->
           <Card v-if="activeProfileTab === 'personal'" padding="lg">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xl font-bold">Personal Information</h3>
+              <h3 class="text-xl font-bold">{{ t('profile.personalInformation') }}</h3>
               <Button variant="outline" size="sm" @click="editingPersonal = !editingPersonal">
-                {{ editingPersonal ? 'Cancel' : 'Edit' }}
+                {{ editingPersonal ? t('common.cancel') : t('common.edit') }}
               </Button>
             </div>
 
             <form @submit.prevent="savePersonalInfo" class="space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">First Name</label>
+                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('checkout.firstName') }}</label>
                   <Input
                     v-model="personalInfo.firstName"
                     :disabled="!editingPersonal"
@@ -303,7 +303,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">Last Name</label>
+                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('checkout.lastName') }}</label>
                   <Input
                     v-model="personalInfo.lastName"
                     :disabled="!editingPersonal"
@@ -313,7 +313,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Email</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.email') }}</label>
                 <Input
                   v-model="personalInfo.email"
                   type="email"
@@ -323,7 +323,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Phone Number</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.phoneNumber') }}</label>
                 <Input
                   v-model="personalInfo.phone"
                   type="tel"
@@ -333,7 +333,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Date of Birth</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.dateOfBirth') }}</label>
                 <Input
                   v-model="personalInfo.dateOfBirth"
                   type="date"
@@ -342,34 +342,34 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Bio</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.bio') }}</label>
                 <textarea
                   v-model="personalInfo.bio"
                   :disabled="!editingPersonal"
                   rows="3"
                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 bg-white text-gray-900"
-                  placeholder="Tell us about yourself..."
+                  :placeholder="t('profile.bioPlaceholder')"
                 ></textarea>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Education / Studies</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.educationStudies') }}</label>
                 <textarea
                   v-model="personalInfo.studies"
                   :disabled="!editingPersonal"
                   rows="4"
                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 bg-white text-gray-900"
-                  placeholder="e.g., Bachelor of Science in Computer Science, University of Rwanda (2018-2022)&#10;Master of Business Administration, Kigali Institute (2023-2025)"
+                  :placeholder="t('profile.educationStudiesPlaceholder')"
                 ></textarea>
-                <p class="text-xs text-gray-500 mt-1">Enter your educational background, degrees, certifications, or any relevant studies.</p>
+                <p class="text-xs text-gray-500 mt-1">{{ t('profile.educationStudiesHelp') }}</p>
               </div>
 
               <div v-if="editingPersonal" class="flex gap-3">
                 <Button type="submit" variant="primary" size="md">
-                  Save Changes
+                  {{ t('common.saveChanges') }}
                 </Button>
                 <Button type="button" variant="outline" size="md" @click="editingPersonal = false">
-                  Cancel
+                  {{ t('common.cancel') }}
                 </Button>
               </div>
             </form>
@@ -377,43 +377,43 @@
 
           <!-- Preferences Tab -->
           <Card v-if="activeProfileTab === 'preferences'" padding="lg">
-            <h3 class="text-xl font-bold mb-6">Preferences</h3>
+            <h3 class="text-xl font-bold mb-6">{{ t('profile.preferences') }}</h3>
 
             <div class="space-y-6">
               <!-- Language -->
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Language</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.language') }}</label>
                 <select v-model="userStore.preferences.language" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
-                  <option value="EN">English</option>
-                  <option value="RW">Kinyarwanda</option>
-                  <option value="FR">Français</option>
+                  <option value="EN">{{ t('language.english') }}</option>
+                  <option value="RW">{{ t('language.kinyarwanda') }}</option>
+                  <option value="FR">{{ t('language.french') }}</option>
                 </select>
               </div>
 
               <!-- Currency -->
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">Currency</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.currency') }}</label>
                 <select v-model="userStore.preferences.currency" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
-                  <option value="RWF">RWF - Rwandan Franc</option>
-                  <option value="USD">USD - US Dollar</option>
-                  <option value="EUR">EUR - Euro</option>
+                  <option value="RWF">{{ t('currency.rwf') }}</option>
+                  <option value="USD">{{ t('currency.usd') }}</option>
+                  <option value="EUR">{{ t('currency.eur') }}</option>
                 </select>
               </div>
 
               <!-- Notifications -->
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-3">Notifications</label>
+                <label class="block text-sm font-medium text-text-brand-600 mb-3">{{ t('profile.notifications') }}</label>
                 <div class="space-y-3">
                   <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <span class="text-sm">Email Notifications</span>
+                    <span class="text-sm">{{ t('profile.emailNotifications') }}</span>
                     <input type="checkbox" v-model="userStore.preferences.notifications.email" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
                   </label>
                   <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <span class="text-sm">Push Notifications</span>
+                    <span class="text-sm">{{ t('profile.pushNotifications') }}</span>
                     <input type="checkbox" v-model="userStore.preferences.notifications.push" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
                   </label>
                   <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <span class="text-sm">SMS Notifications</span>
+                    <span class="text-sm">{{ t('profile.smsNotifications') }}</span>
                     <input type="checkbox" v-model="userStore.preferences.notifications.sms" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
                   </label>
                 </div>
@@ -426,32 +426,32 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   <div>
-                    <span class="text-sm font-semibold">Sustainable Travel Mode</span>
-                    <p class="text-xs text-green-700">Show eco-friendly options first</p>
+                    <span class="text-sm font-semibold">{{ t('profile.sustainableTravelMode') }}</span>
+                    <p class="text-xs text-green-700">{{ t('profile.sustainableTravelDesc') }}</p>
                   </div>
                 </div>
                 <input type="checkbox" v-model="userStore.preferences.sustainableTravel" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
               </label>
 
               <Button variant="primary" size="md" @click="savePreferences">
-                Save Preferences
+                {{ t('profile.savePreferences') }}
               </Button>
             </div>
           </Card>
 
           <!-- Security Tab -->
           <Card v-if="activeProfileTab === 'security'" padding="lg">
-            <h3 class="text-xl font-bold mb-6">Security</h3>
+            <h3 class="text-xl font-bold mb-6">{{ t('profile.security') }}</h3>
 
             <div class="space-y-4">
               <div class="p-4 border border-gray-200 rounded-lg">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h4 class="font-semibold mb-1">Password</h4>
-                    <p class="text-sm text-text-secondary">Last changed 3 months ago</p>
+                    <h4 class="font-semibold mb-1">{{ t('profile.password') }}</h4>
+                    <p class="text-sm text-text-secondary">{{ t('profile.passwordLastChanged', { months: 3 }) }}</p>
                   </div>
                   <Button variant="outline" size="sm" @click="showChangePassword = true">
-                    Change
+                    {{ t('common.change') }}
                   </Button>
                 </div>
               </div>
@@ -459,13 +459,13 @@
               <div class="p-4 border border-gray-200 rounded-lg">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h4 class="font-semibold mb-1">Two-Factor Authentication</h4>
-                    <p class="text-sm text-text-secondary">Add an extra layer of security</p>
+                    <h4 class="font-semibold mb-1">{{ t('profile.twoFactorAuth') }}</h4>
+                    <p class="text-sm text-text-secondary">{{ t('profile.twoFactorAuthDesc') }}</p>
                   </div>
                   <Button v-if="!userStore.user?.twoFactorEnabled" variant="outline" size="sm" @click="enable2FA">
-                    Enable
+                    {{ t('profile.enable') }}
                   </Button>
-                  <span v-else class="text-sm text-green-600 font-semibold">✓ Enabled</span>
+                  <span v-else class="text-sm text-green-600 font-semibold">✓ {{ t('profile.enabled') }}</span>
                 </div>
               </div>
             </div>
@@ -475,7 +475,7 @@
           <div v-if="showChangePassword" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
             <Card padding="lg" class="max-w-md w-full">
               <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold">Change Password</h3>
+                <h3 class="text-xl font-bold">{{ t('profile.changePassword') }}</h3>
                 <button @click="showChangePassword = false" class="text-gray-400 hover:text-gray-600 text-gray-400">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -485,35 +485,35 @@
 
               <form @submit.prevent="changePassword" class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">Current Password</label>
+                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.currentPassword') }}</label>
                   <Input
                     v-model="passwordForm.current"
                     type="password"
-                    placeholder="Enter current password"
+                    :placeholder="t('profile.currentPasswordPlaceholder')"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">New Password</label>
+                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.newPassword') }}</label>
                   <Input
                     v-model="passwordForm.new"
                     type="password"
-                    placeholder="Enter new password"
+                    :placeholder="t('profile.newPasswordPlaceholder')"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">Confirm New Password</label>
+                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.confirmNewPassword') }}</label>
                   <Input
                     v-model="passwordForm.confirm"
                     type="password"
-                    placeholder="Confirm new password"
+                    :placeholder="t('profile.confirmNewPasswordPlaceholder')"
                   />
                 </div>
                 <div class="flex gap-3">
                   <Button type="submit" variant="primary" size="md" full-width>
-                    Update Password
+                    {{ t('profile.updatePassword') }}
                   </Button>
                   <Button type="button" variant="outline" size="md" @click="showChangePassword = false">
-                    Cancel
+                    {{ t('common.cancel') }}
                   </Button>
                 </div>
               </form>
@@ -525,7 +525,7 @@
         <div v-if="show2FASetup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
           <Card padding="lg" class="max-w-md w-full">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xl font-bold">Enable Two-Factor Authentication</h3>
+              <h3 class="text-xl font-bold">{{ t('profile.enableTwoFactorAuth') }}</h3>
               <button @click="show2FASetup = false" class="text-gray-400 hover:text-gray-600 text-gray-400">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -536,8 +536,7 @@
             <div class="space-y-4">
               <div class="bg-blue-50 p-4 rounded-lg">
                 <p class="text-sm text-blue-800">
-                  <strong>Note:</strong> In production, you would scan a QR code with your authenticator app 
-                  (like Google Authenticator or Authy) and enter a verification code.
+                  <strong>{{ t('profile.note') }}</strong> {{ t('profile.twoFactorNote') }}
                 </p>
               </div>
 
@@ -547,18 +546,17 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                   </svg>
                   <div class="text-sm text-amber-800">
-                    <strong>Important:</strong> Once enabled, you will need your authenticator app every time you login. 
-                    Make sure you have access to your device before enabling.
+                    <strong>{{ t('profile.important') }}</strong> {{ t('profile.twoFactorImportant') }}
                   </div>
                 </div>
               </div>
 
               <div class="flex gap-3">
                 <Button variant="primary" size="md" full-width @click="setup2FA">
-                  Enable 2FA
+                  {{ t('profile.enable2FA') }}
                 </Button>
                 <Button variant="outline" size="md" @click="show2FASetup = false">
-                  Cancel
+                  {{ t('common.cancel') }}
                 </Button>
               </div>
             </div>
@@ -582,10 +580,12 @@ import { uploadToCloudinary } from '@/services/cloudinary'
 import { signOut as signOutAuth } from '@/services/auth'
 import { supabase } from '@/services/supabase'
 import { confirmDialog } from '@/composables/useConfirm'
+import { useTranslation } from '@/composables/useTranslation'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 
 const activeProfileTab = ref('trips')
 const activeTripTab = ref('upcoming')
@@ -597,17 +597,17 @@ const show2FASetup = ref(false)
 const avatarInput = ref(null)
 const uploadingAvatar = ref(false)
 
-const profileTabs = ref([
-  { id: 'trips', name: 'My Trips' },
-  { id: 'personal', name: 'Personal Info' },
-  { id: 'preferences', name: 'Preferences' },
-  { id: 'security', name: 'Security' }
+const profileTabs = computed(() => [
+  { id: 'trips', name: t('profile.myTrips') },
+  { id: 'personal', name: t('profile.personalInfoTab') },
+  { id: 'preferences', name: t('profile.preferences') },
+  { id: 'security', name: t('profile.security') }
 ])
 
-const tripTabs = ref([
-  { id: 'upcoming', name: 'Upcoming' },
-  { id: 'past', name: 'Past Trips' },
-  { id: 'saved', name: 'Saved' }
+const tripTabs = computed(() => [
+  { id: 'upcoming', name: t('profile.upcoming') },
+  { id: 'past', name: t('profile.pastTrips') },
+  { id: 'saved', name: t('profile.saved') }
 ])
 
 // Fetch real bookings from user data or API
@@ -692,7 +692,7 @@ const savePersonalInfo = async () => {
     }
     localStorage.setItem('user', JSON.stringify(userStore.user))
     editingPersonal.value = false
-    alert('Personal information updated locally!')
+    alert(t('profile.personalUpdatedLocally'))
     return
   }
 
@@ -749,34 +749,34 @@ const savePersonalInfo = async () => {
     await userStore.login(updatedUser)
 
     editingPersonal.value = false
-    alert('Personal information updated successfully!')
+    alert(t('profile.personalUpdatedSuccessfully'))
   } catch (err) {
     console.error('Error updating profile:', err)
     const errorMsg = err.message || err.hint || 'Unknown error'
-    alert(`Failed to update personal information: ${errorMsg}`)
+    alert(t('profile.personalUpdateFailed', { error: errorMsg }))
   }
 }
 
 const savePreferences = () => {
   // Preferences are already bound to the store
-  alert('Preferences saved successfully!')
+  alert(t('profile.preferencesSaved'))
 }
 
 const changePassword = async () => {
   if (passwordForm.value.new !== passwordForm.value.confirm) {
-    alert('Passwords do not match!')
+    alert(t('profile.passwordsDoNotMatch'))
     return
   }
   
   if (passwordForm.value.new.length < 6) {
-    alert('Password must be at least 6 characters!')
+    alert(t('profile.passwordMinLength', { min: 6 }))
     return
   }
   
   try {
     // Verify current password by re-auth (keeps security expectations aligned with UI)
     if (!userStore.user?.email) {
-      alert('Please login again to change your password.')
+      alert(t('profile.loginAgainToChangePassword'))
       return
     }
 
@@ -786,7 +786,7 @@ const changePassword = async () => {
     })
 
     if (signInError) {
-      alert('Current password is incorrect.')
+      alert(t('profile.currentPasswordIncorrect'))
       return
     }
 
@@ -800,10 +800,10 @@ const changePassword = async () => {
 
     showChangePassword.value = false
     passwordForm.value = { current: '', new: '', confirm: '' }
-    alert('Password changed successfully!')
+    alert(t('profile.passwordChangedSuccessfully'))
   } catch (err) {
     console.error('Password change error:', err)
-    alert(err?.message || 'Failed to change password')
+    alert(err?.message || t('profile.passwordChangeFailed'))
   }
 }
 
@@ -819,7 +819,7 @@ const setup2FA = () => {
   // 4. Enable 2FA for the account
   
   // For now, just simulate success
-  alert('Two-Factor Authentication has been enabled successfully! Please note: Once enabled, you will need your authenticator app to login.')
+  alert(t('profile.twoFactorEnabledAlert'))
   show2FASetup.value = false
   
   // Update user store to reflect 2FA is enabled
@@ -829,10 +829,10 @@ const setup2FA = () => {
 }
 
 const handleLogout = async () => {
-  const ok = await confirmDialog('Are you sure you want to logout?', {
-    title: 'Logout',
-    confirmText: 'Logout',
-    cancelText: 'Cancel'
+  const ok = await confirmDialog(t('auth.logoutConfirm'), {
+    title: t('auth.logout'),
+    confirmText: t('auth.logout'),
+    cancelText: t('common.cancel')
   })
 
   if (ok) {
@@ -856,13 +856,13 @@ const onAvatarChange = async (e) => {
   
   // Validate file size (max 5MB)
   if (file.size > 5 * 1024 * 1024) {
-    alert('Image size must be less than 5MB')
+    alert(t('profile.imageTooLarge', { maxMB: 5 }))
     return
   }
   
   // Validate file type
   if (!file.type.startsWith('image/')) {
-    alert('Please select an image file')
+    alert(t('profile.selectImageFile'))
     return
   }
   
@@ -897,18 +897,18 @@ const onAvatarChange = async (e) => {
         avatar_url: avatarUrl
       }
       await userStore.login(updatedUser)
-      alert('Profile picture updated successfully!')
+      alert(t('profile.profilePictureUpdatedSuccessfully'))
     } else {
       // Fallback for users without database ID
       const user = JSON.parse(localStorage.getItem('user')) || {}
       user.avatar_url = avatarUrl
       localStorage.setItem('user', JSON.stringify(user))
       userStore.login(user)
-      alert('Profile picture updated!')
+      alert(t('profile.profilePictureUpdated'))
     }
   } catch (err) {
     console.error('Failed to upload avatar:', err)
-    alert(`Failed to upload profile picture: ${err.message}`)
+    alert(t('profile.profilePictureUploadFailed', { error: err.message }))
   } finally {
     uploadingAvatar.value = false
     // Reset file input

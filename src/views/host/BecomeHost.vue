@@ -5,16 +5,16 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
           <h1 class="text-3xl md:text-4xl font-bold mb-6 text-text-primary">
-            Become a Host on Merry360
+            {{ t('hostApplication.heroTitle') }}
           </h1>
           <p class="text-base md:text-lg text-text-secondary mb-8">
-            Share your unique space, experiences, or services with travelers from around the world and earn extra income.
+            {{ t('hostApplication.heroSubtitle') }}
           </p>
           <button 
             @click="scrollToForm"
             class="px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-full text-base transition-all shadow-lg hover:shadow-xl"
           >
-            Get Started Today
+            {{ t('hostApplication.getStartedToday') }}
           </button>
         </div>
       </div>
@@ -25,9 +25,9 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">Start Your Hosting Journey</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">{{ t('hostApplication.startJourneyTitle') }}</h2>
             <p class="text-lg text-text-secondary">
-              Complete the 3-step registration process
+              {{ t('hostApplication.startJourneySubtitle') }}
             </p>
           </div>
 
@@ -45,7 +45,7 @@
                   </svg>
                   <span v-else>1</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Personal Info</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.personalInfo') }}</span>
               </div>
 
               <!-- Connector Line 1 -->
@@ -62,7 +62,7 @@
                   </svg>
                   <span v-else>2</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Business Info</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.businessInfo') }}</span>
               </div>
 
               <!-- Connector Line 2 -->
@@ -79,7 +79,7 @@
                   </svg>
                   <span v-else>3</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Property Details</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.propertyDetails') }}</span>
               </div>
             </div>
           </div>
@@ -89,73 +89,73 @@
             <form @submit.prevent="handleSubmit">
               <!-- Step 1: Personal Information -->
               <div v-show="currentStep === 1" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-text-primary mb-6">Personal Information</h3>
+                <h3 class="text-2xl font-bold text-text-primary mb-6">{{ t('hostApplication.stepTitles.personalInformation') }}</h3>
                 <div class="space-y-4">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">First Name *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.firstName') }} *</label>
                       <input 
                         v-model="formData.firstName"
                         type="text" 
                         required
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        placeholder="John"
+                        :placeholder="t('hostApplication.placeholder.firstName')"
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">Last Name *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.lastName') }} *</label>
                       <input 
                         v-model="formData.lastName"
                         type="text" 
                         required
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        placeholder="Doe"
+                        :placeholder="t('hostApplication.placeholder.lastName')"
                       />
                     </div>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">Email Address *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.emailAddress') }} *</label>
                       <input 
                         v-model="formData.email"
                         type="email" 
                         required
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        placeholder="your.email@example.com"
+                        :placeholder="t('hostApplication.placeholder.email')"
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">Phone Number *</label>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.phoneNumber') }} *</label>
                       <input 
                         v-model="formData.phone"
                         type="tel" 
                         required
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        placeholder="+250 788 123 456"
+                        :placeholder="t('hostApplication.placeholder.phone')"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">Address *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.address') }} *</label>
                     <input 
                       v-model="formData.address"
                       type="text" 
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="Street address, City"
+                      :placeholder="t('hostApplication.placeholder.address')"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">Nationality *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
                     <input 
                       v-model="formData.nationality"
                       type="text" 
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="e.g., Rwandan, Kenyan, etc."
+                      :placeholder="t('hostApplication.placeholder.nationality')"
                     />
                   </div>
                 </div>
@@ -163,67 +163,67 @@
 
               <!-- Step 2: Business Information -->
               <div v-show="currentStep === 2" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-text-primary mb-6">Business Information</h3>
+                <h3 class="text-2xl font-bold text-text-primary mb-6">{{ t('hostApplication.stepTitles.businessInformation') }}</h3>
                 <div class="space-y-4">
                   <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">Business Name *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
                     <input 
                       v-model="formData.businessName"
                       type="text" 
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="Your company or individual business name"
+                      :placeholder="t('hostApplication.placeholder.businessName')"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">Business Type *</label>
+                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessType') }} *</label>
                     <select 
                       v-model="formData.businessType"
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                     >
-                      <option value="">Select business type</option>
-                      <option value="individual">Individual/Sole Proprietor</option>
-                      <option value="company">Registered Company</option>
-                      <option value="partnership">Partnership</option>
-                      <option value="ngo">NGO/Non-Profit</option>
+                      <option value="">{{ t('hostApplication.options.selectBusinessType') }}</option>
+                      <option value="individual">{{ t('hostApplication.options.businessTypeIndividual') }}</option>
+                      <option value="company">{{ t('hostApplication.options.businessTypeCompany') }}</option>
+                      <option value="partnership">{{ t('hostApplication.options.businessTypePartnership') }}</option>
+                      <option value="ngo">{{ t('hostApplication.options.businessTypeNgo') }}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tax ID / TIN Number</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.taxId') }}</label>
                     <input 
                       v-model="formData.taxId"
                       type="text" 
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="Optional - if registered"
+                      :placeholder="t('hostApplication.placeholder.taxId')"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Years in Business *</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.yearsInBusiness') }} *</label>
                     <select 
                       v-model="formData.yearsInBusiness"
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                     >
-                      <option value="">Select experience</option>
-                      <option value="new">Just Starting</option>
-                      <option value="1-2">1-2 Years</option>
-                      <option value="3-5">3-5 Years</option>
-                      <option value="5+">5+ Years</option>
+                      <option value="">{{ t('hostApplication.options.selectYearsInBusiness') }}</option>
+                      <option value="new">{{ t('hostApplication.options.yearsNew') }}</option>
+                      <option value="1-2">{{ t('hostApplication.options.years1to2') }}</option>
+                      <option value="3-5">{{ t('hostApplication.options.years3to5') }}</option>
+                      <option value="5+">{{ t('hostApplication.options.years5plus') }}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Bank Account Details *</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.bankAccount') }} *</label>
                     <input 
                       v-model="formData.bankAccount"
                       type="text" 
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="Bank name and account number for payouts"
+                      :placeholder="t('hostApplication.placeholder.bankAccount')"
                     />
                   </div>
                 </div>
@@ -231,59 +231,59 @@
 
               <!-- Step 3: Property/Service Details -->
               <div v-show="currentStep === 3" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Property & Service Details</h3>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ t('hostApplication.stepTitles.propertyServiceDetails') }}</h3>
                 <div class="space-y-4">
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">What would you like to host? *</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
                     <select 
                       v-model="formData.hostingType"
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                     >
-                      <option value="">Select hosting type</option>
-                      <option value="accommodation">Accommodation (Hotel, Guesthouse, Villa)</option>
-                      <option value="tour">Tours & Experiences</option>
-                      <option value="transport">Transport Services</option>
-                      <option value="service">Other Services</option>
+                      <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
+                      <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
+                      <option value="tour">{{ t('hostApplication.options.hostingTour') }}</option>
+                      <option value="transport">{{ t('hostApplication.options.hostingTransport') }}</option>
+                      <option value="service">{{ t('hostApplication.options.hostingOther') }}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Property/Service Location *</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.propertyLocation') }} *</label>
                     <input 
                       v-model="formData.propertyLocation"
                       type="text" 
                       required
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="e.g., Kigali, Musanze, Gisenyi"
+                      :placeholder="t('hostApplication.placeholder.propertyLocation')"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Number of Units/Capacity *</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.capacity') }} *</label>
                     <input 
                       v-model="formData.capacity"
                       type="number" 
                       required
                       min="1"
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="e.g., 5 rooms, 10 guests, 3 vehicles"
+                      :placeholder="t('hostApplication.placeholder.capacity')"
                     />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Detailed Description *</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.description') }} *</label>
                     <textarea 
                       v-model="formData.description"
                       required
                       rows="5"
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      placeholder="Tell us about your property/service: amenities, unique features, target audience, pricing expectations..."
+                      :placeholder="t('hostApplication.placeholder.description')"
                     ></textarea>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Upload Photos/Documents</label>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadPhotos') }}</label>
                     <input 
                       type="file"
                       @change="handleFileUpload"
@@ -291,7 +291,7 @@
                       accept="image/*,.pdf"
                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                     />
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Upload photos of your property or relevant documents (optional)</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHint') }}</p>
                   </div>
 
                   <div class="mt-6">
@@ -303,7 +303,7 @@
                         class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
                       />
                       <span class="text-sm text-gray-600 dark:text-gray-400">
-                        I agree to Merry360's Terms of Service and Privacy Policy, and I understand that my application will be reviewed before approval. *
+                        {{ t('hostApplication.termsAgreement') }} *
                       </span>
                     </label>
                   </div>
@@ -318,7 +318,7 @@
                   @click="previousStep"
                   class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-all"
                 >
-                  Previous
+                  {{ t('hostApplication.previous') }}
                 </button>
                 <div v-else></div>
 
@@ -328,7 +328,7 @@
                   @click="nextStep"
                   class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-all shadow-lg"
                 >
-                  Next Step
+                  {{ t('hostApplication.nextStep') }}
                 </button>
                 <button 
                   v-else
@@ -336,7 +336,7 @@
                   :disabled="isSubmitting"
                   class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
                 >
-                  {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
+                  {{ isSubmitting ? t('hostApplication.submitting') : t('hostApplication.submitApplication') }}
                 </button>
               </div>
             </form>
@@ -349,9 +349,9 @@
     <section class="py-16 md:py-20 bg-white dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Why Host with Merry360?</h2>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('hostApplication.benefits.title') }}</h2>
           <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Join thousands of hosts who are earning income while sharing Rwanda's beauty with the world.
+            {{ t('hostApplication.benefits.subtitle') }}
           </p>
         </div>
 
@@ -363,9 +363,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Earn Extra Income</h3>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.earnTitle') }}</h3>
             <p class="text-gray-600 dark:text-gray-400">
-              Set your own prices and availability. Earn money from your property, tours, or transport services on your schedule.
+              {{ t('hostApplication.benefits.earnDesc') }}
             </p>
           </div>
 
@@ -376,9 +376,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Secure & Protected</h3>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.secureTitle') }}</h3>
             <p class="text-gray-600 dark:text-gray-400">
-              Benefit from secure payment processing, insurance coverage, and 24/7 host support for peace of mind.
+              {{ t('hostApplication.benefits.secureDesc') }}
             </p>
           </div>
 
@@ -389,9 +389,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">Global Reach</h3>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.reachTitle') }}</h3>
             <p class="text-gray-600 dark:text-gray-400">
-              Connect with travelers worldwide and showcase Rwanda's unique offerings to an international audience.
+              {{ t('hostApplication.benefits.reachDesc') }}
             </p>
           </div>
         </div>
@@ -405,8 +405,10 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
+import { useTranslation } from '@/composables/useTranslation'
 
 const router = useRouter()
+const { t } = useTranslation()
 const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(1)
@@ -456,12 +458,12 @@ const previousStep = () => {
 const validateCurrentStep = () => {
   if (currentStep.value === 1) {
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality) {
-      alert('Please fill in all required fields in Step 1')
+      alert(t('hostApplication.validation.step1Required'))
       return false
     }
   } else if (currentStep.value === 2) {
     if (!formData.businessName || !formData.businessType || !formData.yearsInBusiness || !formData.bankAccount) {
-      alert('Please fill in all required fields in Step 2')
+      alert(t('hostApplication.validation.step2Required'))
       return false
     }
   }
@@ -474,7 +476,7 @@ const handleFileUpload = (event) => {
 
 const handleSubmit = async () => {
   if (!formData.agreeToTerms) {
-    alert('Please agree to the terms and conditions')
+    alert(t('hostApplication.validation.termsRequired'))
     return
   }
 
@@ -485,7 +487,7 @@ const handleSubmit = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
-      alert('Please login first to apply as a host')
+      alert(t('hostApplication.loginRequired'))
       router.push('/login')
       return
     }
@@ -513,7 +515,7 @@ const handleSubmit = async () => {
     }
     
     console.log('✅ Host application saved successfully!')
-    alert('Application submitted successfully! We will review your application and get back to you within 24-48 hours.')
+    alert(t('hostApplication.submittedSuccess'))
     
     // Reset form
     currentStep.value = 1
@@ -530,7 +532,7 @@ const handleSubmit = async () => {
     
   } catch (error) {
     console.error('Host application error:', error)
-    alert('Failed to submit application. Please try again.')
+    alert(t('hostApplication.submittedFailed'))
   } finally {
     isSubmitting.value = false
   }

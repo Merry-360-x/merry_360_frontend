@@ -4,17 +4,17 @@
     <section class="py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div v-if="cartCount === 0" class="text-center py-16">
-          <h3 class="text-2xl font-bold text-text-brand-600 mb-2">Your cart is empty</h3>
-          <p class="text-text-secondary mb-6">Add accommodations, tours, and services to your cart</p>
+          <h3 class="text-2xl font-bold text-text-brand-600 mb-2">{{ t('cart.empty') }}</h3>
+          <p class="text-text-secondary mb-6">{{ t('cart.emptyDesc') }}</p>
           <button @click="router.push('/home')" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors">
-            Start Planning
+            {{ t('cart.startPlanning') }}
           </button>
         </div>
 
         <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <!-- Cart Items -->
           <div class="lg:col-span-2 space-y-4">
-            <h2 class="text-2xl font-bold text-text-brand-600 mb-6">Cart Items ({{ cartCount }})</h2>
+            <h2 class="text-2xl font-bold text-text-brand-600 mb-6">{{ t('cart.items') }} ({{ cartCount }})</h2>
             
             <div v-for="item in tripCart" :key="`${item.type}-${item.id}`" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               <div class="flex flex-col sm:flex-row gap-4 p-6">
@@ -31,7 +31,7 @@
                       </span>
                       <h3 class="text-lg font-bold text-text-brand-600 mt-2">{{ item.name || item.title }}</h3>
                       <p v-if="item.location" class="text-text-secondary text-sm">{{ item.location }}</p>
-                      <p v-if="item.duration" class="text-text-secondary text-sm">Duration: {{ item.duration }}</p>
+                      <p v-if="item.duration" class="text-text-secondary text-sm">{{ t('common.duration') }}: {{ item.duration }}</p>
                     </div>
                     <button 
                       @click="removeItem(item)" 
@@ -55,31 +55,31 @@
           <!-- Order Summary -->
           <div class="lg:col-span-1">
             <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
-              <h3 class="text-xl font-bold text-text-brand-600 mb-6">Order Summary</h3>
+              <h3 class="text-xl font-bold text-text-brand-600 mb-6">{{ t('cart.orderSummary') }}</h3>
               
               <div class="space-y-3 mb-6 pb-6 border-b border-gray-200">
                 <div class="flex justify-between text-text-secondary">
-                  <span>Subtotal ({{ cartCount }} items)</span>
+                  <span>{{ t('cart.subtotal') }} ({{ cartCount }} {{ t('cart.itemsLabel') }})</span>
                   <span class="font-semibold">{{ currencyStore.formatPrice(subtotal) }}</span>
                 </div>
                 <div class="flex justify-between text-text-secondary">
-                  <span>Service Fee</span>
+                  <span>{{ t('checkout.serviceFee') }}</span>
                   <span class="font-semibold">{{ currencyStore.formatPrice(serviceFee) }}</span>
                 </div>
                 <div class="flex justify-between text-brand-600">
-                  <span>Loyalty Discount</span>
+                  <span>{{ t('cart.discount') }}</span>
                   <span class="font-semibold">-{{ currencyStore.formatPrice(discount) }}</span>
                 </div>
               </div>
 
               <div class="flex justify-between text-xl font-bold text-text-brand-600 mb-6">
-                <span>Total</span>
+                <span>{{ t('cart.total') }}</span>
                 <span class="text-brand-600">{{ currencyStore.formatPrice(total) }}</span>
               </div>
 
               <div class="mb-6">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm text-text-secondary">Loyalty Points Available</span>
+                  <span class="text-sm text-text-secondary">{{ t('cart.loyaltyPointsAvailable') }}</span>
                   <span class="text-sm font-semibold text-brand-600">{{ loyaltyPoints }} pts</span>
                 </div>
                 <div class="flex items-center gap-2">
@@ -88,14 +88,14 @@
                     type="number" 
                     :max="loyaltyPoints"
                     min="0"
-                    placeholder="Points to redeem"
+                    :placeholder="t('cart.pointsToRedeem')"
                     class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20"
                   />
                   <button 
                     @click="applyPoints" 
                     class="px-4 py-2 bg-brand-500 text-white rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors"
                   >
-                    Apply
+                    {{ t('common.apply') }}
                   </button>
                 </div>
               </div>
@@ -104,14 +104,14 @@
                 @click="proceedToCheckout" 
                 class="w-full px-6 py-4 bg-brand-500 text-white rounded-xl font-bold text-lg hover:bg-red-600 transition-colors shadow-lg hover:shadow-xl"
               >
-                Proceed to Checkout
+                {{ t('cart.checkout') }}
               </button>
 
               <button 
                 @click="clearAllItems" 
                 class="w-full px-6 py-3 mt-3 border-2 border-gray-300 text-text-secondary rounded-xl font-semibold hover:border-red-500 hover:text-red-500 transition-colors"
               >
-                Clear Cart
+                {{ t('cart.clearAll') }}
               </button>
             </div>
           </div>
@@ -126,12 +126,14 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
+const { t } = useTranslation()
 
 const pointsToUse = ref(0)
 
@@ -157,10 +159,10 @@ const removeItem = (item) => {
 }
 
 const clearAllItems = async () => {
-  const ok = await confirmDialog('Are you sure you want to clear your cart?', {
-    title: 'Clear Cart',
-    confirmText: 'Clear',
-    cancelText: 'Cancel'
+  const ok = await confirmDialog(t('cart.clearCartConfirm'), {
+    title: t('cart.clearCartTitle'),
+    confirmText: t('cart.clearCartConfirmText'),
+    cancelText: t('common.cancel')
   })
 
   if (!ok) return
@@ -169,16 +171,16 @@ const clearAllItems = async () => {
 
 const applyPoints = () => {
   if (pointsToUse.value > loyaltyPoints.value) {
-    alert('Insufficient loyalty points!')
+    alert(t('cart.insufficientPoints'))
     pointsToUse.value = loyaltyPoints.value
   } else if (pointsToUse.value > 0) {
-    alert(`${pointsToUse.value} points will be applied at checkout!`)
+    alert(t('cart.pointsApplied', { points: pointsToUse.value }))
   }
 }
 
 const proceedToCheckout = async () => {
   if (!userStore.user) {
-    alert('Please login to complete your booking')
+    alert(t('auth.loginToCompleteBooking'))
     router.push('/login')
     return
   }

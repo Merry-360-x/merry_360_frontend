@@ -13,10 +13,10 @@
       
       <div class="relative z-10 container mx-auto px-4 text-center text-white max-w-4xl">
         <h1 class="text-4xl md:text-6xl font-bold mb-6">
-          Our Comprehensive Services
+          {{ t('servicesPage.heroTitle') }}
         </h1>
         <p class="text-lg md:text-xl mb-8 text-white/90">
-          Everything you need for an unforgettable journey in Rwanda
+          {{ t('servicesPage.heroSubtitle') }}
         </p>
       </div>
     </section>
@@ -26,7 +26,7 @@
       <div class="container mx-auto px-4 max-w-7xl">
         <div class="text-center mb-16">
           <h2 class="text-3xl md:text-5xl font-bold mb-4 text-text-primary">
-            What We Offer
+            {{ t('servicesPage.whatWeOffer') }}
           </h2>
           <div class="w-24 h-1.5 bg-brand-500 rounded-full mx-auto"></div>
         </div>
@@ -51,30 +51,30 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-text-primary">Accommodation Booking</h3>
-              <p class="text-text-secondary text-sm mb-4">From luxury hotels to cozy guesthouses, find your perfect stay</p>
+              <h3 class="text-xl font-bold mb-3 text-text-primary">{{ t('servicesPage.cardAccommodationTitle') }}</h3>
+              <p class="text-text-secondary text-sm mb-4">{{ t('servicesPage.cardAccommodationDesc') }}</p>
               <ul class="space-y-2 mb-6">
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Curated selection of properties</span>
+                  <span>{{ t('servicesPage.accommodationBullet1') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Best price guarantee</span>
+                  <span>{{ t('servicesPage.accommodationBullet2') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>24/7 customer support</span>
+                  <span>{{ t('servicesPage.accommodationBullet3') }}</span>
                 </li>
               </ul>
               <router-link to="/accommodations" class="block w-full text-center px-6 py-3 bg-brand-500 text-white rounded-xl font-semibold hover:bg-brand-600 transition-colors">
-                Explore Stays
+                {{ t('servicesPage.exploreStays') }}
               </router-link>
             </div>
           </div>
@@ -97,30 +97,30 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-text-primary">Tours & Experiences</h3>
-              <p class="text-text-secondary text-sm mb-4">Discover Rwanda's natural wonders and rich culture</p>
+              <h3 class="text-xl font-bold mb-3 text-text-primary">{{ t('servicesPage.cardToursTitle') }}</h3>
+              <p class="text-text-secondary text-sm mb-4">{{ t('servicesPage.cardToursDesc') }}</p>
               <ul class="space-y-2 mb-6">
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Gorilla trekking permits</span>
+                  <span>{{ t('servicesPage.toursBullet1') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Expert local guides</span>
+                  <span>{{ t('servicesPage.toursBullet2') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Small group experiences</span>
+                  <span>{{ t('servicesPage.toursBullet3') }}</span>
                 </li>
               </ul>
               <router-link to="/tours" class="block w-full text-center px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors">
-                Browse Tours
+                {{ t('servicesPage.browseTours') }}
               </router-link>
             </div>
           </div>
@@ -143,30 +143,30 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-text-primary">Transportation Services</h3>
-              <p class="text-text-secondary text-sm mb-4">Safe and comfortable travel across Rwanda</p>
+              <h3 class="text-xl font-bold mb-3 text-text-primary">{{ t('servicesPage.cardTransportTitle') }}</h3>
+              <p class="text-text-secondary text-sm mb-4">{{ t('servicesPage.cardTransportDesc') }}</p>
               <ul class="space-y-2 mb-6">
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Airport transfers</span>
+                  <span>{{ t('servicesPage.transportBullet1') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Car rentals with drivers</span>
+                  <span>{{ t('servicesPage.transportBullet2') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Private & group shuttles</span>
+                  <span>{{ t('servicesPage.transportBullet3') }}</span>
                 </li>
               </ul>
               <router-link to="/transport" class="block w-full text-center px-6 py-3 bg-brand-500 text-white rounded-xl font-semibold hover:bg-brand-600 transition-colors">
-                View Options
+                {{ t('servicesPage.viewOptions') }}
               </router-link>
             </div>
           </div>
@@ -189,30 +189,30 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-text-primary">Custom Trip Planning</h3>
-              <p class="text-text-secondary text-sm mb-4">Personalized itineraries tailored to your preferences</p>
+              <h3 class="text-xl font-bold mb-3 text-text-primary">{{ t('servicesPage.cardPlanningTitle') }}</h3>
+              <p class="text-text-secondary text-sm mb-4">{{ t('servicesPage.cardPlanningDesc') }}</p>
               <ul class="space-y-2 mb-6">
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Expert travel consultants</span>
+                  <span>{{ t('servicesPage.planningBullet1') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Flexible packages</span>
+                  <span>{{ t('servicesPage.planningBullet2') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Budget-friendly options</span>
+                  <span>{{ t('servicesPage.planningBullet3') }}</span>
                 </li>
               </ul>
               <button @click="contactPlanning" class="block w-full text-center px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
-                Plan My Trip
+                {{ t('servicesPage.planMyTrip') }}
               </button>
             </div>
           </div>
@@ -235,30 +235,30 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-text-primary">AI Concierge Service</h3>
-              <p class="text-text-secondary text-sm mb-4">24/7 assistance powered by intelligent AI</p>
+              <h3 class="text-xl font-bold mb-3 text-text-primary">{{ t('servicesPage.cardAiTitle') }}</h3>
+              <p class="text-text-secondary text-sm mb-4">{{ t('servicesPage.cardAiDesc') }}</p>
               <ul class="space-y-2 mb-6">
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Instant recommendations</span>
+                  <span>{{ t('servicesPage.aiBullet1') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Multi-language support</span>
+                  <span>{{ t('servicesPage.aiBullet2') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Always available</span>
+                  <span>{{ t('servicesPage.aiBullet3') }}</span>
                 </li>
               </ul>
               <button @click="openAIConcierge" class="block w-full text-center px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors">
-                Chat Now
+                {{ t('servicesPage.chatNow') }}
               </button>
             </div>
           </div>
@@ -281,30 +281,30 @@
               </div>
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-bold mb-3 text-text-primary">Property Management</h3>
-              <p class="text-text-secondary text-sm mb-4">Maximize your property's potential with us</p>
+              <h3 class="text-xl font-bold mb-3 text-text-primary">{{ t('servicesPage.cardPropertyTitle') }}</h3>
+              <p class="text-text-secondary text-sm mb-4">{{ t('servicesPage.cardPropertyDesc') }}</p>
               <ul class="space-y-2 mb-6">
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Marketing & exposure</span>
+                  <span>{{ t('servicesPage.propertyBullet1') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Guest management</span>
+                  <span>{{ t('servicesPage.propertyBullet2') }}</span>
                 </li>
                 <li class="flex items-start text-sm text-text-secondary">
                   <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                   </svg>
-                  <span>Revenue optimization</span>
+                  <span>{{ t('servicesPage.propertyBullet3') }}</span>
                 </li>
               </ul>
               <router-link to="/become-host" class="block w-full text-center px-6 py-3 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition-colors">
-                Become a Host
+                {{ t('nav.becomeHost') }}
               </router-link>
             </div>
           </div>
@@ -317,10 +317,10 @@
       <div class="container mx-auto px-4 max-w-7xl">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold mb-4 text-text-primary">
-            Why Choose Merry360?
+            {{ t('servicesPage.whyChooseTitle') }}
           </h2>
           <p class="text-text-secondary max-w-2xl mx-auto">
-            We're committed to making your Rwanda experience unforgettable
+            {{ t('servicesPage.whyChooseSubtitle') }}
           </p>
         </div>
 
@@ -331,8 +331,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
               </svg>
             </div>
-            <h3 class="font-bold text-lg mb-2 text-text-primary">Trusted & Secure</h3>
-            <p class="text-sm text-text-secondary">Your safety and security are our top priorities</p>
+            <h3 class="font-bold text-lg mb-2 text-text-primary">{{ t('servicesPage.whyChooseCard1Title') }}</h3>
+            <p class="text-sm text-text-secondary">{{ t('servicesPage.whyChooseCard1Desc') }}</p>
           </div>
 
           <div class="text-center">
@@ -341,8 +341,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="font-bold text-lg mb-2 text-text-primary">Best Price Guarantee</h3>
-            <p class="text-sm text-text-secondary">Get the best deals with no hidden fees</p>
+            <h3 class="font-bold text-lg mb-2 text-text-primary">{{ t('servicesPage.whyChooseCard2Title') }}</h3>
+            <p class="text-sm text-text-secondary">{{ t('servicesPage.whyChooseCard2Desc') }}</p>
           </div>
 
           <div class="text-center">
@@ -351,8 +351,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
             </div>
-            <h3 class="font-bold text-lg mb-2 text-text-primary">24/7 Support</h3>
-            <p class="text-sm text-text-secondary">Round-the-clock assistance whenever you need</p>
+            <h3 class="font-bold text-lg mb-2 text-text-primary">{{ t('servicesPage.whyChooseCard3Title') }}</h3>
+            <p class="text-sm text-text-secondary">{{ t('servicesPage.whyChooseCard3Desc') }}</p>
           </div>
 
           <div class="text-center">
@@ -361,8 +361,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
               </svg>
             </div>
-            <h3 class="font-bold text-lg mb-2 text-text-primary">Local Expertise</h3>
-            <p class="text-sm text-text-secondary">Deep knowledge of Rwanda's hidden gems</p>
+            <h3 class="font-bold text-lg mb-2 text-text-primary">{{ t('servicesPage.whyChooseCard4Title') }}</h3>
+            <p class="text-sm text-text-secondary">{{ t('servicesPage.whyChooseCard4Desc') }}</p>
           </div>
         </div>
       </div>
@@ -371,16 +371,16 @@
     <!-- CTA Section -->
     <section class="py-20 bg-gradient-to-r from-brand-500 to-brand-600">
       <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Start Your Journey?</h2>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">{{ t('servicesPage.ctaTitle') }}</h2>
         <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-          Let us help you create an unforgettable experience in the Land of a Thousand Hills
+          {{ t('servicesPage.ctaSubtitle') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <router-link to="/accommodations" class="px-8 py-4 bg-white text-brand-600 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
-            Start Exploring
+            {{ t('servicesPage.startExploring') }}
           </router-link>
           <button @click="contactPlanning" class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-colors">
-            Contact Us
+            {{ t('servicesPage.contactUs') }}
           </button>
         </div>
       </div>
@@ -390,17 +390,19 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useTranslation } from '../../composables/useTranslation'
 import MainLayout from '../../components/layout/MainLayout.vue'
 
 const router = useRouter()
+const { t } = useTranslation()
 
 const contactPlanning = () => {
-  alert('Our travel planning team will contact you shortly! For immediate assistance, please use our AI Concierge.')
+  alert(t('servicesPage.planningAlert'))
 }
 
 const openAIConcierge = () => {
   // The AI Concierge is always available in the layout
-  alert('Click the AI Trip Advisor button in the bottom right corner to start chatting!')
+  alert(t('servicesPage.aiAlert'))
 }
 </script>
 

@@ -20,7 +20,7 @@
               <input 
                 v-model="searchQuery"
                 type="text" 
-                placeholder="Search routes or destinations..."
+                :placeholder="t('transport.searchPlaceholder')"
                 class="flex-1 bg-transparent text-sm font-medium text-text-primary focus:outline-none placeholder:text-text-muted"
               />
             </div>
@@ -30,10 +30,10 @@
               v-model="vehicleFilter"
               class="px-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-xl text-sm font-medium text-text-primary focus:outline-none cursor-pointer"
             >
-              <option value="">All Vehicles</option>
-              <option value="taxi">Taxi</option>
-              <option value="shuttle">Shuttle</option>
-              <option value="rental">Car Rental</option>
+              <option value="">{{ t('transport.allVehicles') }}</option>
+              <option value="taxi">{{ t('transport.taxi') }}</option>
+              <option value="shuttle">{{ t('transport.shuttle') }}</option>
+              <option value="rental">{{ t('transport.carRental') }}</option>
             </select>
 
             <!-- Search Button -->
@@ -44,7 +44,7 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
-              Search
+              {{ t('common.search') }}
             </button>
           </div>
         </div>
@@ -66,7 +66,7 @@
               <h3 class="text-lg font-bold text-text-brand-600 mb-2">{{ t('transport.taxi') }}</h3>
               <p class="text-sm text-text-secondary mb-4">{{ t('transport.taxiDesc') }}</p>
               <button @click="bookService('taxi')" class="w-full px-5 py-2.5 bg-red-500 text-sm text-white rounded-xl font-semibold hover:bg-red-600 transition-colors">
-                Add to Trip Cart
+                {{ t('accommodation.addToCart') }}
               </button>
             </div>
           </div>
@@ -82,7 +82,7 @@
               <h3 class="text-lg font-bold text-text-brand-600 mb-2">{{ t('transport.shuttle') }}</h3>
               <p class="text-sm text-text-secondary mb-4">{{ t('transport.shuttleDesc') }}</p>
               <button @click="bookService('shuttle')" class="w-full px-5 py-2.5 bg-red-500 text-sm text-white rounded-xl font-semibold hover:bg-red-600 transition-colors">
-                Add to Trip Cart
+                {{ t('accommodation.addToCart') }}
               </button>
             </div>
           </div>
@@ -98,7 +98,7 @@
               <h3 class="text-lg font-bold text-text-brand-600 mb-2">{{ t('transport.carRental') }}</h3>
               <p class="text-sm text-text-secondary mb-4">{{ t('transport.carRentalDesc') }}</p>
               <button @click="browseCars" class="w-full px-5 py-2.5 border-2 border-brand-500 text-sm text-brand-600 rounded-xl font-semibold hover:bg-brand-600 hover:text-white transition-colors">
-                Browse Cars
+                {{ t('transport.browseCars') }}
               </button>
             </div>
           </div>
@@ -106,12 +106,12 @@
 
         <!-- Popular Routes Section -->
         <div class="mt-12">
-          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-6 text-center">Popular Routes</h2>
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-6 text-center">{{ t('transport.popularRoutes') }}</h2>
           <div v-if="filteredRoutes.length === 0" class="text-center py-12">
             <svg class="w-16 h-16 mx-auto text-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <p class="text-text-secondary">No routes found matching your search</p>
+            <p class="text-text-secondary">{{ t('transport.noRoutesFound') }}</p>
           </div>
           <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             <div v-for="route in filteredRoutes" :key="route.id" class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6">
@@ -136,7 +136,7 @@
                 </div>
               </div>
               <button @click="bookRoute(route)" class="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors">
-                Add to Trip Cart
+                {{ t('accommodation.addToCart') }}
               </button>
             </div>
           </div>
@@ -150,17 +150,17 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h4 class="font-semibold text-text-brand-600">24/7 Service</h4>
-            <p class="text-sm text-text-secondary">Available anytime</p>
+            <h4 class="font-semibold text-text-brand-600">{{ t('transport.feature247Title') }}</h4>
+            <p class="text-sm text-text-secondary">{{ t('transport.feature247Desc') }}</p>
           </div>
           <div class="text-center">
-            <div class="w-16 h-16 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-              <svg class="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-16 h-16 mx-auto mb-3 bg-gray-100 dark:bg-gray-900 rounded-full flex items-center justify-center">
+              <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h4 class="font-semibold text-text-brand-600">Verified Drivers</h4>
-            <p class="text-sm text-text-secondary">Safe & reliable</p>
+            <h4 class="font-semibold text-text-brand-600">{{ t('transport.featureDriversTitle') }}</h4>
+            <p class="text-sm text-text-secondary">{{ t('transport.featureDriversDesc') }}</p>
           </div>
           <div class="text-center">
             <div class="w-16 h-16 mx-auto mb-3 bg-gray-100 dark:bg-gray-900 rounded-full flex items-center justify-center">
@@ -168,8 +168,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
-            <h4 class="font-semibold text-text-brand-600">Best Prices</h4>
-            <p class="text-sm text-text-secondary">Affordable rates</p>
+            <h4 class="font-semibold text-text-brand-600">{{ t('transport.featurePricesTitle') }}</h4>
+            <p class="text-sm text-text-secondary">{{ t('transport.featurePricesDesc') }}</p>
           </div>
           <div class="text-center">
             <div class="w-16 h-16 mx-auto mb-3 bg-gray-100 dark:bg-gray-900 rounded-full flex items-center justify-center">
@@ -177,8 +177,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
               </svg>
             </div>
-            <h4 class="font-semibold text-text-brand-600">Easy Booking</h4>
-            <p class="text-sm text-text-secondary">Quick process</p>
+            <h4 class="font-semibold text-text-brand-600">{{ t('transport.featureBookingTitle') }}</h4>
+            <p class="text-sm text-text-secondary">{{ t('transport.featureBookingDesc') }}</p>
           </div>
         </div>
       </div>
@@ -192,7 +192,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useTranslation } from '../../composables/useTranslation'
-import { useToast } from '../../composables/useToast.js'
+import { useToast } from '../../composables/useToast'
 import MainLayout from '../../components/layout/MainLayout.vue'
 
 const router = useRouter()
@@ -200,17 +200,14 @@ const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
 const { success } = useToast()
-
 const searchQuery = ref('')
 const vehicleFilter = ref('')
 
 const popularRoutes = ref([
-  { id: 1, from: 'Kigali', to: 'Musanze', price: 15000, duration: '2.5 hrs' },
-  { id: 2, from: 'Kigali', to: 'Rubavu', price: 18000, duration: '3 hrs' },
-  { id: 3, from: 'Kigali', to: 'Huye', price: 12000, duration: '2 hrs' },
-  { id: 4, from: 'Musanze', to: 'Rubavu', price: 10000, duration: '1.5 hrs' },
-  { id: 5, from: 'Kigali', to: 'Nyagatare', price: 20000, duration: '3.5 hrs' },
-  { id: 6, from: 'Kigali', to: 'Rusizi', price: 22000, duration: '4 hrs' }
+  { id: 1, from: 'Kigali', to: 'Musanze', price: 15000, duration: '2.5 hrs', vehicle: 'shuttle' },
+  { id: 2, from: 'Kigali', to: 'Rubavu', price: 18000, duration: '3 hrs', vehicle: 'shuttle' },
+  { id: 3, from: 'Kigali', to: 'Huye', price: 12000, duration: '2 hrs', vehicle: 'taxi' },
+  { id: 6, from: 'Kigali', to: 'Rusizi', price: 22000, duration: '4 hrs', vehicle: 'taxi' }
 ])
 
 const filteredRoutes = computed(() => {
@@ -218,10 +215,15 @@ const filteredRoutes = computed(() => {
 
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(route => 
-      route.from.toLowerCase().includes(query) ||
-      route.to.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (route) =>
+        route.from.toLowerCase().includes(query) ||
+        route.to.toLowerCase().includes(query)
     )
+  }
+
+  if (vehicleFilter.value) {
+    filtered = filtered.filter((route) => route.vehicle === vehicleFilter.value)
   }
 
   return filtered
@@ -232,20 +234,26 @@ const applySearch = () => {
 }
 
 const bookService = (type) => {
+  const serviceName = type === 'taxi'
+    ? t('transport.taxi')
+    : type === 'shuttle'
+      ? t('transport.shuttle')
+      : t('transport.carRental')
+
   const serviceItem = {
     id: Date.now(),
     type: 'transport',
     service: type,
-    name: `${type.charAt(0).toUpperCase() + type.slice(1)} Service`,
+    name: serviceName,
     price: type === 'taxi' ? 5000 : type === 'shuttle' ? 3000 : 50000,
     image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&q=80'
   }
   userStore.addToCart(serviceItem)
-  success(`${serviceItem.name} added to cart!`)
+  success(t('common.addedToCart', { item: serviceItem.name }))
 }
 
 const browseCars = () => {
-  alert('Car rental catalog coming soon!')
+  alert(t('transport.carRentalCatalogComingSoon'))
 }
 
 const bookRoute = (route) => {
@@ -259,6 +267,6 @@ const bookRoute = (route) => {
     image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80'
   }
   userStore.addToCart(routeItem)
-  success(`Route ${route.from} → ${route.to} added to cart!`)
+  success(t('common.addedToCart', { item: `${route.from} → ${route.to}` }))
 }
 </script>

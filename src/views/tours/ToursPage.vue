@@ -256,10 +256,10 @@ const addToCart = (tour) => {
     ...tour,
     type: 'tour'
   })
-  success(`${tour.title} added to your trip cart!`)
+  success(t('common.addedToCart', { item: tour.title }))
 }
 
 const viewTour = (tour) => {
-  alert(`Tour details for ${tour.title} - Coming soon!`)
+  alert(t('tours.detailsComingSoon', { title: tour.title }))
 }
 </script>
