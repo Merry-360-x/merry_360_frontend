@@ -370,6 +370,31 @@ const routes = [
     name: 'staff-edit-property',
     component: StaffAddProperty,
     meta: { requiresAuth: true, requiresStaff: true }
+  },
+  {
+    path: '/staff/create-tour',
+    name: 'staff-create-tour',
+    component: CreateTour,
+    meta: { requiresAuth: true, requiresStaff: true }
+  },
+  {
+    path: '/staff/create-transport',
+    name: 'staff-create-transport',
+    component: CreateTransport,
+    meta: { requiresAuth: true, requiresStaff: true }
+  },
+  // Admin tour and transport creation routes
+  {
+    path: '/admin/create-tour',
+    name: 'admin-create-tour',
+    component: CreateTour,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/create-transport',
+    name: 'admin-create-transport',
+    component: CreateTransport,
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ]
 

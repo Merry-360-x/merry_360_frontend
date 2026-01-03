@@ -147,6 +147,38 @@
               </svg>
               {{ t('admin.analytics') }}
             </router-link>
+
+            <!-- Divider -->
+            <div class="my-2 border-t border-gray-200 dark:border-gray-700"></div>
+            
+            <!-- Create Section -->
+            <div class="px-4 py-2 text-xs font-semibold text-text-muted uppercase tracking-wide">
+              Create New
+            </div>
+
+            <router-link 
+              to="/admin/create-tour" 
+              class="flex items-center px-4 py-3 rounded-button transition-colors"
+              :class="$route.path === '/admin/create-tour' ? 'bg-green-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              @click="isSidebarOpen = false"
+            >
+              <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Create Tour
+            </router-link>
+
+            <router-link 
+              to="/admin/create-transport" 
+              class="flex items-center px-4 py-3 rounded-button transition-colors"
+              :class="$route.path === '/admin/create-transport' ? 'bg-purple-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              @click="isSidebarOpen = false"
+            >
+              <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Create Transport
+            </router-link>
           </nav>
         </aside>
 

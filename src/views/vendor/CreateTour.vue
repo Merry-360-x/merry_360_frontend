@@ -3,7 +3,7 @@
     <div class="min-h-screen bg-gray-50 py-8">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
         <div class="mb-8">
-          <router-link to="/vendor" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
+          <router-link :to="dashboardPath" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -187,7 +187,7 @@
                 </svg>
                 {{ isSubmitting ? 'Creating...' : 'Create Tour' }}
               </Button>
-              <Button type="button" variant="secondary" @click="$router.push('/vendor')">
+              <Button type="button" variant="secondary" @click="$router.push(dashboardPath)">
                 Cancel
               </Button>
             </div>
@@ -199,9 +199,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useToast } from '../../composables/useToast'
+import { useUserStore } from '../../stores/userStore'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -209,7 +210,16 @@ import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
 
 const router = useRouter()
+const route = useRoute()
 const { showToast } = useToast()
+const userStore = useUserStore()
+
+// Determine dashboard path based on user role and current route
+const dashboardPath = computed(() => {
+  if (route.path.startsWith('/admin')) return '/admin'
+  if (route.path.startsWith('/staff')) return '/staff'
+  return '/vendor'
+})
 
 const form = ref({
   title: '',
@@ -287,7 +297,7 @@ const handleSubmit = async () => {
     showToast('Tour created successfully!', 'success')
     
     setTimeout(() => {
-      router.push('/vendor')
+      router.push(dashboardPath.value)
     }, 2000)
   } catch (error) {
     console.error('Tour creation error:', error)

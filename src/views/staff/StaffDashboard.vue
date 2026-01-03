@@ -93,6 +93,28 @@
               </svg>
               {{ t('portal.addProperty') }}
             </router-link>
+            <router-link 
+              to="/staff/create-tour" 
+              class="flex items-center px-4 py-3 rounded-lg transition-colors"
+              :class="$route.path === '/staff/create-tour' ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              @click="isSidebarOpen = false"
+            >
+              <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Create Tour
+            </router-link>
+            <router-link 
+              to="/staff/create-transport" 
+              class="flex items-center px-4 py-3 rounded-lg transition-colors"
+              :class="$route.path === '/staff/create-transport' ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              @click="isSidebarOpen = false"
+            >
+              <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+              </svg>
+              Create Transport
+            </router-link>
           </nav>
         </aside>
 
@@ -154,10 +176,10 @@
           <!-- Quick Actions -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 transition-colors duration-200">
             <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('portal.quickActions') }}</h2>
-            <div class="flex flex-wrap gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <router-link 
                 :to="addPropertyPath"
-                class="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                class="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -165,13 +187,22 @@
                 {{ t('portal.addNewProperty') }}
               </router-link>
               <router-link 
-                :to="propertiesPath"
-                class="flex items-center gap-2 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-text-secondary rounded-lg transition-colors"
+                to="/staff/create-tour"
+                class="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                {{ t('portal.viewAllProperties') }}
+                Create Tour
+              </router-link>
+              <router-link 
+                to="/staff/create-transport"
+                class="flex items-center gap-2 px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors justify-center"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                </svg>
+                Create Transport
               </router-link>
             </div>
           </div>
