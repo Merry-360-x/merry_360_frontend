@@ -175,7 +175,10 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('stories.form.mediaLabel') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {{ t('stories.form.mediaLabel') }}
+              <span v-if="newStory.mediaFiles.length > 0" class="text-brand-500 ml-2">({{ newStory.mediaFiles.length }})</span>
+            </label>
             <div 
               class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500 transition-colors"
               @click="$refs.storyImageInput.click()"
@@ -184,26 +187,50 @@
                 ref="storyImageInput"
                 type="file" 
                 accept="image/*,video/*" 
+                multiple
                 class="hidden" 
-                @change="handleStoryImage"
+                @change="handleStoryImages"
               />
-              <div v-if="newStory.imagePreview">
+              <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('stories.clickToUploadMultipleMedia') }}</p>
+              <p class="text-xs text-gray-400 mt-1">{{ t('stories.multipleMediaHint') }}</p>
+            </div>
+            
+            <!-- Media Thumbnails -->
+            <div v-if="newStory.mediaFiles.length > 0" class="mt-4 grid grid-cols-3 gap-3">
+              <div 
+                v-for="(media, index) in newStory.mediaFiles" 
+                :key="index"
+                class="relative group"
+              >
                 <video
-                  v-if="newStory.mediaType === 'video'"
-                  :src="newStory.imagePreview"
-                  class="w-full h-40 object-cover rounded-lg mb-2"
+                  v-if="media.type === 'video'"
+                  :src="media.preview"
+                  class="w-full h-24 object-cover rounded-lg"
                   muted
                   playsinline
                   preload="metadata"
                 />
-                <img v-else :src="newStory.imagePreview" class="w-full h-40 object-cover rounded-lg mb-2" />
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('stories.clickToChangeMedia') }}</p>
-              </div>
-              <div v-else>
-                <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('stories.clickToUploadMedia') }}</p>
+                <img 
+                  v-else
+                  :src="media.preview" 
+                  class="w-full h-24 object-cover rounded-lg" 
+                />
+                <button
+                  type="button"
+                  @click.stop="removeMedia(index)"
+                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+                <!-- Upload status indicator -->
+                <div v-if="!media.url" class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+                  <div class="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -433,13 +460,17 @@ const newStory = ref({
   title: '',
   location: '',
   content: '',
-  image: null,
-  imagePreview: null,
-  mediaType: 'image'
+  mediaFiles: [] // Array of { url, preview, type: 'image'|'video' }
 })
 
 function resetStoryForm() {
-  newStory.value = { title: '', location: '', content: '', image: null, imagePreview: null, mediaType: 'image' }
+  // Revoke object URLs to prevent memory leaks
+  newStory.value.mediaFiles.forEach(media => {
+    if (media.preview?.startsWith('blob:')) {
+      URL.revokeObjectURL(media.preview)
+    }
+  })
+  newStory.value = { title: '', location: '', content: '', mediaFiles: [] }
   isEditing.value = false
   editingStoryId.value = null
 }
@@ -503,52 +534,102 @@ function openCreateStory() {
   showCreateModal.value = true
 }
 
-async function handleStoryImage(event) {
-  const file = event.target.files[0]
-  if (!file) return
+async function handleStoryImages(event) {
+  const files = Array.from(event.target.files)
+  if (files.length === 0) return
 
   uploadingMedia.value = true
-  newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 
   try {
-    // Show preview
-    // Use an object URL for videos to avoid huge base64 strings.
-    if (newStory.value.mediaType === 'video') {
-      newStory.value.imagePreview = URL.createObjectURL(file)
-    } else {
-      const preview = await new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = (e) => resolve(e.target.result)
-        reader.onerror = () => reject(new Error('Failed to read file'))
-        reader.readAsDataURL(file)
+    // Process files with concurrency control (max 3 at a time to avoid overloading Cloudinary)
+    const uploadTasks = files.map((file, index) => async () => {
+      const mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
+      
+      // Create preview
+      let preview
+      if (mediaType === 'video') {
+        preview = URL.createObjectURL(file)
+      } else {
+        preview = await new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = (e) => resolve(e.target.result)
+          reader.onerror = () => reject(new Error('Failed to read file'))
+          reader.readAsDataURL(file)
+        })
+      }
+
+      // Add to array immediately with preview
+      const mediaIndex = newStory.value.mediaFiles.length
+      newStory.value.mediaFiles.push({
+        preview,
+        type: mediaType,
+        url: null // Will be set after upload
       })
-      newStory.value.imagePreview = preview
+
+      // Upload to Cloudinary if configured
+      if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
+        try {
+          const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
+          newStory.value.mediaFiles[mediaIndex].url = result.secure_url
+        } catch (uploadError) {
+          console.error('Cloudinary upload failed:', uploadError)
+          // For images, fallback to preview; for videos, remove from array
+          if (mediaType === 'video') {
+            if (preview.startsWith('blob:')) URL.revokeObjectURL(preview)
+            newStory.value.mediaFiles.splice(mediaIndex, 1)
+          } else {
+            newStory.value.mediaFiles[mediaIndex].url = preview
+          }
+        }
+      } else {
+        // Without Cloudinary, videos cannot be stored reliably
+        if (mediaType === 'video') {
+          if (preview.startsWith('blob:')) URL.revokeObjectURL(preview)
+          newStory.value.mediaFiles.splice(mediaIndex, 1)
+        } else {
+          newStory.value.mediaFiles[mediaIndex].url = preview
+        }
+      }
+    })
+
+    // Run uploads with concurrency limit of 3 to avoid overworking Cloudinary
+    const runWithConcurrency = async (tasks, limit) => {
+      const results = []
+      const executing = []
+      
+      for (const task of tasks) {
+        const promise = task().then(result => {
+          executing.splice(executing.indexOf(promise), 1)
+          return result
+        })
+        results.push(promise)
+        executing.push(promise)
+        
+        if (executing.length >= limit) {
+          await Promise.race(executing)
+        }
+      }
+      
+      await Promise.all(results)
     }
 
-    // Upload to Cloudinary if configured
-    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-      const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
-      newStory.value.image = result.secure_url
-    } else {
-      // Without Cloudinary, videos cannot be stored reliably (object URLs won't work for others).
-      if (newStory.value.mediaType === 'video') {
-        alert(t('stories.videoRequiresCloudinary'))
-        newStory.value.image = null
-        newStory.value.imagePreview = null
-        newStory.value.mediaType = 'image'
-      } else {
-        newStory.value.image = newStory.value.imagePreview
-      }
-    }
+    await runWithConcurrency(uploadTasks, 3)
   } catch (error) {
     console.error('Upload error:', error)
-    // Best-effort fallback for images
-    if (newStory.value.mediaType !== 'video') {
-      newStory.value.image = newStory.value.imagePreview
-    }
+    alert(t('stories.uploadFailed'))
   } finally {
     uploadingMedia.value = false
+    // Clear file input
+    if (event.target) event.target.value = ''
   }
+}
+
+function removeMedia(index) {
+  const media = newStory.value.mediaFiles[index]
+  if (media.preview?.startsWith('blob:')) {
+    URL.revokeObjectURL(media.preview)
+  }
+  newStory.value.mediaFiles.splice(index, 1)
 }
 
 function storyPrimaryMedia(story) {
@@ -575,6 +656,14 @@ function startEditStory(story) {
     alert(t('stories.editOwnStoryOnly'))
     return
   }
+
+  // Load existing media into form
+  const existingImages = story.images || (story.image ? [story.image] : [])
+  newStory.value.mediaFiles = existingImages.map(url => ({
+    url,
+    preview: url,
+    type: isVideoUrl(url) ? 'video' : 'image'
+  }))
 
   isEditing.value = true
   editingStoryId.value = story.id
@@ -652,12 +741,13 @@ async function createStory() {
 
   try {
     if (isEditing.value && editingStoryId.value) {
+      const mediaUrls = newStory.value.mediaFiles.map(m => m.url).filter(Boolean)
       const updateData = {
         title: newStory.value.title,
         location: newStory.value.location,
         content: newStory.value.content,
-        image: newStory.value.image || null,
-        images: newStory.value.image ? [newStory.value.image] : [],
+        image: mediaUrls[0] || null,
+        images: mediaUrls,
         updated_at: new Date().toISOString()
       }
 
@@ -684,12 +774,13 @@ async function createStory() {
 
       closeCreateModal()
     } else {
+      const mediaUrls = newStory.value.mediaFiles.map(m => m.url).filter(Boolean)
       const storyData = {
         title: newStory.value.title,
         location: newStory.value.location,
         content: newStory.value.content,
-        image: newStory.value.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-        images: newStory.value.image ? [newStory.value.image] : [],
+        image: mediaUrls[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
+        images: mediaUrls.length > 0 ? mediaUrls : [],
         author: userStore.user?.name || `${userStore.user?.firstName || ''} ${userStore.user?.lastName || ''}`.trim() || 'Anonymous',
         user_id: userStore.user?.id,
         user_avatar: userStore.user?.avatar_url || null
