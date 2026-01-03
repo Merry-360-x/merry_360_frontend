@@ -74,11 +74,11 @@
             <div class="mb-4 sm:mb-6">
               <label class="block text-xs sm:text-sm font-medium mb-3 text-text-primary">{{ t('accommodationList.priceRangePerNight') }}</label>
               <div class="space-y-2">
-                <input 
-                  type="range" 
-                  v-model="filters.maxPrice" 
-                  min="0" 
-                  max="500" 
+                <input
+                  type="range"
+                  v-model="filters.maxPrice"
+                  min="0"
+                  :max="priceRangeMax"
                   class="w-full"
                 />
                 <div class="flex justify-between text-sm text-text-secondary">
@@ -354,7 +354,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import { useUserStore } from '../../stores/userStore'
@@ -499,6 +499,30 @@ const amenities = ['WiFi', 'Pool', 'Parking', 'Restaurant', 'Spa', 'Gym', 'Air C
 
 const accommodations = ref([])
 
+const priceRangeMax = computed(() => {
+  const list = accommodations.value || []
+  if (!list.length) return 500
+
+  let max = 0
+  for (const acc of list) {
+    const price = Number(acc?.price)
+    if (Number.isFinite(price) && price > max) max = price
+  }
+
+  return max > 0 ? max : 500
+})
+
+const hasInitializedPriceFilter = ref(false)
+watch(
+  accommodations,
+  () => {
+    if (hasInitializedPriceFilter.value) return
+    filters.value.maxPrice = priceRangeMax.value
+    hasInitializedPriceFilter.value = true
+  },
+  { immediate: true }
+)
+
 // Load accommodations on mount
 onMounted(async () => {
   const q = route.query.q != null ? String(route.query.q).trim() : ''
@@ -580,7 +604,7 @@ const groupedAccommodations = computed(() => {
 
 const resetFilters = () => {
   filters.value = {
-    maxPrice: 500,
+    maxPrice: priceRangeMax.value,
     propertyTypes: [],
     minRating: 0,
     amenities: [],
