@@ -61,12 +61,12 @@
                 </div>
 
                 <!-- Guests + Search -->
-                <div class="relative">
+                <div class="relative" ref="guestSelectorContainer">
                   <label class="block text-xs font-semibold text-text-secondary mb-1">{{ t('accommodation.guests') }}</label>
                   <div class="flex items-center gap-2">
                     <button
                       type="button"
-                      @click="showGuestSelector = !showGuestSelector"
+                      @click.stop="toggleGuestSelector"
                       class="flex-1 text-sm font-semibold focus:outline-none bg-transparent text-text-primary text-left cursor-pointer flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 hover:border-brand-500 transition-colors"
                     >
                       <span class="truncate">{{ guestSummary }}</span>
@@ -88,7 +88,7 @@
                   </div>
 
                   <!-- Guest Selector Dropdown -->
-                  <div v-if="showGuestSelector" v-click-outside="closeGuestSelector" class="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl p-4 min-w-[320px] z-[100] border border-gray-200 dark:border-gray-700 shadow-xl">
+                  <div v-if="showGuestSelector" @click.stop class="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl p-4 min-w-[320px] z-[100] border border-gray-200 dark:border-gray-700 shadow-xl">
                     <div class="space-y-4">
                       <div class="flex items-center justify-between">
                         <div>
@@ -232,7 +232,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
@@ -247,25 +247,28 @@ const router = useRouter()
 const { t } = useTranslation()
 
 const showGuestSelector = ref(false)
+const guestSelectorContainer = ref(null)
 
-// Click outside directive
-const vClickOutside = {
-  mounted(el, binding) {
-    el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) {
-        binding.value()
-      }
-    }
-    document.addEventListener('click', el.clickOutsideEvent)
-  },
-  unmounted(el) {
-    document.removeEventListener('click', el.clickOutsideEvent)
+// Toggle guest selector
+const toggleGuestSelector = () => {
+  showGuestSelector.value = !showGuestSelector.value
+}
+
+// Close guest selector when clicking outside
+const handleClickOutside = (event) => {
+  if (guestSelectorContainer.value && !guestSelectorContainer.value.contains(event.target)) {
+    showGuestSelector.value = false
   }
 }
 
-const closeGuestSelector = () => {
-  showGuestSelector.value = false
-}
+// Add and remove event listener
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const searchQuery = ref({
   location: '',
