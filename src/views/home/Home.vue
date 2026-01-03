@@ -67,10 +67,10 @@
                     <button
                       type="button"
                       @click="showGuestSelector = !showGuestSelector"
-                      class="flex-1 text-sm font-semibold focus:outline-none bg-transparent text-text-primary text-left cursor-pointer flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2"
+                      class="flex-1 text-sm font-semibold focus:outline-none bg-transparent text-text-primary text-left cursor-pointer flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 hover:border-brand-500 transition-colors"
                     >
                       <span class="truncate">{{ guestSummary }}</span>
-                      <svg class="w-4 h-4 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 text-text-primary transition-transform" :class="{ 'rotate-180': showGuestSelector }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                       </svg>
                     </button>
@@ -78,7 +78,7 @@
                     <button
                       type="button"
                       @click="handleSearch"
-                      class="w-11 h-11 rounded-xl bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors"
+                      class="w-11 h-11 rounded-xl bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors flex-shrink-0"
                       :aria-label="t('home.search')"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +88,7 @@
                   </div>
 
                   <!-- Guest Selector Dropdown -->
-                  <div v-if="showGuestSelector" class="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl p-4 w-full z-50 border border-gray-200 dark:border-gray-700 shadow-card">
+                  <div v-if="showGuestSelector" v-click-outside="closeGuestSelector" class="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl p-4 min-w-[320px] z-[100] border border-gray-200 dark:border-gray-700 shadow-xl">
                     <div class="space-y-4">
                       <div class="flex items-center justify-between">
                         <div>
@@ -247,6 +247,25 @@ const router = useRouter()
 const { t } = useTranslation()
 
 const showGuestSelector = ref(false)
+
+// Click outside directive
+const vClickOutside = {
+  mounted(el, binding) {
+    el.clickOutsideEvent = (event) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        binding.value()
+      }
+    }
+    document.addEventListener('click', el.clickOutsideEvent)
+  },
+  unmounted(el) {
+    document.removeEventListener('click', el.clickOutsideEvent)
+  }
+}
+
+const closeGuestSelector = () => {
+  showGuestSelector.value = false
+}
 
 const searchQuery = ref({
   location: '',
