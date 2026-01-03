@@ -393,11 +393,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
 import { useTranslation } from '@/composables/useTranslation'
+import api from '@/services/api'
 
 const router = useRouter()
 const { t } = useTranslation()
@@ -461,6 +462,31 @@ const featuredProperties = ref([])
 
 const guides = ref([])
 
+const extractAccommodations = (response) => {
+  if (Array.isArray(response)) return response
+  if (Array.isArray(response?.data)) return response.data
+  return []
+}
+
+const loadHomeProperties = async () => {
+  try {
+    const response = await api.accommodations.getAll({ limit: 32 })
+    const all = extractAccommodations(response)
+
+    const take = (start, count) => all.slice(start, start + count)
+    const fallback = (items) => (items.length ? items : take(0, 8))
+
+    latestProperties.value = fallback(take(0, 8))
+    nearbyProperties.value = fallback(take(8, 8))
+    featuredProperties.value = fallback(take(16, 8))
+    topRatedProperties.value = [...all]
+      .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
+      .slice(0, 8)
+  } catch (error) {
+    console.error('Failed to load home properties:', error)
+  }
+}
+
 const buildSearchQuery = () => {
   const q = String(searchQuery.value.location || '').trim()
   const guests = (Number(guestCounts.value.adults) || 0) + (Number(guestCounts.value.children) || 0)
@@ -502,6 +528,8 @@ const heroVideos = ref([
 const nextVideo = () => {
   currentVideoIndex.value = (currentVideoIndex.value + 1) % heroVideos.value.length
 }
+
+onMounted(loadHomeProperties)
 </script>
 
 <style scoped>

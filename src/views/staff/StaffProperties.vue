@@ -199,6 +199,7 @@ import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast.js'
+import { mapPropertyRowForPortals } from '../../services/propertyMapper'
 
 const router = useRouter()
 const route = useRoute()
@@ -240,7 +241,7 @@ async function loadProperties() {
       .order('created_at', { ascending: false })
 
     if (error) throw error
-    properties.value = data || []
+    properties.value = (data || []).map(mapPropertyRowForPortals)
   } catch (error) {
     console.error('Error loading properties:', error)
   } finally {

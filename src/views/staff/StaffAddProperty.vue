@@ -237,7 +237,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
-import { supabase } from '../../services/supabase'
+import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
 import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
@@ -433,27 +433,20 @@ async function handleSubmit() {
       showToast(t('portal.uploadAtLeastOneImage'), 'error')
       return
     }
-    const propertyRow = {
-      host_id: userStore.user.id,
+
+    await api.accommodations.create({
       name: title,
       description,
-      property_type: normalizePropertyType(category),
+      type: normalizePropertyType(category),
       location,
-      price_per_night: price,
-      bedrooms: Number.isFinite(bedrooms) ? bedrooms : 1,
-      bathrooms: Number.isFinite(bathrooms) ? bathrooms : 1,
-      max_guests: maxGuests,
+      price,
+      beds: Number.isFinite(bedrooms) ? bedrooms : 1,
+      baths: Number.isFinite(bathrooms) ? bathrooms : 1,
+      maxGuests,
       amenities: form.value.amenities,
-      images: imageUrls,
-      main_image: imageUrls[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
-      available: true
-    }
-
-    const { error } = await supabase
-      .from('properties')
-      .insert([propertyRow])
-
-    if (error) throw error
+      image: imageUrls[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
+      images: imageUrls
+    })
 
     showSuccess.value = true
 

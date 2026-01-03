@@ -81,6 +81,7 @@ import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
 import { useCurrencyStore } from '@/stores/currency'
 import { useTranslation } from '@/composables/useTranslation'
+import { normalizePropertyType, getHostLabel } from '@/services/propertyMapper'
 
 const { showToast } = useToast()
 const currencyStore = useCurrencyStore()
@@ -106,7 +107,6 @@ const statusClass = (status) => {
 const loadProperties = async () => {
   try {
     loading.value = true
-    console.log('Loading properties from Supabase...')
     
     const { data, error } = await supabase
       .from('properties')
@@ -118,12 +118,11 @@ const loadProperties = async () => {
       throw error
     }
     
-    console.log('Loaded properties:', data?.length || 0)
     properties.value = (data || []).map(p => ({
       id: p.id,
       name: p.name,
-      type: p.property_type || 'Property',
-      host: `${p.profiles?.first_name || ''} ${p.profiles?.last_name || ''}`.trim() || p.profiles?.email || 'Unknown Host',
+      type: normalizePropertyType(p.property_type || 'Property'),
+      host: getHostLabel(p),
       location: p.city || p.location || 'Unknown',
       price: p.price_per_night || 0,
       status: p.available ? 'active' : 'inactive',
