@@ -51,19 +51,27 @@ export const supabaseApiAdapter = {
       const cacheKey = getAllCacheKey(params)
       const cached = getCachedAccommodations(params)
 
-      // If we already have fresh cached data, serve it instantly.
+      // If we have fresh cached data, serve it instantly.
       if (cached?.data?.length && cached.isFresh) {
+        // Trigger background refresh but return immediately
+        const bg = (async () => {
+          try {
+            const fresh = await buildAndExecuteQuery()
+            const mapped = (fresh.data || []).map(mapPropertyRowToAccommodation)
+            setCachedAccommodations(params, mapped)
+          } catch (err) {
+            console.warn('Background cache refresh failed:', err)
+          }
+        })()
         return { data: cached.data }
       }
 
       // De-dupe concurrent requests with identical params.
       const existing = inflightAccommodationGetAll.get(cacheKey)
       if (existing) {
+        // If we have stale cache, return it instantly while fetch completes
         if (cached?.data?.length) {
-          return Promise.race([
-            existing,
-            new Promise((resolve) => setTimeout(() => resolve({ data: cached.data }), 250))
-          ])
+          return { data: cached.data }
         }
         return existing
       }
@@ -100,55 +108,59 @@ export const supabaseApiAdapter = {
         return query
       }
 
+      const buildAndExecuteQuery = async () => {
+        let data
+        let error
+
+        // First attempt: small select + availability filter.
+        ;({ data, error } = await buildQuery({ includeAvailabilityFilter: true }))
+
+        // Retry without availability filter if the column is missing.
+        if (error && isMissingColumnError(error, 'available')) {
+          ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
+        }
+
+        // If any selected column is missing, fall back to select('*').
+        if (error && isMissingColumnError(error)) {
+          const buildStarQuery = ({ includeAvailabilityFilter } = { includeAvailabilityFilter: true }) => {
+            let query = supabase
+              .from('properties')
+              .select('*')
+              .order('created_at', { ascending: false })
+
+            if (includeAvailabilityFilter) {
+              query = query.or('available.is.null,available.eq.true')
+            }
+
+            if (term) {
+              query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+            }
+
+            if (Number.isFinite(guestsCount) && guestsCount > 0) {
+              query = query.gte('max_guests', guestsCount)
+            }
+
+            if (limit) {
+              query = query.limit(limit)
+            }
+
+            return query
+          }
+
+          ;({ data, error } = await buildStarQuery({ includeAvailabilityFilter: true }))
+          if (error && isMissingColumnError(error, 'available')) {
+            ;({ data, error } = await buildStarQuery({ includeAvailabilityFilter: false }))
+          }
+        }
+
+        if (error) throw error
+        return { data }
+      }
+
       const fetchPromise = (async () => {
         try {
-          let data
-          let error
-
-          // First attempt: small select + availability filter.
-          ;({ data, error } = await buildQuery({ includeAvailabilityFilter: true }))
-
-          // Retry without availability filter if the column is missing.
-          if (error && isMissingColumnError(error, 'available')) {
-            ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
-          }
-
-          // If any selected column is missing, fall back to select('*').
-          if (error && isMissingColumnError(error)) {
-            const buildStarQuery = ({ includeAvailabilityFilter } = { includeAvailabilityFilter: true }) => {
-              let query = supabase
-                .from('properties')
-                .select('*')
-                .order('created_at', { ascending: false })
-
-              if (includeAvailabilityFilter) {
-                query = query.or('available.is.null,available.eq.true')
-              }
-
-              if (term) {
-                query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
-              }
-
-              if (Number.isFinite(guestsCount) && guestsCount > 0) {
-                query = query.gte('max_guests', guestsCount)
-              }
-
-              if (limit) {
-                query = query.limit(limit)
-              }
-
-              return query
-            }
-
-            ;({ data, error } = await buildStarQuery({ includeAvailabilityFilter: true }))
-            if (error && isMissingColumnError(error, 'available')) {
-              ;({ data, error } = await buildStarQuery({ includeAvailabilityFilter: false }))
-            }
-          }
-
-          if (error) throw error
-
-          const mapped = (data || []).map(mapPropertyRowToAccommodation)
+          const result = await buildAndExecuteQuery()
+          const mapped = (result.data || []).map(mapPropertyRowToAccommodation)
           setCachedAccommodations(params, mapped)
           return { data: mapped }
         } finally {
@@ -158,12 +170,9 @@ export const supabaseApiAdapter = {
 
       inflightAccommodationGetAll.set(cacheKey, fetchPromise)
 
-      // If we have stale cached data, don't block the UI on a slow network.
+      // If we have stale cache, return it instantly (UI is already showing it)
       if (cached?.data?.length) {
-        return Promise.race([
-          fetchPromise,
-          new Promise((resolve) => setTimeout(() => resolve({ data: cached.data }), 250))
-        ])
+        return { data: cached.data }
       }
 
       return fetchPromise

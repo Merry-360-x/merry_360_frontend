@@ -285,7 +285,7 @@ const latestProperties = ref([])
 const nearbyProperties = ref([])
 const topRatedProperties = ref([])
 const featuredProperties = ref([])
-
+const isLoading = ref(true)
 
 const extractAccommodations = (response) => {
   if (Array.isArray(response)) return response
@@ -294,20 +294,21 @@ const extractAccommodations = (response) => {
 }
 
 const loadHomeProperties = async () => {
-  const params = { limit: 32 }
+  const params = { limit: 16 }
   try {
     const cached = getCachedAccommodations(params)
     if (cached?.data?.length) {
       const all = cached.data
       const take = (start, count) => all.slice(start, start + count)
-      const fallback = (items) => (items.length ? items : take(0, 8))
+      const fallback = (items) => (items.length ? items : take(0, 4))
 
-      latestProperties.value = fallback(take(0, 8))
-      nearbyProperties.value = fallback(take(8, 8))
-      featuredProperties.value = fallback(take(16, 8))
+      latestProperties.value = fallback(take(0, 4))
+      nearbyProperties.value = fallback(take(4, 4))
+      featuredProperties.value = fallback(take(8, 4))
       topRatedProperties.value = [...all]
         .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-        .slice(0, 8)
+        .slice(0, 4)
+      isLoading.value = false
 
       // Revalidate in the background.
       api.accommodations.getAll(params)
@@ -316,14 +317,14 @@ const loadHomeProperties = async () => {
           setCachedAccommodations(params, freshList)
           const next = freshList
           const t2 = (start, count) => next.slice(start, start + count)
-          const fb2 = (items) => (items.length ? items : t2(0, 8))
+          const fb2 = (items) => (items.length ? items : t2(0, 4))
 
-          latestProperties.value = fb2(t2(0, 8))
-          nearbyProperties.value = fb2(t2(8, 8))
-          featuredProperties.value = fb2(t2(16, 8))
+          latestProperties.value = fb2(t2(0, 4))
+          nearbyProperties.value = fb2(t2(4, 4))
+          featuredProperties.value = fb2(t2(8, 4))
           topRatedProperties.value = [...next]
             .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-            .slice(0, 8)
+            .slice(0, 4)
         })
         .catch(() => {})
 
@@ -335,16 +336,18 @@ const loadHomeProperties = async () => {
     setCachedAccommodations(params, all)
 
     const take = (start, count) => all.slice(start, start + count)
-    const fallback = (items) => (items.length ? items : take(0, 8))
+    const fallback = (items) => (items.length ? items : take(0, 4))
 
-    latestProperties.value = fallback(take(0, 8))
-    nearbyProperties.value = fallback(take(8, 8))
-    featuredProperties.value = fallback(take(16, 8))
+    latestProperties.value = fallback(take(0, 4))
+    nearbyProperties.value = fallback(take(4, 4))
+    featuredProperties.value = fallback(take(8, 4))
     topRatedProperties.value = [...all]
       .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-      .slice(0, 8)
+      .slice(0, 4)
   } catch (error) {
     console.error('Failed to load home properties:', error)
+  } finally {
+    isLoading.value = false
   }
 }
 
