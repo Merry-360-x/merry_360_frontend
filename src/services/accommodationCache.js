@@ -1,5 +1,7 @@
+import { getFromMemory, setInMemory, hasInMemory } from './memoryCache'
+
 const PREFIX = 'merry360:accommodations:getAll:'
-const DEFAULT_TTL_MS = 60 * 60 * 1000 // 60 minutes (was 30)
+const DEFAULT_TTL_MS = 60 * 60 * 1000 // 60 minutes
 
 const MAX_CACHED_IMAGES = 3
 
@@ -59,9 +61,26 @@ export const getAllCacheKey = (params = {}) => {
 }
 
 export const getCachedAccommodations = (params = {}, { ttlMs = DEFAULT_TTL_MS } = {}) => {
+  const key = getAllCacheKey(params)
+  
+  // Check memory first (INSTANT - nanoseconds)
+  if (hasInMemory(key)) {
+    const cached = getFromMemory(key)
+    const age = Date.now() - cached.timestamp
+    console.log('⚡ Memory cache hit - instant access')
+    return {
+      key,
+      ts: cached.timestamp,
+      age,
+      isFresh: age >= 0 && age <= ttlMs,
+      data: cached.data,
+      source: 'memory'
+    }
+  }
+
+  // Fallback to localStorage (slower but persistent)
   if (!canUseStorage()) return null
 
-  const key = getAllCacheKey(params)
   try {
     const raw = window.localStorage.getItem(key)
     if (!raw) return null
@@ -75,12 +94,18 @@ export const getCachedAccommodations = (params = {}, { ttlMs = DEFAULT_TTL_MS } 
     const age = Date.now() - ts
     const isFresh = age >= 0 && age <= ttlMs
     
+    // Store in memory for next access
+    setInMemory(key, data)
+    
+    console.log('💾 localStorage cache hit - loaded to memory')
+    
     return {
       key,
       ts,
       age,
       isFresh,
-      data
+      data,
+      source: 'localStorage'
     }
   } catch {
     return null
@@ -88,12 +113,17 @@ export const getCachedAccommodations = (params = {}, { ttlMs = DEFAULT_TTL_MS } 
 }
 
 export const setCachedAccommodations = (params = {}, data = []) => {
-  if (!canUseStorage()) return
-
   const key = getAllCacheKey(params)
+  const list = Array.isArray(data) ? data : []
+  const compactList = list.map(compactAccommodation)
+  
+  // Store in memory first (INSTANT access)
+  setInMemory(key, compactList)
+  
+  // Also persist to localStorage (survives page reload)
+  if (!canUseStorage()) return
+  
   try {
-    const list = Array.isArray(data) ? data : []
-    const compactList = list.map(compactAccommodation)
     window.localStorage.setItem(
       key,
       JSON.stringify({ ts: Date.now(), data: compactList })

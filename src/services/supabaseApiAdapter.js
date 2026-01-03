@@ -9,6 +9,7 @@
 import { supabase } from './supabase'
 import { normalizePropertyType, mapPropertyRowToAccommodation } from './propertyMapper'
 import { clearAccommodationCache, getAllCacheKey, getCachedAccommodations, setCachedAccommodations } from './accommodationCache'
+import { markAsFetched, wasFetchedThisSession } from './memoryCache'
 
 const inflightAccommodationGetAll = new Map()
 
@@ -53,16 +54,20 @@ export const supabaseApiAdapter = {
 
       // If we have fresh cached data, serve it instantly.
       if (cached?.data?.length && cached.isFresh) {
-        // Trigger background refresh but return immediately
-        const bg = (async () => {
-          try {
-            const fresh = await buildAndExecuteQuery()
-            const mapped = (fresh.data || []).map(mapPropertyRowToAccommodation)
-            setCachedAccommodations(params, mapped)
-          } catch (err) {
-            console.warn('Background cache refresh failed:', err)
-          }
-        })()
+        // Only refresh in background if we haven't fetched this session
+        if (!wasFetchedThisSession(cacheKey)) {
+          markAsFetched(cacheKey)
+          // Trigger background refresh but return immediately
+          const bg = (async () => {
+            try {
+              const fresh = await buildAndExecuteQuery()
+              const mapped = (fresh.data || []).map(mapPropertyRowToAccommodation)
+              setCachedAccommodations(params, mapped)
+            } catch (err) {
+              console.warn('Background cache refresh failed:', err)
+            }
+          })()
+        }
         return { data: cached.data }
       }
 
@@ -103,6 +108,9 @@ export const supabaseApiAdapter = {
 
         if (limit) {
           query = query.limit(limit)
+        } else {
+          // Default limit to prevent large payloads
+          query = query.limit(50)
         }
 
         return query
@@ -162,6 +170,7 @@ export const supabaseApiAdapter = {
           const result = await buildAndExecuteQuery()
           const mapped = (result.data || []).map(mapPropertyRowToAccommodation)
           setCachedAccommodations(params, mapped)
+          markAsFetched(cacheKey)
           return { data: mapped }
         } finally {
           inflightAccommodationGetAll.delete(cacheKey)
