@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Test - Merry 360</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; margin-top: 0; }
+    h2 { color: #666; font-size: 18px; margin-top: 0; }
+    .metric {
+      display: inline-block;
+      padding: 8px 16px;
+      margin: 4px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .metric.fast { background: #10b981; color: white; }
+    .metric.ok { background: #f59e0b; color: white; }
+    .metric.slow { background: #ef4444; color: white; }
+    button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px 4px;
+    }
+    button:hover { background: #4f46e5; }
+    #results { margin-top: 20px; }
+    .loading { color: #666; font-style: italic; }
+    iframe { display: none; }
+  </style>
+</head>
+<body>
+  <h1>🚀 Merry 360 Performance Test</h1>
+  <p>Testing page load times with real browser rendering and API calls</p>
+
+  <div class="test-card">
+    <h2>Test Controls</h2>
+    <button onclick="testHomePage()">Test Homepage</button>
+    <button onclick="testAccommodations()">Test Accommodations</button>
+    <button onclick="testAll()">Test All Pages</button>
+    <button onclick="clearCache()">Clear Cache & Retest</button>
+  </div>
+
+  <div id="results"></div>
+
+  <iframe id="testFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+
+  <script>
+    const BASE_URL = 'https://merry-360-frontend-3wa1g3zy9-das-48ca2629.vercel.app';
+    const results = document.getElementById('results');
+
+    function getMetricClass(time) {
+      if (time < 500) return 'fast';
+      if (time < 2000) return 'ok';
+      return 'slow';
+    }
+
+    function displayResult(pageName, time, isCached = false) {
+      const className = getMetricClass(time);
+      const status = className === 'fast' ? '✅' : className === 'ok' ? '⚠️' : '❌';
+      const label = isCached ? ' (Cached)' : '';
+      
+      results.innerHTML += `
+        <div class="test-card">
+          <h2>${status} ${pageName}${label}</h2>
+          <span class="metric ${className}">${time}ms</span>
+          <p style="margin: 12px 0 0; color: #666; font-size: 14px;">
+            Target: <500ms (fast) | <2000ms (ok) | >2000ms (slow)
+          </p>
+        </div>
+      `;
+    }
+
+    async function testPage(url, name) {
+      results.innerHTML += `<div class="test-card loading">🔄 Testing ${name}...</div>`;
+      
+      const start = performance.now();
+      
+      try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const end = performance.now();
+        
+        const loadTime = Math.round(end - start);
+        
+        results.innerHTML = results.innerHTML.replace(
+          `<div class="test-card loading">🔄 Testing ${name}...</div>`,
+          ''
+        );
+        
+        displayResult(name, loadTime, false);
+        
+        // Test cached load
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const cacheStart = performance.now();
+        await fetch(url);
+        const cacheEnd = performance.now();
+        const cacheTime = Math.round(cacheEnd - cacheStart);
+        
+        displayResult(name, cacheTime, true);
+        
+        return { name, loadTime, cacheTime };
+      } catch (error) {
+        results.innerHTML = results.innerHTML.replace(
+          `<div class="test-card loading">🔄 Testing ${name}...</div>`,
+          `<div class="test-card"><h2>❌ ${name}</h2><p>Error: ${error.message}</p></div>`
+        );
+        return null;
+      }
+    }
+
+    async function testHomePage() {
+      results.innerHTML = '';
+      await testPage(BASE_URL + '/', 'Homepage');
+    }
+
+    async function testAccommodations() {
+      results.innerHTML = '';
+      await testPage(BASE_URL + '/accommodations', 'Accommodations');
+    }
+
+    async function testAll() {
+      results.innerHTML = '';
+      await testPage(BASE_URL + '/', 'Homepage');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      await testPage(BASE_URL + '/accommodations', 'Accommodations');
+      
+      results.innerHTML += `
+        <div class="test-card" style="background: #eef2ff; border: 2px solid #6366f1;">
+          <h2>📊 Test Complete</h2>
+          <p>All pages tested. Check results above.</p>
+        </div>
+      `;
+    }
+
+    async function clearCache() {
+      if ('caches' in window) {
+        const names = await caches.keys();
+        await Promise.all(names.map(name => caches.delete(name)));
+      }
+      localStorage.clear();
+      results.innerHTML = `
+        <div class="test-card" style="background: #fef3c7;">
+          <h2>🧹 Cache Cleared</h2>
+          <p>Browser cache and localStorage cleared. Run tests again.</p>
+        </div>
+      `;
+    }
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      setTimeout(testHomePage, 1000);
+    });
+  </script>
+</body>
+</html>
