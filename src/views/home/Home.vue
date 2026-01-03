@@ -185,9 +185,8 @@
               {{ t('home.browseMore') }}
             </router-link>
           </div>
-          <div v-if="isLoading" class="flex flex-col items-center justify-center py-20">
-            <div class="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
-            <p class="text-text-secondary">Loading properties...</p>
+          <div v-if="isLoading" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <PropertyCardSkeleton v-for="n in 4" :key="`skeleton-${n}`" />
           </div>
           <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
@@ -228,6 +227,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
+import PropertyCardSkeleton from '@/components/common/PropertyCardSkeleton.vue'
 import { useTranslation } from '@/composables/useTranslation'
 import api from '@/services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
@@ -291,6 +291,7 @@ const nearbyProperties = ref([])
 const topRatedProperties = ref([])
 const featuredProperties = ref([])
 const isLoading = ref(true)
+const sectionsLoaded = ref(false)
 
 const extractAccommodations = (response) => {
   if (Array.isArray(response)) return response
@@ -299,22 +300,28 @@ const extractAccommodations = (response) => {
 }
 
 const loadHomeProperties = () => {
-  const params = { limit: 16 }
+  // Fetch only 8 properties initially for faster load
+  const params = { limit: 8 }
   
   // Synchronously read cache - INSTANT display
   const cached = getCachedAccommodations(params)
   if (cached?.data?.length) {
     const all = cached.data
     const take = (start, count) => all.slice(start, start + count)
-    const fallback = (items) => (items.length ? items : take(0, 4))
-
-    latestProperties.value = fallback(take(0, 4))
-    nearbyProperties.value = fallback(take(4, 4))
-    featuredProperties.value = fallback(take(8, 4))
-    topRatedProperties.value = [...all]
-      .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-      .slice(0, 4)
+    
+    // Show first 4 immediately for ultra-fast load
+    latestProperties.value = take(0, 4)
     isLoading.value = false
+    
+    // Load other sections slightly delayed for progressive rendering
+    setTimeout(() => {
+      nearbyProperties.value = take(4, 4).length ? take(4, 4) : take(0, 4)
+      featuredProperties.value = all.length > 4 ? take(0, 4) : []
+      topRatedProperties.value = [...all]
+        .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
+        .slice(0, 4)
+      sectionsLoaded.value = true
+    }, 50)
 
     // Silent background refresh if stale
     if (!cached.isFresh) {
@@ -323,10 +330,9 @@ const loadHomeProperties = () => {
         if (freshList.length) {
           setCachedAccommodations(params, freshList)
           const t2 = (start, count) => freshList.slice(start, start + count)
-          const fb2 = (items) => (items.length ? items : t2(0, 4))
-          latestProperties.value = fb2(t2(0, 4))
-          nearbyProperties.value = fb2(t2(4, 4))
-          featuredProperties.value = fb2(t2(8, 4))
+          latestProperties.value = t2(0, 4)
+          nearbyProperties.value = t2(4, 4).length ? t2(4, 4) : t2(0, 4)
+          featuredProperties.value = freshList.length > 4 ? t2(0, 4) : []
           topRatedProperties.value = [...freshList].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
         }
       }).catch(() => {})
@@ -341,13 +347,19 @@ const loadHomeProperties = () => {
     if (all.length) {
       setCachedAccommodations(params, all)
       const take = (start, count) => all.slice(start, start + count)
-      const fallback = (items) => (items.length ? items : take(0, 4))
-      latestProperties.value = fallback(take(0, 4))
-      nearbyProperties.value = fallback(take(4, 4))
-      featuredProperties.value = fallback(take(8, 4))
-      topRatedProperties.value = [...all].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
+      latestProperties.value = take(0, 4)
+      isLoading.value = false
+      
+      // Progressive load other sections
+      setTimeout(() => {
+        nearbyProperties.value = take(4, 4).length ? take(4, 4) : take(0, 4)
+        featuredProperties.value = all.length > 4 ? take(0, 4) : []
+        topRatedProperties.value = [...all].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
+        sectionsLoaded.value = true
+      }, 50)
+    } else {
+      isLoading.value = false
     }
-    isLoading.value = false
   }).catch((error) => {
     console.error('Failed to load home properties:', error)
     isLoading.value = false

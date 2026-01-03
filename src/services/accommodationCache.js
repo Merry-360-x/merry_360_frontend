@@ -1,9 +1,9 @@
 import { getFromMemory, setInMemory, hasInMemory } from './memoryCache'
 
 const PREFIX = 'merry360:accommodations:getAll:'
-const DEFAULT_TTL_MS = 60 * 60 * 1000 // 60 minutes
+const DEFAULT_TTL_MS = 30 * 60 * 1000 // 30 minutes - optimized for balance between speed and freshness
 
-const MAX_CACHED_IMAGES = 3
+const MAX_CACHED_IMAGES = 2 // Reduced from 3 for faster cache reads
 
 const compactAccommodation = (acc) => {
   const imagesRaw = Array.isArray(acc?.images) ? acc.images : []

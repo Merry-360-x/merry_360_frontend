@@ -13,6 +13,22 @@ import { markAsFetched, wasFetchedThisSession } from './memoryCache'
 
 const inflightAccommodationGetAll = new Map()
 
+// Minimal select for home page - ultra fast loading
+const PROPERTIES_HOME_SELECT = [
+  'id',
+  'name',
+  'property_type',
+  'location',
+  'city',
+  'price_per_night',
+  'bedrooms',
+  'bathrooms',
+  'main_image',
+  'images',
+  'rating',
+  'reviews_count'
+].join(',')
+
 // Keep payload small for public listing pages. If some columns are missing in a
 // given environment, we fall back to select('*') automatically.
 const PROPERTIES_LIST_SELECT = [
@@ -87,9 +103,12 @@ export const supabaseApiAdapter = {
       const guestsCount = guests != null && String(guests).trim() ? Number(guests) : null
 
       const buildQuery = ({ includeAvailabilityFilter } = { includeAvailabilityFilter: true }) => {
+        // Use minimal select for home page (limit 8) for ultra-fast loading
+        const selectFields = limit === 8 ? PROPERTIES_HOME_SELECT : PROPERTIES_LIST_SELECT
+        
         let query = supabase
           .from('properties')
-          .select(PROPERTIES_LIST_SELECT)
+          .select(selectFields)
           .order('created_at', { ascending: false })
 
         // Public pages should only show active listings, but some environments
@@ -109,8 +128,8 @@ export const supabaseApiAdapter = {
         if (limit) {
           query = query.limit(limit)
         } else {
-          // Default limit to prevent large payloads
-          query = query.limit(50)
+          // Default limit to prevent large payloads - optimized for speed
+          query = query.limit(30)
         }
 
         return query

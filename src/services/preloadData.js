@@ -13,7 +13,7 @@ export const preloadCriticalData = () => {
   if (preloadPromise) return preloadPromise
 
   // Check if we already have cached data - if so, we're already "preloaded"
-  const cached = getCachedAccommodations({ limit: 16 })
+  const cached = getCachedAccommodations({ limit: 8 })
   if (cached?.data?.length) {
     isPreloaded = true
     console.log('✅ Data already cached, instant load ready')
@@ -27,7 +27,7 @@ export const preloadCriticalData = () => {
       
       // Pre-fetch properties for instant homepage/accommodations load
       await Promise.all([
-        supabaseApiAdapter.accommodations.getAll({ limit: 16 }),
+        supabaseApiAdapter.accommodations.getAll({ limit: 8 }),
         supabaseApiAdapter.tours?.getAll?.({ limit: 8 }).catch(() => {}),
       ])
       
