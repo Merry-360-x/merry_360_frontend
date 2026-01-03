@@ -342,6 +342,11 @@ async function handlePaymentSuccess(paymentResult) {
       })
 
       created.push(booking)
+      
+      // Send confirmation emails for each booking
+      sendBookingEmails(booking, item).catch(err => {
+        console.error('Failed to send booking emails:', err)
+      })
     }
 
     // Clear cart
@@ -377,6 +382,36 @@ async function handlePaymentSuccess(paymentResult) {
 function handlePaymentError(error) {
   showPaymentModal.value = false
   alert(t('checkout.paymentFailed'))
+}
+
+// Send booking confirmation emails
+async function sendBookingEmails(booking, item) {
+  try {
+    const response = await supabase.functions.invoke('send-booking-emails', {
+      body: {
+        bookingId: booking.id,
+        customerEmail: guestInfo.value.email,
+        customerName: `${guestInfo.value.firstName} ${guestInfo.value.lastName}`.trim(),
+        propertyName: item.name || item.title || 'Your booking',
+        checkIn: bookingDetails.value.checkIn,
+        checkOut: bookingDetails.value.checkOut,
+        guests: bookingDetails.value.guests,
+        totalPrice: booking.total_price,
+        currency: currencyStore.selectedCurrency,
+        bookingStatus: booking.status || 'confirmed',
+        specialRequests: guestInfo.value.specialRequests || undefined,
+        phone: guestInfo.value.phone || undefined
+      }
+    })
+
+    if (response.error) {
+      console.error('Email function error:', response.error)
+    } else {
+      console.log('Booking emails sent:', response.data)
+    }
+  } catch (error) {
+    console.error('Failed to invoke email function:', error)
+  }
 }
 
 function handleSuccessClose() {

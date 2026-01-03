@@ -494,6 +494,11 @@ const confirmBooking = async () => {
       throw new Error('Failed to create booking')
     }
     
+    // Send confirmation emails (don't block on this)
+    sendBookingEmails(booking).catch(err => {
+      console.error('Failed to send booking emails:', err)
+    })
+    
     // Update user store with booking
     if (userStore.upcomingBookings) {
       userStore.upcomingBookings.push(booking)
@@ -538,6 +543,15 @@ const confirmBooking = async () => {
         .update({ payment_status: 'paid', status: 'confirmed' })
         .eq('id', booking.id)
 
+      // Send confirmation emails after successful payment
+      sendBookingEmails({
+        ...booking,
+        status: 'confirmed',
+        payment_status: 'paid'
+      }).catch(err => {
+        console.error('Failed to send booking emails:', err)
+      })
+
       router.push({
         path: '/profile',
         query: { 
@@ -554,6 +568,38 @@ const confirmBooking = async () => {
     errors.value.general = error.message || 'Failed to create booking. Please try again.'
   } finally {
     processing.value = false
+  }
+}
+
+// Send booking confirmation emails
+async function sendBookingEmails(booking) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    const response = await supabase.functions.invoke('send-booking-emails', {
+      body: {
+        bookingId: booking.id,
+        customerEmail: guestInfo.value.email,
+        customerName: `${guestInfo.value.firstName} ${guestInfo.value.lastName}`.trim(),
+        propertyName: property.value.name,
+        checkIn: stay.value.checkIn,
+        checkOut: stay.value.checkOut,
+        guests: stay.value.guests,
+        totalPrice: total.value,
+        currency: currencyStore.selectedCurrency,
+        bookingStatus: booking.status || 'pending',
+        specialRequests: specialRequests.value || undefined,
+        phone: guestInfo.value.phone || undefined
+      }
+    })
+
+    if (response.error) {
+      console.error('Email function error:', response.error)
+    } else {
+      console.log('Booking emails sent:', response.data)
+    }
+  } catch (error) {
+    console.error('Failed to invoke email function:', error)
   }
 }
 
