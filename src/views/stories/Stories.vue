@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <!-- Stories Header -->
-    <section class="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 dark:from-purple-900 dark:via-pink-800 dark:to-orange-700 py-12 transition-colors duration-200">
+    <section class="bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 dark:from-brand-800 dark:via-brand-900 dark:to-gray-900 py-12 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center mb-8">
           <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-white">{{ t('stories.travelStoriesTitle') }}</h1>
@@ -12,7 +12,7 @@
         <div class="flex justify-center">
           <button 
             @click="openCreateStory"
-            class="flex items-center gap-2 px-6 py-3 bg-white text-purple-600 font-semibold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+            class="flex items-center gap-2 px-6 py-3 bg-white text-brand-600 font-semibold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>

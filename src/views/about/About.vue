@@ -1,7 +1,7 @@
 <template>
   <PropertyLayout>
     <!-- Hero Section -->
-    <section class="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-gradient-to-r from-brand-500 to-red-600">
+    <section class="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-gradient-to-r from-brand-500 to-brand-600">
       <div class="absolute inset-0 bg-black/10"></div>
       <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
         <div class="text-center text-white">
@@ -44,7 +44,7 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="bg-gradient-to-br from-brand-500 to-red-600 py-12 md:py-16">
+    <section class="bg-gradient-to-br from-brand-500 to-brand-600 py-12 md:py-16">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           <div class="text-center text-white">
@@ -174,7 +174,7 @@
 
     <!-- CTA Section -->
     <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-      <div class="bg-gradient-to-br from-brand-500 to-red-600 rounded-2xl p-8 sm:p-12 md:p-16 text-center text-white">
+      <div class="bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl p-8 sm:p-12 md:p-16 text-center text-white">
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">Ready to Find Your Dream Property?</h2>
         <p class="text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto opacity-90">
           Join thousands of satisfied customers who found their perfect home with Merry360X. Start your journey today!
