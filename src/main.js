@@ -120,4 +120,8 @@ const initSupabaseAuth = async () => {
 // Initialize Supabase auth
 initSupabaseAuth()
 
+// Aggressively pre-load critical data for instant page loads
+import { preloadCriticalData } from './services/preloadData'
+preloadCriticalData()
+
 app.mount('#app')

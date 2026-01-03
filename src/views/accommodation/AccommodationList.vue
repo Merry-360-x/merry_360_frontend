@@ -445,29 +445,36 @@ const applyLoadedAccommodations = (list, term = '') => {
 const loadAccommodations = async (params = {}) => {
   const term = String(params.q ?? params.search ?? '').trim()
 
+  // Always check cache first - instant display
   const cached = getCachedAccommodations(params)
   if (cached?.data?.length) {
     applyLoadedAccommodations(cached.data, term)
     loading.value = false
 
-    // Revalidate in the background ("state" stays instantly available).
-    api.accommodations.getAll(params)
-      .then((fresh) => {
-        const freshList = Array.isArray(fresh?.data) ? fresh.data : []
-        setCachedAccommodations(params, freshList)
-        applyLoadedAccommodations(freshList, term)
-      })
-      .catch(() => {})
-
+    // Background refresh only if stale
+    if (!cached.isFresh) {
+      api.accommodations.getAll(params)
+        .then((fresh) => {
+          const freshList = Array.isArray(fresh?.data) ? fresh.data : []
+          if (freshList.length) {
+            setCachedAccommodations(params, freshList)
+            applyLoadedAccommodations(freshList, term)
+          }
+        })
+        .catch(() => {})
+    }
     return
   }
 
+  // No cache - fetch fresh
   loading.value = true
   try {
     const response = await api.accommodations.getAll(params)
     const list = Array.isArray(response?.data) ? response.data : []
-    setCachedAccommodations(params, list)
-    applyLoadedAccommodations(list, term)
+    if (list.length) {
+      setCachedAccommodations(params, list)
+      applyLoadedAccommodations(list, term)
+    }
   } catch (error) {
     console.error('Failed to load accommodations:', error)
   } finally {

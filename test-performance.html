@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Performance Test</title>
+</head>
+<body>
+  <h1>Testing Performance</h1>
+  <div id="results"></div>
+  
+  <script>
+    const testUrl = 'http://localhost:5173';
+    const results = document.getElementById('results');
+    
+    async function measureLoad() {
+      const start = performance.now();
+      
+      try {
+        const response = await fetch(testUrl);
+        const html = await response.text();
+        const end = performance.now();
+        
+        results.innerHTML += `<p>✅ Load time: ${(end - start).toFixed(2)}ms</p>`;
+        
+        // Test cache performance
+        const cacheStart = performance.now();
+        const cached = await fetch(testUrl);
+        const cachedHtml = await cached.text();
+        const cacheEnd = performance.now();
+        
+        results.innerHTML += `<p>⚡ Cached load: ${(cacheEnd - cacheStart).toFixed(2)}ms</p>`;
+      } catch (error) {
+        results.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+      }
+    }
+    
+    measureLoad();
+  </script>
+</body>
+</html>

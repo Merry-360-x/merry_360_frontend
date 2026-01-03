@@ -1,5 +1,5 @@
 const PREFIX = 'merry360:accommodations:getAll:'
-const DEFAULT_TTL_MS = 30 * 60 * 1000 // 30 minutes
+const DEFAULT_TTL_MS = 60 * 60 * 1000 // 60 minutes (was 30)
 
 const MAX_CACHED_IMAGES = 3
 

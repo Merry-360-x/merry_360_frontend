@@ -186,7 +186,10 @@
             </router-link>
           </div>
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
+            <template v-if="isLoading">
+              <SkeletonLoader v-for="i in 4" :key="`skeleton-${i}`" type="card" />
+            </template>
+            <PropertyCard v-else v-for="property in latestProperties" :key="property.id" :property="property" />
           </div>
         </div>
       </div>
@@ -224,6 +227,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
+import SkeletonLoader from '@/components/common/SkeletonLoader.vue'
 import { useTranslation } from '@/composables/useTranslation'
 import api from '@/services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
@@ -295,46 +299,11 @@ const extractAccommodations = (response) => {
 
 const loadHomeProperties = async () => {
   const params = { limit: 16 }
-  try {
-    const cached = getCachedAccommodations(params)
-    if (cached?.data?.length) {
-      const all = cached.data
-      const take = (start, count) => all.slice(start, start + count)
-      const fallback = (items) => (items.length ? items : take(0, 4))
-
-      latestProperties.value = fallback(take(0, 4))
-      nearbyProperties.value = fallback(take(4, 4))
-      featuredProperties.value = fallback(take(8, 4))
-      topRatedProperties.value = [...all]
-        .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-        .slice(0, 4)
-      isLoading.value = false
-
-      // Revalidate in the background.
-      api.accommodations.getAll(params)
-        .then((fresh) => {
-          const freshList = extractAccommodations(fresh)
-          setCachedAccommodations(params, freshList)
-          const next = freshList
-          const t2 = (start, count) => next.slice(start, start + count)
-          const fb2 = (items) => (items.length ? items : t2(0, 4))
-
-          latestProperties.value = fb2(t2(0, 4))
-          nearbyProperties.value = fb2(t2(4, 4))
-          featuredProperties.value = fb2(t2(8, 4))
-          topRatedProperties.value = [...next]
-            .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-            .slice(0, 4)
-        })
-        .catch(() => {})
-
-      return
-    }
-
-    const response = await api.accommodations.getAll(params)
-    const all = extractAccommodations(response)
-    setCachedAccommodations(params, all)
-
+  
+  // Always check cache first for instant display
+  const cached = getCachedAccommodations(params)
+  if (cached?.data?.length) {
+    const all = cached.data
     const take = (start, count) => all.slice(start, start + count)
     const fallback = (items) => (items.length ? items : take(0, 4))
 
@@ -344,6 +313,49 @@ const loadHomeProperties = async () => {
     topRatedProperties.value = [...all]
       .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
       .slice(0, 4)
+    isLoading.value = false
+
+    // Background refresh only if stale
+    if (!cached.isFresh) {
+      api.accommodations.getAll(params)
+        .then((fresh) => {
+          const freshList = extractAccommodations(fresh)
+          if (freshList.length) {
+            setCachedAccommodations(params, freshList)
+            const t2 = (start, count) => freshList.slice(start, start + count)
+            const fb2 = (items) => (items.length ? items : t2(0, 4))
+
+            latestProperties.value = fb2(t2(0, 4))
+            nearbyProperties.value = fb2(t2(4, 4))
+            featuredProperties.value = fb2(t2(8, 4))
+            topRatedProperties.value = [...freshList]
+              .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
+              .slice(0, 4)
+          }
+        })
+        .catch(() => {})
+    }
+    return
+  }
+
+  // No cache - fetch fresh data
+  isLoading.value = true
+  try {
+    const response = await api.accommodations.getAll(params)
+    const all = extractAccommodations(response)
+    if (all.length) {
+      setCachedAccommodations(params, all)
+
+      const take = (start, count) => all.slice(start, start + count)
+      const fallback = (items) => (items.length ? items : take(0, 4))
+
+      latestProperties.value = fallback(take(0, 4))
+      nearbyProperties.value = fallback(take(4, 4))
+      featuredProperties.value = fallback(take(8, 4))
+      topRatedProperties.value = [...all]
+        .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
+        .slice(0, 4)
+    }
   } catch (error) {
     console.error('Failed to load home properties:', error)
   } finally {
