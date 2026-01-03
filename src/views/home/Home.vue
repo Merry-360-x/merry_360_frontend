@@ -298,10 +298,10 @@ const extractAccommodations = (response) => {
   return []
 }
 
-const loadHomeProperties = async () => {
+const loadHomeProperties = () => {
   const params = { limit: 16 }
   
-  // Always check cache first for instant display
+  // Synchronously read cache - INSTANT display
   const cached = getCachedAccommodations(params)
   if (cached?.data?.length) {
     const all = cached.data
@@ -316,52 +316,42 @@ const loadHomeProperties = async () => {
       .slice(0, 4)
     isLoading.value = false
 
-    // Background refresh only if stale
+    // Silent background refresh if stale
     if (!cached.isFresh) {
-      api.accommodations.getAll(params)
-        .then((fresh) => {
-          const freshList = extractAccommodations(fresh)
-          if (freshList.length) {
-            setCachedAccommodations(params, freshList)
-            const t2 = (start, count) => freshList.slice(start, start + count)
-            const fb2 = (items) => (items.length ? items : t2(0, 4))
-
-            latestProperties.value = fb2(t2(0, 4))
-            nearbyProperties.value = fb2(t2(4, 4))
-            featuredProperties.value = fb2(t2(8, 4))
-            topRatedProperties.value = [...freshList]
-              .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-              .slice(0, 4)
-          }
-        })
-        .catch(() => {})
+      api.accommodations.getAll(params).then((fresh) => {
+        const freshList = extractAccommodations(fresh)
+        if (freshList.length) {
+          setCachedAccommodations(params, freshList)
+          const t2 = (start, count) => freshList.slice(start, start + count)
+          const fb2 = (items) => (items.length ? items : t2(0, 4))
+          latestProperties.value = fb2(t2(0, 4))
+          nearbyProperties.value = fb2(t2(4, 4))
+          featuredProperties.value = fb2(t2(8, 4))
+          topRatedProperties.value = [...freshList].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
+        }
+      }).catch(() => {})
     }
     return
   }
 
-  // No cache - fetch fresh data
+  // No cache - fetch in background, show spinner briefly
   isLoading.value = true
-  try {
-    const response = await api.accommodations.getAll(params)
+  api.accommodations.getAll(params).then((response) => {
     const all = extractAccommodations(response)
     if (all.length) {
       setCachedAccommodations(params, all)
-
       const take = (start, count) => all.slice(start, start + count)
       const fallback = (items) => (items.length ? items : take(0, 4))
-
       latestProperties.value = fallback(take(0, 4))
       nearbyProperties.value = fallback(take(4, 4))
       featuredProperties.value = fallback(take(8, 4))
-      topRatedProperties.value = [...all]
-        .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
-        .slice(0, 4)
+      topRatedProperties.value = [...all].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
     }
-  } catch (error) {
-    console.error('Failed to load home properties:', error)
-  } finally {
     isLoading.value = false
-  }
+  }).catch((error) => {
+    console.error('Failed to load home properties:', error)
+    isLoading.value = false
+  })
 }
 
 const buildSearchQuery = () => {

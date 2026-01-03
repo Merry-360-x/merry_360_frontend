@@ -67,17 +67,19 @@ export const getCachedAccommodations = (params = {}, { ttlMs = DEFAULT_TTL_MS } 
     if (!raw) return null
 
     const parsed = JSON.parse(raw)
-    const ts = Number(parsed?.ts)
+    const ts = parsed?.ts
     const data = parsed?.data
 
-    if (!Number.isFinite(ts) || !Array.isArray(data)) return null
+    if (!ts || !Array.isArray(data)) return null
 
     const age = Date.now() - ts
+    const isFresh = age >= 0 && age <= ttlMs
+    
     return {
       key,
       ts,
       age,
-      isFresh: age >= 0 && age <= ttlMs,
+      isFresh,
       data
     }
   } catch {

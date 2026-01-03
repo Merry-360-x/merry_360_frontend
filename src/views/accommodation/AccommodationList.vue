@@ -451,44 +451,41 @@ const applyLoadedAccommodations = (list, term = '') => {
   }))
 }
 
-const loadAccommodations = async (params = {}) => {
+const loadAccommodations = (params = {}) => {
   const term = String(params.q ?? params.search ?? '').trim()
 
-  // Always check cache first - instant display
+  // Synchronous cache read - INSTANT display
   const cached = getCachedAccommodations(params)
   if (cached?.data?.length) {
     applyLoadedAccommodations(cached.data, term)
     loading.value = false
 
-    // Background refresh only if stale
+    // Silent background refresh if stale
     if (!cached.isFresh) {
-      api.accommodations.getAll(params)
-        .then((fresh) => {
-          const freshList = Array.isArray(fresh?.data) ? fresh.data : []
-          if (freshList.length) {
-            setCachedAccommodations(params, freshList)
-            applyLoadedAccommodations(freshList, term)
-          }
-        })
-        .catch(() => {})
+      api.accommodations.getAll(params).then((fresh) => {
+        const freshList = Array.isArray(fresh?.data) ? fresh.data : []
+        if (freshList.length) {
+          setCachedAccommodations(params, freshList)
+          applyLoadedAccommodations(freshList, term)
+        }
+      }).catch(() => {})
     }
     return
   }
 
-  // No cache - fetch fresh
+  // No cache - fetch in background
   loading.value = true
-  try {
-    const response = await api.accommodations.getAll(params)
+  api.accommodations.getAll(params).then((response) => {
     const list = Array.isArray(response?.data) ? response.data : []
     if (list.length) {
       setCachedAccommodations(params, list)
       applyLoadedAccommodations(list, term)
     }
-  } catch (error) {
-    console.error('Failed to load accommodations:', error)
-  } finally {
     loading.value = false
-  }
+  }).catch((error) => {
+    console.error('Failed to load accommodations:', error)
+    loading.value = false
+  })
 }
 
 const performSearch = async () => {
