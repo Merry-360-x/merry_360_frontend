@@ -547,6 +547,9 @@
         </div>
       </div>
     </footer>
+
+    <!-- Live Chat Widget -->
+    <LiveChat />
   </div>
 </template>
 
@@ -560,6 +563,7 @@ import { useLanguageStore } from '../../stores/language'
 import { useThemeStore } from '../../stores/theme'
 import { useTranslation } from '../../composables/useTranslation'
 import AIConcierge from '../ai/AIConcierge.vue'
+import LiveChat from '../common/LiveChat.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 
 const router = useRouter()

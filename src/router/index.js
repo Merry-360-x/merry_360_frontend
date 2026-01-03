@@ -68,6 +68,7 @@ const AdminTransport = () => import('../views/admin/AdminTransport.vue')
 const AdminPayments = () => import('../views/admin/AdminPayments.vue')
 const AdminAnalytics = () => import('../views/admin/AdminAnalytics.vue')
 const AdminHostApplications = () => import('../views/admin/AdminHostApplications.vue')
+const LiveSupport = () => import('../views/admin/LiveSupport.vue')
 
 // Vendor
 const VendorDashboard = () => import('../views/vendor/VendorDashboard.vue')
@@ -327,6 +328,12 @@ const routes = [
     path: '/admin/host-applications',
     name: 'admin-host-applications',
     component: AdminHostApplications,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/live-support',
+    name: 'admin-live-support',
+    component: LiveSupport,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
