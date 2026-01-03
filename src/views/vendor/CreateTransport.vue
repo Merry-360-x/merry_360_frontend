@@ -133,28 +133,66 @@
               <h2 class="text-xl font-bold text-gray-900 mb-4">Images</h2>
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Main Image URL *</label>
-                <Input 
-                  v-model="form.image" 
-                  placeholder="https://example.com/vehicle.jpg"
-                  :class="errors.image ? 'border-red-500' : ''"
-                />
-                <p v-if="errors.image" class="mt-1 text-sm text-red-600">{{ errors.image }}</p>
-                <p class="mt-1 text-xs text-gray-500">Provide a direct image URL of your vehicle</p>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Vehicle Images *</label>
+                <div 
+                  class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-500 transition-colors cursor-pointer"
+                  @click="$refs.transportImageInput.click()"
+                >
+                  <input 
+                    ref="transportImageInput"
+                    type="file" 
+                    accept="image/jpeg,image/png,image/webp" 
+                    multiple 
+                    class="hidden" 
+                    @change="handleImageUpload"
+                  />
+                  <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                  </svg>
+                  <p class="text-gray-600 font-medium mb-1">Click to upload vehicle images</p>
+                  <p class="text-sm text-gray-500">Maximum 2MB per image (JPEG, PNG, WebP)</p>
+                </div>
+                <p v-if="errors.image" class="mt-2 text-sm text-red-600">{{ errors.image }}</p>
+                <p v-if="uploading" class="mt-2 text-sm text-blue-600">Uploading images...</p>
               </div>
 
-              <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Images (optional)</label>
-                <div v-for="(img, index) in form.additionalImages" :key="index" class="flex gap-2 mb-2">
-                  <Input 
-                    v-model="form.additionalImages[index]" 
-                    placeholder="https://example.com/image.jpg"
+              <!-- Uploaded Images Preview -->
+              <div v-if="uploadedImages.length > 0" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div 
+                  v-for="(img, index) in uploadedImages" 
+                  :key="img.id"
+                  class="relative aspect-video rounded-lg overflow-hidden bg-gray-100 group"
+                >
+                  <img 
+                    v-if="img.status === 'ready'" 
+                    :src="img.url" 
+                    :alt="`Vehicle image ${index + 1}`" 
+                    class="w-full h-full object-cover" 
                   />
-                  <Button type="button" variant="secondary" @click="removeImage(index)">Remove</Button>
+                  <div v-else-if="img.status === 'uploading'" class="absolute inset-0 flex items-center justify-center">
+                    <svg class="animate-spin h-8 w-8 text-brand-600" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                  <div v-else-if="img.status === 'error'" class="absolute inset-0 flex items-center justify-center bg-red-50">
+                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </div>
+                  <button 
+                    @click="removeImage(index)"
+                    type="button"
+                    class="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                  <div v-if="index === 0" class="absolute bottom-2 left-2 px-2 py-1 bg-brand-600 text-white text-xs rounded">
+                    Main
+                  </div>
                 </div>
-                <Button type="button" variant="secondary" @click="addImage" class="mt-2">
-                  Add Image
-                </Button>
               </div>
             </div>
 
@@ -239,6 +277,8 @@ import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
+import { uploadToCloudinary } from '../../services/cloudinary'
+import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
 
 const router = useRouter()
 const route = useRoute()
@@ -273,6 +313,8 @@ const form = ref({
 const errors = ref({})
 const isSubmitting = ref(false)
 const showSuccess = ref(false)
+const uploading = ref(false)
+const uploadedImages = ref([])
 
 const availableFeatures = [
   'A/C', 'WiFi', 'GPS', 'Child Seat', 
@@ -280,12 +322,76 @@ const availableFeatures = [
   'Pet Friendly', 'Wheelchair Access', 'Music System', 'Phone Charger'
 ]
 
-const addImage = () => {
-  form.value.additionalImages.push('')
+const handleImageUpload = async (event) => {
+  const files = Array.from(event.target.files)
+  if (!files.length) return
+
+  // Validate file sizes
+  const oversizedFiles = files.filter(f => f.size > 2 * 1024 * 1024)
+  if (oversizedFiles.length > 0) {
+    const fileNames = oversizedFiles.map(f => `${f.name} (${(f.size / (1024 * 1024)).toFixed(2)}MB)`).join(', ')
+    showToast(`These files exceed 2MB limit: ${fileNames}`, 'error')
+    return
+  }
+
+  uploading.value = true
+  event.target.value = ''
+
+  const isCloudinaryConfigured = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+
+  const tasks = files.map((file) => async () => {
+    const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`
+    const previewUrl = URL.createObjectURL(file)
+
+    uploadedImages.value.push({ id, url: previewUrl, status: 'uploading' })
+
+    const updateById = (patch) => {
+      const idx = uploadedImages.value.findIndex((img) => img.id === id)
+      if (idx === -1) {
+        if (previewUrl) URL.revokeObjectURL(previewUrl)
+        return
+      }
+      uploadedImages.value[idx] = { ...uploadedImages.value[idx], ...patch }
+    }
+
+    try {
+      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+
+      if (isCloudinaryConfigured) {
+        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/transport' })
+        updateById({ url: result.secure_url, status: 'ready' })
+      } else {
+        const dataUrl = await fileToDataUrl(optimized)
+        updateById({ url: dataUrl, status: 'ready' })
+      }
+    } catch (error) {
+      console.error('Upload error:', error)
+      updateById({ status: 'error' })
+      showToast(`Failed to upload ${file.name}`, 'error')
+    } finally {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  })
+
+  // Run uploads with concurrency limit
+  const runWithConcurrency = async (tasks, limit = 3) => {
+    const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
+      while (tasks.length) {
+        const task = tasks.shift()
+        if (task) await task()
+      }
+    })
+    await Promise.all(workers)
+  }
+
+  await runWithConcurrency(tasks, 3)
+  uploading.value = false
 }
 
 const removeImage = (index) => {
-  form.value.additionalImages.splice(index, 1)
+  uploadedImages.value.splice(index, 1)
 }
 
 const validateForm = () => {
@@ -297,7 +403,7 @@ const validateForm = () => {
   if (!form.value.description) errors.value.description = 'Description is required'
   if (!form.value.capacity || form.value.capacity <= 0) errors.value.capacity = 'Valid capacity is required'
   if (!form.value.price || form.value.price <= 0) errors.value.price = 'Valid price is required'
-  if (!form.value.image) errors.value.image = 'Main image is required'
+  if (uploadedImages.value.length === 0) errors.value.image = 'At least one vehicle image is required'
   
   return Object.keys(errors.value).length === 0
 }
@@ -311,6 +417,11 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
+    // Get all uploaded image URLs
+    const imageUrls = uploadedImages.value
+      .filter(img => img.status === 'ready')
+      .map(img => img.url)
+
     const transportData = {
       name: form.value.name,
       vehicle_type: form.value.vehicleType,
@@ -320,8 +431,8 @@ const handleSubmit = async () => {
       luggage: form.value.luggage,
       price: form.value.price,
       duration: form.value.duration,
-      image: form.value.image,
-      images: [form.value.image, ...form.value.additionalImages.filter(img => img)],
+      image: imageUrls[0], // First image is main image
+      images: imageUrls,
       features: form.value.features,
       driver_name: form.value.driverName,
       driver_experience: form.value.driverExperience,
