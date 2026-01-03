@@ -3,7 +3,16 @@
     <!-- Airbnb-style Hero + Search -->
     <section class="relative overflow-hidden">
       <div class="absolute inset-0">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover">
+        <video 
+          autoplay 
+          muted 
+          loop 
+          playsinline 
+          loading="lazy"
+          preload="metadata"
+          poster="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80"
+          class="w-full h-full object-cover"
+        >
           <source src="/videos/Merry.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-black/40"></div>

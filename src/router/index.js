@@ -3,80 +3,82 @@ import { supabase } from '@/services/supabase'
 import { useUserStore } from '@/stores/userStore'
 import { useTranslation } from '@/composables/useTranslation'
 
-// Onboarding
-import SplashScreen from '../views/onboarding/SplashScreen.vue'
-import WelcomeSlider from '../views/onboarding/WelcomeSlider.vue'
+// Critical routes - load immediately
+import Home from '../views/home/Home.vue'
 import Login from '../views/onboarding/Login.vue'
 import Signup from '../views/onboarding/Signup.vue'
-import ForgotPassword from '../views/onboarding/ForgotPassword.vue'
-import ResetPassword from '../views/onboarding/ResetPassword.vue'
-import AuthCallback from '../views/onboarding/AuthCallback.vue'
+
+// Lazy load all other routes for better performance
+const SplashScreen = () => import('../views/onboarding/SplashScreen.vue')
+const WelcomeSlider = () => import('../views/onboarding/WelcomeSlider.vue')
+const ForgotPassword = () => import('../views/onboarding/ForgotPassword.vue')
+const ResetPassword = () => import('../views/onboarding/ResetPassword.vue')
+const AuthCallback = () => import('../views/onboarding/AuthCallback.vue')
 
 // Home
-import Home from '../views/home/Home.vue'
-import PropertyHome from '../views/home/PropertyHome.vue'
+const PropertyHome = () => import('../views/home/PropertyHome.vue')
 
 // About
-import About from '../views/about/About.vue'
+const About = () => import('../views/about/About.vue')
 
-// Accommodation
-import AccommodationList from '../views/accommodation/AccommodationList.vue'
-import AccommodationDetail from '../views/accommodation/AccommodationDetail.vue'
-import AccommodationCheckout from '../views/accommodation/AccommodationCheckout.vue'
+// Accommodation - lazy load for better initial load
+const AccommodationList = () => import('../views/accommodation/AccommodationList.vue')
+const AccommodationDetail = () => import('../views/accommodation/AccommodationDetail.vue')
+const AccommodationCheckout = () => import('../views/accommodation/AccommodationCheckout.vue')
 
 // Transport
-import TransportList from '../views/transport/TransportList.vue'
-import TransportBooking from '../views/transport/TransportBooking.vue'
-import TransportServices from '../views/transport/TransportServices.vue'
+const TransportList = () => import('../views/transport/TransportList.vue')
+const TransportBooking = () => import('../views/transport/TransportBooking.vue')
+const TransportServices = () => import('../views/transport/TransportServices.vue')
 
 // Tours
-import ToursList from '../views/tours/ToursList.vue'
-import TourDetail from '../views/tours/TourDetail.vue'
-import TourBooking from '../views/tours/TourBooking.vue'
-import ToursPage from '../views/tours/ToursPage.vue'
+const ToursList = () => import('../views/tours/ToursList.vue')
+const TourDetail = () => import('../views/tours/TourDetail.vue')
+const TourBooking = () => import('../views/tours/TourBooking.vue')
+const ToursPage = () => import('../views/tours/ToursPage.vue')
 
 // Services
-import ServicesPage from '../views/services/ServicesPage.vue'
+const ServicesPage = () => import('../views/services/ServicesPage.vue')
 
 // Host
-import BecomeHost from '../views/host/BecomeHost.vue'
+const BecomeHost = () => import('../views/host/BecomeHost.vue')
 
 // Dashboard
-import UserDashboard from '../views/dashboard/UserDashboard.vue'
-import MyTrips from '../views/dashboard/MyTrips.vue'
-import Messages from '../views/dashboard/Messages.vue'
+const UserDashboard = () => import('../views/dashboard/UserDashboard.vue')
+const MyTrips = () => import('../views/dashboard/MyTrips.vue')
+const Messages = () => import('../views/dashboard/Messages.vue')
 
 // Cart
-import TripCart from '../views/cart/TripCart.vue'
-import Checkout from '../views/cart/Checkout.vue'
+const TripCart = () => import('../views/cart/TripCart.vue')
+const Checkout = () => import('../views/cart/Checkout.vue')
 
 // Wishlist
-import Wishlist from '../views/wishlist/Wishlist.vue'
+const Wishlist = () => import('../views/wishlist/Wishlist.vue')
 
 // Stories
-import Stories from '../views/stories/Stories.vue'
+const Stories = () => import('../views/stories/Stories.vue')
 
-// Admin
-import AdminDashboard from '../views/admin/AdminDashboard.vue'
-import ManageProperties from '../views/admin/ManageProperties.vue'
-import AdminAccommodations from '../views/admin/AdminAccommodations.vue'
-import AdminUsers from '../views/admin/AdminUsers.vue'
-import AdminTours from '../views/admin/AdminTours.vue'
-import AdminTransport from '../views/admin/AdminTransport.vue'
-import AdminPayments from '../views/admin/AdminPayments.vue'
-import AdminAnalytics from '../views/admin/AdminAnalytics.vue'
-import AdminHostApplications from '../views/admin/AdminHostApplications.vue'
+// Admin - heavy pages, definitely lazy load
+const AdminDashboard = () => import('../views/admin/AdminDashboard.vue')
+const ManageProperties = () => import('../views/admin/ManageProperties.vue')
+const AdminAccommodations = () => import('../views/admin/AdminAccommodations.vue')
+const AdminUsers = () => import('../views/admin/AdminUsers.vue')
+const AdminTours = () => import('../views/admin/AdminTours.vue')
+const AdminTransport = () => import('../views/admin/AdminTransport.vue')
+const AdminPayments = () => import('../views/admin/AdminPayments.vue')
+const AdminAnalytics = () => import('../views/admin/AdminAnalytics.vue')
+const AdminHostApplications = () => import('../views/admin/AdminHostApplications.vue')
 
 // Vendor
-import VendorDashboard from '../views/vendor/VendorDashboard.vue'
-import CreateProperty from '../views/vendor/CreateProperty.vue'
-import CreateTour from '../views/vendor/CreateTour.vue'
-import CreateTransport from '../views/vendor/CreateTransport.vue'
+const VendorDashboard = () => import('../views/vendor/VendorDashboard.vue')
+const CreateProperty = () => import('../views/vendor/CreateProperty.vue')
+const CreateTour = () => import('../views/vendor/CreateTour.vue')
+const CreateTransport = () => import('../views/vendor/CreateTransport.vue')
 
 // Staff
-import StaffDashboard from '../views/staff/StaffDashboard.vue'
-import StaffProperties from '../views/staff/StaffProperties.vue'
-import StaffAddProperty from '../views/staff/StaffAddProperty.vue'
+const StaffDashboard = () => import('../views/staff/StaffDashboard.vue')
+const StaffProperties = () => import('../views/staff/StaffProperties.vue')
+const StaffAddProperty = () => import('../views/staff/StaffAddProperty.vue')
 
 const routes = [
   {
