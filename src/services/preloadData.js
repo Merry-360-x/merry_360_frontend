@@ -1,10 +1,10 @@
 /**
  * Aggressive data pre-loading
  * Fetches critical data immediately on app boot for instant page loads
+ * Now using ultra-fast fetching with in-memory caching
  */
 
-import { supabaseApiAdapter } from './supabaseApiAdapter'
-import { getCachedAccommodations } from './accommodationCache'
+import fastFetch from './fastFetch'
 
 let preloadPromise = null
 let isPreloaded = false
@@ -12,23 +12,16 @@ let isPreloaded = false
 export const preloadCriticalData = () => {
   if (preloadPromise) return preloadPromise
 
-  // Check if we already have cached data - if so, we're already "preloaded"
-  const cached = getCachedAccommodations({ limit: 8 })
-  if (cached?.data?.length) {
-    isPreloaded = true
-    console.log('✅ Data already cached, instant load ready')
-    return Promise.resolve()
-  }
-
   preloadPromise = (async () => {
     try {
-      console.log('🚀 Preloading critical data...')
+      console.log('🚀 Preloading critical data with ultra-fast fetch...')
       const start = performance.now()
       
-      // Pre-fetch properties for instant homepage/accommodations load
-      await Promise.all([
-        supabaseApiAdapter.accommodations.getAll({ limit: 8 }),
-        supabaseApiAdapter.tours?.getAll?.({ limit: 8 }).catch(() => {}),
+      // Pre-fetch properties with aggressive caching for instant load
+      await Promise.allSettled([
+        fastFetch.fetchAccommodations({ limit: 8, minimal: true }),
+        fastFetch.fetchAccommodations({ limit: 20, minimal: false }),
+        fastFetch.fetchAccommodations({ limit: 12, minimal: true })
       ])
       
       const end = performance.now()
@@ -36,6 +29,7 @@ export const preloadCriticalData = () => {
       console.log(`✅ Critical data preloaded in ${Math.round(end - start)}ms`)
     } catch (error) {
       console.warn('⚠️ Preload failed, will fetch on demand:', error)
+      isPreloaded = true
     }
   })()
 

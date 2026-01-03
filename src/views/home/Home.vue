@@ -232,6 +232,7 @@ import { useTranslation } from '@/composables/useTranslation'
 import api from '@/services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
 import { waitForPreload } from '@/services/preloadData'
+import fastFetch from '@/services/fastFetch'
 
 const router = useRouter()
 const { t } = useTranslation()
@@ -299,21 +300,24 @@ const extractAccommodations = (response) => {
   return []
 }
 
-const loadHomeProperties = () => {
-  // Fetch only 8 properties initially for faster load
-  const params = { limit: 8 }
-  
-  // Synchronously read cache - INSTANT display
-  const cached = getCachedAccommodations(params)
-  if (cached?.data?.length) {
-    const all = cached.data
+const loadHomeProperties = async () => {
+  try {
+    // Ultra-fast fetch with aggressive caching
+    const result = await fastFetch.fetchAccommodations({ limit: 8, minimal: true })
+    const all = result.data || []
+    
+    if (all.length === 0) {
+      isLoading.value = false
+      return
+    }
+    
     const take = (start, count) => all.slice(start, start + count)
     
-    // Show first 4 immediately for ultra-fast load
+    // Show first 4 immediately
     latestProperties.value = take(0, 4)
     isLoading.value = false
     
-    // Load other sections slightly delayed for progressive rendering
+    // Progressive load other sections (non-blocking)
     setTimeout(() => {
       nearbyProperties.value = take(4, 4).length ? take(4, 4) : take(0, 4)
       featuredProperties.value = all.length > 4 ? take(0, 4) : []
@@ -321,49 +325,15 @@ const loadHomeProperties = () => {
         .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
         .slice(0, 4)
       sectionsLoaded.value = true
-    }, 50)
-
-    // Silent background refresh if stale
-    if (!cached.isFresh) {
-      api.accommodations.getAll(params).then((fresh) => {
-        const freshList = extractAccommodations(fresh)
-        if (freshList.length) {
-          setCachedAccommodations(params, freshList)
-          const t2 = (start, count) => freshList.slice(start, start + count)
-          latestProperties.value = t2(0, 4)
-          nearbyProperties.value = t2(4, 4).length ? t2(4, 4) : t2(0, 4)
-          featuredProperties.value = freshList.length > 4 ? t2(0, 4) : []
-          topRatedProperties.value = [...freshList].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
-        }
-      }).catch(() => {})
-    }
-    return
-  }
-
-  // No cache - fetch in background, show spinner briefly
-  isLoading.value = true
-  api.accommodations.getAll(params).then((response) => {
-    const all = extractAccommodations(response)
-    if (all.length) {
-      setCachedAccommodations(params, all)
-      const take = (start, count) => all.slice(start, start + count)
-      latestProperties.value = take(0, 4)
-      isLoading.value = false
       
-      // Progressive load other sections
-      setTimeout(() => {
-        nearbyProperties.value = take(4, 4).length ? take(4, 4) : take(0, 4)
-        featuredProperties.value = all.length > 4 ? take(0, 4) : []
-        topRatedProperties.value = [...all].sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0)).slice(0, 4)
-        sectionsLoaded.value = true
-      }, 50)
-    } else {
-      isLoading.value = false
-    }
-  }).catch((error) => {
+      // Prefetch more data for accommodations page
+      fastFetch.prefetchNextPage({ limit: 20 })
+    }, 50)
+    
+  } catch (error) {
     console.error('Failed to load home properties:', error)
     isLoading.value = false
-  })
+  }
 }
 
 const buildSearchQuery = () => {

@@ -374,6 +374,7 @@ import Card from '../../components/common/Card.vue'
 import MapView from '../../components/common/MapView.vue'
 import api from '../../services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
+import fastFetch from '@/services/fastFetch'
 
 const router = useRouter()
 const route = useRoute()
@@ -451,41 +452,35 @@ const applyLoadedAccommodations = (list, term = '') => {
   }))
 }
 
-const loadAccommodations = (params = {}) => {
+const loadAccommodations = async (params = {}) => {
   const term = String(params.q ?? params.search ?? '').trim()
-
-  // Synchronous cache read - INSTANT display
-  const cached = getCachedAccommodations(params)
-  if (cached?.data?.length) {
-    applyLoadedAccommodations(cached.data, term)
-    loading.value = false
-
-    // Silent background refresh if stale
-    if (!cached.isFresh) {
-      api.accommodations.getAll(params).then((fresh) => {
-        const freshList = Array.isArray(fresh?.data) ? fresh.data : []
-        if (freshList.length) {
-          setCachedAccommodations(params, freshList)
-          applyLoadedAccommodations(freshList, term)
-        }
-      }).catch(() => {})
-    }
-    return
-  }
-
-  // No cache - fetch in background
-  loading.value = true
-  api.accommodations.getAll(params).then((response) => {
-    const list = Array.isArray(response?.data) ? response.data : []
+  
+  try {
+    loading.value = true
+    
+    // Ultra-fast fetch with smart caching
+    const result = await fastFetch.fetchAccommodations({ 
+      ...params, 
+      limit: params.limit || 30,
+      minimal: false // Full details for listing page
+    })
+    
+    const list = result.data || []
+    
     if (list.length) {
-      setCachedAccommodations(params, list)
       applyLoadedAccommodations(list, term)
+      
+      // Prefetch next batch in background
+      if (list.length >= 20) {
+        setTimeout(() => fastFetch.prefetchNextPage(params), 500)
+      }
     }
+    
     loading.value = false
-  }).catch((error) => {
+  } catch (error) {
     console.error('Failed to load accommodations:', error)
     loading.value = false
-  })
+  }
 }
 
 const performSearch = async () => {
