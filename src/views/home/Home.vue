@@ -194,10 +194,10 @@
               {{ t('home.browseMore') }}
             </router-link>
           </div>
-          <div v-if="isLoading" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <PropertyCardSkeleton v-for="n in 4" :key="`skeleton-${n}`" />
+          <div v-if="isLoading" class="grid grid-cols-5 gap-4">
+            <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
           </div>
-          <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div v-else class="grid grid-cols-5 gap-4">
             <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
           </div>
         </div>
@@ -311,8 +311,8 @@ const extractAccommodations = (response) => {
 
 const loadHomeProperties = async () => {
   try {
-    // Ultra-fast fetch with aggressive caching
-    const result = await fastFetch.fetchAccommodations({ limit: 8, minimal: true })
+    // Ultra-fast fetch with aggressive caching - fetch 10 for 2x5 grid
+    const result = await fastFetch.fetchAccommodations({ limit: 10, minimal: true })
     const all = result.data || []
     
     if (all.length === 0) {
@@ -322,13 +322,13 @@ const loadHomeProperties = async () => {
     
     const take = (start, count) => all.slice(start, start + count)
     
-    // Show first 4 immediately
-    latestProperties.value = take(0, 4)
+    // Show first 10 immediately for 2x5 grid
+    latestProperties.value = take(0, 10)
     isLoading.value = false
     
     // Progressive load other sections (non-blocking)
     setTimeout(() => {
-      nearbyProperties.value = take(4, 4).length ? take(4, 4) : take(0, 4)
+      nearbyProperties.value = take(0, 10)
       featuredProperties.value = all.length > 4 ? take(0, 4) : []
       topRatedProperties.value = [...all]
         .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))

@@ -223,124 +223,21 @@
             />
           </div>
 
-          <!-- List View -->
-          <div v-if="viewMode === 'list'" class="space-y-4 sm:space-y-6">
-            <div v-for="group in groupedAccommodations" :key="group.type" class="space-y-3">
-              <div class="flex items-center justify-between">
-                <h3 class="text-base sm:text-lg font-semibold text-text-brand-600">{{ t(propertyTypeLabelKey[group.type] || group.type) }}</h3>
-                <p class="text-xs sm:text-sm text-text-secondary">
-                  {{ group.items.length }} {{ t(group.items.length === 1 ? 'accommodationList.listingSingular' : 'accommodationList.listingPlural') }}
-                </p>
-              </div>
-
-              <div 
-                v-for="accommodation in group.items" 
-                :key="accommodation.id"
-                @click="goToDetails(accommodation.id)"
-                class="bg-white dark:bg-gray-800 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1"
-              >
-                <div class="grid md:grid-cols-3 gap-0">
-                  <!-- Image -->
-                  <div class="relative h-56 sm:h-64 md:h-auto">
-                    <img loading="lazy" 
-                      :src="accommodation.image" 
-                      :alt="accommodation.name" 
-                      class="w-full h-full object-cover"
-                    />
-                    <button 
-                      @click.stop="toggleFavorite(accommodation.id)"
-                      class="absolute top-3 right-3 w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                    >
-                      <svg 
-                        class="w-6 h-6" 
-                        :class="accommodation.isFavorite ? 'text-brand-600 fill-current' : 'text-text-muted'"
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                      </svg>
-                    </button>
-                    <div v-if="accommodation.eco" class="absolute top-3 left-3 bg-success text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center">
-                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
-                      </svg>
-                      {{ t('accommodationList.eco') }}
-                    </div>
-                  </div>
-
-                  <!-- Content -->
-                  <div class="md:col-span-2 p-6">
-                    <div class="flex items-start justify-between mb-2">
-                      <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                          <h3 class="text-xl font-semibold text-text-brand-600">{{ accommodation.name }}</h3>
-                          <span class="inline-flex items-center px-2 py-1 bg-brand-500 bg-opacity-10 text-brand-600 text-xs font-semibold rounded">
-                            {{ t(propertyTypeLabelKey[accommodation.type] || accommodation.type) }}
-                          </span>
-                        </div>
-                        <p class="text-text-secondary text-sm flex items-center">
-                          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                          </svg>
-                          {{ accommodation.location }}
-                        </p>
-                      </div>
-                      <div class="text-right">
-                        <div class="flex items-center gap-1 mb-1">
-                          <span class="text-lg font-bold text-text-brand-600">{{ accommodation.rating }}</span>
-                            <svg class="w-4 h-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                        </div>
-                        <p class="text-xs text-text-secondary">{{ t('accommodationList.reviewsCount', { count: accommodation.reviews }) }}</p>
-                      </div>
-                    </div>
-
-                    <p class="text-text-secondary mb-4">{{ accommodation.description }}</p>
-
-                    <!-- Amenities -->
-                    <div class="flex flex-wrap gap-2 mb-4">
-                      <span 
-                        v-for="amenity in accommodation.amenities.slice(0, 4)" 
-                        :key="amenity"
-                        class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-text-secondary text-xs rounded"
-                      >
-                        {{ amenity }}
-                      </span>
-                      <span v-if="accommodation.amenities.length > 4" class="px-2 py-1 text-text-secondary text-xs">
-                        {{ t('accommodationList.moreAmenities', { count: accommodation.amenities.length - 4 }) }}
-                      </span>
-                    </div>
-
-                    <!-- Price and CTA -->
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 pt-4 border-t border-gray-100 dark:border-gray-700">
-                      <div>
-                        <div class="flex items-baseline gap-1 flex-wrap">
-                          <span class="text-xl sm:text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(accommodation.price) }}</span>
-                          <span class="text-text-secondary text-sm sm:text-base whitespace-nowrap">{{ t('accommodationList.perNightShort') }}</span>
-                        </div>
-                        <p class="text-xs text-text-secondary">{{ t('accommodationList.includesTaxesAndFees') }}</p>
-                      </div>
-                      <div class="flex gap-2 w-full sm:w-auto">
-                        <button 
-                          @click.stop="addToCart(accommodation)"
-                          class="flex-1 sm:flex-none px-3 sm:px-4 py-2 sm:py-2.5 border-2 border-brand-500 text-brand-600 rounded-lg hover:bg-brand-50 transition-all duration-200 font-medium text-sm sm:text-base flex items-center justify-center gap-1"
-                        >
-                          {{ t('accommodation.addToCart') }}
-                        </button>
-                        <button 
-                          @click.stop="goToDetails(accommodation.id)"
-                          class="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 font-medium text-sm sm:text-base transform hover:scale-105"
-                        >
-                          {{ t('accommodation.details') }}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <!-- Grid View (2 rows x 5 columns) -->
+          <div v-if="viewMode === 'list'">
+            <!-- Loading State -->
+            <div v-if="loading" class="grid grid-cols-5 gap-4">
+              <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
+            </div>
+            
+            <!-- Loaded State: Grid Layout -->
+            <div v-else class="grid grid-cols-5 gap-4">
+              <PropertyCard
+                v-for="property in filteredAccommodations"
+                :key="property.id"
+                :property="property"
+                @click="goToDetails(property.id)"
+              />
             </div>
           </div>
 
@@ -372,6 +269,8 @@ import { useToast } from '../../composables/useToast.js'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import MapView from '../../components/common/MapView.vue'
+import PropertyCard from '@/components/common/PropertyCard.vue'
+import PropertyCardSkeleton from '@/components/common/PropertyCardSkeleton.vue'
 import api from '../../services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
 import fastFetch from '@/services/fastFetch'
