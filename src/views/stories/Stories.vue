@@ -1,30 +1,84 @@
 <template>
   <MainLayout>
     <!-- Stories Header -->
-    <section class="bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 dark:from-brand-800 dark:via-brand-900 dark:to-gray-900 py-12 transition-colors duration-200">
+    <section class="bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 dark:from-brand-800 dark:via-brand-900 dark:to-gray-900 py-8 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center mb-8">
-          <h1 class="text-3xl sm:text-4xl font-bold mb-3 text-white">{{ t('stories.travelStoriesTitle') }}</h1>
-          <p class="text-base md:text-lg text-white/90">{{ t('stories.travelStoriesSubtitle') }}</p>
-        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-white">{{ t('stories.travelStoriesTitle') }}</h1>
         
-        <!-- Add Story Button -->
-        <div class="flex justify-center">
+        <!-- Instagram-style Stories Carousel -->
+        <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          <!-- Add Your Story -->
           <button 
             @click="openCreateStory"
-            class="flex items-center gap-2 px-6 py-3 bg-white text-brand-600 font-semibold rounded-full hover:bg-gray-100 transition-colors shadow-lg"
+            class="flex flex-col items-center gap-2 flex-shrink-0"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            {{ t('stories.shareYourStory') }}
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 p-0.5 shadow-lg">
+              <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
+                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+              </div>
+            </div>
+            <span class="text-white text-xs font-medium">{{ t('stories.addStory') }}</span>
           </button>
+
+          <!-- User Stories -->
+          <div
+            v-for="userStory in groupedStories"
+            :key="userStory.userId"
+            @click="openUserStories(userStory)"
+            class="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer group"
+          >
+            <div class="relative">
+              <!-- Story Ring with Segments -->
+              <svg class="w-20 h-20 absolute -inset-0.5 -rotate-90" viewBox="0 0 100 100">
+                <circle 
+                  v-for="(story, index) in userStory.stories"
+                  :key="story.id"
+                  cx="50" 
+                  cy="50" 
+                  r="48"
+                  fill="none"
+                  :stroke="story.viewed ? '#9CA3AF' : 'url(#gradient)'"
+                  stroke-width="3"
+                  :stroke-dasharray="`${segmentLength(userStory.stories.length)} ${circleCircumference - segmentLength(userStory.stories.length)}`"
+                  :stroke-dashoffset="segmentOffset(index, userStory.stories.length)"
+                  stroke-linecap="round"
+                />
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              
+              <!-- Profile Picture -->
+              <div class="w-20 h-20 rounded-full overflow-hidden bg-brand-500 border-2 border-white group-hover:scale-105 transition-transform">
+                <img
+                  v-if="userStory.avatar"
+                  :src="userStory.avatar"
+                  :alt="userStory.author"
+                  class="w-full h-full object-cover"
+                />
+                <span v-else class="w-full h-full flex items-center justify-center text-white font-bold text-xl">
+                  {{ (userStory.author || 'U').charAt(0).toUpperCase() }}
+                </span>
+              </div>
+              
+              <!-- Story Count Badge -->
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-brand-600 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                {{ userStory.stories.length }}
+              </div>
+            </div>
+            <span class="text-white text-xs font-medium truncate max-w-[80px]">{{ userStory.author }}</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Stories Grid -->
-    <section class="py-12 md:py-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <!-- Recent Stories Section -->
+    <section class="py-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Loading State -->
         <div v-if="loading" class="text-center py-20">
@@ -33,7 +87,9 @@
         </div>
 
         <!-- Stories Grid -->
-        <div v-else-if="stories.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div v-else-if="stories.length > 0">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('stories.recentStories') }}</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           <div
             v-for="story in stories"
             :key="story.id"
@@ -105,6 +161,7 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
 
         <!-- Empty State -->
@@ -175,10 +232,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {{ t('stories.form.mediaLabel') }}
-              <span v-if="newStory.mediaFiles.length > 0" class="text-brand-500 ml-2">({{ newStory.mediaFiles.length }})</span>
-            </label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('stories.form.mediaLabel') }}</label>
             <div 
               class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-brand-500 transition-colors"
               @click="$refs.storyImageInput.click()"
@@ -187,50 +241,26 @@
                 ref="storyImageInput"
                 type="file" 
                 accept="image/*,video/*" 
-                multiple
                 class="hidden" 
-                @change="handleStoryImages"
+                @change="handleStoryImage"
               />
-              <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('stories.clickToUploadMultipleMedia') }}</p>
-              <p class="text-xs text-gray-400 mt-1">{{ t('stories.multipleMediaHint') }}</p>
-            </div>
-            
-            <!-- Media Thumbnails -->
-            <div v-if="newStory.mediaFiles.length > 0" class="mt-4 grid grid-cols-3 gap-3">
-              <div 
-                v-for="(media, index) in newStory.mediaFiles" 
-                :key="index"
-                class="relative group"
-              >
+              <div v-if="newStory.imagePreview">
                 <video
-                  v-if="media.type === 'video'"
-                  :src="media.preview"
-                  class="w-full h-24 object-cover rounded-lg"
+                  v-if="newStory.mediaType === 'video'"
+                  :src="newStory.imagePreview"
+                  class="w-full h-40 object-cover rounded-lg mb-2"
                   muted
                   playsinline
                   preload="metadata"
                 />
-                <img 
-                  v-else
-                  :src="media.preview" 
-                  class="w-full h-24 object-cover rounded-lg" 
-                />
-                <button
-                  type="button"
-                  @click.stop="removeMedia(index)"
-                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
-                <!-- Upload status indicator -->
-                <div v-if="!media.url" class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
-                  <div class="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
-                </div>
+                <img v-else :src="newStory.imagePreview" class="w-full h-40 object-cover rounded-lg mb-2" />
+                <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('stories.clickToChangeMedia') }}</p>
+              </div>
+              <div v-else>
+                <svg class="w-10 h-10 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-sm text-gray-600 dark:text-gray-400">{{ t('stories.clickToUploadMedia') }}</p>
               </div>
             </div>
           </div>
@@ -255,8 +285,152 @@
       </div>
     </div>
 
-    <!-- Story Viewer Modal -->
-    <div v-if="activeStory" class="fixed inset-0 z-50 bg-black" @click="closeStory">
+    <!-- Instagram-Style Story Viewer Modal -->
+    <div v-if="activeUserStories" class="fixed inset-0 z-50 bg-black" @click="closeStoryViewer">
+      <div class="h-full max-w-lg mx-auto relative" @click.stop>
+        <!-- Progress Bars -->
+        <div class="absolute top-2 left-2 right-2 z-30 flex gap-1">
+          <div
+            v-for="(story, index) in activeUserStories.stories"
+            :key="story.id"
+            class="flex-1 h-0.5 bg-white/30 rounded-full overflow-hidden"
+          >
+            <div 
+              class="h-full bg-white transition-all duration-300"
+              :style="{ width: getProgressWidth(index) + '%' }"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Story Content -->
+        <div class="relative h-full" v-if="currentStory">
+          <video
+            v-if="isVideoUrl(storyPrimaryMedia(currentStory))"
+            ref="storyVideo"
+            :src="storyPrimaryMedia(currentStory)"
+            class="w-full h-full object-contain bg-black"
+            playsinline
+            @ended="nextStory"
+            @loadedmetadata="onMediaLoaded"
+          />
+          <img
+            v-else
+            :src="storyPrimaryMedia(currentStory)"
+            :alt="currentStory.title"
+            class="w-full h-full object-contain bg-black"
+            @load="onMediaLoaded"
+          />
+
+          <!-- Navigation Areas -->
+          <div class="absolute inset-0 flex">
+            <div class="w-1/3 h-full cursor-pointer" @click="previousStory"></div>
+            <div class="w-1/3 h-full cursor-pointer" @click="togglePause"></div>
+            <div class="w-1/3 h-full cursor-pointer" @click="nextStory"></div>
+          </div>
+          
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 pointer-events-none"></div>
+
+          <!-- User Header -->
+          <div class="absolute top-12 left-4 right-16 flex items-center gap-3 z-20 pointer-events-none">
+            <div class="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-brand-500 flex-shrink-0">
+              <img
+                v-if="activeUserStories.avatar"
+                :src="activeUserStories.avatar"
+                :alt="activeUserStories.author"
+                class="w-full h-full object-cover"
+              />
+              <span v-else class="w-full h-full flex items-center justify-center text-white font-bold text-sm">
+                {{ (activeUserStories.author || 'U').charAt(0).toUpperCase() }}
+              </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-white font-semibold text-sm">{{ activeUserStories.author }}</p>
+              <p class="text-white/80 text-xs">{{ formatTimeAgo(currentStory.created_at) }}</p>
+            </div>
+          </div>
+
+          <!-- Close Button -->
+          <button
+            @click.stop="closeStoryViewer"
+            class="absolute top-12 right-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors z-20 pointer-events-auto"
+          >
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+
+          <!-- Story Content Info -->
+          <div class="absolute bottom-24 left-4 right-4 z-20 pointer-events-none">
+            <h3 class="text-white text-lg font-bold mb-1">{{ currentStory.title }}</h3>
+            <p class="text-white/90 text-sm line-clamp-2">{{ currentStory.content }}</p>
+            <div class="flex items-center gap-2 mt-2">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-white text-sm">{{ currentStory.location }}</span>
+            </div>
+          </div>
+
+          <!-- Engagement Actions -->
+          <div class="absolute bottom-6 left-4 right-4 z-20 flex items-center justify-between pointer-events-auto">
+            <div class="flex items-center gap-6">
+              <!-- Like Button -->
+              <button 
+                @click.stop="toggleLike(currentStory)"
+                class="flex items-center gap-2 text-white hover:scale-110 transition-transform"
+              >
+                <svg 
+                  class="w-7 h-7" 
+                  :class="currentStory.isLiked ? 'text-red-500 fill-current' : ''"
+                  :fill="currentStory.isLiked ? 'currentColor' : 'none'" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+                <span class="text-sm font-semibold">{{ currentStory.likes_count || 0 }}</span>
+              </button>
+
+              <!-- Comment Button -->
+              <button 
+                @click.stop="showComments = !showComments"
+                class="flex items-center gap-2 text-white hover:scale-110 transition-transform"
+              >
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                <span class="text-sm font-semibold">{{ currentStory.comments_count || 0 }}</span>
+              </button>
+            </div>
+
+            <!-- Edit/Delete Actions (if own story) -->
+            <div v-if="canEditStory(currentStory)" class="flex items-center gap-2">
+              <button
+                @click.stop="startEditStory(currentStory)"
+                class="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors"
+              >
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button
+                @click.stop="deleteStory(currentStory)"
+                :disabled="deletingStoryId === currentStory.id"
+                class="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-black/60 transition-colors disabled:opacity-50"
+              >
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Viewer Modal (OLD - keeping for fallback) -->
+    <div v-if="activeStory && !activeUserStories" class="fixed inset-0 z-50 bg-black" @click="closeStory">
       <div class="h-full max-w-lg mx-auto relative" @click.stop>
         <!-- Story Content -->
         <div class="relative h-full">
@@ -422,7 +596,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount, watch, nextTick } from 'vue'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
@@ -456,21 +630,65 @@ const deletingStoryId = ref(null)
 const isEditing = ref(false)
 const editingStoryId = ref(null)
 
+// Instagram-style story viewer state
+const activeUserStories = ref(null)
+const currentStoryIndex = ref(0)
+const storyProgress = ref(0)
+const storyTimer = ref(null)
+const isPaused = ref(false)
+const storyVideo = ref(null)
+const STORY_DURATION = 30000 // 30 seconds
+
+// Story ring segments
+const circleCircumference = 2 * Math.PI * 48
+const segmentLength = (totalStories) => {
+  const gapSize = 2
+  return (circleCircumference / totalStories) - gapSize
+}
+const segmentOffset = (index, totalStories) => {
+  const gapSize = 2
+  return -index * (circleCircumference / totalStories) - gapSize * index
+}
+
 const newStory = ref({
   title: '',
   location: '',
   content: '',
-  mediaFiles: [] // Array of { url, preview, type: 'image'|'video' }
+  image: null,
+  imagePreview: null,
+  mediaType: 'image'
+})
+
+// Group stories by user
+const groupedStories = computed(() => {
+  const groups = {}
+  
+  stories.value.forEach(story => {
+    const userId = story.user_id || 'anonymous'
+    if (!groups[userId]) {
+      groups[userId] = {
+        userId,
+        author: story.author,
+        avatar: story.user_avatar,
+        stories: []
+      }
+    }
+    groups[userId].stories.push(story)
+  })
+  
+  return Object.values(groups)
+})
+
+const currentStory = computed(() => {
+  if (!activeUserStories.value) return null
+  return activeUserStories.value.stories[currentStoryIndex.value]
 })
 
 function resetStoryForm() {
-  // Revoke object URLs to prevent memory leaks
-  newStory.value.mediaFiles.forEach(media => {
-    if (media.preview?.startsWith('blob:')) {
-      URL.revokeObjectURL(media.preview)
-    }
-  })
-  newStory.value = { title: '', location: '', content: '', mediaFiles: [] }
+  if (newStory.value.imagePreview?.startsWith('blob:')) {
+    URL.revokeObjectURL(newStory.value.imagePreview)
+  }
+  newStory.value = { title: '', location: '', content: '', image: null, imagePreview: null, mediaType: 'image' }
   isEditing.value = false
   editingStoryId.value = null
 }
@@ -479,6 +697,132 @@ function closeCreateModal() {
   showCreateModal.value = false
   resetStoryForm()
 }
+
+// Instagram-style story viewer functions
+function openUserStories(userStory) {
+  activeUserStories.value = userStory
+  currentStoryIndex.value = 0
+  storyProgress.value = 0
+  isPaused.value = false
+  showComments.value = false
+  nextTick(() => {
+    startStoryTimer()
+  })
+}
+
+function closeStoryViewer() {
+  stopStoryTimer()
+  if (storyVideo.value) {
+    storyVideo.value.pause()
+    storyVideo.value.currentTime = 0
+  }
+  activeUserStories.value = null
+  currentStoryIndex.value = 0
+  storyProgress.value = 0
+  isPaused.value = false
+  showComments.value = false
+}
+
+function startStoryTimer() {
+  stopStoryTimer()
+  
+  const story = currentStory.value
+  if (!story) return
+
+  // If it's a video, let the video control the duration
+  if (isVideoUrl(storyPrimaryMedia(story))) {
+    if (storyVideo.value) {
+      storyVideo.value.play()
+    }
+    return
+  }
+
+  // For images, use 30-second timer
+  const startTime = Date.now()
+  const duration = STORY_DURATION
+
+  storyTimer.value = setInterval(() => {
+    if (isPaused.value) return
+
+    const elapsed = Date.now() - startTime
+    storyProgress.value = (elapsed / duration) * 100
+
+    if (elapsed >= duration) {
+      nextStory()
+    }
+  }, 50)
+}
+
+function stopStoryTimer() {
+  if (storyTimer.value) {
+    clearInterval(storyTimer.value)
+    storyTimer.value = null
+  }
+}
+
+function nextStory() {
+  if (!activeUserStories.value) return
+
+  if (currentStoryIndex.value < activeUserStories.value.stories.length - 1) {
+    currentStoryIndex.value++
+    storyProgress.value = 0
+    nextTick(() => {
+      startStoryTimer()
+    })
+  } else {
+    // Move to next user's stories or close
+    closeStoryViewer()
+  }
+}
+
+function previousStory() {
+  if (!activeUserStories.value) return
+
+  if (currentStoryIndex.value > 0) {
+    currentStoryIndex.value--
+    storyProgress.value = 0
+    nextTick(() => {
+      startStoryTimer()
+    })
+  }
+}
+
+function togglePause() {
+  isPaused.value = !isPaused.value
+  if (storyVideo.value) {
+    if (isPaused.value) {
+      storyVideo.value.pause()
+    } else {
+      storyVideo.value.play()
+    }
+  }
+}
+
+function onMediaLoaded() {
+  // Media is loaded, start timer if not video
+  if (!isVideoUrl(storyPrimaryMedia(currentStory.value))) {
+    startStoryTimer()
+  }
+}
+
+function getProgressWidth(index) {
+  if (index < currentStoryIndex.value) return 100
+  if (index === currentStoryIndex.value) return storyProgress.value
+  return 0
+}
+
+// Watch for story changes to restart timer
+watch(currentStoryIndex, () => {
+  storyProgress.value = 0
+})
+
+// Cleanup on unmount
+onBeforeUnmount(() => {
+  stopStoryTimer()
+  if (newStory.value.imagePreview?.startsWith('blob:')) {
+    URL.revokeObjectURL(newStory.value.imagePreview)
+  }
+})
 
 onMounted(async () => {
   await loadStories()
@@ -534,102 +878,51 @@ function openCreateStory() {
   showCreateModal.value = true
 }
 
-async function handleStoryImages(event) {
-  const files = Array.from(event.target.files)
-  if (files.length === 0) return
+async function handleStoryImage(event) {
+  const file = event.target.files[0]
+  if (!file) return
 
   uploadingMedia.value = true
+  newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 
   try {
-    // Process files with concurrency control (max 3 at a time to avoid overloading Cloudinary)
-    const uploadTasks = files.map((file, index) => async () => {
-      const mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
-      
-      // Create preview
-      let preview
-      if (mediaType === 'video') {
-        preview = URL.createObjectURL(file)
-      } else {
-        preview = await new Promise((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onload = (e) => resolve(e.target.result)
-          reader.onerror = () => reject(new Error('Failed to read file'))
-          reader.readAsDataURL(file)
-        })
-      }
-
-      // Add to array immediately with preview
-      const mediaIndex = newStory.value.mediaFiles.length
-      newStory.value.mediaFiles.push({
-        preview,
-        type: mediaType,
-        url: null // Will be set after upload
+    // Show preview
+    if (newStory.value.mediaType === 'video') {
+      newStory.value.imagePreview = URL.createObjectURL(file)
+    } else {
+      const preview = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = (e) => resolve(e.target.result)
+        reader.onerror = () => reject(new Error('Failed to read file'))
+        reader.readAsDataURL(file)
       })
-
-      // Upload to Cloudinary if configured
-      if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-        try {
-          const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
-          newStory.value.mediaFiles[mediaIndex].url = result.secure_url
-        } catch (uploadError) {
-          console.error('Cloudinary upload failed:', uploadError)
-          // For images, fallback to preview; for videos, remove from array
-          if (mediaType === 'video') {
-            if (preview.startsWith('blob:')) URL.revokeObjectURL(preview)
-            newStory.value.mediaFiles.splice(mediaIndex, 1)
-          } else {
-            newStory.value.mediaFiles[mediaIndex].url = preview
-          }
-        }
-      } else {
-        // Without Cloudinary, videos cannot be stored reliably
-        if (mediaType === 'video') {
-          if (preview.startsWith('blob:')) URL.revokeObjectURL(preview)
-          newStory.value.mediaFiles.splice(mediaIndex, 1)
-        } else {
-          newStory.value.mediaFiles[mediaIndex].url = preview
-        }
-      }
-    })
-
-    // Run uploads with concurrency limit of 3 to avoid overworking Cloudinary
-    const runWithConcurrency = async (tasks, limit) => {
-      const results = []
-      const executing = []
-      
-      for (const task of tasks) {
-        const promise = task().then(result => {
-          executing.splice(executing.indexOf(promise), 1)
-          return result
-        })
-        results.push(promise)
-        executing.push(promise)
-        
-        if (executing.length >= limit) {
-          await Promise.race(executing)
-        }
-      }
-      
-      await Promise.all(results)
+      newStory.value.imagePreview = preview
     }
 
-    await runWithConcurrency(uploadTasks, 3)
+    // Upload to Cloudinary if configured
+    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
+      const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
+      newStory.value.image = result.secure_url
+    } else {
+      // Without Cloudinary, videos cannot be stored reliably
+      if (newStory.value.mediaType === 'video') {
+        alert(t('stories.videoRequiresCloudinary'))
+        newStory.value.image = null
+        newStory.value.imagePreview = null
+        newStory.value.mediaType = 'image'
+      } else {
+        newStory.value.image = newStory.value.imagePreview
+      }
+    }
   } catch (error) {
     console.error('Upload error:', error)
-    alert(t('stories.uploadFailed'))
+    // Best-effort fallback for images
+    if (newStory.value.mediaType !== 'video') {
+      newStory.value.image = newStory.value.imagePreview
+    }
   } finally {
     uploadingMedia.value = false
-    // Clear file input
-    if (event.target) event.target.value = ''
   }
-}
-
-function removeMedia(index) {
-  const media = newStory.value.mediaFiles[index]
-  if (media.preview?.startsWith('blob:')) {
-    URL.revokeObjectURL(media.preview)
-  }
-  newStory.value.mediaFiles.splice(index, 1)
 }
 
 function storyPrimaryMedia(story) {
@@ -657,14 +950,6 @@ function startEditStory(story) {
     return
   }
 
-  // Load existing media into form
-  const existingImages = story.images || (story.image ? [story.image] : [])
-  newStory.value.mediaFiles = existingImages.map(url => ({
-    url,
-    preview: url,
-    type: isVideoUrl(url) ? 'video' : 'image'
-  }))
-
   isEditing.value = true
   editingStoryId.value = story.id
 
@@ -675,12 +960,13 @@ function startEditStory(story) {
     title: story.title || '',
     location: story.location || '',
     content: story.content || '',
-    image: story.image || null,
+    image: primary || null,
     imagePreview: primary || null,
     mediaType
   }
 
   showCreateModal.value = true
+  closeStoryViewer()
 }
 
 function canDeleteStory(story) {
@@ -741,13 +1027,12 @@ async function createStory() {
 
   try {
     if (isEditing.value && editingStoryId.value) {
-      const mediaUrls = newStory.value.mediaFiles.map(m => m.url).filter(Boolean)
       const updateData = {
         title: newStory.value.title,
         location: newStory.value.location,
         content: newStory.value.content,
-        image: mediaUrls[0] || null,
-        images: mediaUrls,
+        image: newStory.value.image || null,
+        images: newStory.value.image ? [newStory.value.image] : [],
         updated_at: new Date().toISOString()
       }
 
@@ -774,13 +1059,12 @@ async function createStory() {
 
       closeCreateModal()
     } else {
-      const mediaUrls = newStory.value.mediaFiles.map(m => m.url).filter(Boolean)
       const storyData = {
         title: newStory.value.title,
         location: newStory.value.location,
         content: newStory.value.content,
-        image: mediaUrls[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-        images: mediaUrls.length > 0 ? mediaUrls : [],
+        image: newStory.value.image || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
+        images: newStory.value.image ? [newStory.value.image] : [],
         author: userStore.user?.name || `${userStore.user?.firstName || ''} ${userStore.user?.lastName || ''}`.trim() || 'Anonymous',
         user_id: userStore.user?.id,
         user_avatar: userStore.user?.avatar_url || null
