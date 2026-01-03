@@ -8,11 +8,33 @@
 
 import { supabase } from './supabase'
 import { normalizePropertyType, mapPropertyRowToAccommodation } from './propertyMapper'
-import { clearAccommodationCache } from './accommodationCache'
+import { clearAccommodationCache, getAllCacheKey, getCachedAccommodations, setCachedAccommodations } from './accommodationCache'
+
+const inflightAccommodationGetAll = new Map()
 
 export const supabaseApiAdapter = {
   accommodations: {
     getAll: async (params = {}) => {
+      const cacheKey = getAllCacheKey(params)
+      const cached = getCachedAccommodations(params)
+
+      // If we already have fresh cached data, serve it instantly.
+      if (cached?.data?.length && cached.isFresh) {
+        return { data: cached.data }
+      }
+
+      // De-dupe concurrent requests with identical params.
+      const existing = inflightAccommodationGetAll.get(cacheKey)
+      if (existing) {
+        if (cached?.data?.length) {
+          return Promise.race([
+            existing,
+            new Promise((resolve) => setTimeout(() => resolve({ data: cached.data }), 250))
+          ])
+        }
+        return existing
+      }
+
       const { search, q, guests, limit } = params || {}
       const termRaw = (q ?? search)
       const term = termRaw != null ? String(termRaw).trim() : ''
@@ -45,24 +67,44 @@ export const supabaseApiAdapter = {
         return query
       }
 
-      let data
-      let error
+      const fetchPromise = (async () => {
+        try {
+          let data
+          let error
 
-      ;({ data, error } = await buildQuery({ includeAvailabilityFilter: true }))
+          ;({ data, error } = await buildQuery({ includeAvailabilityFilter: true }))
 
-      if (error) {
-        const msg = String(error.message || '')
-        const code = String(error.code || '')
-        const looksLikeMissingColumn = code === '42703' || msg.toLowerCase().includes('column') && msg.toLowerCase().includes('available')
+          if (error) {
+            const msg = String(error.message || '')
+            const code = String(error.code || '')
+            const looksLikeMissingColumn = code === '42703' || msg.toLowerCase().includes('column') && msg.toLowerCase().includes('available')
 
-        if (looksLikeMissingColumn) {
-          ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
+            if (looksLikeMissingColumn) {
+              ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
+            }
+          }
+
+          if (error) throw error
+
+          const mapped = (data || []).map(mapPropertyRowToAccommodation)
+          setCachedAccommodations(params, mapped)
+          return { data: mapped }
+        } finally {
+          inflightAccommodationGetAll.delete(cacheKey)
         }
+      })()
+
+      inflightAccommodationGetAll.set(cacheKey, fetchPromise)
+
+      // If we have stale cached data, don't block the UI on a slow network.
+      if (cached?.data?.length) {
+        return Promise.race([
+          fetchPromise,
+          new Promise((resolve) => setTimeout(() => resolve({ data: cached.data }), 250))
+        ])
       }
 
-      if (error) throw error
-
-      return { data: (data || []).map(mapPropertyRowToAccommodation) }
+      return fetchPromise
     },
 
     getById: async (id) => {

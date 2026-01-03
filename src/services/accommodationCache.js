@@ -1,6 +1,37 @@
 const PREFIX = 'merry360:accommodations:getAll:'
 const DEFAULT_TTL_MS = 30 * 60 * 1000 // 30 minutes
 
+const MAX_CACHED_IMAGES = 3
+
+const compactAccommodation = (acc) => {
+  const imagesRaw = Array.isArray(acc?.images) ? acc.images : []
+  const images = imagesRaw.filter(Boolean).slice(0, MAX_CACHED_IMAGES)
+  const image = acc?.image || images[0] || acc?.main_image || null
+
+  // Keep only fields needed for listing/search/filter UIs.
+  return {
+    id: acc?.id,
+    title: acc?.title || acc?.name,
+    name: acc?.name || acc?.title,
+    location: acc?.location || acc?.city || '',
+    city: acc?.city,
+    type: acc?.type || acc?.property_type,
+    property_type: acc?.property_type || acc?.type,
+    price: acc?.price,
+    beds: acc?.beds,
+    baths: acc?.baths,
+    area: acc?.area,
+    rating: acc?.rating,
+    reviews: acc?.reviews,
+    amenities: Array.isArray(acc?.amenities) ? acc.amenities : [],
+    ecoFriendly: Boolean(acc?.ecoFriendly),
+    images,
+    image,
+    main_image: acc?.main_image,
+    available: acc?.available
+  }
+}
+
 const canUseStorage = () => {
   try {
     return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
@@ -59,9 +90,11 @@ export const setCachedAccommodations = (params = {}, data = []) => {
 
   const key = getAllCacheKey(params)
   try {
+    const list = Array.isArray(data) ? data : []
+    const compactList = list.map(compactAccommodation)
     window.localStorage.setItem(
       key,
-      JSON.stringify({ ts: Date.now(), data: Array.isArray(data) ? data : [] })
+      JSON.stringify({ ts: Date.now(), data: compactList })
     )
   } catch {
     // ignore quota / serialization errors
