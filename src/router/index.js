@@ -220,6 +220,18 @@ const routes = [
     meta: { requiresAuth: true, requiresHost: true }
   },
   {
+    path: '/host/create-tour',
+    name: 'host-create-tour',
+    component: CreateTour,
+    meta: { requiresAuth: true, requiresHost: true }
+  },
+  {
+    path: '/host/create-transport',
+    name: 'host-create-transport',
+    component: CreateTransport,
+    meta: { requiresAuth: true, requiresHost: true }
+  },
+  {
     path: '/dashboard',
     redirect: '/profile'
   },

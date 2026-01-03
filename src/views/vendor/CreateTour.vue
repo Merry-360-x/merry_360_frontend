@@ -218,6 +218,7 @@ const userStore = useUserStore()
 const dashboardPath = computed(() => {
   if (route.path.startsWith('/admin')) return '/admin'
   if (route.path.startsWith('/staff')) return '/staff'
+  if (route.path.startsWith('/host')) return '/host'
   return '/vendor'
 })
 

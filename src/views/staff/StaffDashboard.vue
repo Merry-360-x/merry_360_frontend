@@ -94,9 +94,9 @@
               {{ t('portal.addProperty') }}
             </router-link>
             <router-link 
-              to="/staff/create-tour" 
+              :to="`${basePath}/create-tour`" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === '/staff/create-tour' ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path.includes('/create-tour') ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,9 +105,9 @@
               Create Tour
             </router-link>
             <router-link 
-              to="/staff/create-transport" 
+              :to="`${basePath}/create-transport`" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === '/staff/create-transport' ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path.includes('/create-transport') ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +187,7 @@
                 {{ t('portal.addNewProperty') }}
               </router-link>
               <router-link 
-                to="/staff/create-tour"
+                :to="`${basePath}/create-tour`"
                 class="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,7 +196,7 @@
                 Create Tour
               </router-link>
               <router-link 
-                to="/staff/create-transport"
+                :to="`${basePath}/create-transport`"
                 class="flex items-center gap-2 px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
