@@ -10,13 +10,25 @@ import supabaseApiAdapter from './supabaseApiAdapter'
 import { mockApiService } from './mockApi'
 
 // Base API URL - should be from environment variable
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
-const HAS_SUPABASE_CONFIG = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY)
+const envString = (value) => (value == null ? '' : String(value)).trim()
+const envFlag = (name) => {
+  const raw = import.meta.env[name]
+  if (raw == null) return null
+
+  const normalized = String(raw).trim().toLowerCase()
+  if (normalized === 'true') return true
+  if (normalized === 'false') return false
+  return null
+}
+
+const API_BASE_URL = envString(import.meta.env.VITE_API_BASE_URL) || 'http://localhost:3000/api'
+const HAS_SUPABASE_CONFIG = Boolean(
+  envString(import.meta.env.VITE_SUPABASE_URL) &&
+  envString(import.meta.env.VITE_SUPABASE_ANON_KEY)
+)
 // Use Supabase if explicitly enabled, or default to Supabase when configured.
-const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE != null
-  ? import.meta.env.VITE_USE_SUPABASE === 'true'
-  : HAS_SUPABASE_CONFIG
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true' // Only use mock if explicitly enabled
+const USE_SUPABASE = envFlag('VITE_USE_SUPABASE') ?? HAS_SUPABASE_CONFIG
+const USE_MOCK_API = envFlag('VITE_USE_MOCK_API') === true // Only use mock if explicitly enabled
 
 /**
  * Custom API Error class
