@@ -10,12 +10,18 @@ import supabaseApiAdapter from './supabaseApiAdapter'
 import { mockApiService } from './mockApi'
 
 // Base API URL - should be from environment variable
-const envString = (value) => (value == null ? '' : String(value)).trim()
+const envString = (value) => {
+  if (value == null) return ''
+  return String(value)
+    .replace(/\\n/g, '')
+    .replace(/\r/g, '')
+    .trim()
+}
 const envFlag = (name) => {
   const raw = import.meta.env[name]
   if (raw == null) return null
 
-  const normalized = String(raw).trim().toLowerCase()
+  const normalized = envString(raw).toLowerCase()
   if (normalized === 'true') return true
   if (normalized === 'false') return false
   return null

@@ -5,8 +5,13 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = String(import.meta.env.VITE_SUPABASE_URL || '').trim()
-const supabaseAnonKey = String(import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim()
+const sanitizeEnv = (value) => String(value || '')
+  .replace(/\\n/g, '')
+  .replace(/\r/g, '')
+  .trim()
+
+const supabaseUrl = sanitizeEnv(import.meta.env.VITE_SUPABASE_URL)
+const supabaseAnonKey = sanitizeEnv(import.meta.env.VITE_SUPABASE_ANON_KEY)
 
 // Validate configuration
 if (!supabaseUrl || !supabaseAnonKey) {
