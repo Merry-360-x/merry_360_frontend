@@ -15,11 +15,16 @@ import { mapPropertyRowToAccommodation } from './propertyMapper'
 // In-memory cache with sub-millisecond access
 const memCache = new Map()
 const pendingRequests = new Map()
-const CACHE_TTL = 5 * 60 * 1000 // 5 minutes for ultra-fast access
+const CACHE_TTL = 10 * 60 * 1000 // 10 minutes for ultra-fast access
+const STALE_THRESHOLD = 60 * 1000 // 1 minute - refresh in background after this
 
 // Prefetch queue for background loading
 const prefetchQueue = new Set()
 let prefetchTimer = null
+
+// Aggressive prefetch settings
+const PREFETCH_DELAY = 100 // Start prefetching after 100ms
+const MAX_CONCURRENT_PREFETCH = 5
 
 /**
  * Ultra-minimal select for listing pages (maximum speed)
@@ -64,7 +69,12 @@ const getFromCache = (key) => {
     return null
   }
   
-  return { data: cached.data, age, isFresh: age < 30000 } // Fresh under 30s
+  return { 
+    data: cached.data, 
+    age, 
+    isFresh: age < STALE_THRESHOLD,
+    isStale: age > STALE_THRESHOLD && age < CACHE_TTL
+  }
 }
 
 /**
@@ -87,8 +97,8 @@ export const fastFetchAccommodations = async (params = {}) => {
   // 1. Check cache first (sub-millisecond)
   const cached = getFromCache(cacheKey)
   if (cached) {
-    // Trigger background refresh if data is getting stale
-    if (!cached.isFresh && !pendingRequests.has(cacheKey)) {
+    // Trigger aggressive background refresh if data is stale
+    if (cached.isStale && !pendingRequests.has(cacheKey)) {
       schedulePrefetch(cacheKey, params)
     }
     return { data: cached.data, fromCache: true, age: cached.age }

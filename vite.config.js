@@ -21,14 +21,29 @@ export default defineConfig({
       }
     },
     chunkSizeWarningLimit: 600,
-    // Enable minification
+    // Aggressive minification
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console.logs in production
-        drop_debugger: true
+        drop_console: true,
+        drop_debugger: true,
+        passes: 2, // Multiple passes for better compression
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        unsafe_arrows: true,
+        unsafe_methods: true,
+        unsafe_proto: true,
+        unsafe_regexp: true
+      },
+      mangle: {
+        safari10: true
       }
-    }
+    },
+    // Target modern browsers for smaller bundles
+    target: 'es2020',
+    // Optimize CSS
+    cssCodeSplit: true,
+    // Source maps for production debugging (small overhead)
+    sourcemap: false
   },
   // Optimize dependencies
   optimizeDeps: {
