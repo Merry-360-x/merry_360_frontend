@@ -168,10 +168,6 @@
             </div>
           </div>
 
-          <div class="mt-6 flex items-center justify-center gap-2 text-white/90 text-sm">
-            <span class="font-semibold">{{ t('accommodationList.propertiesFound') }}:</span>
-            <span>{{ latestProperties.length + featuredProperties.length + topRatedProperties.length }}</span>
-          </div>
         </div>
       </div>
     </section>
@@ -230,6 +226,7 @@ import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
 import { useTranslation } from '@/composables/useTranslation'
 import api from '@/services/api'
+import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
 
 const router = useRouter()
 const { t } = useTranslation()
@@ -297,9 +294,45 @@ const extractAccommodations = (response) => {
 }
 
 const loadHomeProperties = async () => {
+  const params = { limit: 32 }
   try {
-    const response = await api.accommodations.getAll({ limit: 32 })
+    const cached = getCachedAccommodations(params)
+    if (cached?.data?.length) {
+      const all = cached.data
+      const take = (start, count) => all.slice(start, start + count)
+      const fallback = (items) => (items.length ? items : take(0, 8))
+
+      latestProperties.value = fallback(take(0, 8))
+      nearbyProperties.value = fallback(take(8, 8))
+      featuredProperties.value = fallback(take(16, 8))
+      topRatedProperties.value = [...all]
+        .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
+        .slice(0, 8)
+
+      // Revalidate in the background.
+      api.accommodations.getAll(params)
+        .then((fresh) => {
+          const freshList = extractAccommodations(fresh)
+          setCachedAccommodations(params, freshList)
+          const next = freshList
+          const t2 = (start, count) => next.slice(start, start + count)
+          const fb2 = (items) => (items.length ? items : t2(0, 8))
+
+          latestProperties.value = fb2(t2(0, 8))
+          nearbyProperties.value = fb2(t2(8, 8))
+          featuredProperties.value = fb2(t2(16, 8))
+          topRatedProperties.value = [...next]
+            .sort((a, b) => (Number(b?.rating) || 0) - (Number(a?.rating) || 0))
+            .slice(0, 8)
+        })
+        .catch(() => {})
+
+      return
+    }
+
+    const response = await api.accommodations.getAll(params)
     const all = extractAccommodations(response)
+    setCachedAccommodations(params, all)
 
     const take = (start, count) => all.slice(start, start + count)
     const fallback = (items) => (items.length ? items : take(0, 8))

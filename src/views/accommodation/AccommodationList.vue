@@ -364,6 +364,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import MapView from '../../components/common/MapView.vue'
 import api from '../../services/api'
+import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
 
 const router = useRouter()
 const route = useRoute()
@@ -431,17 +432,42 @@ const computeMatchScore = (acc, term) => {
   return score
 }
 
+const applyLoadedAccommodations = (list, term = '') => {
+  const safeList = Array.isArray(list) ? list : []
+  accommodations.value = safeList.map(acc => ({
+    ...acc,
+    eco: acc.ecoFriendly,
+    isFavorite: false,
+    matchScore: computeMatchScore(acc, term)
+  }))
+}
+
 const loadAccommodations = async (params = {}) => {
+  const term = String(params.q ?? params.search ?? '').trim()
+
+  const cached = getCachedAccommodations(params)
+  if (cached?.data?.length) {
+    applyLoadedAccommodations(cached.data, term)
+    loading.value = false
+
+    // Revalidate in the background ("state" stays instantly available).
+    api.accommodations.getAll(params)
+      .then((fresh) => {
+        const freshList = Array.isArray(fresh?.data) ? fresh.data : []
+        setCachedAccommodations(params, freshList)
+        applyLoadedAccommodations(freshList, term)
+      })
+      .catch(() => {})
+
+    return
+  }
+
   loading.value = true
   try {
     const response = await api.accommodations.getAll(params)
-    const term = String(params.q ?? params.search ?? '').trim()
-    accommodations.value = response.data.map(acc => ({
-      ...acc,
-      eco: acc.ecoFriendly,
-      isFavorite: false,
-      matchScore: computeMatchScore(acc, term)
-    }))
+    const list = Array.isArray(response?.data) ? response.data : []
+    setCachedAccommodations(params, list)
+    applyLoadedAccommodations(list, term)
   } catch (error) {
     console.error('Failed to load accommodations:', error)
   } finally {
@@ -514,13 +540,13 @@ const priceRangeMax = computed(() => {
 
 const hasInitializedPriceFilter = ref(false)
 watch(
-  accommodations,
-  () => {
+  () => (accommodations.value || []).length,
+  (len) => {
     if (hasInitializedPriceFilter.value) return
+    if (!len) return
     filters.value.maxPrice = priceRangeMax.value
     hasInitializedPriceFilter.value = true
-  },
-  { immediate: true }
+  }
 )
 
 // Load accommodations on mount

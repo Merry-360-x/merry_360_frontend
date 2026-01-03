@@ -8,6 +8,7 @@
 
 import { supabase } from './supabase'
 import { normalizePropertyType, mapPropertyRowToAccommodation } from './propertyMapper'
+import { clearAccommodationCache } from './accommodationCache'
 
 export const supabaseApiAdapter = {
   accommodations: {
@@ -118,6 +119,9 @@ export const supabaseApiAdapter = {
         .single()
 
       if (error) throw error
+
+      // New listings should appear immediately on public pages.
+      clearAccommodationCache()
       return { data: mapPropertyRowToAccommodation(data) }
     }
   },
