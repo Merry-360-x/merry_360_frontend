@@ -675,4 +675,43 @@ const addToCart = (accommodation) => {
   userStore.addToCart(cartItem)
   success(t('common.addedToCart', { item: accommodation.name }))
 }
-</script>
+
+// Initialize: Load accommodations on mount
+onMounted(async () => {
+  const q = String(route.query.q || route.query.search || '').trim()
+  const guests = route.query.guests ? parseInt(route.query.guests, 10) : null
+  const inDate = String(route.query.checkIn || '').trim()
+  const outDate = String(route.query.checkOut || '').trim()
+
+  if (q) searchQuery.value = q
+  if (Number.isFinite(guests) && guests > 0) guestCount.value = guests
+  if (inDate) checkIn.value = inDate
+  if (outDate) checkOut.value = outDate
+
+  await loadAccommodations({
+    q: q || undefined,
+    guests: guests || undefined,
+    checkIn: inDate || undefined,
+    checkOut: outDate || undefined
+  })
+})
+
+// Watch for route changes
+watch(() => route.query, (newQuery) => {
+  const q = String(newQuery.q || newQuery.search || '').trim()
+  const guests = newQuery.guests ? parseInt(newQuery.guests, 10) : null
+  const inDate = String(newQuery.checkIn || '').trim()
+  const outDate = String(newQuery.checkOut || '').trim()
+
+  if (q) searchQuery.value = q
+  if (Number.isFinite(guests) && guests > 0) guestCount.value = guests
+  if (inDate) checkIn.value = inDate
+  if (outDate) checkOut.value = outDate
+
+  loadAccommodations({
+    q: q || undefined,
+    guests: guests || undefined,
+    checkIn: inDate || undefined,
+    checkOut: outDate || undefined
+  })
+}, { deep: true })</script>
