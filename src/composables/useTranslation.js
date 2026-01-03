@@ -58,6 +58,8 @@ const translations = {
     'accommodationList.adjustFilters': 'Try adjusting your filters',
     'accommodationList.resetFilters': 'Reset filters',
     'accommodationList.propertiesFound': 'properties found',
+    'accommodationList.searchResults': 'Active Filters',
+    'accommodationList.showing': 'Showing',
     'accommodationList.sortRecommended': 'Recommended',
     'accommodationList.sortPriceLow': 'Price: low to high',
     'accommodationList.sortPriceHigh': 'Price: high to low',

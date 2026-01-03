@@ -33,6 +33,53 @@
     </section>
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-white dark:bg-gray-900 min-h-screen">
+      <!-- Search Summary Badge -->
+      <div v-if="hasSearchSummary" class="mb-6 p-4 bg-brand-50 dark:bg-brand-900/20 rounded-xl border border-brand-200 dark:border-brand-800">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2">
+              <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+              </svg>
+              <h3 class="font-semibold text-brand-700 dark:text-brand-300">{{ t('accommodationList.searchResults') }}</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span v-if="searchQuery" class="inline-flex items-center px-3 py-1 rounded-full bg-white dark:bg-gray-800 text-sm border border-brand-300 dark:border-brand-700">
+                <svg class="w-4 h-4 mr-1.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <strong class="text-brand-700 dark:text-brand-300">{{ searchQuery }}</strong>
+              </span>
+              <span v-if="guestCount" class="inline-flex items-center px-3 py-1 rounded-full bg-white dark:bg-gray-800 text-sm border border-brand-300 dark:border-brand-700">
+                <svg class="w-4 h-4 mr-1.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <strong class="text-brand-700 dark:text-brand-300">{{ guestCount }} {{ guestCount === 1 ? 'guest' : 'guests' }}</strong>
+              </span>
+              <span v-if="checkIn && checkOut" class="inline-flex items-center px-3 py-1 rounded-full bg-white dark:bg-gray-800 text-sm border border-brand-300 dark:border-brand-700">
+                <svg class="w-4 h-4 mr-1.5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <strong class="text-brand-700 dark:text-brand-300">{{ formatDateShort(checkIn) }} - {{ formatDateShort(checkOut) }}</strong>
+              </span>
+            </div>
+          </div>
+          <button 
+            @click="clearSearch" 
+            class="ml-4 text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 p-1 rounded-lg hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors"
+            title="Clear filters"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="text-sm text-brand-600 dark:text-brand-400 mt-2">
+          {{ t('accommodationList.showing') }} <strong>{{ filteredAccommodations.length }}</strong> {{ filteredAccommodations.length === 1 ? 'property' : 'properties' }}
+        </p>
+      </div>
+
       <!-- Header -->
       <div class="mb-6 sm:mb-8">
         <h1 class="text-2xl sm:text-3xl font-bold text-text-brand-600 mb-2">{{ t('accommodationList.title') }}</h1>
@@ -481,16 +528,46 @@ onMounted(async () => {
 
 const filteredAccommodations = computed(() => {
   return accommodations.value.filter(acc => {
+    // Price filter
     if (acc.price > filters.value.maxPrice) return false
+    
+    // Property type filter
     if (filters.value.propertyTypes.length > 0 && !filters.value.propertyTypes.includes(acc.type)) return false
+    
+    // Rating filter
     if (acc.rating < filters.value.minRating) return false
+    
+    // Eco-friendly filter
     if (filters.value.ecoFriendly && !acc.eco) return false
+    
+    // Amenities filter
     if (filters.value.amenities.length > 0) {
       const hasAllAmenities = filters.value.amenities.every(amenity => 
         acc.amenities.includes(amenity)
       )
       if (!hasAllAmenities) return false
     }
+    
+    // Guest capacity filter (from search params)
+    if (guestCount.value && Number.isFinite(guestCount.value)) {
+      const maxGuests = Number(acc.guests || acc.maxGuests || acc.capacity || 2)
+      if (maxGuests < guestCount.value) return false
+    }
+    
+    // Location filter (from search params)
+    if (searchQuery.value) {
+      const query = searchQuery.value.toLowerCase()
+      const location = String(acc.location || '').toLowerCase()
+      const name = String(acc.name || '').toLowerCase()
+      const city = String(acc.city || '').toLowerCase()
+      
+      const matchesLocation = location.includes(query) || 
+                             name.includes(query) || 
+                             city.includes(query)
+      
+      if (!matchesLocation) return false
+    }
+    
     return true
   })
 })
@@ -515,6 +592,23 @@ const sortItems = (items) => {
         return bTime - aTime
       })
   }
+}
+
+// Format date for display
+const formatDateShort = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+// Clear all search parameters
+const clearSearch = () => {
+  searchQuery.value = ''
+  guestCount.value = null
+  checkIn.value = ''
+  checkOut.value = ''
+  router.replace({ query: {} })
+  loadAccommodations()
 }
 
 const groupedAccommodations = computed(() => {
