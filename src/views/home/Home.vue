@@ -231,6 +231,7 @@ import SkeletonLoader from '@/components/common/SkeletonLoader.vue'
 import { useTranslation } from '@/composables/useTranslation'
 import api from '@/services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
+import { waitForPreload } from '@/services/preloadData'
 
 const router = useRouter()
 const { t } = useTranslation()
@@ -385,7 +386,11 @@ const handleSearch = () => {
 }
 
 // Hero Video Carousel
-onMounted(loadHomeProperties)
+onMounted(async () => {
+  // Wait for preload to complete (or return immediately if already cached)
+  await waitForPreload()
+  await loadHomeProperties()
+})
 </script>
 
 <style scoped></style>

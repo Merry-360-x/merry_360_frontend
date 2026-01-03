@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { supabase } from '@/services/supabase'
 import { useUserStore } from '@/stores/userStore'
 import { useTranslation } from '@/composables/useTranslation'
+import { waitForPreload } from '@/services/preloadData'
 
 // Onboarding
 import SplashScreen from '../views/onboarding/SplashScreen.vue'
@@ -385,6 +386,11 @@ const router = createRouter({
 
 // Navigation guard for admin routes
 router.beforeEach(async (to, from, next) => {
+  // Preload critical data for instant page loads (home & accommodations)
+  if (to.path === '/' || to.path === '/accommodations') {
+    await waitForPreload()
+  }
+
   const { t } = useTranslation()
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
   const requiresStaff = to.matched.some(record => record.meta.requiresStaff)
