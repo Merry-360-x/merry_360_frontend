@@ -185,11 +185,12 @@
               {{ t('home.browseMore') }}
             </router-link>
           </div>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <template v-if="isLoading">
-              <SkeletonLoader v-for="i in 4" :key="`skeleton-${i}`" type="card" />
-            </template>
-            <PropertyCard v-else v-for="property in latestProperties" :key="property.id" :property="property" />
+          <div v-if="isLoading" class="flex flex-col items-center justify-center py-20">
+            <div class="w-12 h-12 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
+            <p class="text-text-secondary">Loading properties...</p>
+          </div>
+          <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
           </div>
         </div>
       </div>
@@ -227,7 +228,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
-import SkeletonLoader from '@/components/common/SkeletonLoader.vue'
 import { useTranslation } from '@/composables/useTranslation'
 import api from '@/services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'

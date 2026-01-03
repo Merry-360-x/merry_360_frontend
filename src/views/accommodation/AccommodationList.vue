@@ -181,18 +181,26 @@
 
         <!-- Listings -->
         <div class="lg:col-span-4">
-          <!-- Results Header -->
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-            <p class="text-text-secondary text-sm sm:text-base">
-              <span class="font-semibold text-text-brand-600">{{ filteredAccommodations.length }}</span> {{ t('accommodationList.propertiesFound') }}
-            </p>
-            <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary text-sm sm:text-base">
-              <option value="recommended">{{ t('accommodationList.sortRecommended') }}</option>
-              <option value="price-low">{{ t('accommodationList.sortPriceLow') }}</option>
-              <option value="price-high">{{ t('accommodationList.sortPriceHigh') }}</option>
-              <option value="rating">{{ t('accommodationList.sortHighestRated') }}</option>
-            </select>
+          <!-- Loading Spinner -->
+          <div v-if="loading && !accommodations.length" class="flex flex-col items-center justify-center py-20">
+            <div class="w-16 h-16 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
+            <h2 class="text-xl font-semibold text-text-primary mb-2">Loading Properties</h2>
+            <p class="text-text-secondary">Finding the best accommodations for you...</p>
           </div>
+
+          <!-- Results Header -->
+          <div v-else>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <p class="text-text-secondary text-sm sm:text-base">
+                <span class="font-semibold text-text-brand-600">{{ filteredAccommodations.length }}</span> {{ t('accommodationList.propertiesFound') }}
+              </p>
+              <select v-model="sortBy" class="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary text-sm sm:text-base">
+                <option value="recommended">{{ t('accommodationList.sortRecommended') }}</option>
+                <option value="price-low">{{ t('accommodationList.sortPriceLow') }}</option>
+                <option value="price-high">{{ t('accommodationList.sortPriceHigh') }}</option>
+                <option value="rating">{{ t('accommodationList.sortHighestRated') }}</option>
+              </select>
+            </div>
 
           <p class="text-text-secondary text-xs sm:text-sm mb-5">
             {{ t('accommodationList.groupingNote') }}
@@ -347,6 +355,7 @@
               {{ t('accommodationList.resetFilters') }}
             </button>
           </div>
+          </div><!-- Close v-else -->
         </div>
       </div>
     </div>
