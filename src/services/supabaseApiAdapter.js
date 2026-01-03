@@ -12,6 +12,38 @@ import { clearAccommodationCache, getAllCacheKey, getCachedAccommodations, setCa
 
 const inflightAccommodationGetAll = new Map()
 
+// Keep payload small for public listing pages. If some columns are missing in a
+// given environment, we fall back to select('*') automatically.
+const PROPERTIES_LIST_SELECT = [
+  'id',
+  'name',
+  'description',
+  'property_type',
+  'location',
+  'city',
+  'price_per_night',
+  'bedrooms',
+  'bathrooms',
+  'area',
+  'max_guests',
+  'amenities',
+  'images',
+  'main_image',
+  'available',
+  'rating',
+  'reviews_count',
+  'created_at'
+].join(',')
+
+const isMissingColumnError = (error, columnHint = '') => {
+  const msg = String(error?.message || '').toLowerCase()
+  const code = String(error?.code || '')
+  if (code === '42703') return true
+  if (msg.includes('column') && msg.includes('does not exist')) return true
+  if (columnHint && msg.includes(columnHint.toLowerCase())) return true
+  return false
+}
+
 export const supabaseApiAdapter = {
   accommodations: {
     getAll: async (params = {}) => {
@@ -43,7 +75,7 @@ export const supabaseApiAdapter = {
       const buildQuery = ({ includeAvailabilityFilter } = { includeAvailabilityFilter: true }) => {
         let query = supabase
           .from('properties')
-          .select('*')
+          .select(PROPERTIES_LIST_SELECT)
           .order('created_at', { ascending: false })
 
         // Public pages should only show active listings, but some environments
@@ -72,15 +104,44 @@ export const supabaseApiAdapter = {
           let data
           let error
 
+          // First attempt: small select + availability filter.
           ;({ data, error } = await buildQuery({ includeAvailabilityFilter: true }))
 
-          if (error) {
-            const msg = String(error.message || '')
-            const code = String(error.code || '')
-            const looksLikeMissingColumn = code === '42703' || msg.toLowerCase().includes('column') && msg.toLowerCase().includes('available')
+          // Retry without availability filter if the column is missing.
+          if (error && isMissingColumnError(error, 'available')) {
+            ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
+          }
 
-            if (looksLikeMissingColumn) {
-              ;({ data, error } = await buildQuery({ includeAvailabilityFilter: false }))
+          // If any selected column is missing, fall back to select('*').
+          if (error && isMissingColumnError(error)) {
+            const buildStarQuery = ({ includeAvailabilityFilter } = { includeAvailabilityFilter: true }) => {
+              let query = supabase
+                .from('properties')
+                .select('*')
+                .order('created_at', { ascending: false })
+
+              if (includeAvailabilityFilter) {
+                query = query.or('available.is.null,available.eq.true')
+              }
+
+              if (term) {
+                query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+              }
+
+              if (Number.isFinite(guestsCount) && guestsCount > 0) {
+                query = query.gte('max_guests', guestsCount)
+              }
+
+              if (limit) {
+                query = query.limit(limit)
+              }
+
+              return query
+            }
+
+            ;({ data, error } = await buildStarQuery({ includeAvailabilityFilter: true }))
+            if (error && isMissingColumnError(error, 'available')) {
+              ;({ data, error } = await buildStarQuery({ includeAvailabilityFilter: false }))
             }
           }
 
