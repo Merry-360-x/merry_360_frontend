@@ -122,12 +122,12 @@
             <div v-if="userStore.isAuthenticated" class="relative" v-click-outside="closeUserMenu">
               <button 
                 @click.stop="showUserMenu = !showUserMenu"
-                class="relative flex items-center gap-2 bg-white border border-gray-300 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
+                class="relative flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full pl-2 pr-3 py-1.5 hover:border-brand-500 hover:shadow-md transition-all"
               >
                 <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-red-600 rounded-full flex items-center justify-center">
                   <span class="text-white text-xs font-bold">{{ userStore.user?.name?.substring(0, 2).toUpperCase() || 'JO' }}</span>
                 </div>
-                <svg class="w-4 h-4 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-text-secondary dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
