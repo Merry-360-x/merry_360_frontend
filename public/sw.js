@@ -1,53 +1,63 @@
-// Service Worker for PWA
-const CACHE_NAME = 'merry360-v1';
-const urlsToCache = [
-  '/',
-  '/merry-360-logo.png',
-  '/manifest.json'
-];
+/*
+  This service worker exists only to safely clean up legacy registrations.
+  A previous version attempted to cache non-GET requests which throws:
+  "Failed to execute 'put' on 'Cache': Request method 'POST' is unsupported".
 
-// Install service worker
+  Current behavior:
+  - Never caches requests.
+  - Ignores non-GET fetch events.
+  - Clears existing caches and unregisters itself on activate.
+*/
+
+const CLEANUP_TRIGGERED_KEY = 'merry360-sw-cleanup-triggered'
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
-  );
-  self.skipWaiting();
-});
+  // Take control ASAP so we can clean up.
+  event.waitUntil(self.skipWaiting())
+})
 
-// Activate service worker
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
-  self.clients.claim();
-});
+    (async () => {
+      try {
+        // Clear any caches created by older SW versions.
+        const keys = await caches.keys()
+        await Promise.all(keys.map((k) => caches.delete(k)))
 
-// Fetch with network-first strategy
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Cache successful responses
-        if (response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+        // Try to unregister so the app returns to normal network behavior.
+        // This prevents the old buggy caching strategy from persisting.
+        if (self.registration) {
+          await self.registration.unregister()
         }
-        return response;
-      })
-      .catch(() => {
-        // Fallback to cache if network fails
-        return caches.match(event.request);
-      })
-  );
-});
+
+        // Refresh open tabs so they detach from SW control.
+        const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+        await Promise.all(
+          clients.map((client) => {
+            try {
+              // Avoid infinite reload loops.
+              if (client.url && !client.url.includes(CLEANUP_TRIGGERED_KEY)) {
+                const url = new URL(client.url)
+                url.searchParams.set(CLEANUP_TRIGGERED_KEY, '1')
+                return client.navigate(url.toString())
+              }
+            } catch {
+              // ignore
+            }
+            return Promise.resolve()
+          })
+        )
+      } finally {
+        await self.clients.claim()
+      }
+    })()
+  )
+})
+
+self.addEventListener('fetch', (event) => {
+  // Never attempt to cache non-GET requests (POST/HEAD/etc.)
+  if (event.request.method !== 'GET') return
+
+  // Pass-through network fetch; no Cache API writes.
+  event.respondWith(fetch(event.request))
+})
