@@ -845,8 +845,9 @@ const handleLogout = async () => {
 
   if (ok) {
     try {
+      // signOutAuth() calls supabase.auth.signOut() which triggers SIGNED_OUT event
+      // The event listener in main.js will call userStore.logout()
       await signOutAuth()
-      await userStore.logout()
       
       // Show success toast and redirect to home
       const { success } = useToast()

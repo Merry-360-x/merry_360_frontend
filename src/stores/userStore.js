@@ -162,11 +162,10 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   
-  const logout = async () => {
-    // Sign out from Supabase
-    await supabase.auth.signOut()
-    
+  const logout = () => {
     // Clear local state
+    // Note: Supabase signOut should be called by the component/auth service
+    // which will trigger the SIGNED_OUT event in main.js that calls this function
     user.value = null
     isAuthenticated.value = false
     watchlist.value = []

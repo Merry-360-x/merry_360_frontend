@@ -653,14 +653,23 @@ const handleLogout = async () => {
 
   if (!ok) return
 
-  await userStore.logout()
-  showUserMenu.value = false
-  mobileMenuOpen.value = false
-  
-  // Show success toast and redirect to home
-  const { success } = useToast()
-  success(t('auth.logoutSuccess'))
-  router.push('/')
+  try {
+    // Sign out from Supabase (this triggers SIGNED_OUT event which calls store.logout())
+    const { signOut } = await import('../../services/auth')
+    await signOut()
+    
+    showUserMenu.value = false
+    mobileMenuOpen.value = false
+    
+    // Show success toast and redirect to home
+    const { success } = useToast()
+    success(t('auth.logoutSuccess'))
+    router.push('/')
+  } catch (error) {
+    console.error('Logout error:', error)
+    const { error: showError } = useToast()
+    showError(t('auth.logoutError') || 'Failed to logout')
+  }
 }
 
 const selectMode = (mode) => {
