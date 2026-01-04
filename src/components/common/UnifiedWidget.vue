@@ -223,7 +223,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../../stores/user'
+import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { supabase } from '../../services/supabase'
 
