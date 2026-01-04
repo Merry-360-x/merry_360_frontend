@@ -274,12 +274,12 @@
           <!-- Grid View (2 rows x 5 columns) -->
           <div v-if="viewMode === 'list'">
             <!-- Loading State -->
-            <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+            <div v-if="loading" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
               <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
             </div>
             
             <!-- Loaded State: Grid Layout -->
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+            <div v-else class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
               <PropertyCard
                 v-for="property in filteredAccommodations"
                 :key="property.id"

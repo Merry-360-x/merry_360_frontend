@@ -91,15 +91,15 @@
     </div>
 
     <!-- Content -->
-    <div class="p-2 sm:p-3">
+    <div class="p-1.5 sm:p-3">
       <!-- Title -->
-      <h3 class="font-bold text-base sm:text-lg text-text-primary mb-2 line-clamp-1 group-hover:text-brand-600 transition-colors">
+      <h3 class="font-bold text-xs sm:text-lg text-text-primary mb-1 sm:mb-2 line-clamp-1 group-hover:text-brand-600 transition-colors">
         {{ property.title }}
       </h3>
 
       <!-- Location -->
-      <p class="flex items-center text-text-secondary text-xs sm:text-sm mb-3 sm:mb-4">
-        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <p class="flex items-center text-text-secondary text-[10px] sm:text-sm mb-1 sm:mb-4">
+        <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
         </svg>
@@ -107,21 +107,21 @@
       </p>
 
       <!-- Details -->
-      <div class="flex items-center justify-between text-xs sm:text-sm text-text-secondary mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between text-[9px] sm:text-sm text-text-secondary mb-1 sm:mb-4 pb-1 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
         <div class="flex items-center">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
           </svg>
           <span class="whitespace-nowrap">{{ property.beds }} Beds</span>
         </div>
         <div class="flex items-center">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
           </svg>
           <span class="whitespace-nowrap">{{ property.baths }} Baths</span>
         </div>
         <div class="flex items-center">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
           </svg>
           <span class="whitespace-nowrap">{{ property.area }} sqft</span>
@@ -129,20 +129,20 @@
       </div>
 
       <!-- Price -->
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-baseline gap-1">
-          <span class="text-sm sm:text-base font-bold text-brand-600">{{ formatPrice(property.price) }}</span>
-          <span class="text-text-secondary text-xs whitespace-nowrap">/night</span>
+      <div class="flex items-center justify-between flex-wrap gap-1">
+        <div class="flex items-baseline gap-0.5 sm:gap-1">
+          <span class="text-xs sm:text-base font-bold text-brand-600">{{ formatPrice(property.price) }}</span>
+          <span class="text-text-secondary text-[9px] sm:text-xs whitespace-nowrap">/night</span>
         </div>
         <button 
           @click.stop="addToCart"
-          class="px-2.5 py-1.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 flex items-center gap-1 shadow-sm"
+          class="px-1.5 py-1 sm:px-2.5 sm:py-1.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 flex items-center gap-0.5 sm:gap-1 shadow-sm"
           title="Add to Trip"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8l2 2 4-4"></path>
           </svg>
-          <span class="text-xs font-medium">Add</span>
+          <span class="text-[9px] sm:text-xs font-medium">Add</span>
         </button>
       </div>
     </div>

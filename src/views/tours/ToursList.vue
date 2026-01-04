@@ -43,7 +43,7 @@
         Loading tours...
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div v-else class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
         <Card v-for="tour in tours" :key="tour.id" hover clickable padding="none" @click="router.push(`/tour/${tour.id}`)">
           <div class="relative h-64">
             <img loading="lazy" :src="tour.image" :alt="tour.title" class="w-full h-full object-cover rounded-t-card" />
