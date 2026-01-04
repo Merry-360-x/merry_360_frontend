@@ -572,6 +572,7 @@ import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import { useCurrencyStore } from '@/stores/currency'
+import { useLanguageStore } from '@/stores/language'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import Card from '@/components/common/Card.vue'
 import Input from '@/components/common/Input.vue'
@@ -585,6 +586,7 @@ import { useTranslation } from '@/composables/useTranslation'
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
+const languageStore = useLanguageStore()
 const { t } = useTranslation()
 
 const activeProfileTab = ref('trips')
@@ -758,6 +760,11 @@ const savePersonalInfo = async () => {
 }
 
 const savePreferences = () => {
+  // Sync language preference to language store
+  if (userStore.preferences.language) {
+    languageStore.setLanguage(userStore.preferences.language)
+  }
+  
   // Preferences are already bound to the store
   alert(t('profile.preferencesSaved'))
 }
