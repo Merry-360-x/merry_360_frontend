@@ -603,7 +603,6 @@ const uploadingAvatar = ref(false)
 const profileTabs = computed(() => [
   { id: 'trips', name: t('profile.myTrips') },
   { id: 'personal', name: t('profile.personalInfoTab') },
-  { id: 'preferences', name: t('profile.preferences') },
   { id: 'security', name: t('profile.security') }
 ])
 

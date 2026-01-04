@@ -152,17 +152,6 @@
                   </router-link>
 
                   <router-link 
-                    to="/messages" 
-                    @click="showUserMenu = false"
-                    class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
-                  >
-                    <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h8m-5 8h5a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2h3"></path>
-                    </svg>
-                      <span class="text-sm">{{ t('nav.messages') }}</span>
-                  </router-link>
-
-                  <router-link 
                     v-if="canSeeStaffPortal"
                     to="/staff" 
                     @click="showUserMenu = false"
@@ -632,8 +621,7 @@ const mobileNavigation = [
   { name: 'Accommodations', to: '/accommodations' },
   { name: 'Tours', to: '/tours' },
   { name: 'Transport', to: '/transport' },
-  { name: 'My Trips', to: '/profile' },
-  { name: 'Messages', to: '/messages' }
+  { name: 'My Trips', to: '/profile' }
 ]
 
 const toggleMobileMenu = () => {
