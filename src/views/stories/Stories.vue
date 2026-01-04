@@ -65,11 +65,6 @@
                   {{ (userStory.author || 'U').charAt(0).toUpperCase() }}
                 </span>
               </div>
-              
-              <!-- Story Count Badge -->
-              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-brand-600 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                {{ userStory.stories.length }}
-              </div>
             </div>
             <span class="text-white text-xs font-medium truncate max-w-[80px]">{{ userStory.author }}</span>
           </div>
@@ -642,11 +637,11 @@ const STORY_DURATION = 30000 // 30 seconds
 // Story ring segments
 const circleCircumference = 2 * Math.PI * 48
 const segmentLength = (totalStories) => {
-  const gapSize = 2
+  const gapSize = 4 // Larger gap for better visibility
   return (circleCircumference / totalStories) - gapSize
 }
 const segmentOffset = (index, totalStories) => {
-  const gapSize = 2
+  const gapSize = 4
   return -index * (circleCircumference / totalStories) - gapSize * index
 }
 
