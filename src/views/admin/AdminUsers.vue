@@ -25,8 +25,8 @@
               <span :class="{
                 'px-3 py-1 rounded-full text-sm font-medium inline-block mt-2': true,
                 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': selectedUser.role === 'admin',
-                'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300': selectedUser.role === 'host',
-                'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300': selectedUser.role === 'staff',
+                'bg-brand-100 dark:bg-brand-900/30 text-brand-800 dark:text-brand-300': selectedUser.role === 'host',
+                'bg-brand-100 dark:bg-brand-900/30 text-brand-800 dark:text-brand-300': selectedUser.role === 'staff',
                 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300': selectedUser.role === 'user'
               }">
                 {{ selectedUser.role }}
@@ -115,7 +115,7 @@
       </Card>
       <Card padding="md">
         <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Staff</p>
-        <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ stats.staff }}</p>
+        <p class="text-3xl font-bold text-brand-600 dark:text-brand-400">{{ stats.staff }}</p>
       </Card>
       <Card padding="md">
         <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Regular Users</p>

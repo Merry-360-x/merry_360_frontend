@@ -16,7 +16,7 @@
           </button>
 
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-500 rounded-xl flex items-center justify-center overflow-hidden">
+            <div class="w-8 h-8 bg-brand-500 rounded-xl flex items-center justify-center overflow-hidden">
               <img
                 v-if="userStore.user?.avatar_url"
                 :src="userStore.user.avatar_url"
@@ -47,7 +47,7 @@
         >
           <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center space-x-2">
-              <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center overflow-hidden">
+              <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center overflow-hidden">
                 <img
                   v-if="userStore.user?.avatar_url"
                   :src="userStore.user.avatar_url"
@@ -63,7 +63,7 @@
             <router-link 
               :to="dashboardPath" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === dashboardPath ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path === dashboardPath ? 'bg-brand-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@
             <router-link 
               :to="propertiesPath" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === propertiesPath ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path === propertiesPath ? 'bg-brand-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@
             <router-link 
               :to="addPropertyPath" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path === addPropertyPath ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path === addPropertyPath ? 'bg-brand-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@
             <router-link 
               :to="`${basePath}/create-tour`" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path.includes('/create-tour') ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path.includes('/create-tour') ? 'bg-brand-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@
             <router-link 
               :to="`${basePath}/create-transport`" 
               class="flex items-center px-4 py-3 rounded-lg transition-colors"
-              :class="$route.path.includes('/create-transport') ? 'bg-blue-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+              :class="$route.path.includes('/create-transport') ? 'bg-brand-500 text-white' : 'text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
               @click="isSidebarOpen = false"
             >
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,8 +134,8 @@
                   <p class="text-3xl font-bold text-text-primary">{{ stats.properties }}</p>
                   <p class="text-green-600 dark:text-green-400 text-sm mt-1">{{ t('portal.activeListings') }}</p>
                 </div>
-                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                  <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                   </svg>
                 </div>
@@ -179,7 +179,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <router-link 
                 :to="addPropertyPath"
-                class="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors justify-center"
+                class="flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -197,7 +197,7 @@
               </router-link>
               <router-link 
                 :to="`${basePath}/create-transport`"
-                class="flex items-center gap-2 px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors justify-center"
+                class="flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
@@ -224,7 +224,7 @@
               <p class="text-text-secondary mb-4">{{ t('portal.startByAddingFirstProperty') }}</p>
               <router-link 
                 :to="addPropertyPath"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -248,7 +248,7 @@
                   <h3 class="font-semibold text-text-primary mb-1">{{ property.title }}</h3>
                   <p class="text-sm text-text-secondary mb-2">{{ property.location }}</p>
                   <div class="flex items-center justify-between">
-                    <span class="text-blue-600 dark:text-blue-400 font-bold">
+                    <span class="text-brand-600 dark:text-brand-400 font-bold">
                       {{ currencyStore.formatPrice(parsePrice(property.price)) }}
                       <span class="font-normal">/{{ t('accommodation.perNight') }}</span>
                     </span>

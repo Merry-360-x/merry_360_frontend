@@ -6,14 +6,14 @@
       <aside class="w-64 bg-white border-r border-gray-200 min-h-screen sticky top-0">
         <div class="p-6 border-b border-gray-200">
           <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-accent-blue rounded-xl flex items-center justify-center">
+            <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center">
               <span class="text-white font-bold text-xl">{{ isHost ? 'H' : 'V' }}</span>
             </div>
             <span class="text-xl font-bold">{{ portalTitle }}</span>
           </div>
         </div>
         <nav class="p-4 space-y-1">
-          <a href="#" class="flex items-center px-4 py-3 bg-accent-blue text-white rounded-button">
+          <a href="#" class="flex items-center px-4 py-3 bg-brand-500 text-white rounded-button">
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
             </svg>
@@ -101,8 +101,8 @@
                 <p class="text-3xl font-bold">$0</p>
                 <p class="text-text-secondary text-sm mt-1">This month</p>
               </div>
-              <div class="w-12 h-12 bg-accent-blue bg-opacity-10 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>

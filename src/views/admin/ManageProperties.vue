@@ -55,7 +55,7 @@
                 <div class="mt-2 grid grid-cols-2 gap-2">
                   <button 
                     @click="open360Upload(property)"
-                    class="px-2 py-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                    class="px-2 py-1.5 text-xs bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 rounded text-brand-700 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors"
                   >
                     {{ t('admin.manageProperties.tour360') }}
                   </button>
@@ -84,7 +84,7 @@
                   <div class="flex gap-2">
                     <button 
                       @click="editProperty(property)"
-                      class="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
+                      class="p-2 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/30 rounded-lg transition-colors"
                       :title="t('admin.manageProperties.editProperty')"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,7 +131,7 @@
                   <span 
                     v-for="amenity in property.amenities.slice(0, 5)" 
                     :key="amenity"
-                    class="px-2 py-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full"
+                    class="px-2 py-1 text-xs bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 rounded-full"
                   >
                     {{ amenity }}
                   </span>
@@ -393,19 +393,19 @@
                   class="hidden"
                   ref="tour360Input"
                 />
-                <div class="border-2 border-dashed border-blue-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer bg-blue-50">
-                  <svg class="w-12 h-12 mx-auto text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="border-2 border-dashed border-brand-300 rounded-lg p-8 text-center hover:border-brand-500 transition-colors cursor-pointer bg-brand-50">
+                  <svg class="w-12 h-12 mx-auto text-brand-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
-                  <p class="text-blue-700 font-medium mb-1">{{ t('admin.manageProperties.tour360UploadTitle') }}</p>
-                  <p class="text-sm text-blue-600">{{ t('admin.manageProperties.tour360UploadHint') }}</p>
+                  <p class="text-brand-700 font-medium mb-1">{{ t('admin.manageProperties.tour360UploadTitle') }}</p>
+                  <p class="text-sm text-brand-600">{{ t('admin.manageProperties.tour360UploadHint') }}</p>
                 </div>
               </label>
             </div>
 
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p class="text-sm text-blue-800">
+            <div class="bg-brand-50 border border-brand-200 rounded-lg p-4">
+              <p class="text-sm text-brand-800">
                 {{ t('admin.manageProperties.tour360Tip') }}
               </p>
             </div>

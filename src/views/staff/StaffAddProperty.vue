@@ -3,7 +3,7 @@
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-200">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
         <div class="mb-8">
-          <router-link :to="dashboardPath" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-2 mb-4">
+          <router-link :to="dashboardPath" class="text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 flex items-center gap-2 mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -80,8 +80,8 @@
                     </svg>
                     Exact Location (for map display)
                   </label>
-                  <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
-                    <p class="text-sm text-blue-800 dark:text-blue-300">
+                  <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-lg p-3 mb-3">
+                    <p class="text-sm text-brand-800 dark:text-brand-300">
                       💡 <strong>Tip:</strong> Enter the coordinates to show a pinpoint on the map for guests.
                     </p>
                   </div>
@@ -108,7 +108,7 @@
                     </div>
                   </div>
                   <p class="text-xs text-text-muted mt-2">
-                    Get coordinates: Right-click on <a href="https://www.google.com/maps" target="_blank" class="text-blue-500 hover:underline">Google Maps</a> → Click location → Copy coordinates
+                    Get coordinates: Right-click on <a href="https://www.google.com/maps" target="_blank" class="text-brand-500 hover:underline">Google Maps</a> → Click location → Copy coordinates
                   </p>
                 </div>
 
@@ -233,27 +233,27 @@
                   </div>
                 </div>
 
-                <p v-if="uploading" class="text-sm text-blue-600 dark:text-blue-400">{{ t('portal.uploadingImages') }}</p>
+                <p v-if="uploading" class="text-sm text-brand-600 dark:text-brand-400">{{ t('portal.uploadingImages') }}</p>
               </div>
             </div>
 
             <!-- Virtual Tour (VR/3D) -->
             <div class="mb-8">
               <h2 class="text-xl font-bold text-text-primary mb-4 flex items-center gap-2">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
                 360° Virtual Tour
               </h2>
               
-              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+              <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-lg p-4 mb-4">
                 <div class="flex gap-3">
-                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-5 h-5 text-brand-600 dark:text-brand-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                   </svg>
                   <div>
-                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Add a virtual tour to increase bookings by up to 40%!</p>
-                    <p class="text-xs text-blue-700 dark:text-blue-300">Supported: Matterport, Google Tour, YouTube 360, or custom embed</p>
+                    <p class="text-sm text-brand-800 dark:text-brand-200 font-medium mb-1">Add a virtual tour to increase bookings by up to 40%!</p>
+                    <p class="text-xs text-brand-700 dark:text-brand-300">Supported: Matterport, Google Tour, YouTube 360, or custom embed</p>
                   </div>
                 </div>
               </div>
@@ -263,7 +263,7 @@
                   <input 
                     type="checkbox" 
                     v-model="form.vrTourEnabled"
-                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 w-5 h-5"
+                    class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500 w-5 h-5"
                   />
                   <div>
                     <span class="text-sm font-medium text-text-secondary">Enable Virtual Tour</span>
@@ -321,7 +321,7 @@
                     type="checkbox" 
                     :value="amenity"
                     v-model="form.amenities"
-                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
+                    class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500"
                   />
                   <span class="text-sm text-text-secondary">{{ amenity }}</span>
                 </label>
@@ -333,7 +333,7 @@
               <button 
                 type="submit"
                 :disabled="isSubmitting || uploading"
-                class="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {{ isSubmitting ? t('portal.addingProperty') : t('portal.addProperty') }}
               </button>

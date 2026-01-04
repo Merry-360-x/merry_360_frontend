@@ -153,7 +153,7 @@
                   <p class="text-sm text-gray-500">Maximum 2MB per image (JPEG, PNG, WebP)</p>
                 </div>
                 <p v-if="errors.image" class="mt-2 text-sm text-red-600">{{ errors.image }}</p>
-                <p v-if="uploading" class="mt-2 text-sm text-blue-600">Uploading images...</p>
+                <p v-if="uploading" class="mt-2 text-sm text-brand-600">Uploading images...</p>
               </div>
 
               <!-- Uploaded Images Preview -->

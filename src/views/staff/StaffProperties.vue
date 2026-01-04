@@ -16,7 +16,7 @@
           </button>
 
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-500 rounded-xl flex items-center justify-center">
+            <div class="w-8 h-8 bg-brand-500 rounded-xl flex items-center justify-center">
               <span class="text-white font-bold">{{ portalInitial }}</span>
             </div>
             <span class="font-bold text-text-primary">{{ portalTitle }}</span>
@@ -41,7 +41,7 @@
         >
           <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center space-x-2">
-              <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+              <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center">
                 <span class="text-white font-bold text-xl">{{ portalInitial }}</span>
               </div>
               <span class="text-xl font-bold text-text-primary">{{ portalTitle }}</span>
@@ -54,7 +54,7 @@
               </svg>
               {{ t('admin.dashboard') }}
             </router-link>
-            <router-link :to="propertiesPath" class="flex items-center px-4 py-3 bg-blue-500 text-white rounded-lg" @click="isSidebarOpen = false">
+            <router-link :to="propertiesPath" class="flex items-center px-4 py-3 bg-brand-500 text-white rounded-lg" @click="isSidebarOpen = false">
               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
               </svg>
@@ -78,7 +78,7 @@
             </div>
             <router-link 
               :to="addPropertyPath"
-              class="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+              class="flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -101,7 +101,7 @@
             <p class="text-text-secondary mb-6">{{ t('portal.startAddingPropertiesHere') }}</p>
             <router-link 
               :to="addPropertyPath"
-              class="inline-flex items-center gap-2 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-lg font-semibold"
+              class="inline-flex items-center gap-2 px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors text-lg font-semibold"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -137,7 +137,7 @@
                 <p class="text-text-secondary mb-4 line-clamp-2">{{ property.description }}</p>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
-                    <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">
                       {{ currencyStore.formatPrice(property.price_per_night || 0) }}
                       <span class="font-normal">/{{ t('accommodation.perNight') }}</span>
                     </span>
