@@ -667,6 +667,14 @@ const openImageUpload = (property) => {
 
 const handleImageUpload = async (event) => {
   const files = Array.from(event.target.files)
+  
+  // Check for large files and warn
+  const largeFiles = files.filter(file => file.size > 2 * 1024 * 1024)
+  if (largeFiles.length > 0) {
+    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
+    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  }
+  
   // Here you would upload to Cloudinary or Supabase Storage
   showToast(t('admin.manageProperties.imageUploadInfo'), 'info')
 }
@@ -699,6 +707,14 @@ const open360Upload = (property) => {
 
 const handle360Upload = async (event) => {
   const files = Array.from(event.target.files)
+  
+  // Check for large files and warn
+  const largeFiles = files.filter(file => file.size > 5 * 1024 * 1024)
+  if (largeFiles.length > 0) {
+    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
+    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  }
+  
   showToast(t('admin.manageProperties.tour360UploadInfo'), 'info')
 }
 
@@ -710,6 +726,14 @@ const openVRUpload = (property) => {
 
 const handleVRUpload = async (event) => {
   const files = Array.from(event.target.files)
+  
+  // Check for large files and warn
+  const largeFiles = files.filter(file => file.size > 5 * 1024 * 1024)
+  if (largeFiles.length > 0) {
+    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
+    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  }
+  
   showToast(t('admin.manageProperties.vrUploadInfo'), 'info')
 }
 

@@ -877,6 +877,12 @@ async function handleStoryImage(event) {
   const file = event.target.files[0]
   if (!file) return
 
+  // Check file size and warn if large (over 5MB)
+  const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+  if (file.size > 5 * 1024 * 1024) {
+    warning(`Large file detected (${fileSizeMB}MB). Upload may take longer.`, 1000)
+  }
+
   uploadingMedia.value = true
   newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 

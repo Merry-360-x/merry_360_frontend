@@ -283,6 +283,13 @@ const handlePhotoUpload = async (event) => {
   const files = event.target.files
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
+    
+    // Check file size and warn if large (over 5MB)
+    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+    if (file.size > 5 * 1024 * 1024) {
+      warning(`Large file detected (${fileSizeMB}MB). Upload may take longer.`, 1000)
+    }
+    
     if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
       try {
         const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })

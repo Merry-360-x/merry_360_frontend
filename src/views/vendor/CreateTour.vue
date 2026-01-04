@@ -297,6 +297,13 @@ const handleImageUpload = async (event) => {
     showToast(`These files exceed 2MB limit: ${fileNames}`, 'error')
     return
   }
+  
+  // Warn about large files (over 1MB)
+  const largeFiles = files.filter(file => file.size > 1 * 1024 * 1024)
+  if (largeFiles.length > 0) {
+    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
+    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  }
 
   uploading.value = true
   event.target.value = ''

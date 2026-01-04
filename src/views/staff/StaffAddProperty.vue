@@ -448,6 +448,13 @@ async function handleImageUpload(event) {
     event.target.value = '' // Reset input
     return
   }
+  
+  // Warn about large files (over 1MB)
+  const largeFiles = files.filter(file => file.size > 1 * 1024 * 1024)
+  if (largeFiles.length > 0) {
+    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
+    warning(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 1000)
+  }
 
   // allow selecting the same files again
   event.target.value = ''

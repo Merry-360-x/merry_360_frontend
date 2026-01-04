@@ -863,8 +863,15 @@ const onAvatarChange = async (e) => {
   
   // Validate file size (max 5MB)
   if (file.size > 5 * 1024 * 1024) {
-    alert(t('profile.imageTooLarge', { maxMB: 5 }))
+    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+    error(`File too large (${fileSizeMB}MB). Maximum size is 5MB.`, 2000)
     return
+  }
+  
+  // Warn if file is large (over 2MB)
+  const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+  if (file.size > 2 * 1024 * 1024) {
+    warning(`Large file detected (${fileSizeMB}MB). Upload may take longer.`, 1000)
   }
   
   // Validate file type
