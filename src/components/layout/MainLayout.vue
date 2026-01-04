@@ -432,7 +432,7 @@
     </transition>
 
     <!-- Main Content -->
-    <main class="flex-grow pb-20 lg:pb-0">
+    <main class="flex-grow">
       <slot></slot>
     </main>
 
@@ -558,12 +558,12 @@
             </ul>
           </div>
         </div>
-        <div class="mt-4 sm:mt-12 pt-3 sm:pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
+        <div class="mt-4 sm:mt-12 pt-3 sm:pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-2">
           <p class="text-text-secondary text-xs sm:text-sm">© 2025 Merry360X. All rights reserved.</p>
-          <div class="flex space-x-3 sm:space-x-6 mt-2 sm:mt-4 md:mt-0">
-            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">{{ t('footer.privacy') }}</a>
-            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">{{ t('footer.terms') }}</a>
-            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors">{{ t('footer.cookies') }}</a>
+          <div class="flex flex-wrap justify-center gap-x-3 sm:gap-x-6 gap-y-1 mt-1 sm:mt-4 md:mt-0">
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors font-medium">{{ t('footer.privacy') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors font-medium">{{ t('footer.terms') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors font-medium">{{ t('footer.cookies') }}</a>
           </div>
         </div>
       </div>

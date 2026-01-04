@@ -1,7 +1,7 @@
 <template>
   <nav 
     v-if="showBottomNav" 
-    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 lg:hidden app-safe-area-bottom"
+    class="relative bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-40 lg:hidden app-safe-area-bottom"
     style="padding-bottom: max(env(safe-area-inset-bottom), 12px);"
   >
     <div class="flex items-center justify-around px-2 pt-2">
