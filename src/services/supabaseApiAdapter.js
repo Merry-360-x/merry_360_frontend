@@ -250,6 +250,11 @@ export const supabaseApiAdapter = {
         amenities: propertyData.amenities || [],
         images: propertyData.images || (propertyData.image ? [propertyData.image] : []),
         main_image: propertyData.image || propertyData.main_image || null,
+        vr_tour_enabled: propertyData.vr_tour_enabled || false,
+        vr_tour_url: propertyData.vr_tour_url || null,
+        vr_tour_type: propertyData.vr_tour_type || null,
+        latitude: propertyData.latitude || null,
+        longitude: propertyData.longitude || null,
         available: true
       }
 

@@ -64,6 +64,11 @@ export function mapPropertyRowToAccommodation(row) {
     baths,
     area,
     ecoFriendly: false,
+    vrTourEnabled: row.vr_tour_enabled || false,
+    vrTourUrl: row.vr_tour_url || null,
+    vrTourType: row.vr_tour_type || null,
+    latitude: row.latitude || null,
+    longitude: row.longitude || null,
     createdAt: row.created_at || null
   }
 }

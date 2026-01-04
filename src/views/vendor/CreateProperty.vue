@@ -206,6 +206,90 @@
               </div>
             </div>
 
+            <!-- Virtual Tour (VR/3D) -->
+            <div class="mb-8">
+              <h2 class="text-xl font-bold text-text-primary mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                {{ t('vendor.virtualTour') || '360° Virtual Tour' }}
+              </h2>
+              
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <div class="flex gap-3">
+                  <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <p class="text-sm text-blue-800 font-medium mb-1">Add a virtual tour to increase bookings by up to 40%!</p>
+                    <p class="text-xs text-blue-700">Supported platforms: Matterport, Google Tour, YouTube 360, or custom embed</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    v-model="form.vrTourEnabled"
+                    class="rounded border-gray-300 text-brand-600 focus:ring-brand-500 w-5 h-5"
+                  />
+                  <div>
+                    <span class="text-sm font-medium text-text-secondary">Enable Virtual Tour</span>
+                    <p class="text-xs text-text-muted">Allow guests to explore your property in 360° before booking</p>
+                  </div>
+                </label>
+
+                <div v-if="form.vrTourEnabled" class="space-y-4 pl-8 animate-fade-in">
+                  <div>
+                    <label class="block text-sm font-medium text-text-secondary mb-2">
+                      Virtual Tour Platform
+                    </label>
+                    <select 
+                      v-model="form.vrTourType"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary"
+                    >
+                      <option value="">Select platform...</option>
+                      <option value="matterport">Matterport 3D Tour</option>
+                      <option value="google_tour">Google Virtual Tour</option>
+                      <option value="youtube_360">YouTube 360° Video</option>
+                      <option value="custom">Custom VR/3D Link</option>
+                    </select>
+                    <p class="mt-1 text-xs text-text-muted">Choose the platform you used to create your virtual tour</p>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-text-secondary mb-2">
+                      Virtual Tour URL
+                    </label>
+                    <Input 
+                      v-model="form.vrTourUrl" 
+                      placeholder="https://my.matterport.com/show/?m=..."
+                      type="url"
+                    />
+                    <div class="mt-2 space-y-1">
+                      <p class="text-xs text-text-muted font-medium">Examples:</p>
+                      <ul class="text-xs text-text-muted space-y-0.5 pl-4">
+                        <li>• Matterport: https://my.matterport.com/show/?m=xxxxx</li>
+                        <li>• YouTube 360: https://www.youtube.com/watch?v=xxxxx</li>
+                        <li>• Google Tour: https://goo.gl/maps/xxxxx</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div v-if="form.vrTourUrl" class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                      <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span class="text-sm font-medium text-green-800">Preview Ready</span>
+                    </div>
+                    <p class="text-xs text-gray-600">Your virtual tour will be displayed on the property detail page</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Amenities -->
             <div class="mb-8">
               <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.amenities') }}</h2>
@@ -287,7 +371,12 @@ const form = ref({
   image: '',
   additionalImages: [],
   amenities: [],
-  ecoFriendly: false
+  ecoFriendly: false,
+  vrTourEnabled: false,
+  vrTourUrl: '',
+  vrTourType: '',
+  latitude: null,
+  longitude: null
 })
 
 const errors = ref({})
@@ -343,7 +432,12 @@ const handleSubmit = async () => {
       image: form.value.image,
       images: [form.value.image, ...form.value.additionalImages.filter(img => img)],
       amenities: form.value.amenities,
-      eco_friendly: form.value.ecoFriendly
+      eco_friendly: form.value.ecoFriendly,
+      vr_tour_enabled: form.value.vrTourEnabled,
+      vr_tour_url: form.value.vrTourUrl || null,
+      vr_tour_type: form.value.vrTourType || null,
+      latitude: form.value.latitude || null,
+      longitude: form.value.longitude || null
     }
     
     await api.accommodations.create(propertyData)

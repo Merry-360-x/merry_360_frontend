@@ -71,6 +71,47 @@
                   />
                 </div>
 
+                <!-- Location Coordinates -->
+                <div class="col-span-2">
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Exact Location (for map display)
+                  </label>
+                  <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
+                    <p class="text-sm text-blue-800 dark:text-blue-300">
+                      💡 <strong>Tip:</strong> Enter the coordinates to show a pinpoint on the map for guests.
+                    </p>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-xs text-text-muted mb-1">Latitude</label>
+                      <input
+                        v-model.number="form.latitude"
+                        type="number"
+                        step="any"
+                        placeholder="e.g., -1.9536"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-xs text-text-muted mb-1">Longitude</label>
+                      <input
+                        v-model.number="form.longitude"
+                        type="number"
+                        step="any"
+                        placeholder="e.g., 30.0606"
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
+                      />
+                    </div>
+                  </div>
+                  <p class="text-xs text-text-muted mt-2">
+                    Get coordinates: Right-click on <a href="https://www.google.com/maps" target="_blank" class="text-blue-500 hover:underline">Google Maps</a> → Click location → Copy coordinates
+                  </p>
+                </div>
+
                 <div>
                   <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.description') }} *</label>
                   <textarea 
@@ -196,6 +237,80 @@
               </div>
             </div>
 
+            <!-- Virtual Tour (VR/3D) -->
+            <div class="mb-8">
+              <h2 class="text-xl font-bold text-text-primary mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                360° Virtual Tour
+              </h2>
+              
+              <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                <div class="flex gap-3">
+                  <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  <div>
+                    <p class="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">Add a virtual tour to increase bookings by up to 40%!</p>
+                    <p class="text-xs text-blue-700 dark:text-blue-300">Supported: Matterport, Google Tour, YouTube 360, or custom embed</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    v-model="form.vrTourEnabled"
+                    class="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 w-5 h-5"
+                  />
+                  <div>
+                    <span class="text-sm font-medium text-text-secondary">Enable Virtual Tour</span>
+                    <p class="text-xs text-text-muted">Allow guests to explore the property in 360° before booking</p>
+                  </div>
+                </label>
+
+                <div v-if="form.vrTourEnabled" class="space-y-4 pl-8">
+                  <div>
+                    <label class="block text-sm font-medium text-text-secondary mb-2">
+                      Virtual Tour Platform
+                    </label>
+                    <select 
+                      v-model="form.vrTourType"
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
+                    >
+                      <option value="">Select platform...</option>
+                      <option value="matterport">Matterport 3D Tour</option>
+                      <option value="google_tour">Google Virtual Tour</option>
+                      <option value="youtube_360">YouTube 360° Video</option>
+                      <option value="custom">Custom VR/3D Link</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-text-secondary mb-2">
+                      Virtual Tour URL
+                    </label>
+                    <input 
+                      v-model="form.vrTourUrl" 
+                      type="url"
+                      placeholder="https://my.matterport.com/show/?m=..."
+                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
+                    />
+                    <div class="mt-2 space-y-1">
+                      <p class="text-xs text-text-muted font-medium">Examples:</p>
+                      <ul class="text-xs text-text-muted space-y-0.5 pl-4">
+                        <li>• Matterport: https://my.matterport.com/show/?m=xxxxx</li>
+                        <li>• YouTube 360: https://www.youtube.com/watch?v=xxxxx</li>
+                        <li>• Google Tour: https://goo.gl/maps/xxxxx</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Amenities -->
             <div class="mb-8">
               <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.amenities') }}</h2>
@@ -272,7 +387,12 @@ const form = ref({
   baths: 1,
   maxGuests: 2,
   price: null,
-  amenities: []
+  amenities: [],
+  vrTourEnabled: false,
+  vrTourUrl: '',
+  vrTourType: '',
+  latitude: null,
+  longitude: null
 })
 
 const uploadedImages = ref([])
@@ -464,7 +584,12 @@ async function handleSubmit() {
       maxGuests,
       amenities: form.value.amenities,
       image: imageUrls[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
-      images: imageUrls
+      images: imageUrls,
+      vr_tour_enabled: form.value.vrTourEnabled || false,
+      vr_tour_url: form.value.vrTourUrl || null,
+      vr_tour_type: form.value.vrTourType || null,
+      latitude: form.value.latitude || null,
+      longitude: form.value.longitude || null
     })
 
     showSuccess.value = true

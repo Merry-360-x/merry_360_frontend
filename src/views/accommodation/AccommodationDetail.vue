@@ -84,21 +84,85 @@
           </Card>
 
           <!-- VR/AR Preview -->
-          <Card padding="lg">
+          <Card v-if="accommodation.vrTourEnabled && accommodation.vrTourUrl" padding="lg">
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-xl font-bold">360° Virtual Tour</h2>
-              <span class="px-3 py-1 bg-accent-blue bg-opacity-10 text-accent-blue text-sm font-medium rounded-full">VR/AR Ready</span>
+              <span class="px-3 py-1 bg-blue-500 bg-opacity-10 text-blue-600 text-sm font-medium rounded-full flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                {{ accommodation.vrTourType === 'matterport' ? 'Matterport 3D' : accommodation.vrTourType === 'google_tour' ? 'Google Tour' : accommodation.vrTourType === 'youtube_360' ? 'YouTube 360°' : 'VR Tour' }}
+              </span>
             </div>
-            <div class="bg-gray-100 rounded-card h-64 flex items-center justify-center">
-              <button class="flex flex-col items-center gap-2 hover:scale-105 transition-transform">
-                <div class="w-14 h-14 bg-accent-blue rounded-full flex items-center justify-center">
-                  <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <span class="text-sm text-accent-blue font-semibold">Launch Virtual Tour</span>
-              </button>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <iframe 
+                v-if="accommodation.vrTourType === 'matterport'"
+                :src="accommodation.vrTourUrl"
+                class="w-full h-[500px]"
+                frameborder="0"
+                allowfullscreen
+                allow="vr; xr; accelerometer; magnetometer; gyroscope"
+              ></iframe>
+              <iframe 
+                v-else-if="accommodation.vrTourType === 'youtube_360'"
+                :src="getYouTubeEmbedUrl(accommodation.vrTourUrl)"
+                class="w-full h-[500px]"
+                frameborder="0"
+                allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              ></iframe>
+              <iframe 
+                v-else-if="accommodation.vrTourType === 'google_tour'"
+                :src="accommodation.vrTourUrl"
+                class="w-full h-[500px]"
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+              <div v-else class="h-[500px] flex items-center justify-center">
+                <a 
+                  :href="accommodation.vrTourUrl" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex flex-col items-center gap-3 hover:scale-105 transition-transform"
+                >
+                  <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                  <span class="text-blue-600 font-semibold">Open Virtual Tour</span>
+                  <span class="text-sm text-gray-500">Click to launch in new window</span>
+                </a>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Location Map -->
+          <Card v-if="accommodation.latitude && accommodation.longitude" padding="lg">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-bold">Exact Location</h2>
+              <span class="px-3 py-1 bg-green-500 bg-opacity-10 text-green-600 text-sm font-medium rounded-full flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Pinpoint Location
+              </span>
+            </div>
+            <div id="property-map" class="w-full h-[400px] rounded-lg overflow-hidden border border-gray-200"></div>
+            <div class="mt-3 flex items-center justify-between text-sm text-gray-600">
+              <span>📍 {{ accommodation.location }}</span>
+              <a 
+                :href="`https://www.google.com/maps?q=${accommodation.latitude},${accommodation.longitude}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-brand-500 hover:text-brand-600 font-medium flex items-center gap-1"
+              >
+                Open in Google Maps
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
             </div>
           </Card>
 
@@ -462,6 +526,15 @@ const formatPrice = (price) => {
   return currencyStore.formatPrice(price)
 }
 
+const getYouTubeEmbedUrl = (url) => {
+  // Extract video ID from various YouTube URL formats
+  const videoIdMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)
+  if (videoIdMatch && videoIdMatch[1]) {
+    return `https://www.youtube.com/embed/${videoIdMatch[1]}`
+  }
+  return url
+}
+
 const accommodation = ref({
   id: route.params.id,
   name: 'Kigali Serena Hotel',
@@ -482,6 +555,78 @@ const accommodation = ref({
 })
 
 import api from '../../services/api'
+
+// Leaflet map instance
+let map = null
+
+// Initialize map when accommodation has coordinates
+const initializeMap = () => {
+  if (!accommodation.value.latitude || !accommodation.value.longitude) return
+  
+  // Wait for next tick to ensure DOM is ready
+  setTimeout(() => {
+    const mapElement = document.getElementById('property-map')
+    if (!mapElement || map) return
+    
+    try {
+      // Load Leaflet dynamically
+      if (!window.L) {
+        const script = document.createElement('script')
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+        script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
+        script.crossOrigin = ''
+        script.onload = () => createMap()
+        document.head.appendChild(script)
+      } else {
+        createMap()
+      }
+    } catch (error) {
+      console.error('Error initializing map:', error)
+    }
+  }, 100)
+}
+
+const createMap = () => {
+  if (map) return
+  
+  const lat = accommodation.value.latitude
+  const lng = accommodation.value.longitude
+  
+  // Create map centered on property
+  map = window.L.map('property-map').setView([lat, lng], 15)
+  
+  // Add OpenStreetMap tiles
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map)
+  
+  // Custom marker icon
+  const markerIcon = window.L.divIcon({
+    className: 'custom-map-marker',
+    html: `
+      <div style="position: relative;">
+        <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 0C8.95 0 0 8.95 0 20C0 35 20 50 20 50C20 50 40 35 40 20C40 8.95 31.05 0 20 0Z" fill="#EF4444"/>
+          <circle cx="20" cy="20" r="8" fill="white"/>
+          <circle cx="20" cy="20" r="5" fill="#EF4444"/>
+        </svg>
+      </div>
+    `,
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50]
+  })
+  
+  // Add marker with popup
+  const marker = window.L.marker([lat, lng], { icon: markerIcon }).addTo(map)
+  marker.bindPopup(`
+    <div style="text-align: center; padding: 8px;">
+      <strong style="font-size: 14px;">${accommodation.value.name}</strong><br>
+      <span style="font-size: 12px; color: #666;">${accommodation.value.location}</span>
+    </div>
+  `).openPopup()
+}
 
 onMounted(async () => {
   // Hydrate booking sidebar from URL (or use sensible defaults)
@@ -510,6 +655,11 @@ onMounted(async () => {
       mainImage: response.data.images[0] || response.data.image,
       gallery: response.data.images.slice(1) || [],
       eco: response.data.ecoFriendly
+    }
+    
+    // Initialize map if coordinates are available
+    if (accommodation.value.latitude && accommodation.value.longitude) {
+      initializeMap()
     }
   } catch (error) {
     console.error('Failed to load accommodation:', error)
