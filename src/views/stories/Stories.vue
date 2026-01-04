@@ -29,18 +29,18 @@
             @click="openUserStories(userStory)"
             class="flex flex-col items-center gap-2 flex-shrink-0 cursor-pointer group"
           >
-            <div class="relative">
+            <div class="relative w-20 h-20">
               <!-- Story Ring with Segments -->
-              <svg class="w-20 h-20 absolute -inset-0.5 -rotate-90" viewBox="0 0 100 100">
+              <svg class="w-full h-full absolute inset-0 -rotate-90" viewBox="0 0 100 100">
                 <circle 
                   v-for="(story, index) in userStory.stories"
                   :key="story.id"
                   cx="50" 
                   cy="50" 
-                  r="48"
+                  r="46"
                   fill="none"
                   :stroke="story.viewed ? '#9CA3AF' : 'url(#gradient)'"
-                  stroke-width="3"
+                  stroke-width="3.5"
                   :stroke-dasharray="`${segmentLength(userStory.stories.length)} ${circleCircumference - segmentLength(userStory.stories.length)}`"
                   :stroke-dashoffset="segmentOffset(index, userStory.stories.length)"
                   stroke-linecap="round"
@@ -54,7 +54,7 @@
               </svg>
               
               <!-- Profile Picture -->
-              <div class="w-20 h-20 rounded-full overflow-hidden bg-brand-500 border-2 border-white group-hover:scale-105 transition-transform">
+              <div class="w-16 h-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden bg-brand-500 group-hover:scale-105 transition-transform">
                 <img
                   v-if="userStory.avatar"
                   :src="userStory.avatar"
@@ -635,7 +635,7 @@ const storyVideo = ref(null)
 const STORY_DURATION = 30000 // 30 seconds
 
 // Story ring segments
-const circleCircumference = 2 * Math.PI * 48
+const circleCircumference = 2 * Math.PI * 46 // Match the r="46" in SVG
 const segmentLength = (totalStories) => {
   const gapSize = 4 // Larger gap for better visibility
   return (circleCircumference / totalStories) - gapSize
