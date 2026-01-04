@@ -66,7 +66,7 @@
             </div>
 
             <!-- Membership -->
-            <div class="p-4 bg-gradient-to-br from-brand-50 to-red-50 rounded-xl mb-4">
+            <div class="p-4 bg-gradient-to-br from-brand-50 to-red-50 dark:from-brand-900/30 dark:to-red-900/30 rounded-xl mb-4">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-text-secondary">{{ t('profile.membership') }}</span>
                 <span class="px-2 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full">
@@ -74,15 +74,15 @@
                 </span>
               </div>
               <div class="flex items-baseline gap-1">
-                <span class="text-2xl font-bold text-brand-600">{{ userStore.loyaltyPoints }}</span>
+                <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">{{ userStore.loyaltyPoints }}</span>
                 <span class="text-text-secondary text-sm">{{ t('profile.points') }}</span>
               </div>
               <div class="mt-3">
                 <div class="flex justify-between text-xs mb-1">
                   <span class="text-text-secondary">{{ t('profile.nextTier') }}</span>
-                  <span class="font-semibold">{{ userStore.nextTierPoints }} pts</span>
+                  <span class="font-semibold text-text-primary">{{ userStore.nextTierPoints }} pts</span>
                 </div>
-                <div class="w-full bg-white rounded-full h-2">
+                <div class="w-full bg-white dark:bg-gray-700 rounded-full h-2">
                   <div class="bg-brand-500 rounded-full h-2 transition-all" :style="`width: ${loyaltyProgress}%`"></div>
                 </div>
               </div>
@@ -92,15 +92,15 @@
             <div class="space-y-3">
               <div class="flex items-center justify-between py-2">
                 <span class="text-sm text-text-secondary">{{ t('profile.tripsCompleted') }}</span>
-                <span class="font-semibold">{{ userStore.pastBookings.length }}</span>
+                <span class="font-semibold text-text-primary">{{ userStore.pastBookings.length }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
                 <span class="text-sm text-text-secondary">{{ t('profile.savedItems') }}</span>
-                <span class="font-semibold">{{ userStore.watchlistCount }}</span>
+                <span class="font-semibold text-text-primary">{{ userStore.watchlistCount }}</span>
               </div>
               <div class="flex items-center justify-between py-2">
                 <span class="text-sm text-text-secondary">{{ t('profile.memberSince') }}</span>
-                <span class="font-semibold">{{ memberSince }}</span>
+                <span class="font-semibold text-text-primary">{{ memberSince }}</span>
               </div>
             </div>
 
