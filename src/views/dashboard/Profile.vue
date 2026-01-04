@@ -143,7 +143,7 @@
                   'px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap',
                   activeProfileTab === tab.id
                     ? 'bg-brand-500 text-white'
-                    : 'text-text-secondary hover:bg-gray-100'
+                    : 'text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800'
                 ]"
               >
                 {{ tab.name }}
@@ -402,35 +402,35 @@
 
               <!-- Notifications -->
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-3">{{ t('profile.notifications') }}</label>
+                <label class="block text-sm font-medium text-text-primary mb-3">{{ t('profile.notifications') }}</label>
                 <div class="space-y-3">
-                  <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <span class="text-sm">{{ t('profile.emailNotifications') }}</span>
-                    <input type="checkbox" v-model="userStore.preferences.notifications.email" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                  <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                    <span class="text-sm text-text-primary">{{ t('profile.emailNotifications') }}</span>
+                    <input type="checkbox" v-model="userStore.preferences.notifications.email" class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500 dark:bg-gray-800">
                   </label>
-                  <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <span class="text-sm">{{ t('profile.pushNotifications') }}</span>
-                    <input type="checkbox" v-model="userStore.preferences.notifications.push" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                  <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                    <span class="text-sm text-text-primary">{{ t('profile.pushNotifications') }}</span>
+                    <input type="checkbox" v-model="userStore.preferences.notifications.push" class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500 dark:bg-gray-800">
                   </label>
-                  <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                    <span class="text-sm">{{ t('profile.smsNotifications') }}</span>
-                    <input type="checkbox" v-model="userStore.preferences.notifications.sms" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                  <label class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                    <span class="text-sm text-text-primary">{{ t('profile.smsNotifications') }}</span>
+                    <input type="checkbox" v-model="userStore.preferences.notifications.sms" class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500 dark:bg-gray-800">
                   </label>
                 </div>
               </div>
 
               <!-- Sustainable Travel -->
-              <label class="flex items-center justify-between p-4 rounded-lg bg-green-50 border border-green-200 cursor-pointer">
+              <label class="flex items-center justify-between p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 cursor-pointer">
                 <div class="flex items-center gap-3">
-                  <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   <div>
-                    <span class="text-sm font-semibold">{{ t('profile.sustainableTravelMode') }}</span>
-                    <p class="text-xs text-green-700">{{ t('profile.sustainableTravelDesc') }}</p>
+                    <span class="text-sm font-semibold text-text-primary">{{ t('profile.sustainableTravelMode') }}</span>
+                    <p class="text-xs text-green-700 dark:text-green-300">{{ t('profile.sustainableTravelDesc') }}</p>
                   </div>
                 </div>
-                <input type="checkbox" v-model="userStore.preferences.sustainableTravel" class="rounded border-gray-300 text-green-600 focus:ring-green-500">
+                <input type="checkbox" v-model="userStore.preferences.sustainableTravel" class="rounded border-gray-300 dark:border-gray-600 text-green-600 focus:ring-green-500 dark:bg-gray-800">
               </label>
 
               <Button variant="primary" size="md" @click="savePreferences">
@@ -444,10 +444,10 @@
             <h3 class="text-xl font-bold mb-6">{{ t('profile.security') }}</h3>
 
             <div class="space-y-4">
-              <div class="p-4 border border-gray-200 rounded-lg">
+              <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h4 class="font-semibold mb-1">{{ t('profile.password') }}</h4>
+                    <h4 class="font-semibold mb-1 text-text-primary">{{ t('profile.password') }}</h4>
                     <p class="text-sm text-text-secondary">{{ t('profile.passwordLastChanged', { months: 3 }) }}</p>
                   </div>
                   <Button variant="outline" size="sm" @click="showChangePassword = true">
