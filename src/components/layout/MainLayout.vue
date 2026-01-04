@@ -432,7 +432,7 @@
     </transition>
 
     <!-- Main Content -->
-    <main class="flex-grow">
+    <main class="flex-grow pb-20 lg:pb-0">
       <slot></slot>
     </main>
 
@@ -569,6 +569,8 @@
       </div>
     </footer>
 
+    <!-- Mobile Bottom Navigation -->
+    <MobileBottomNav />
 
   </div>
 </template>
@@ -582,7 +584,8 @@ import { useCurrencyStore } from '../../stores/currency'
 import { useLanguageStore } from '../../stores/language'
 import { useThemeStore } from '../../stores/theme'
 import { useTranslation } from '../../composables/useTranslation'
-import AIConcierge from '../ai/AIConcierge.vue'
+import { useConfirm } from '../../composables/useConfirm'
+import MobileBottomNav from './MobileBottomNav.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 import { useToast } from '../../composables/useToast'
 

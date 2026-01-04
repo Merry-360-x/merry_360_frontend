@@ -3,7 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/merry-360-logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    
+    <!-- Mobile App Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Mobile App Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Merry360" />
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#FE4F4F" />
+    <meta name="msapplication-TileColor" content="#FE4F4F" />
+    <meta name="msapplication-navbutton-color" content="#FE4F4F" />
+    
+    <!-- iOS App Icons -->
+    <link rel="apple-touch-icon" href="/merry-360-logo.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/merry-360-logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/merry-360-logo.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/merry-360-logo.png" />
+    
+    <!-- iOS Splash Screens -->
+    <link rel="apple-touch-startup-image" href="/merry-360-logo.png" />
     
     <!-- Performance: Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,5 +53,16 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => console.log('✅ Service Worker registered'))
+            .catch(err => console.log('❌ Service Worker registration failed:', err));
+        });
+      }
+    </script>
   </body>
 </html>
