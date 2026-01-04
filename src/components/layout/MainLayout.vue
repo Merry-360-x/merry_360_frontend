@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans transition-colors duration-200">
     <!-- Header -->
-    <header class="bg-white/80 dark:bg-gray-800/80 lg:bg-white dark:lg:bg-gray-800 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
+    <header class="bg-white dark:bg-gray-800 lg:bg-white/80 dark:lg:bg-gray-800/80 lg:backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div class="container mx-auto px-3 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 sm:h-20">
           <!-- Logo -->
@@ -515,7 +515,7 @@
     <button
       v-if="!showAIConcierge"
       @click="showModeSelector = true"
-      class="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all transform hover:scale-110 flex items-center justify-center group"
+      class="fixed bottom-20 lg:bottom-6 right-4 lg:right-6 z-50 w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all transform hover:scale-110 flex items-center justify-center group"
     >
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
