@@ -447,58 +447,6 @@
       <slot></slot>
     </main>
 
-    <!-- AI Trip Advisor Button - Fixed Position with Minimize -->
-    <transition name="slide-fade">
-      <div 
-        v-if="!aiMinimized"
-        class="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40"
-      >
-        <button 
-          @click="showAIConcierge = !showAIConcierge"
-          class="relative bg-gradient-to-br from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center gap-3 px-5 py-4 group"
-          :class="showAIConcierge ? 'pr-12' : ''"
-        >
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-              </svg>
-              <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
-            </div>
-            <div class="text-left">
-              <div class="font-bold text-sm leading-tight">AI Trip Advisor</div>
-              <div class="text-xs text-white/80 leading-tight">Ask me anything!</div>
-            </div>
-          </div>
-          <button 
-            v-if="showAIConcierge"
-            @click.stop="aiMinimized = true"
-            class="absolute right-3 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-lg p-1 transition-colors"
-            title="Minimize"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-            </svg>
-          </button>
-        </button>
-      </div>
-    </transition>
-
-    <!-- Minimized AI Button -->
-    <transition name="scale-fade">
-      <button 
-        v-if="aiMinimized"
-        @click="aiMinimized = false; showAIConcierge = true"
-        class="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-40 w-12 h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group"
-        title="Open AI Trip Advisor"
-      >
-        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-        </svg>
-        <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
-      </button>
-    </transition>
-
     <!-- Mode Selector Popup -->
     <transition name="fade">
       <div v-if="showModeSelector" class="fixed inset-0 z-50 flex items-center justify-center p-4" @click="showModeSelector = false">
