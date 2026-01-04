@@ -260,6 +260,16 @@ html, body, #app {
   .animate-fade-out {
     animation: fadeOut 0.5s ease-out forwards;
   }
+  
+  /* Hide scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 @layer components {

@@ -25,52 +25,52 @@
           </h1>
 
           <div class="mt-6 sm:mt-8 w-full max-w-4xl px-2 sm:px-0">
-            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur rounded-2xl shadow-card border border-gray-200/60 dark:border-gray-700 p-2 sm:p-3">
-              <div class="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-3">
+            <div class="bg-white dark:bg-gray-800 backdrop-blur rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
                 <!-- Location -->
                 <div class="md:col-span-1">
-                  <label class="block text-xs font-semibold text-text-secondary mb-1">{{ t('accommodation.location') }}</label>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('accommodation.location') }}</label>
                   <input
                     v-model="searchQuery.location"
                     type="text"
                     :placeholder="t('search.whereGoing')"
-                    class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary min-h-[44px] px-2"
+                    class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder:text-gray-400 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
                   />
                 </div>
 
                 <!-- Check In -->
                 <div>
-                  <label class="block text-xs font-semibold text-text-secondary mb-1">{{ t('search.checkIn') }}</label>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('search.checkIn') }}</label>
                   <input
                     v-model="searchQuery.checkIn"
                     type="date"
                     :min="minCheckInDate"
-                    class="w-full text-sm font-semibold focus:outline-none bg-transparent text-text-primary cursor-pointer min-h-[44px] px-2"
+                    class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
                   />
                 </div>
 
                 <!-- Check Out -->
                 <div>
-                  <label class="block text-xs font-semibold text-text-secondary mb-1">{{ t('search.checkOut') }}</label>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('search.checkOut') }}</label>
                   <input
                     v-model="searchQuery.checkOut"
                     type="date"
                     :min="minCheckOutDate"
-                    class="w-full text-sm font-semibold focus:outline-none bg-transparent text-text-primary cursor-pointer min-h-[44px] px-2"
+                    class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
                   />
                 </div>
 
                 <!-- Guests + Search -->
                 <div class="relative" ref="guestSelectorContainer">
-                  <label class="block text-xs font-semibold text-text-secondary mb-1">{{ t('accommodation.guests') }}</label>
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('accommodation.guests') }}</label>
                   <div class="flex items-center gap-2">
                     <button
                       type="button"
                       @click.stop="toggleGuestSelector"
-                      class="flex-1 text-sm font-semibold focus:outline-none bg-transparent text-text-primary text-left cursor-pointer flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 hover:border-brand-500 transition-colors"
+                      class="flex-1 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 cursor-pointer flex items-center justify-between border border-gray-300 dark:border-gray-600 rounded-xl px-4 min-h-[48px] hover:border-brand-500 transition-colors"
                     >
                       <span class="truncate">{{ guestSummary }}</span>
-                      <svg class="w-4 h-4 text-text-primary transition-transform" :class="{ 'rotate-180': showGuestSelector }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform flex-shrink-0 ml-2" :class="{ 'rotate-180': showGuestSelector }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                       </svg>
                     </button>
@@ -78,7 +78,7 @@
                     <button
                       type="button"
                       @click="handleSearch"
-                      class="w-11 h-11 rounded-xl bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors flex-shrink-0"
+                      class="w-12 h-12 rounded-xl bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 active:scale-95 transition-all shadow-lg flex-shrink-0"
                       :aria-label="t('home.search')"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -183,21 +183,21 @@
 
     <!-- Primary Listings (Airbnb-style grid) -->
     <section class="bg-white dark:bg-gray-900">
-      <div class="container mx-auto px-4 py-10">
+      <div class="container mx-auto px-3 sm:px-4 py-8 sm:py-10">
         <div class="max-w-7xl mx-auto">
-          <div class="flex items-end justify-between mb-6">
+          <div class="flex items-end justify-between mb-4 sm:mb-6">
             <div>
-              <h2 class="text-2xl md:text-3xl font-semibold text-text-primary">{{ t('home.latestProperties') }}</h2>
-              <p class="text-text-secondary text-sm mt-1">{{ t('home.browseDesc') }}</p>
+              <h2 class="text-xl sm:text-2xl md:text-3xl font-semibold text-text-primary">{{ t('home.latestProperties') }}</h2>
+              <p class="text-text-secondary text-xs sm:text-sm mt-1">{{ t('home.browseDesc') }}</p>
             </div>
-            <router-link to="/accommodations" class="text-sm font-semibold text-brand-600 hover:text-brand-700">
+            <router-link to="/accommodations" class="text-sm font-semibold text-brand-600 hover:text-brand-700 whitespace-nowrap">
               {{ t('home.browseMore') }}
             </router-link>
           </div>
-          <div v-if="isLoading" class="grid grid-cols-5 gap-4">
+          <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
           </div>
-          <div v-else class="grid grid-cols-5 gap-4">
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
           </div>
         </div>
@@ -206,8 +206,8 @@
 
     <!-- Hosting CTA (kept, simplified) -->
     <section class="bg-gray-50 dark:bg-gray-900">
-      <div class="container mx-auto px-4 py-10">
-        <div class="relative overflow-hidden rounded-2xl max-w-7xl mx-auto">
+      <div class="container mx-auto px-3 sm:px-4 py-8 sm:py-10">
+        <div class="relative overflow-hidden rounded-xl sm:rounded-2xl max-w-7xl mx-auto min-h-[200px] sm:min-h-[300px]">
           <img
             loading="lazy"
             src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80"
@@ -215,12 +215,12 @@
             class="absolute inset-0 w-full h-full object-cover"
           />
           <div class="absolute inset-0 bg-black/40"></div>
-          <div class="relative p-8 md:p-12 max-w-2xl">
-            <h2 class="text-2xl md:text-4xl font-semibold text-white">{{ t('home.tryHosting') }}</h2>
-            <p class="mt-3 text-white/90 text-sm md:text-base">{{ t('home.tryHostingDesc') }}</p>
+          <div class="relative p-6 sm:p-8 md:p-12 max-w-2xl">
+            <h2 class="text-xl sm:text-2xl md:text-4xl font-semibold text-white">{{ t('home.tryHosting') }}</h2>
+            <p class="mt-2 sm:mt-3 text-white/90 text-xs sm:text-sm md:text-base">{{ t('home.tryHostingDesc') }}</p>
             <router-link
               to="/become-host"
-              class="mt-6 inline-flex items-center justify-center px-6 py-3 rounded-xl bg-brand-500 text-white font-semibold hover:bg-brand-600 transition-colors"
+              class="mt-4 sm:mt-6 inline-flex items-center justify-center px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-brand-500 text-white text-sm font-semibold hover:bg-brand-600 active:scale-95 transition-all shadow-lg"
             >
               {{ t('home.tryHosting') }}
             </router-link>

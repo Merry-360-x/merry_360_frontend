@@ -1,30 +1,31 @@
 <template>
   <MainLayout>
     <!-- Header Search (aligned with Home) -->
-    <section class="bg-gray-50 dark:bg-gray-900 pt-10 pb-6">
-      <div class="container mx-auto px-4">
+    <section class="bg-gray-50 dark:bg-gray-900 pt-6 pb-4">
+      <div class="container mx-auto px-3">
         <div class="max-w-4xl mx-auto">
-          <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur rounded-2xl shadow-card border border-gray-200/60 dark:border-gray-700 p-3">
+          <div class="bg-white dark:bg-gray-800 backdrop-blur rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-3">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-              <div class="flex-1 px-2 md:px-4">
-                <label class="block text-xs font-semibold mb-1 text-text-secondary">{{ t('nav.accommodations') }}</label>
+              <div class="flex-1">
+                <label class="block text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">{{ t('nav.accommodations') }}</label>
                 <input
                   v-model="searchQuery"
                   type="text"
                   :placeholder="t('home.search')"
-                  class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary"
+                  class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder:text-gray-400 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
                   @keyup.enter="performSearch"
                 />
               </div>
               <button
                 type="button"
                 @click="performSearch"
-                class="w-full md:w-11 h-11 rounded-xl bg-brand-500 text-white flex items-center justify-center hover:bg-brand-600 transition-colors flex-shrink-0"
+                class="w-full md:w-auto h-12 px-6 md:px-4 rounded-xl bg-brand-500 text-white flex items-center justify-center gap-2 hover:bg-brand-600 active:scale-95 transition-all shadow-lg font-medium"
                 :aria-label="t('home.search')"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
+                <span class="md:hidden">Search</span>
               </button>
             </div>
           </div>
@@ -87,10 +88,10 @@
       </div>
 
       <!-- Filters and Search -->
-      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
         <!-- Filters Sidebar -->
         <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 lg:sticky lg:top-24">
             <h3 class="font-semibold text-base sm:text-lg mb-4 text-text-primary">{{ t('accommodationList.filters') }}</h3>
             
             <!-- View Toggle -->
@@ -273,12 +274,12 @@
           <!-- Grid View (2 rows x 5 columns) -->
           <div v-if="viewMode === 'list'">
             <!-- Loading State -->
-            <div v-if="loading" class="grid grid-cols-5 gap-4">
+            <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
             </div>
             
             <!-- Loaded State: Grid Layout -->
-            <div v-else class="grid grid-cols-5 gap-4">
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               <PropertyCard
                 v-for="property in filteredAccommodations"
                 :key="property.id"
