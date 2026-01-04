@@ -243,8 +243,12 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
+import { optimizeImageFile } from '../../utils/imageOptimization'
+import { useToast } from '../../composables/useToast'
 import api from '../../services/api'
 import { useTranslation } from '@/composables/useTranslation'
+
+const { warning } = useToast()
 
 const router = useRouter()
 const { t, currentLanguage } = useTranslation()
@@ -287,12 +291,23 @@ const handlePhotoUpload = async (event) => {
     // Check file size and warn if large (over 5MB)
     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
     if (file.size > 5 * 1024 * 1024) {
-      warning(`Large file detected (${fileSizeMB}MB). Upload may take longer.`, 1000)
+      warning(`Large file detected (${fileSizeMB}MB). Compressing...`, 1000)
+    }
+    
+    // Optimize image before upload
+    let fileToUpload = file
+    if (file.type.startsWith('image/')) {
+      fileToUpload = await optimizeImageFile(file, { 
+        maxWidth: 1200, 
+        maxHeight: 1200, 
+        quality: 0.85 
+      })
+      console.log(`Image optimized: ${(file.size / 1024).toFixed(1)}KB → ${(fileToUpload.size / 1024).toFixed(1)}KB`)
     }
     
     if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
       try {
-        const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
+        const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
         storyForm.value.photos.push(result.secure_url)
       } catch (err) {
         console.warn('Cloudinary upload failed, falling back to base64', err.message)
@@ -300,14 +315,14 @@ const handlePhotoUpload = async (event) => {
         reader.onload = (e) => {
           storyForm.value.photos.push(e.target.result)
         }
-        reader.readAsDataURL(file)
+        reader.readAsDataURL(fileToUpload)
       }
     } else {
       const reader = new FileReader()
       reader.onload = (e) => {
         storyForm.value.photos.push(e.target.result)
       }
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(fileToUpload)
     }
   }
 }

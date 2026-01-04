@@ -598,6 +598,10 @@ import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
 import { confirmDialog } from '../../composables/useConfirm'
 import { useTranslation } from '@/composables/useTranslation'
+import { optimizeImageFile } from '../../utils/imageOptimization'
+import { useToast } from '../../composables/useToast'
+
+const { warning } = useToast()
 
 const userStore = useUserStore()
 const { t, currentLanguage } = useTranslation()
@@ -880,13 +884,25 @@ async function handleStoryImage(event) {
   // Check file size and warn if large (over 5MB)
   const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
   if (file.size > 5 * 1024 * 1024) {
-    warning(`Large file detected (${fileSizeMB}MB). Upload may take longer.`, 1000)
+    warning(`Large file detected (${fileSizeMB}MB). Compressing...`, 1000)
   }
 
   uploadingMedia.value = true
   newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 
   try {
+    let fileToUpload = file
+    
+    // Optimize images before upload for faster processing
+    if (newStory.value.mediaType === 'image') {
+      fileToUpload = await optimizeImageFile(file, { 
+        maxWidth: 1200, 
+        maxHeight: 1200, 
+        quality: 0.85 
+      })
+      console.log(`Image optimized: ${(file.size / 1024).toFixed(1)}KB → ${(fileToUpload.size / 1024).toFixed(1)}KB`)
+    }
+    
     // Show preview
     if (newStory.value.mediaType === 'video') {
       newStory.value.imagePreview = URL.createObjectURL(file)
@@ -895,14 +911,14 @@ async function handleStoryImage(event) {
         const reader = new FileReader()
         reader.onload = (e) => resolve(e.target.result)
         reader.onerror = () => reject(new Error('Failed to read file'))
-        reader.readAsDataURL(file)
+        reader.readAsDataURL(fileToUpload)
       })
       newStory.value.imagePreview = preview
     }
 
     // Upload to Cloudinary if configured
     if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-      const result = await uploadToCloudinary(file, { folder: 'merry360x/stories' })
+      const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
       newStory.value.image = result.secure_url
     } else {
       // Without Cloudinary, videos cannot be stored reliably
