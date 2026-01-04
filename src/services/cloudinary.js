@@ -6,27 +6,34 @@ export async function uploadToCloudinary(file, options = {}) {
     throw new Error('Cloudinary is not configured (VITE_CLOUDINARY_CLOUD_NAME / VITE_CLOUDINARY_UPLOAD_PRESET)')
   }
 
-  // Validate file size (max 2MB to prevent large uploads)
-  const maxSize = 2 * 1024 * 1024 // 2MB
+  // Detect if file is video
+  const isVideo = file.type?.startsWith('video/')
+  
+  // Validate file size - different limits for images vs videos
+  const maxSize = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024 // 100MB for video, 10MB for images
   if (file.size > maxSize) {
     const sizeMB = (file.size / (1024 * 1024)).toFixed(2)
-    throw new Error(`Image size (${sizeMB}MB) exceeds maximum allowed size (2MB). Please compress the image before uploading.`)
+    const maxMB = isVideo ? '100MB' : '10MB'
+    throw new Error(`File size (${sizeMB}MB) exceeds maximum allowed size (${maxMB}). Please compress before uploading.`)
   }
 
   const formData = new FormData()
   formData.append('file', file)
   formData.append('upload_preset', uploadPreset)
 
-  // Apply aggressive compression transformations on upload
-  formData.append('quality', 'auto:eco') // Eco quality for 10x compression
-  formData.append('fetch_format', 'auto') // Auto format (WebP when supported)
+  // Apply compression transformations
+  if (!isVideo) {
+    formData.append('quality', 'auto:eco') // Eco quality for images
+    formData.append('fetch_format', 'auto') // Auto format (WebP when supported)
+  }
   
   if (options.folder) {
     formData.append('folder', options.folder)
   }
 
-  // Use `auto/upload` so the same helper supports both images and videos.
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+  // Use appropriate resource type
+  const resourceType = isVideo ? 'video' : 'image'
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
     method: 'POST',
     body: formData
   })

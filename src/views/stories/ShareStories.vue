@@ -288,13 +288,23 @@ const handlePhotoUpload = async (event) => {
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
     
-    // Check file size and warn if large (over 5MB)
+    const isVideo = file.type?.startsWith('video/')
     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-    if (file.size > 5 * 1024 * 1024) {
-      warning(`Large file detected (${fileSizeMB}MB). Compressing...`, 1000)
+    const sizeLimit = isVideo ? 100 : 10
+    
+    // Check file size limit
+    if (file.size > sizeLimit * 1024 * 1024) {
+      const { error: showError } = useToast()
+      showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
+      continue
     }
     
-    // Optimize image before upload
+    // Warn if large
+    if (file.size > 5 * 1024 * 1024) {
+      warning(`Uploading ${fileSizeMB}MB file...`, 1000)
+    }
+    
+    // Optimize image before upload (skip videos)
     let fileToUpload = file
     if (file.type.startsWith('image/')) {
       fileToUpload = await optimizeImageFile(file, { 
@@ -307,17 +317,29 @@ const handlePhotoUpload = async (event) => {
     
     if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
       try {
+        console.log(`Uploading ${isVideo ? 'video' : 'image'} to Cloudinary...`)
         const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
         storyForm.value.photos.push(result.secure_url)
+        console.log('Upload successful:', result.secure_url)
       } catch (err) {
-        console.warn('Cloudinary upload failed, falling back to base64', err.message)
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          storyForm.value.photos.push(e.target.result)
+        console.error('Cloudinary upload failed:', err)
+        const { error: showError } = useToast()
+        showError(err.message || 'Upload failed')
+        
+        // Fallback for images only (not videos)
+        if (!isVideo) {
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            storyForm.value.photos.push(e.target.result)
+          }
+          reader.readAsDataURL(fileToUpload)
         }
-        reader.readAsDataURL(fileToUpload)
       }
     } else {
+      if (isVideo) {
+        alert('Video uploads require Cloudinary configuration')
+        continue
+      }
       const reader = new FileReader()
       reader.onload = (e) => {
         storyForm.value.photos.push(e.target.result)

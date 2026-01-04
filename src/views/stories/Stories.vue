@@ -936,17 +936,26 @@ async function handleStoryImage(event) {
   const file = event.target.files[0]
   if (!file) return
 
-  // Check file size and warn if large (over 5MB)
-  const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-  if (file.size > 5 * 1024 * 1024) {
-    warning(`Large file detected (${fileSizeMB}MB). Compressing...`, 1000)
-  }
-
   uploadingMedia.value = true
   newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 
   try {
     let fileToUpload = file
+    
+    // Check file size and warn if large
+    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+    const sizeLimit = newStory.value.mediaType === 'video' ? 100 : 10
+    
+    if (file.size > sizeLimit * 1024 * 1024) {
+      const { error: showError } = useToast()
+      showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
+      uploadingMedia.value = false
+      return
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      warning(`Uploading ${fileSizeMB}MB file...`, 1000)
+    }
     
     // Optimize images before upload for faster processing
     if (newStory.value.mediaType === 'image') {
@@ -973,8 +982,10 @@ async function handleStoryImage(event) {
 
     // Upload to Cloudinary if configured
     if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
+      console.log(`Uploading ${newStory.value.mediaType} to Cloudinary...`)
       const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
       newStory.value.image = result.secure_url
+      console.log('Upload successful:', result.secure_url)
     } else {
       // Without Cloudinary, videos cannot be stored reliably
       if (newStory.value.mediaType === 'video') {
@@ -988,10 +999,12 @@ async function handleStoryImage(event) {
     }
   } catch (error) {
     console.error('Upload error:', error)
-    // Best-effort fallback for images
-    if (newStory.value.mediaType !== 'video') {
-      newStory.value.image = newStory.value.imagePreview
-    }
+    const { error: showError } = useToast()
+    showError(error.message || 'Upload failed. Please try again.')
+    
+    // Clear failed upload
+    newStory.value.image = null
+    newStory.value.imagePreview = null
   } finally {
     uploadingMedia.value = false
   }
@@ -1203,6 +1216,11 @@ async function toggleLike(story) {
     return
   }
 
+  if (!story || !story.id) {
+    console.error('Invalid story object:', story)
+    return
+  }
+
   try {
     if (story.isLiked) {
       // Unlike
@@ -1212,23 +1230,31 @@ async function toggleLike(story) {
         .eq('story_id', story.id)
         .eq('user_id', userStore.user.id)
 
-      if (error) throw error
+      if (error) {
+        console.error('Error unliking story:', error)
+        throw error
+      }
 
       story.isLiked = false
       story.likes_count = Math.max(0, (story.likes_count || 1) - 1)
+      console.log('Story unliked successfully')
     } else {
       // Like
       const { error } = await supabase
         .from('story_likes')
-        .upsert(
-          [{ story_id: story.id, user_id: userStore.user.id }],
-          { onConflict: 'story_id,user_id', ignoreDuplicates: true }
-        )
+        .insert([{ 
+          story_id: story.id, 
+          user_id: userStore.user.id 
+        }])
 
-      if (error) throw error
+      if (error) {
+        console.error('Error liking story:', error)
+        throw error
+      }
 
       story.isLiked = true
       story.likes_count = (story.likes_count || 0) + 1
+      console.log('Story liked successfully')
     }
 
     // Update in stories array
@@ -1238,13 +1264,21 @@ async function toggleLike(story) {
     }
   } catch (error) {
     console.error('Error toggling like:', error)
-    alert(t('stories.likeUpdateFailed'))
+    const { error: showError } = useToast()
+    showError(error.message || t('stories.likeUpdateFailed'))
   }
 }
 
 async function addComment() {
   if (!newComment.value.trim() || !userStore.isAuthenticated) {
-    if (!userStore.isAuthenticated) alert(t('stories.loginToCommentAlert'))
+    if (!userStore.isAuthenticated) {
+      alert(t('stories.loginToCommentAlert'))
+    }
+    return
+  }
+
+  if (!activeStory.value || !activeStory.value.id) {
+    console.error('No active story to comment on')
     return
   }
 
@@ -1258,14 +1292,20 @@ async function addComment() {
       content: newComment.value.trim()
     }
 
+    console.log('Adding comment:', commentData)
+
     const { data, error } = await supabase
       .from('story_comments')
       .insert([commentData])
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Error adding comment:', error)
+      throw error
+    }
 
+    console.log('Comment added successfully:', data)
     storyComments.value.unshift(data)
     activeStory.value.comments_count = (activeStory.value.comments_count || 0) + 1
     newComment.value = ''
@@ -1275,9 +1315,14 @@ async function addComment() {
     if (idx !== -1) {
       stories.value[idx].comments_count = activeStory.value.comments_count
     }
+
+    // Show success feedback
+    const { success } = useToast()
+    success('Comment added!')
   } catch (error) {
     console.error('Error adding comment:', error)
-    alert(t('stories.addCommentFailed'))
+    const { error: showError } = useToast()
+    showError(error.message || t('stories.addCommentFailed'))
   } finally {
     addingComment.value = false
   }
