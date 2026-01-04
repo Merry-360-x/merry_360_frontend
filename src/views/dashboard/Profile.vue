@@ -836,27 +836,33 @@ const setup2FA = () => {
 }
 
 const handleLogout = async () => {
-  const ok = await confirmDialog(t('auth.logoutConfirm'), {
-    title: t('auth.logout'),
-    confirmText: t('auth.logout'),
-    cancelText: t('common.cancel')
-  })
+  const isMobileViewport =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 1023px)').matches
 
-  if (ok) {
-    try {
-      // signOutAuth() calls supabase.auth.signOut() which triggers SIGNED_OUT event
-      // The event listener in main.js will call userStore.logout()
-      await signOutAuth()
-      
-      // Show success toast and redirect to home
-      const { success } = useToast()
-      success(t('auth.logoutSuccess'))
-      router.push('/')
-    } catch (err) {
-      console.error('Error signing out:', err)
-      const { error: showError } = useToast()
-      showError(t('auth.logoutError'))
-    }
+  if (!isMobileViewport) {
+    const ok = await confirmDialog(t('auth.logoutConfirm'), {
+      title: t('auth.logout'),
+      confirmText: t('auth.logout'),
+      cancelText: t('common.cancel')
+    })
+
+    if (!ok) return
+  }
+
+  try {
+    // signOutAuth() calls supabase.auth.signOut() which triggers SIGNED_OUT event
+    // The event listener in main.js will call userStore.logout()
+    await signOutAuth()
+
+    const { success } = useToast()
+    success(t('auth.logoutSuccess'))
+    router.push('/')
+  } catch (err) {
+    console.error('Error signing out:', err)
+    const { error: showError } = useToast()
+    showError(t('auth.logoutError'))
   }
 }
 

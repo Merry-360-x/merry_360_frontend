@@ -1,70 +1,70 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 font-sans transition-colors duration-200">
-    <!-- Desktop Header (hidden on mobile) -->
-    <header v-if="false" class="hidden lg:block bg-white dark:bg-gray-900 lg:bg-white/95 dark:lg:bg-gray-900/95 lg:backdrop-blur-xl shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 transition-all duration-200">
+  <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans transition-colors duration-200">
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-800/80 lg:bg-white dark:lg:bg-gray-800 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div class="container mx-auto px-3 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 sm:h-20">
           <!-- Logo -->
           <router-link to="/" class="flex items-center flex-shrink-0 mr-2 sm:mr-4">
-            <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-8 sm:h-10 md:h-12 w-auto" />
+            <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-10 sm:h-10 md:h-12 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden lg:flex items-center gap-1">
+          <nav class="hidden lg:flex items-center gap-0">
             <router-link 
               to="/"
-              class="text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-brand-500 dark:hover:text-brand-400 transition-all px-4 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
-              active-class="!bg-brand-50 dark:!bg-brand-950 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
               exact
             >
               {{ t('nav.home') }}
             </router-link>
             <router-link 
               to="/accommodations"
-              class="text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-brand-500 dark:hover:text-brand-400 transition-all px-4 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
-              active-class="!bg-brand-50 dark:!bg-brand-950 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.accommodations') }}
             </router-link>
             <router-link 
               to="/tours"
-              class="text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-brand-500 dark:hover:text-brand-400 transition-all px-4 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
-              active-class="!bg-brand-50 dark:!bg-brand-950 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.tours') }}
             </router-link>
             <router-link 
               to="/transport"
-              class="text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-brand-500 dark:hover:text-brand-400 transition-all px-4 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
-              active-class="!bg-brand-50 dark:!bg-brand-950 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.transport') }}
             </router-link>
             <router-link 
               to="/services"
-              class="text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-brand-500 dark:hover:text-brand-400 transition-all px-4 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
-              active-class="!bg-brand-50 dark:!bg-brand-950 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.services') }}
             </router-link>
             <router-link 
               to="/stories"
-              class="text-sm text-gray-700 dark:text-gray-300 font-semibold hover:text-brand-500 dark:hover:text-brand-400 transition-all px-4 py-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
-              active-class="!bg-brand-50 dark:!bg-brand-950 !text-brand-600 dark:!text-brand-400"
+              class="text-sm text-text-secondary font-medium hover:text-brand-600 dark:hover:text-brand-400 transition-all px-4 py-2 border border-transparent rounded-[25px]"
+              active-class="!border-brand-500 !text-brand-600 dark:!text-brand-400"
             >
               {{ t('nav.stories') }}
             </router-link>
             <router-link
               v-if="canSeeHostPortal"
               to="/host"
-              class="text-sm text-white font-semibold hover:from-brand-600 hover:to-brand-700 transition-all px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 rounded-xl ml-2 shadow-md hover:shadow-lg"
+              class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px] ml-4"
             >
               {{ t('nav.hostDashboard') }}
             </router-link>
             <router-link
               v-else
               to="/become-host"
-              class="text-sm text-white font-semibold hover:from-brand-600 hover:to-brand-700 transition-all px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 rounded-xl ml-2 shadow-md hover:shadow-lg"
+              class="text-sm text-white font-medium hover:bg-red-600 transition-all px-4 py-2 bg-red-500 rounded-[25px] ml-4"
             >
               {{ t('nav.becomeHost') }}
             </router-link>
@@ -220,7 +220,7 @@
 
           <!-- Mobile Right -->
           <div class="flex lg:hidden items-center gap-1 sm:gap-2">
-            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+            <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
               <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
@@ -253,13 +253,44 @@
         <!-- Menu Panel -->
         <div class="fixed top-0 right-0 bottom-0 w-72 sm:w-80 bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto transition-colors duration-200">
           <!-- Header -->
-          <div class="sticky top-0 bg-white dark:bg-gray-800 px-6 py-4 flex items-center justify-between border-b border-gray-100 dark:border-gray-700">
-            <h3 class="font-semibold text-gray-900 dark:text-gray-100">{{ t('nav.menu') }}</h3>
-            <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
+          <div class="sticky top-0 bg-white dark:bg-gray-800 px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold text-gray-900 dark:text-gray-100">{{ t('nav.menu') }}</h3>
+              <button @click="mobileMenuOpen = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Currency + Language (mobile menu header) -->
+            <div class="mt-3 flex gap-2">
+              <select
+                v-model="currencyStore.currentCurrency"
+                @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
+                class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
+                aria-label="Currency"
+              >
+                <option value="USD">$ USD</option>
+                <option value="EUR">€ EUR</option>
+                <option value="GBP">£ GBP</option>
+                <option value="CNY">¥ CNY</option>
+                <option value="RWF">RWF</option>
+              </select>
+
+              <select
+                v-model="languageStore.currentLanguage"
+                @change="languageStore.setLanguage(languageStore.currentLanguage)"
+                class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
+                aria-label="Language"
+              >
+                <option value="EN">EN</option>
+                <option value="RW">RW</option>
+                <option value="FR">FR</option>
+                <option value="ZH">中文</option>
+                <option value="SW">SW</option>
+              </select>
+            </div>
           </div>
 
           <div class="p-6">
@@ -515,7 +546,7 @@
     <button
       v-if="!showAIConcierge"
       @click="showModeSelector = true"
-      class="fixed bottom-20 lg:bottom-6 right-4 lg:right-6 z-50 w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all transform hover:scale-110 flex items-center justify-center group"
+      class="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all transform hover:scale-110 flex items-center justify-center group"
     >
       <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
@@ -524,59 +555,57 @@
     </button>
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 border-t border-gray-200 dark:border-gray-800 mt-8 sm:mt-20 relative overflow-hidden transition-colors duration-200">
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-8 sm:mt-20 relative overflow-hidden transition-colors duration-200">
       <div class="container mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-16 relative z-10">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
-          <div class="col-span-2 md:col-span-1">
-            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-10 sm:h-12 w-auto" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-12">
+          <div>
+            <div class="flex items-center space-x-3 mb-6">
+              <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />
             </div>
-            <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed font-medium">{{ t('footer.tagline') }}</p>
+            <p class="text-text-secondary text-sm leading-relaxed">{{ t('footer.tagline') }}</p>
           </div>
-          <div>
-            <h4 class="font-bold mb-3 sm:mb-5 text-gray-900 dark:text-white text-sm sm:text-base">{{ t('footer.explore') }}</h4>
-            <ul class="space-y-2 sm:space-y-3 text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">
-              <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('nav.accommodations') }}</router-link></li>
-              <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('nav.tours') }}</router-link></li>
-              <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('nav.transport') }}</router-link></li>
+          <div class="hidden sm:block">
+            <h4 class="font-bold mb-5 text-text-primary text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.explore') }}</h4>
+            <ul class="space-y-3 text-text-secondary text-sm">
+              <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.accommodations') }}</router-link></li>
+              <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.tours') }}</router-link></li>
+              <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.transport') }}</router-link></li>
             </ul>
           </div>
-          <div>
-            <h4 class="font-bold mb-3 sm:mb-5 text-gray-900 dark:text-white text-sm sm:text-base">{{ t('footer.company') }}</h4>
-            <ul class="space-y-2 sm:space-y-3 text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">
-              <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('footer.aboutUs') }}</router-link></li>
-              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('footer.contact') }}</a></li>
-              <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('nav.becomeHost') }}</router-link></li>
+          <div class="hidden sm:block">
+            <h4 class="font-bold mb-5 text-text-primary text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.company') }}</h4>
+            <ul class="space-y-3 text-text-secondary text-sm">
+              <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.aboutUs') }}</router-link></li>
+              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.contact') }}</a></li>
+              <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.becomeHost') }}</router-link></li>
             </ul>
           </div>
-          <div>
-            <h4 class="font-bold mb-3 sm:mb-5 text-gray-900 dark:text-white text-sm sm:text-base">{{ t('footer.support') }}</h4>
-            <ul class="space-y-2 sm:space-y-3 text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">
-              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('footer.helpCenter') }}</a></li>
-              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('footer.safety') }}</a></li>
-              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all inline-block">{{ t('footer.terms') }}</a></li>
+          <div class="hidden sm:block">
+            <h4 class="font-bold mb-5 text-text-primary text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.support') }}</h4>
+            <ul class="space-y-3 text-text-secondary text-sm">
+              <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.helpCenter') }}</a></li>
+              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.safety') }}</a></li>
+              <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.terms') }}</a></li>
             </ul>
           </div>
         </div>
-        <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-3">
-          <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">© 2025 Merry360X. All rights reserved.</p>
-          <div class="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 gap-y-2">
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors font-semibold">{{ t('footer.privacy') }}</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors font-semibold">{{ t('footer.terms') }}</a>
-            <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-500 dark:hover:text-brand-400 text-xs sm:text-sm transition-colors font-semibold">{{ t('footer.cookies') }}</a>
+        <div class="mt-6 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-text-secondary text-sm">© 2025 Merry360X. All rights reserved.</p>
+          <div class="flex space-x-4 mt-3 md:mt-0">
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.privacy') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.terms') }}</a>
+            <a href="#" class="text-text-secondary hover:text-brand-500 dark:hover:text-brand-400 text-sm transition-colors">{{ t('footer.cookies') }}</a>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- Mobile Bottom Navigation -->
-    <MobileBottomNav />
 
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '../../stores/app'
 import { useUserStore } from '../../stores/userStore'
@@ -584,10 +613,10 @@ import { useCurrencyStore } from '../../stores/currency'
 import { useLanguageStore } from '../../stores/language'
 import { useThemeStore } from '../../stores/theme'
 import { useTranslation } from '../../composables/useTranslation'
-import { useConfirm } from '../../composables/useConfirm'
-import MobileBottomNav from './MobileBottomNav.vue'
+import AIConcierge from '../ai/AIConcierge.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 import { useToast } from '../../composables/useToast'
+import { signOut as signOutAuth } from '../../services/auth'
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -636,6 +665,35 @@ const closeUserMenu = () => {
 }
 
 const handleLogout = async () => {
+  // Close menus first so the confirm dialog is always visible/clickable on mobile.
+  showUserMenu.value = false
+  mobileMenuOpen.value = false
+
+  const { info, success, error: showError } = useToast()
+
+  const isMobileViewport =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(max-width: 1023px)').matches
+
+  // Mobile fallback: force logout without confirm.
+  if (isMobileViewport) {
+    try {
+      info('Signing out…', 1200)
+      await signOutAuth()
+      success(t('auth.logoutSuccess'))
+      router.push('/')
+    } catch (error) {
+      console.error('Logout error:', error)
+      showError(t('auth.logoutError') || 'Failed to logout')
+    }
+    return
+  }
+
+  // Let the menu overlay unmount before opening the confirm.
+  await nextTick()
+  await new Promise((resolve) => setTimeout(resolve, 60))
+
   const ok = await confirmDialog(t('auth.logoutConfirm'), {
     title: t('auth.logout'),
     confirmText: t('auth.logout'),
@@ -645,20 +703,15 @@ const handleLogout = async () => {
   if (!ok) return
 
   try {
+    info('Signing out…', 1200)
+
     // Sign out from Supabase (this triggers SIGNED_OUT event which calls store.logout())
-    const { signOut } = await import('../../services/auth')
-    await signOut()
-    
-    showUserMenu.value = false
-    mobileMenuOpen.value = false
-    
-    // Show success toast and redirect to home
-    const { success } = useToast()
+    await signOutAuth()
+
     success(t('auth.logoutSuccess'))
     router.push('/')
   } catch (error) {
     console.error('Logout error:', error)
-    const { error: showError } = useToast()
     showError(t('auth.logoutError') || 'Failed to logout')
   }
 }

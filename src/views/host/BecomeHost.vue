@@ -1,7 +1,7 @@
 <template>
   <MainLayout>
     <!-- Hero Section -->
-    <section class="relative bg-white dark:from-gray-800 via-orange-50 dark:via-gray-700 to-white dark:to-gray-900 py-16 md:py-24 transition-colors duration-200">
+    <section class="relative bg-gradient-to-br from-white via-orange-50 to-white dark:from-gray-800 dark:via-gray-700 dark:to-gray-900 py-16 md:py-24 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto text-center">
           <h1 class="text-3xl md:text-4xl font-bold mb-6 text-text-primary">
@@ -21,7 +21,7 @@
     </section>
 
     <!-- Multi-Step Registration Form -->
-    <section ref="formSection" class="py-16 md:py-20 bg-white dark:from-gray-900 to-white dark:to-gray-800 transition-colors duration-200">
+    <section ref="formSection" class="py-16 md:py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-10">
@@ -346,7 +346,7 @@
     </section>
 
     <!-- Benefits Section -->
-    <section class="py-16 md:py-20 bg-white dark:bg-gray-900 transition-colors duration-200">
+    <section class="py-16 md:py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('hostApplication.benefits.title') }}</h2>
