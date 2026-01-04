@@ -2,11 +2,11 @@
   <div class="min-h-screen flex flex-col bg-white dark:bg-gray-900 font-sans transition-colors duration-200">
     <!-- Header -->
     <header class="bg-white/80 dark:bg-gray-800/80 lg:bg-white dark:lg:bg-gray-800 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
+      <div class="container mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20">
           <!-- Logo -->
-          <router-link to="/" class="flex items-center flex-shrink-0 mr-4">
-            <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-10 md:h-12 w-auto" />
+          <router-link to="/" class="flex items-center flex-shrink-0 mr-2 sm:mr-4">
+            <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-8 sm:h-10 md:h-12 w-auto" />
           </router-link>
 
           <!-- Desktop Navigation -->
@@ -219,16 +219,16 @@
           </div>
 
           <!-- Mobile Right -->
-          <div class="flex lg:hidden items-center gap-2">
+          <div class="flex lg:hidden items-center gap-1 sm:gap-2">
             <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
-              <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
             </router-link>
 
             <button 
               @click="mobileMenuOpen = !mobileMenuOpen"
-              class="p-1.5 text-gray-900 dark:text-gray-100"
+              class="p-2 text-gray-900 dark:text-gray-100 min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Menu"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -524,9 +524,9 @@
     </button>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20 relative overflow-hidden transition-colors duration-200">
-      <div class="container mx-auto px-4 lg:px-8 py-16 relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12 sm:mt-20 relative overflow-hidden transition-colors duration-200">
+      <div class="container mx-auto px-3 sm:px-4 lg:px-8 py-12 sm:py-16 relative z-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
           <div>
             <div class="flex items-center space-x-3 mb-6">
               <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />

@@ -18,15 +18,15 @@
         <div class="absolute inset-0 bg-black/40"></div>
       </div>
 
-      <div class="relative z-10 container mx-auto px-4">
-        <div class="min-h-[70vh] flex flex-col items-center justify-center py-20">
-          <h1 class="text-3xl md:text-5xl font-semibold text-white text-center max-w-3xl">
+      <div class="relative z-10 container mx-auto px-3 sm:px-4">
+        <div class="min-h-[60vh] sm:min-h-[70vh] flex flex-col items-center justify-center py-12 sm:py-20">
+          <h1 class="text-2xl sm:text-3xl md:text-5xl font-semibold text-white text-center max-w-3xl px-4">
             {{ t('home.findProperty') }}
           </h1>
 
-          <div class="mt-8 w-full max-w-4xl">
-            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur rounded-2xl shadow-card border border-gray-200/60 dark:border-gray-700 p-3">
-              <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div class="mt-6 sm:mt-8 w-full max-w-4xl px-2 sm:px-0">
+            <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur rounded-2xl shadow-card border border-gray-200/60 dark:border-gray-700 p-2 sm:p-3">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-3">
                 <!-- Location -->
                 <div class="md:col-span-1">
                   <label class="block text-xs font-semibold text-text-secondary mb-1">{{ t('accommodation.location') }}</label>
@@ -34,7 +34,7 @@
                     v-model="searchQuery.location"
                     type="text"
                     :placeholder="t('search.whereGoing')"
-                    class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary"
+                    class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary min-h-[44px] px-2"
                   />
                 </div>
 
@@ -45,7 +45,7 @@
                     v-model="searchQuery.checkIn"
                     type="date"
                     :min="minCheckInDate"
-                    class="w-full text-sm font-semibold focus:outline-none bg-transparent text-text-primary cursor-pointer"
+                    class="w-full text-sm font-semibold focus:outline-none bg-transparent text-text-primary cursor-pointer min-h-[44px] px-2"
                   />
                 </div>
 
@@ -56,7 +56,7 @@
                     v-model="searchQuery.checkOut"
                     type="date"
                     :min="minCheckOutDate"
-                    class="w-full text-sm font-semibold focus:outline-none bg-transparent text-text-primary cursor-pointer"
+                    class="w-full text-sm font-semibold focus:outline-none bg-transparent text-text-primary cursor-pointer min-h-[44px] px-2"
                   />
                 </div>
 
