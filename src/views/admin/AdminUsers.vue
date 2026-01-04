@@ -2,10 +2,10 @@
   <AdminLayout>
     <!-- User Profile Modal -->
     <div v-if="selectedUser" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="selectedUser = null">
-      <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-start mb-6">
-          <h2 class="text-2xl font-bold">User Profile</h2>
-          <button @click="selectedUser = null" class="text-gray-400 hover:text-gray-600">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">User Profile</h2>
+          <button @click="selectedUser = null" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -20,14 +20,14 @@
               class="w-24 h-24 rounded-full" 
             />
             <div>
-              <h3 class="text-xl font-bold">{{ selectedUser.first_name }} {{ selectedUser.last_name }}</h3>
-              <p class="text-gray-600">{{ selectedUser.email }}</p>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ selectedUser.first_name }} {{ selectedUser.last_name }}</h3>
+              <p class="text-gray-600 dark:text-gray-400">{{ selectedUser.email }}</p>
               <span :class="{
                 'px-3 py-1 rounded-full text-sm font-medium inline-block mt-2': true,
-                'bg-red-100 text-red-800': selectedUser.role === 'admin',
-                'bg-blue-100 text-blue-800': selectedUser.role === 'host',
-                'bg-indigo-100 text-indigo-800': selectedUser.role === 'staff',
-                'bg-gray-100 text-gray-800': selectedUser.role === 'user'
+                'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': selectedUser.role === 'admin',
+                'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300': selectedUser.role === 'host',
+                'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300': selectedUser.role === 'staff',
+                'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300': selectedUser.role === 'user'
               }">
                 {{ selectedUser.role }}
               </span>
@@ -35,60 +35,60 @@
           </div>
           
           <!-- Details -->
-          <div class="grid grid-cols-2 gap-4 border-t pt-4">
+          <div class="grid grid-cols-2 gap-4 border-t border-gray-200 dark:border-gray-700 pt-4">
             <div>
-              <p class="text-sm text-gray-500">Phone</p>
-              <p class="font-medium">{{ selectedUser.phone_number || 'Not provided' }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Phone</p>
+              <p class="font-medium text-gray-900 dark:text-white">{{ selectedUser.phone_number || 'Not provided' }}</p>
             </div>
             <div>
-              <p class="text-sm text-gray-500">Date of Birth</p>
-              <p class="font-medium">{{ selectedUser.date_of_birth || 'Not provided' }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Date of Birth</p>
+              <p class="font-medium text-gray-900 dark:text-white">{{ selectedUser.date_of_birth || 'Not provided' }}</p>
             </div>
             <div>
-              <p class="text-sm text-gray-500">City</p>
-              <p class="font-medium">{{ selectedUser.city || 'Not provided' }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">City</p>
+              <p class="font-medium text-gray-900 dark:text-white">{{ selectedUser.city || 'Not provided' }}</p>
             </div>
             <div>
-              <p class="text-sm text-gray-500">Joined</p>
-              <p class="font-medium">{{ formatDate(selectedUser.created_at) }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Joined</p>
+              <p class="font-medium text-gray-900 dark:text-white">{{ formatDate(selectedUser.created_at) }}</p>
             </div>
           </div>
           
-          <div v-if="selectedUser.bio" class="border-t pt-4">
-            <p class="text-sm text-gray-500 mb-2">Bio</p>
-            <p class="text-gray-700">{{ selectedUser.bio }}</p>
+          <div v-if="selectedUser.bio" class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Bio</p>
+            <p class="text-gray-700 dark:text-gray-300">{{ selectedUser.bio }}</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-2">User Management</h1>
-      <p class="text-text-secondary">Manage users and assign roles</p>
+      <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-white">User Management</h1>
+      <p class="text-text-secondary dark:text-gray-400">Manage users and assign roles</p>
     </div>
 
     <!-- Create Staff Account (Admin only) -->
     <Card padding="lg" class="mb-8">
-      <h2 class="text-xl font-bold mb-4">Create Staff Account</h2>
-      <p class="text-text-secondary text-sm mb-4">
+      <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Create Staff Account</h2>
+      <p class="text-text-secondary dark:text-gray-400 text-sm mb-4">
         Staff accounts are created by admins only. Staff cannot self-register.
       </p>
       <form class="grid grid-cols-1 md:grid-cols-4 gap-4" @submit.prevent="createStaff">
         <div>
-          <label class="block text-sm font-medium mb-1">First name</label>
-          <input v-model="staffForm.firstName" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="First" />
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">First name</label>
+          <input v-model="staffForm.firstName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="First" />
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">Last name</label>
-          <input v-model="staffForm.lastName" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Last" />
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Last name</label>
+          <input v-model="staffForm.lastName" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Last" />
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">Email *</label>
-          <input v-model="staffForm.email" type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="staff@example.com" />
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Email *</label>
+          <input v-model="staffForm.email" type="email" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="staff@example.com" />
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">Password *</label>
-          <input v-model="staffForm.password" type="password" minlength="6" required class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="Min 6 chars" />
+          <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Password *</label>
+          <input v-model="staffForm.password" type="password" minlength="6" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="Min 6 chars" />
         </div>
 
         <div class="md:col-span-4 flex justify-end">
@@ -102,24 +102,24 @@
     <!-- Stats -->
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
       <Card padding="md">
-        <p class="text-text-secondary text-sm mb-1">Total Users</p>
-        <p class="text-3xl font-bold">{{ stats.total }}</p>
+        <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Total Users</p>
+        <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.total }}</p>
       </Card>
       <Card padding="md">
-        <p class="text-text-secondary text-sm mb-1">Admins</p>
-        <p class="text-3xl font-bold text-error">{{ stats.admins }}</p>
+        <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Admins</p>
+        <p class="text-3xl font-bold text-error dark:text-red-400">{{ stats.admins }}</p>
       </Card>
       <Card padding="md">
-        <p class="text-text-secondary text-sm mb-1">Hosts</p>
-        <p class="text-3xl font-bold text-brand-600">{{ stats.hosts }}</p>
+        <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Hosts</p>
+        <p class="text-3xl font-bold text-brand-600 dark:text-brand-400">{{ stats.hosts }}</p>
       </Card>
       <Card padding="md">
-        <p class="text-text-secondary text-sm mb-1">Staff</p>
-        <p class="text-3xl font-bold text-indigo-600">{{ stats.staff }}</p>
+        <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Staff</p>
+        <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ stats.staff }}</p>
       </Card>
       <Card padding="md">
-        <p class="text-text-secondary text-sm mb-1">Regular Users</p>
-        <p class="text-3xl font-bold text-success">{{ stats.users }}</p>
+        <p class="text-text-secondary dark:text-gray-400 text-sm mb-1">Regular Users</p>
+        <p class="text-3xl font-bold text-success dark:text-green-400">{{ stats.users }}</p>
       </Card>
     </div>
 
@@ -128,16 +128,16 @@
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
-            <tr class="border-b border-gray-200">
-              <th class="text-left py-3 px-4">User</th>
-              <th class="text-left py-3 px-4">Email</th>
-              <th class="text-left py-3 px-4">Role</th>
-              <th class="text-left py-3 px-4">Joined</th>
-              <th class="text-left py-3 px-4">Actions</th>
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+              <th class="text-left py-3 px-4 text-gray-700 dark:text-gray-300">User</th>
+              <th class="text-left py-3 px-4 text-gray-700 dark:text-gray-300">Email</th>
+              <th class="text-left py-3 px-4 text-gray-700 dark:text-gray-300">Role</th>
+              <th class="text-left py-3 px-4 text-gray-700 dark:text-gray-300">Joined</th>
+              <th class="text-left py-3 px-4 text-gray-700 dark:text-gray-300">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in users" :key="user.id" class="border-b border-gray-100">
+            <tr v-for="user in users" :key="user.id" class="border-b border-gray-100 dark:border-gray-800">
               <td class="py-4 px-4">
                 <div class="flex items-center">
                   <img 
@@ -145,17 +145,17 @@
                     class="w-10 h-10 rounded-full mr-3" 
                   />
                   <div>
-                    <p class="font-semibold">{{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="font-semibold text-gray-900 dark:text-white">{{ user.first_name }} {{ user.last_name }}</p>
                   </div>
                 </div>
               </td>
-              <td class="py-4 px-4">{{ user.email }}</td>
+              <td class="py-4 px-4 text-gray-700 dark:text-gray-300">{{ user.email }}</td>
               <td class="py-4 px-4">
                 <div class="flex items-center gap-2">
                   <select 
                     v-model="user.role" 
                     @change="markUserAsChanged(user)"
-                    class="px-3 py-1 border border-gray-300 rounded-lg text-sm"
+                    class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="user">User</option>
                     <option value="host">Host</option>
@@ -172,7 +172,7 @@
                   </Button>
                 </div>
               </td>
-              <td class="py-4 px-4">{{ formatDate(user.created_at) }}</td>
+              <td class="py-4 px-4 text-gray-700 dark:text-gray-300">{{ formatDate(user.created_at) }}</td>
               <td class="py-4 px-4">
                 <Button variant="outline" size="sm" @click="viewProfile(user)">View Profile</Button>
               </td>
