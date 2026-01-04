@@ -179,9 +179,13 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, onMounted, onUnmounted, computed } from 'vue'
 import { getAIResponse as callOpenAI, isOpenAIConfigured } from '../../services/openai'
 import { getMerry360XContext, formatContextForAI } from '../../services/aiContext'
+import { supabase } from '../../services/supabase'
+import { useUserStore } from '../../stores/userStore'
+import { useCurrencyStore } from '../../stores/currency'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   isOpen: {
@@ -192,6 +196,10 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'minimize'])
 
+const router = useRouter()
+const userStore = useUserStore()
+const currencyStore = useCurrencyStore()
+
 const messages = ref([])
 const inputMessage = ref('')
 const isTyping = ref(false)
@@ -201,11 +209,18 @@ const adminName = ref('')
 const adminRole = ref('')
 const conversationHistory = ref([]) // Store conversation for context
 const useOpenAI = ref(isOpenAIConfigured())
+const conversationId = ref(null)
+const showRating = ref(false)
+const rating = ref(0)
+const showCartTab = ref(false)
+
+// Computed
+const cartCount = computed(() => userStore.cartCount)
 
 const quickSuggestions = [
   'Show me hotels',
   'Gorilla trekking',
-  'Airport transfer',
+  'I need help',
   'Best time to visit'
 ]
 
@@ -224,29 +239,24 @@ const minimize = () => {
   emit('minimize')
 }
 
-const requestHumanSupport = () => {
-  // In production, this would create a support ticket in backend
-  messages.value.push({
-    type: 'system',
-    text: 'Connecting you to a live support agent...',
-    isAdmin: false
-  })
-  
-  // Simulate admin taking over (in production, this would be real-time via WebSocket/Supabase realtime)
-  setTimeout(() => {
-    adminMode.value = true
-    adminName.value = 'Sarah'
-    adminRole.value = CLEARANCE_LEVELS.SUPPORT
+const requestHumanSupport = async () => {
+  // Update conversation to request human support
+  if (conversationId.value) {
+    await supabase
+      .from('support_conversations')
+      .update({ 
+        needs_human: true,
+        status: 'waiting'
+      })
+      .eq('id', conversationId.value)
     
     messages.value.push({
-      type: 'ai',
-      text: "Hi! I'm Sarah from the support team. How can I help you today?",
-      isAdmin: true,
-      adminName: 'Sarah',
-      adminRole: CLEARANCE_LEVELS.SUPPORT
+      type: 'system',
+      text: 'Request sent! A support agent will join you shortly. Average wait time: 2-5 minutes.',
+      isAdmin: false
     })
     scrollToBottom()
-  }, 2000)
+  }
 }
 
 const sendUserMessage = () => {
@@ -266,16 +276,27 @@ const sendMessage = async (text) => {
   inputMessage.value = ''
   scrollToBottom()
   
+  // Save user message to database
+  if (conversationId.value) {
+    await supabase.from('support_messages').insert({
+      conversation_id: conversationId.value,
+      sender: 'user',
+      content: text
+    })
+  }
+  
+  // Don't auto-respond if in admin mode (wait for staff)
+  if (adminMode.value) {
+    return
+  }
+  
   // Show typing indicator
   isTyping.value = true
   
   try {
     let response
     
-    if (adminMode.value) {
-      // Admin response (simulated for now)
-      response = getAdminResponse(text)
-    } else if (useOpenAI.value) {
+    if (useOpenAI.value) {
       // Fetch real-time data from Supabase before calling AI
       const realtimeContext = await getMerry360XContext()
       const formattedContext = formatContextForAI(realtimeContext)
@@ -301,10 +322,20 @@ const sendMessage = async (text) => {
     messages.value.push({
       type: 'ai',
       text: response,
-      isAdmin: adminMode.value,
-      adminName: adminMode.value ? adminName.value : null,
-      adminRole: adminMode.value ? adminRole.value : null
+      isAdmin: false,
+      adminName: null,
+      adminRole: null
     })
+    
+    // Save AI response to database
+    if (conversationId.value) {
+      await supabase.from('support_messages').insert({
+        conversation_id: conversationId.value,
+        sender: 'ai',
+        content: response,
+        is_staff: false
+      })
+    }
   } catch (error) {
     console.error('AI Response Error:', error)
     messages.value.push({
@@ -318,13 +349,13 @@ const sendMessage = async (text) => {
   }
 }
 
-const getAdminResponse = (userMessage) => {
-  // In production, this would be handled by real admin via backend
-  return "I understand your question. Let me check that for you and get back with the exact details. Is there anything specific you'd like to know?"
-}
-
 const getFallbackResponse = (userMessage) => {
   const msg = userMessage.toLowerCase()
+  
+  // Support/Help queries
+  if (msg.includes('help') || msg.includes('support') || msg.includes('problem') || msg.includes('issue')) {
+    return "I'm here to help! I can assist with:\n\n• Booking questions\n• Payment issues\n• Account problems\n• Travel information\n• General inquiries\n\nNeed to speak with a human? Click 'Talk to Support' above!"
+  }
   
   // Accommodation queries
   if (msg.includes('hotel') || msg.includes('accommodation') || msg.includes('stay')) {
@@ -387,6 +418,107 @@ const scrollToBottom = () => {
     }
   })
 }
+
+// Initialize support conversation
+onMounted(async () => {
+  if (userStore.user) {
+    // Try to find existing active conversation
+    const { data: existingConversation } = await supabase
+      .from('support_conversations')
+      .select('*')
+      .eq('user_id', userStore.user.id)
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+    
+    if (existingConversation) {
+      conversationId.value = existingConversation.id
+      adminMode.value = !existingConversation.is_ai && existingConversation.staff_id
+      adminName.value = existingConversation.staff_name || ''
+      adminRole.value = CLEARANCE_LEVELS.SUPPORT
+      
+      // Load existing messages
+      const { data: existingMessages } = await supabase
+        .from('support_messages')
+        .select('*')
+        .eq('conversation_id', conversationId.value)
+        .order('created_at', { ascending: true })
+      
+      if (existingMessages && existingMessages.length > 0) {
+        messages.value = existingMessages.map(msg => ({
+          type: msg.sender === 'user' ? 'user' : 'ai',
+          text: msg.content,
+          isAdmin: msg.is_staff,
+          adminName: msg.staff_name,
+          adminRole: msg.is_staff ? CLEARANCE_LEVELS.SUPPORT : null
+        }))
+      }
+    } else {
+      // Create new conversation
+      const { data: newConversation } = await supabase
+        .from('support_conversations')
+        .insert({
+          user_id: userStore.user.id,
+          user_email: userStore.user.email,
+          status: 'active',
+          is_ai: true
+        })
+        .select()
+        .single()
+      
+      conversationId.value = newConversation.id
+    }
+  } else {
+    // Guest user - create anonymous conversation
+    const guestEmail = `guest_${Date.now()}@temp.com`
+    const { data: newConversation } = await supabase
+      .from('support_conversations')
+      .insert({
+        user_email: guestEmail,
+        status: 'active',
+        is_ai: true
+      })
+      .select()
+      .single()
+    
+    conversationId.value = newConversation.id
+  }
+  
+  // Subscribe to new messages from staff
+  const channel = supabase
+    .channel(`support_${conversationId.value}`)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'support_messages',
+      filter: `conversation_id=eq.${conversationId.value}`
+    }, (payload) => {
+      const message = payload.new
+      if (message.sender !== 'user') {
+        messages.value.push({
+          type: 'ai',
+          text: message.content,
+          isAdmin: message.is_staff,
+          adminName: message.staff_name,
+          adminRole: message.is_staff ? CLEARANCE_LEVELS.SUPPORT : null
+        })
+        scrollToBottom()
+        
+        // Update admin mode if staff joined
+        if (message.is_staff && !adminMode.value) {
+          adminMode.value = true
+          adminName.value = message.staff_name
+          adminRole.value = CLEARANCE_LEVELS.SUPPORT
+        }
+      }
+    })
+    .subscribe()
+  
+  onUnmounted(() => {
+    supabase.removeChannel(channel)
+  })
+})
 
 // Watch for open state to reset
 watch(() => props.isOpen, (newVal) => {

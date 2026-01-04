@@ -107,7 +107,10 @@
               <option value="SW">SW</option>
             </select>
 
-            <!-- Removed TripCart link - now in unified widget -->
+            <router-link to="/trip-cart" class="relative px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-full text-sm font-semibold text-text-secondary hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-all">
+              {{ t('nav.tripCart') }}
+              <span v-if="userStore.cartCount > 0" class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 inline-flex items-center justify-center">{{ userStore.cartCount }}</span>
+            </router-link>
 
             <router-link to="/dashboard/watchlist" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors" :title="t('nav.wishlist')">
               <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -545,8 +548,7 @@
       </div>
     </footer>
 
-    <!-- Unified Widget (Chat + Cart) -->
-    <UnifiedWidget />
+
   </div>
 </template>
 
@@ -560,7 +562,6 @@ import { useLanguageStore } from '../../stores/language'
 import { useThemeStore } from '../../stores/theme'
 import { useTranslation } from '../../composables/useTranslation'
 import AIConcierge from '../ai/AIConcierge.vue'
-import UnifiedWidget from '../common/UnifiedWidget.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 
 const router = useRouter()
