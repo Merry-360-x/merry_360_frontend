@@ -281,8 +281,9 @@
     </div>
 
     <!-- Instagram-Style Story Viewer Modal -->
-    <div v-if="activeUserStories" class="fixed inset-0 z-50 bg-black" @click="closeStoryViewer">
-      <div class="h-full max-w-lg mx-auto relative" @click.stop>
+    <div v-if="activeUserStories" class="fixed inset-0 z-50 bg-black flex items-center justify-center" @click="closeStoryViewer">
+      <!-- Main Story Container -->
+      <div class="h-full max-w-lg w-full mx-auto relative flex-shrink-0" @click.stop>
         <!-- Progress Bars -->
         <div class="absolute top-2 left-2 right-2 z-30 flex gap-1">
           <div
@@ -418,6 +419,54 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                 </svg>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar with Other Stories (Instagram-style) -->
+      <div class="hidden lg:flex flex-col gap-3 ml-6 w-80 flex-shrink-0 max-h-screen overflow-y-auto py-4" @click.stop>
+        <div 
+          v-for="userStory in otherUserStories"
+          :key="userStory.userId"
+          @click="openUserStories(userStory)"
+          class="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-3 cursor-pointer hover:bg-gray-800/50 transition-colors group"
+        >
+          <div class="flex items-center gap-3">
+            <!-- Story Preview Thumbnail -->
+            <div class="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+              <img
+                :src="storyPrimaryMedia(userStory.stories[0])"
+                :alt="userStory.author"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            </div>
+            
+            <!-- User Info -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <div class="w-8 h-8 rounded-full overflow-hidden bg-brand-500 flex-shrink-0">
+                  <img
+                    v-if="userStory.avatar"
+                    :src="userStory.avatar"
+                    :alt="userStory.author"
+                    class="w-full h-full object-cover"
+                  />
+                  <span v-else class="w-full h-full flex items-center justify-center text-white font-bold text-xs">
+                    {{ (userStory.author || 'U').charAt(0).toUpperCase() }}
+                  </span>
+                </div>
+                <span class="text-white font-medium text-sm truncate">{{ userStory.author }}</span>
+              </div>
+              <p class="text-white/60 text-xs">{{ formatTimeAgo(userStory.stories[0].created_at) }}</p>
+            </div>
+
+            <!-- View Indicator -->
+            <div class="flex-shrink-0">
+              <svg class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
             </div>
           </div>
         </div>
@@ -681,6 +730,12 @@ const groupedStories = computed(() => {
 const currentStory = computed(() => {
   if (!activeUserStories.value) return null
   return activeUserStories.value.stories[currentStoryIndex.value]
+})
+
+// Get other user stories (excluding the currently active one)
+const otherUserStories = computed(() => {
+  if (!activeUserStories.value) return []
+  return groupedStories.value.filter(userStory => userStory.userId !== activeUserStories.value.userId)
 })
 
 function resetStoryForm() {
