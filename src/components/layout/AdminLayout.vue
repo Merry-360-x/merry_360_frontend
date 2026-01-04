@@ -36,10 +36,10 @@
 
         <!-- Admin Sidebar -->
         <aside
-          class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen transform transition-transform duration-200 md:static md:translate-x-0 md:sticky md:top-0"
+          class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 min-h-screen transform transition-transform duration-200 md:static md:translate-x-0 md:sticky md:top-0 flex flex-col"
           :class="isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
         >
-          <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <div class="flex items-center space-x-2">
               <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center">
                 <span class="text-white font-bold text-xl">M</span>
@@ -47,7 +47,7 @@
               <span class="text-xl font-bold text-text-primary">{{ t('admin.panel') }}</span>
             </div>
           </div>
-          <nav class="p-4 space-y-1">
+          <nav class="p-4 space-y-1 flex-1 overflow-y-auto overscroll-contain">
             <router-link 
               to="/admin" 
               class="flex items-center px-4 py-3 rounded-button transition-colors"

@@ -1,34 +1,48 @@
 <template>
-  <div class="min-h-screen bg-gray-50 p-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Live Support Conversations</h1>
-        <p class="text-gray-600 mt-2">Monitor and respond to customer inquiries in real-time</p>
-      </div>
+  <AdminLayout>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-6 sm:mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Live Support Conversations</h1>
+            <p class="text-gray-600 dark:text-gray-300 mt-2">Monitor and respond to customer inquiries in real-time</p>
+          </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <button
+            type="button"
+            class="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            @click="goBackToDashboard"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+        </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <!-- Conversations List -->
-        <div class="lg:col-span-1 bg-white rounded-xl shadow-sm overflow-hidden">
-          <div class="p-4 border-b border-gray-200">
-            <h2 class="font-semibold text-gray-900">Active Conversations</h2>
+        <div class="lg:col-span-1 bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200/60 dark:border-gray-700">
+          <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="font-semibold text-gray-900 dark:text-white">Active Conversations</h2>
             <div class="mt-3 flex gap-2">
               <button 
                 @click="filter = 'waiting'"
-                :class="filter === 'waiting' ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-700'"
+                :class="filter === 'waiting' ? 'bg-brand-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200'"
                 class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
               >
                 Waiting ({{ waitingCount }})
               </button>
               <button 
                 @click="filter = 'active'"
-                :class="filter === 'active' ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-700'"
+                :class="filter === 'active' ? 'bg-brand-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200'"
                 class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
               >
                 Active ({{ activeCount }})
               </button>
               <button 
                 @click="filter = 'all'"
-                :class="filter === 'all' ? 'bg-brand-600 text-white' : 'bg-gray-100 text-gray-700'"
+                :class="filter === 'all' ? 'bg-brand-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200'"
                 class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
               >
                 All
@@ -41,17 +55,17 @@
               v-for="conv in filteredConversations" 
               :key="conv.id"
               @click="selectConversation(conv)"
-              :class="selectedConversation?.id === conv.id ? 'bg-brand-50 border-l-4 border-brand-600' : 'hover:bg-gray-50'"
-              class="p-4 border-b border-gray-200 cursor-pointer transition-colors"
+              :class="selectedConversation?.id === conv.id ? 'bg-brand-50 dark:bg-brand-900/20 border-l-4 border-brand-600' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'"
+              class="p-4 border-b border-gray-200 dark:border-gray-700 cursor-pointer transition-colors"
             >
               <div class="flex items-start justify-between mb-2">
                 <div class="flex items-center gap-2">
-                  <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center">
+                  <div class="w-10 h-10 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
                     <span class="text-brand-600 font-semibold text-sm">{{ getInitials(conv.user_email) }}</span>
                   </div>
                   <div>
-                    <p class="font-medium text-gray-900 text-sm">{{ conv.user_email }}</p>
-                    <p class="text-xs text-gray-500">{{ formatTime(conv.created_at) }}</p>
+                    <p class="font-medium text-gray-900 dark:text-white text-sm">{{ conv.user_email }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ formatTime(conv.created_at) }}</p>
                   </div>
                 </div>
                 <span 
@@ -65,7 +79,7 @@
                   {{ conv.status }}
                 </span>
               </div>
-              <p v-if="conv.last_message" class="text-sm text-gray-600 truncate">{{ conv.last_message }}</p>
+              <p v-if="conv.last_message" class="text-sm text-gray-600 dark:text-gray-300 truncate">{{ conv.last_message }}</p>
               <div v-if="conv.needs_human && conv.status === 'waiting'" class="mt-2 flex items-center gap-1 text-orange-600">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -74,7 +88,7 @@
               </div>
             </div>
             
-            <div v-if="filteredConversations.length === 0" class="p-8 text-center text-gray-500">
+            <div v-if="filteredConversations.length === 0" class="p-8 text-center text-gray-500 dark:text-gray-400">
               <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
               </svg>
@@ -84,17 +98,17 @@
         </div>
 
         <!-- Chat Area -->
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden flex flex-col" style="height: calc(100vh - 200px)">
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden flex flex-col border border-gray-200/60 dark:border-gray-700" style="height: calc(100vh - 200px)">
           <div v-if="selectedConversation" class="flex flex-col h-full">
             <!-- Chat Header -->
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center">
+                <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
                   <span class="text-brand-600 font-semibold">{{ getInitials(selectedConversation.user_email) }}</span>
                 </div>
                 <div>
-                  <h3 class="font-semibold text-gray-900">{{ selectedConversation.user_email }}</h3>
-                  <p class="text-sm text-gray-500">
+                  <h3 class="font-semibold text-gray-900 dark:text-white">{{ selectedConversation.user_email }}</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
                     {{ selectedConversation.staff_id ? `Handled by ${selectedConversation.staff_name}` : 'No staff assigned' }}
                   </p>
                 </div>
@@ -118,9 +132,9 @@
             </div>
 
             <!-- Messages -->
-            <div ref="chatMessages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            <div ref="chatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-gray-50 dark:bg-gray-900">
               <div v-for="message in currentMessages" :key="message.id" :class="message.sender === 'user' ? 'flex justify-end' : 'flex justify-start'">
-                <div :class="message.sender === 'user' ? 'bg-brand-600 text-white' : 'bg-white text-gray-900'" class="max-w-[70%] rounded-2xl px-4 py-3 shadow-sm">
+                <div :class="message.sender === 'user' ? 'bg-brand-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'" class="max-w-[80%] sm:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm">
                   <div v-if="message.sender !== 'user'" class="flex items-center gap-2 mb-1">
                     <span class="text-xs font-medium opacity-75">
                       {{ message.sender === 'ai' ? 'AI Assistant' : message.is_staff ? message.staff_name || 'Staff' : 'System' }}
@@ -134,14 +148,14 @@
             </div>
 
             <!-- Input Area -->
-            <div v-if="selectedConversation.staff_id && selectedConversation.status === 'active'" class="border-t border-gray-200 p-4 bg-white">
+            <div v-if="selectedConversation.staff_id && selectedConversation.status === 'active'" class="border-t border-gray-200 dark:border-gray-700 p-4 bg-white dark:bg-gray-800">
               <div class="flex gap-3">
                 <input 
                   v-model="replyMessage"
                   @keypress.enter="sendReply"
                   type="text"
                   placeholder="Type your message..."
-                  class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
                 />
                 <button 
                   @click="sendReply"
@@ -153,16 +167,16 @@
               </div>
             </div>
 
-            <div v-else-if="!selectedConversation.staff_id" class="border-t border-gray-200 p-4 bg-yellow-50">
-              <p class="text-center text-sm text-yellow-800">Click "Take Over" to start responding to this conversation</p>
+            <div v-else-if="!selectedConversation.staff_id" class="border-t border-gray-200 dark:border-gray-700 p-4 bg-yellow-50 dark:bg-yellow-900/20">
+              <p class="text-center text-sm text-yellow-800 dark:text-yellow-200">Click "Take Over" to start responding to this conversation</p>
             </div>
 
-            <div v-else class="border-t border-gray-200 p-4 bg-gray-50">
-              <p class="text-center text-sm text-gray-600">This conversation has ended</p>
+            <div v-else class="border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-900">
+              <p class="text-center text-sm text-gray-600 dark:text-gray-300">This conversation has ended</p>
             </div>
           </div>
 
-          <div v-else class="flex-1 flex items-center justify-center text-gray-500">
+          <div v-else class="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">
             <div class="text-center">
               <svg class="w-24 h-24 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -173,17 +187,21 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </AdminLayout>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import AdminLayout from '../../components/layout/AdminLayout.vue'
 import { supabase } from '../../services/supabase'
 import { useUserStore } from '../../stores/userStore'
 import { useToast } from '../../composables/useToast'
 
 const userStore = useUserStore()
 const { showToast } = useToast()
+const router = useRouter()
 
 const conversations = ref([])
 const selectedConversation = ref(null)
@@ -244,12 +262,18 @@ const loadMessages = async (conversationId) => {
 const takeOverConversation = async () => {
   if (!selectedConversation.value) return
 
+  const staff = userStore.user
+  if (!staff?.id) {
+    showToast('You must be logged in as admin to take over', 'error')
+    return
+  }
+
   try {
     const { error } = await supabase
       .from('support_conversations')
       .update({
-        staff_id: userStore.user.id,
-        staff_name: userStore.user.name || userStore.user.email,
+        staff_id: staff.id,
+        staff_name: staff.name || staff.email,
         status: 'active',
         is_ai: false
       })
@@ -263,7 +287,7 @@ const takeOverConversation = async () => {
       .insert({
         conversation_id: selectedConversation.value.id,
         sender: 'system',
-        content: `${userStore.user.name || userStore.user.email} joined the conversation`,
+        content: `${staff.name || staff.email} joined the conversation`,
         is_staff: false
       })
 
@@ -279,6 +303,12 @@ const takeOverConversation = async () => {
 const sendReply = async () => {
   if (!replyMessage.value.trim() || !selectedConversation.value) return
 
+  const staff = userStore.user
+  if (!staff?.id) {
+    showToast('You must be logged in as admin to reply', 'error')
+    return
+  }
+
   const messageContent = replyMessage.value.trim()
   replyMessage.value = ''
 
@@ -290,8 +320,8 @@ const sendReply = async () => {
         sender: 'staff',
         content: messageContent,
         is_staff: true,
-        staff_id: userStore.user.id,
-        staff_name: userStore.user.name || userStore.user.email
+        staff_id: staff.id,
+        staff_name: staff.name || staff.email
       })
 
     if (error) throw error
@@ -307,6 +337,7 @@ const endConversation = async () => {
   if (!confirm('Are you sure you want to end this conversation? The user will be asked to rate their experience.')) return
 
   try {
+    const staff = userStore.user
     const { error } = await supabase
       .from('support_conversations')
       .update({ status: 'closed' })
@@ -320,7 +351,7 @@ const endConversation = async () => {
       .insert({
         conversation_id: selectedConversation.value.id,
         sender: 'system',
-        content: `${userStore.user.name || userStore.user.email} has ended the conversation. If you need further assistance, feel free to start a new chat.`,
+        content: `${staff?.name || staff?.email || 'Staff'} has ended the conversation. If you need further assistance, feel free to start a new chat.`,
         is_staff: false
       })
 
@@ -408,4 +439,8 @@ onUnmounted(() => {
     supabase.removeChannel(messagesSubscription)
   }
 })
+
+const goBackToDashboard = () => {
+  router.push('/admin')
+}
 </script>
