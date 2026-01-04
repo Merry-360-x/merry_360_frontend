@@ -1,8 +1,8 @@
 <template>
   <MainLayout>
-    <div class="container mx-auto px-4 lg:px-8 py-8 bg-white min-h-screen">
+    <div class="container mx-auto px-4 lg:px-8 py-8 bg-white dark:bg-gray-900 min-h-screen">
       <!-- Back Button -->
-      <button @click="router.back()" class="flex items-center text-sm text-text-secondary hover:text-brand-600 text-brand-400 mb-6 transition-colors">
+      <button @click="router.back()" class="flex items-center text-sm text-text-secondary hover:text-brand-600 dark:text-brand-400 mb-6 transition-colors">
         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
