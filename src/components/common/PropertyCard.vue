@@ -5,7 +5,7 @@
   >
     <!-- Image Gallery -->
     <div 
-      class="relative aspect-square overflow-hidden"
+      class="relative aspect-square overflow-hidden bg-gray-200 dark:bg-gray-700"
       @mouseenter="startAutoScroll"
       @mouseleave="stopAutoScroll"
     >
@@ -13,8 +13,19 @@
       <img loading="lazy" 
         :src="optimizeImage(currentImage)" 
         :alt="property.title"
+        @error="handleImageError"
         class="w-full h-full object-cover transform transition-all duration-500 group-hover:scale-110"
       />
+      
+      <!-- Placeholder when image fails to load -->
+      <div v-if="imageError" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
+        <div class="text-center">
+          <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ property.title }}</p>
+        </div>
+      </div>
       
       <!-- Image Navigation Dots -->
       <div v-if="propertyImages.length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
@@ -154,6 +165,7 @@ const { success } = useToast()
 const userStore = useUserStore()
 const isFavorite = ref(false)
 const currentImageIndex = ref(0)
+const imageError = ref(false)
 let autoScrollInterval = null
 
 // Handle multiple images - use property.images array or fallback to single image
@@ -177,11 +189,18 @@ const currentImage = computed(() => {
 
 // Optimize images with Cloudinary for 10x size reduction
 const optimizeImage = (url) => {
-  if (!url) return url
+  if (!url) {
+    imageError.value = true
+    return ''
+  }
   return optimizeImageUrl(url, {
     width: 600, // Resize to 600px width (sufficient for card display)
     quality: 'auto:eco' // Eco quality for 10x compression
   })
+}
+
+const handleImageError = () => {
+  imageError.value = true
 }
 
 const previousImage = () => {
