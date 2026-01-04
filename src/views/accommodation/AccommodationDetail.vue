@@ -533,19 +533,22 @@ const transportOptions = ref([
     id: 1,
     name: 'Airport Transfer',
     description: 'Direct transfer from Kigali Airport',
-    price: 25
+    price: 25,
+    justAdded: false
   },
   {
     id: 2,
     name: 'Private Car Rental',
     description: 'Luxury sedan with driver',
-    price: 50
+    price: 50,
+    justAdded: false
   },
   {
     id: 3,
     name: 'Taxi Service',
     description: 'On-demand city transportation',
-    price: 15
+    price: 15,
+    justAdded: false
   }
 ])
 
