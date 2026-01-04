@@ -88,9 +88,13 @@ export function mapPropertyRowForPortals(row) {
 }
 
 export function getHostLabel(row) {
+  // If profiles object exists (from join), use it
   const profiles = row?.profiles
-  if (!profiles) return 'Unknown Host'
-
-  const fullName = `${profiles.first_name || ''} ${profiles.last_name || ''}`.trim()
-  return fullName || profiles.email || 'Unknown Host'
+  if (profiles) {
+    const fullName = `${profiles.first_name || ''} ${profiles.last_name || ''}`.trim()
+    return fullName || profiles.email || 'Unknown Host'
+  }
+  
+  // Otherwise, just return the host_id or Unknown
+  return row?.host_id ? `Host ID: ${row.host_id}` : 'Unknown Host'
 }
