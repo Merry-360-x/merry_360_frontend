@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 lg:px-8 py-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-2 text-gray-900">{{ t('profile.title') }}</h1>
+        <h1 class="text-3xl font-bold mb-2 text-text-primary">{{ t('profile.title') }}</h1>
         <p class="text-text-secondary">{{ t('profile.subtitle') }}</p>
       </div>
 
@@ -105,7 +105,7 @@
             </div>
 
             <!-- Admin Panel Button (only for admins) -->
-            <div v-if="userStore.user?.role === 'admin'" class="mt-6 pt-6 border-t border-gray-200">
+            <div v-if="userStore.user?.role === 'admin'" class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
               <Button 
                 variant="primary" 
                 size="md" 
@@ -122,7 +122,7 @@
             </div>
 
             <!-- Logout Button -->
-            <div :class="userStore.user?.role === 'admin' ? '' : 'mt-6 pt-6 border-t border-gray-200'">
+            <div :class="userStore.user?.role === 'admin' ? '' : 'mt-6 pt-6 border-t border-gray-200 dark:border-gray-700'">
               <Button variant="outline" size="md" full-width @click="handleLogout" class="text-red-600 border-red-600 hover:bg-red-50">
                 {{ t('auth.logout') }}
               </Button>
@@ -173,7 +173,7 @@
                 <div class="flex items-center justify-between">
                   <div>
                     <p class="text-text-muted text-xs mb-1">{{ t('cart.items') }}</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ userStore.cartCount }}</p>
+                    <p class="text-2xl font-bold text-text-primary">{{ userStore.cartCount }}</p>
                   </div>
                   <div class="px-2 py-1 bg-brand-500 text-white rounded-lg flex items-center justify-center">
                     <span class="text-xs font-bold">TripCart</span>
@@ -197,7 +197,7 @@
             </div>
 
             <!-- Trip Status Tabs -->
-            <div class="flex gap-4 mb-6 border-b border-gray-200">
+            <div class="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700">
               <button
                 v-for="tab in tripTabs"
                 :key="tab.id"
@@ -295,7 +295,7 @@
             <form @submit.prevent="savePersonalInfo" class="space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('checkout.firstName') }}</label>
+                  <label class="block text-sm font-medium text-text-primary mb-2">{{ t('checkout.firstName') }}</label>
                   <Input
                     v-model="personalInfo.firstName"
                     :disabled="!editingPersonal"
@@ -303,7 +303,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('checkout.lastName') }}</label>
+                  <label class="block text-sm font-medium text-text-primary mb-2">{{ t('checkout.lastName') }}</label>
                   <Input
                     v-model="personalInfo.lastName"
                     :disabled="!editingPersonal"
@@ -313,7 +313,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.email') }}</label>
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('auth.email') }}</label>
                 <Input
                   v-model="personalInfo.email"
                   type="email"
@@ -323,7 +323,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('auth.phoneNumber') }}</label>
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('auth.phoneNumber') }}</label>
                 <Input
                   v-model="personalInfo.phone"
                   type="tel"
@@ -333,7 +333,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.dateOfBirth') }}</label>
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('profile.dateOfBirth') }}</label>
                 <Input
                   v-model="personalInfo.dateOfBirth"
                   type="date"
@@ -342,26 +342,26 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.bio') }}</label>
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('profile.bio') }}</label>
                 <textarea
                   v-model="personalInfo.bio"
                   :disabled="!editingPersonal"
                   rows="3"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 bg-white text-gray-900"
+                  class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-500 bg-white dark:bg-gray-900 text-text-primary placeholder:text-gray-400"
                   :placeholder="t('profile.bioPlaceholder')"
                 ></textarea>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.educationStudies') }}</label>
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('profile.educationStudies') }}</label>
                 <textarea
                   v-model="personalInfo.studies"
                   :disabled="!editingPersonal"
                   rows="4"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 disabled:text-gray-500 bg-white text-gray-900"
+                  class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 bg-white dark:bg-gray-900 text-text-primary placeholder:text-gray-400"
                   :placeholder="t('profile.educationStudiesPlaceholder')"
                 ></textarea>
-                <p class="text-xs text-gray-500 mt-1">{{ t('profile.educationStudiesHelp') }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('profile.educationStudiesHelp') }}</p>
               </div>
 
               <div v-if="editingPersonal" class="flex gap-3">
@@ -382,8 +382,8 @@
             <div class="space-y-6">
               <!-- Language -->
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.language') }}</label>
-                <select v-model="userStore.preferences.language" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('profile.language') }}</label>
+                <select v-model="userStore.preferences.language" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-900 text-text-primary">
                   <option value="EN">{{ t('language.english') }}</option>
                   <option value="RW">{{ t('language.kinyarwanda') }}</option>
                   <option value="FR">{{ t('language.french') }}</option>
@@ -392,8 +392,8 @@
 
               <!-- Currency -->
               <div>
-                <label class="block text-sm font-medium text-text-brand-600 mb-2">{{ t('profile.currency') }}</label>
-                <select v-model="userStore.preferences.currency" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <label class="block text-sm font-medium text-text-primary mb-2">{{ t('profile.currency') }}</label>
+                <select v-model="userStore.preferences.currency" class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-900 text-text-primary">
                   <option value="RWF">{{ t('currency.rwf') }}</option>
                   <option value="USD">{{ t('currency.usd') }}</option>
                   <option value="EUR">{{ t('currency.eur') }}</option>
