@@ -1,6 +1,6 @@
 <template>
   <MainLayout>
-    <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl bg-white min-h-screen">
+    <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl bg-white dark:bg-gray-900 min-h-screen">
       <h1 class="text-3xl font-bold text-text-brand-600 mb-8">{{ t('checkout.title') }}</h1>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

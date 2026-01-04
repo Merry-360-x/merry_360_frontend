@@ -16,7 +16,7 @@
           <div class="lg:col-span-2 space-y-4">
             <h2 class="text-2xl font-bold text-text-brand-600 mb-6">{{ t('cart.items') }} ({{ cartCount }})</h2>
             
-            <div v-for="item in tripCart" :key="`${item.type}-${item.id}`" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div v-for="item in tripCart" :key="`${item.type}-${item.id}`" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
               <div class="flex flex-col sm:flex-row gap-4 p-6">
                 <img loading="lazy" 
                   :src="item.image" 
@@ -54,10 +54,10 @@
 
           <!-- Order Summary -->
           <div class="lg:col-span-1">
-            <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-24">
               <h3 class="text-xl font-bold text-text-brand-600 mb-6">{{ t('cart.orderSummary') }}</h3>
               
-              <div class="space-y-3 mb-6 pb-6 border-b border-gray-200">
+              <div class="space-y-3 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                 <div class="flex justify-between text-text-secondary">
                   <span>{{ t('cart.subtotal') }} ({{ cartCount }} {{ t('cart.itemsLabel') }})</span>
                   <span class="font-semibold">{{ currencyStore.formatPrice(subtotal) }}</span>
