@@ -9,16 +9,28 @@
       @mouseenter="startAutoScroll"
       @mouseleave="stopAutoScroll"
     >
-      <!-- Main Image with Cloudinary Optimization -->
-      <img loading="lazy" 
-        :src="optimizeImage(currentImage)" 
-        :alt="property.title"
-        @error="handleImageError"
-        class="w-full h-full object-cover transform transition-all duration-500 group-hover:scale-110"
-      />
+      <!-- Sliding Image Container -->
+      <div 
+        class="flex h-full transition-transform duration-500 ease-out"
+        :style="{ transform: `translateX(-${currentImageIndex * 100}%)` }"
+      >
+        <div 
+          v-for="(image, index) in propertyImages" 
+          :key="index"
+          class="min-w-full h-full flex-shrink-0"
+        >
+          <img 
+            loading="lazy" 
+            :src="optimizeImage(image)" 
+            :alt="`${property.title} - Image ${index + 1}`"
+            @error="handleImageError"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
       
       <!-- Placeholder when image fails to load -->
-      <div v-if="imageError" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
+      <div v-if="imageError && propertyImages.length === 0" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
         <div class="text-center">
           <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -28,21 +40,14 @@
       </div>
       
       <!-- Image Navigation Dots -->
-      <div v-if="propertyImages.length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+      <div v-if="propertyImages.length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
         <button
-          v-for="(img, index) in propertyImages.slice(0, 5)"
+          v-for="(img, index) in propertyImages"
           :key="index"
-          @click.stop="currentImageIndex = index"
-          class="w-1.5 h-1.5 rounded-full transition-all"
-          :class="currentImageIndex === index ? 'bg-white w-4' : 'bg-white/60 hover:bg-white/80'"
+          @click.stop="jumpToImage(index)"
+          class="transition-all duration-300"
+          :class="currentImageIndex === index ? 'w-6 h-1.5 bg-white rounded-full' : 'w-1.5 h-1.5 bg-white/60 hover:bg-white/80 rounded-full'"
         ></button>
-        <button
-          v-if="propertyImages.length > 5"
-          @click.stop="showAllImages"
-          class="px-2 py-0.5 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-semibold text-gray-800 hover:bg-white transition-all"
-        >
-          +{{ propertyImages.length - 5 }}
-        </button>
       </div>
       
       <!-- Badge -->
@@ -219,6 +224,15 @@ const nextImage = () => {
   }
 }
 
+const jumpToImage = (index) => {
+  currentImageIndex.value = index
+  // Restart auto-scroll from this image
+  if (autoScrollInterval) {
+    stopAutoScroll()
+    startAutoScroll()
+  }
+}
+
 const showAllImages = () => {
   // Navigate to detail page to show all images
   goToDetail()
@@ -267,7 +281,7 @@ const startAutoScroll = () => {
   if (propertyImages.value.length > 1) {
     autoScrollInterval = setInterval(() => {
       nextImage()
-    }, 1500) // Change image every 1.5 seconds
+    }, 2000) // Change image every 2 seconds
   }
 }
 
