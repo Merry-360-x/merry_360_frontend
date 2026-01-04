@@ -209,6 +209,7 @@ const translations = {
     'common.na': 'N/A',
     'time.justNow': 'just now',
     'time.minutesAgo': '{count}m ago',
+    'time.hoursAgo': '{count}h ago',
     'time.daysAgo': '{count}d ago',
     'dashboard.recentActivity': 'Recent Activity',
     'dashboard.savedItems': 'Saved Items',
