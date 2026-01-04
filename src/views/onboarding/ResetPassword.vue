@@ -1,22 +1,22 @@
 <template>
   <MainLayout>
-    <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 py-12">
       <div class="max-w-md w-full">
         <div class="text-center mb-8">
           <router-link to="/" class="inline-flex items-center justify-center">
             <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-16 w-auto" />
           </router-link>
-          <h2 class="mt-6 text-3xl font-bold text-text-brand-600">Reset Password</h2>
-          <p class="mt-2 text-text-secondary">Set a new password for your account.</p>
+          <h2 class="mt-6 text-3xl font-bold text-text-brand-600 dark:text-white">Reset Password</h2>
+          <p class="mt-2 text-text-secondary dark:text-gray-400">Set a new password for your account.</p>
         </div>
 
         <Card padding="lg">
-          <div v-if="!ready" class="text-text-secondary text-sm">
+          <div v-if="!ready" class="text-text-secondary dark:text-gray-400 text-sm">
             Loading…
           </div>
 
           <div v-else-if="!hasRecoverySession" class="space-y-4">
-            <p class="text-text-secondary">
+            <p class="text-text-secondary dark:text-gray-400">
               This reset link is invalid or expired. Please request a new password reset email.
             </p>
             <Button variant="primary" size="lg" full-width @click="router.push('/forgot-password')">
@@ -26,12 +26,12 @@
 
           <form v-else @submit.prevent="handleUpdate" class="space-y-5">
             <div>
-              <label class="block text-sm font-medium text-text-brand-600 mb-2">New Password</label>
+              <label class="block text-sm font-medium text-text-brand-600 dark:text-gray-300 mb-2">New Password</label>
               <Input v-model="password" type="password" placeholder="Enter new password" :error="error" />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-text-brand-600 mb-2">Confirm New Password</label>
+              <label class="block text-sm font-medium text-text-brand-600 dark:text-gray-300 mb-2">Confirm New Password</label>
               <Input v-model="confirm" type="password" placeholder="Confirm new password" :error="error" />
             </div>
 
@@ -39,7 +39,7 @@
               Update password
             </Button>
 
-            <div v-if="success" class="text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg p-3">
+            <div v-if="success" class="text-sm text-green-700 dark:text-green-200 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-3">
               Password updated. You can now log in.
             </div>
           </form>
