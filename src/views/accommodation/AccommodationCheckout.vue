@@ -479,7 +479,7 @@ const confirmBooking = async () => {
   try {
     const bookingInsert = {
       user_id: userStore.user.id,
-      property_id: property.value.id,
+      listing_id: property.value.id,
       check_in: stay.value.checkIn,
       check_out: stay.value.checkOut,
       guests: stay.value.guests,
