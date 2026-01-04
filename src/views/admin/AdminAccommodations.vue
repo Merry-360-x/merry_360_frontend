@@ -32,31 +32,62 @@
               <thead>
                 <tr class="border-b border-gray-200">
                   <th class="text-left py-3 px-4">Property</th>
-                  <th class="text-left py-3 px-4">Host</th>
-                  <th class="text-left py-3 px-4">Location</th>
-                  <th class="text-left py-3 px-4">Price</th>
-                  <th class="text-left py-3 px-4">Status</th>
-                  <th class="text-left py-3 px-4">Actions</th>
+                  <th class="hidden md:table-cell text-left py-3 px-4">Host</th>
+                  <th class="hidden md:table-cell text-left py-3 px-4">Location</th>
+                  <th class="hidden md:table-cell text-left py-3 px-4">Price</th>
+                  <th class="hidden md:table-cell text-left py-3 px-4">Status</th>
+                  <th class="hidden md:table-cell text-left py-3 px-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="property in properties" :key="property.id" class="border-b border-gray-100">
                   <td class="py-4 px-4">
-                    <div class="flex items-center">
-                      <img :src="property.image" class="w-16 h-16 rounded-lg object-cover mr-3" />
-                      <div>
-                        <p class="font-semibold">{{ property.name }}</p>
-                        <p class="text-sm text-text-secondary">{{ property.type }}</p>
+                    <div class="flex items-center gap-3">
+                      <img :src="property.image" class="w-14 h-14 md:w-16 md:h-16 rounded-lg object-cover" />
+                      <div class="min-w-0">
+                        <p class="font-semibold truncate">{{ property.name }}</p>
+                        <p class="text-sm text-text-secondary truncate">{{ property.type }}</p>
+
+                        <!-- Mobile details (no horizontal scrolling) -->
+                        <div class="md:hidden mt-2 space-y-1 text-sm text-text-secondary">
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="text-text-muted">Host</span>
+                            <span class="font-medium text-text-primary truncate" :title="property.host">{{ shortHostLabel(property.host) }}</span>
+                          </div>
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="text-text-muted">Location</span>
+                            <span class="font-medium text-text-primary truncate" :title="property.location">{{ property.location }}</span>
+                          </div>
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="text-text-muted">Price</span>
+                            <span class="font-medium text-text-primary">{{ currencyStore.formatPrice(property.price) }}/{{ t('accommodation.perNight') }}</span>
+                          </div>
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="text-text-muted">Status</span>
+                            <span :class="statusClass(property.status)">{{ t(property.status === 'active' ? 'status.active' : 'status.inactive') }}</span>
+                          </div>
+
+                          <div class="pt-2 flex gap-2">
+                            <Button variant="outline" size="sm" full-width>{{ t('common.edit') }}</Button>
+                            <Button variant="outline" size="sm" full-width @click="toggleStatus(property)">
+                              {{ property.status === 'active' ? t('status.inactive') : t('status.active') }}
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </td>
-                  <td class="py-4 px-4">{{ property.host }}</td>
-                  <td class="py-4 px-4">{{ property.location }}</td>
-                  <td class="py-4 px-4">{{ currencyStore.formatPrice(property.price) }}/{{ t('accommodation.perNight') }}</td>
-                  <td class="py-4 px-4">
+                  <td class="hidden md:table-cell py-4 px-4 max-w-[14rem]">
+                    <span class="block truncate" :title="property.host">{{ property.host }}</span>
+                  </td>
+                  <td class="hidden md:table-cell py-4 px-4 max-w-[14rem]">
+                    <span class="block truncate" :title="property.location">{{ property.location }}</span>
+                  </td>
+                  <td class="hidden md:table-cell py-4 px-4 whitespace-nowrap">{{ currencyStore.formatPrice(property.price) }}/{{ t('accommodation.perNight') }}</td>
+                  <td class="hidden md:table-cell py-4 px-4">
                     <span :class="statusClass(property.status)">{{ t(property.status === 'active' ? 'status.active' : 'status.inactive') }}</span>
                   </td>
-                  <td class="py-4 px-4">
+                  <td class="hidden md:table-cell py-4 px-4">
                     <div class="flex gap-2">
                       <Button variant="outline" size="sm">{{ t('common.edit') }}</Button>
                       <Button variant="outline" size="sm" @click="toggleStatus(property)">
@@ -102,6 +133,13 @@ const statusClass = (status) => {
     'pending': 'px-2 py-1 bg-warning text-white rounded text-sm',
     'inactive': 'px-2 py-1 bg-gray-400 text-white rounded text-sm'
   }[status] || 'px-2 py-1 bg-gray-400 text-white rounded text-sm'
+}
+
+const shortHostLabel = (host) => {
+  const value = String(host || '').trim()
+  if (!value) return '—'
+  if (value.length <= 26) return value
+  return `${value.slice(0, 14)}…${value.slice(-8)}`
 }
 
 const loadProperties = async () => {

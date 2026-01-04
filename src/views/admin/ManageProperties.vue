@@ -23,9 +23,9 @@
         <!-- Properties List -->
         <div v-else-if="properties.length > 0" class="space-y-6">
           <Card v-for="property in properties" :key="property.id" padding="lg">
-            <div class="flex gap-6">
+            <div class="flex flex-col md:flex-row gap-6">
               <!-- Property Images -->
-              <div class="w-64 flex-shrink-0">
+              <div class="w-full md:w-64 flex-shrink-0">
                 <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3">
                   <img 
                     v-if="property.images && property.images[0]" 
