@@ -526,32 +526,32 @@
     <!-- Footer -->
     <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-8 sm:mt-20 relative overflow-hidden transition-colors duration-200">
       <div class="container mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-16 relative z-10">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-12">
+        <div class="grid grid-cols-4 gap-3 sm:gap-12">
           <div>
-            <div class="flex items-center space-x-3 mb-6">
-              <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-14 w-auto" />
+            <div class="flex items-center space-x-3 mb-2 sm:mb-6">
+              <img loading="lazy" src="/merry-360-logo.png" alt="Merry360X" class="h-8 sm:h-14 w-auto" />
             </div>
-            <p class="text-text-secondary text-sm leading-relaxed">{{ t('footer.tagline') }}</p>
+            <p class="text-text-secondary text-[9px] sm:text-sm leading-relaxed hidden sm:block">{{ t('footer.tagline') }}</p>
           </div>
           <div>
-            <h4 class="font-bold mb-2 sm:mb-5 text-text-primary text-sm sm:text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.explore') }}</h4>
-            <ul class="space-y-1 sm:space-y-3 text-text-secondary text-xs sm:text-sm">
+            <h4 class="font-bold mb-1 sm:mb-5 text-text-primary text-[10px] sm:text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.explore') }}</h4>
+            <ul class="space-y-0.5 sm:space-y-3 text-text-secondary text-[9px] sm:text-sm">
               <li><router-link to="/accommodations" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.accommodations') }}</router-link></li>
               <li><router-link to="/tours" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.tours') }}</router-link></li>
               <li><router-link to="/transport" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.transport') }}</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-2 sm:mb-5 text-text-primary text-sm sm:text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.company') }}</h4>
-            <ul class="space-y-1 sm:space-y-3 text-text-secondary text-xs sm:text-sm">
+            <h4 class="font-bold mb-1 sm:mb-5 text-text-primary text-[10px] sm:text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.company') }}</h4>
+            <ul class="space-y-0.5 sm:space-y-3 text-text-secondary text-[9px] sm:text-sm">
               <li><router-link to="/about" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.aboutUs') }}</router-link></li>
               <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.contact') }}</a></li>
               <li><router-link to="/become-host" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('nav.becomeHost') }}</router-link></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-bold mb-2 sm:mb-5 text-text-primary text-sm sm:text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.support') }}</h4>
-            <ul class="space-y-1 sm:space-y-3 text-text-secondary text-xs sm:text-sm">
+            <h4 class="font-bold mb-1 sm:mb-5 text-text-primary text-[10px] sm:text-base" style="font-family: 'Montserrat', sans-serif;">{{ t('footer.support') }}</h4>
+            <ul class="space-y-0.5 sm:space-y-3 text-text-secondary text-[9px] sm:text-sm">
               <li><a href="mailto:support@merry360.com" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.helpCenter') }}</a></li>
               <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.safety') }}</a></li>
               <li><a href="#" class="hover:text-brand-500 dark:hover:text-brand-400 transition-all hover:translate-x-1 inline-block">{{ t('footer.terms') }}</a></li>
