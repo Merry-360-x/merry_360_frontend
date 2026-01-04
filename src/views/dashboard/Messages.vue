@@ -1,40 +1,40 @@
 <template>
   <MainLayout>
     <div class="container mx-auto px-4 lg:px-8 py-8 max-w-6xl">
-      <h1 class="text-2xl font-bold mb-4">{{ t('messages.title') }}</h1>
+      <h1 class="text-2xl font-bold mb-4 text-text-primary">{{ t('messages.title') }}</h1>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Conversations list -->
-        <div class="col-span-1 bg-white border border-gray-200 rounded-xl p-4">
-          <div class="font-semibold mb-3">{{ t('messages.conversations') }}</div>
-          <div v-if="conversations.length === 0" class="text-sm text-gray-500 py-4">
+        <div class="col-span-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+          <div class="font-semibold mb-3 text-text-primary">{{ t('messages.conversations') }}</div>
+          <div v-if="conversations.length === 0" class="text-sm text-gray-500 dark:text-gray-400 py-4">
             {{ t('messages.noConversationsDesc') }}
           </div>
           <div v-else>
             <div
               v-for="conv in conversations"
               :key="conv.id"
-              class="py-2 cursor-pointer hover:bg-gray-50 rounded-md px-2"
+              class="py-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-2"
               @click="selectConversation(conv)"
             >
               <div class="flex items-center justify-between">
                 <div>
-                  <div class="text-sm font-medium">{{ conv.with }}</div>
-                  <div class="text-xs text-gray-500">{{ conv.lastMessage }}</div>
+                  <div class="text-sm font-medium text-text-primary">{{ conv.with }}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">{{ conv.lastMessage }}</div>
                 </div>
-                <div class="text-xs text-gray-400">{{ conv.updatedAt }}</div>
+                <div class="text-xs text-gray-400 dark:text-gray-500">{{ conv.updatedAt }}</div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Messages -->
-        <div class="col-span-2 bg-white border border-gray-200 rounded-xl p-4 flex flex-col">
+        <div class="col-span-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col">
           <div class="flex-1 overflow-y-auto p-4 space-y-3" ref="messagesContainer">
-            <div v-if="selectedConversation === null" class="text-center text-gray-400">{{ t('messages.selectConversationToStart') }}</div>
+            <div v-if="selectedConversation === null" class="text-center text-gray-400 dark:text-gray-500">{{ t('messages.selectConversationToStart') }}</div>
             <div v-else>
               <div v-for="(msg, index) in messages" :key="msg.id || index" class="mb-2">
-                <div class="text-xs text-gray-500">{{ msg.from }} · {{ formatDate(msg.createdAt) }}</div>
-                <div class="mt-2 bg-gray-100 p-3 rounded-md max-w-xl">{{ msg.text }}</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">{{ msg.from }} · {{ formatDate(msg.createdAt) }}</div>
+                <div class="mt-2 bg-gray-100 dark:bg-gray-700 text-text-primary p-3 rounded-md max-w-xl">{{ msg.text }}</div>
               </div>
             </div>
           </div>
@@ -42,8 +42,8 @@
           <div class="pt-3">
             <form @submit.prevent="sendMessage">
               <div class="flex gap-2">
-                <input v-model="newMessage" :placeholder="t('messages.typeMessagePlaceholder')" class="flex-1 px-4 py-3 border border-gray-200 rounded-button bg-white focus:outline-none" />
-                <button class="px-4 py-2 bg-brand-500 text-white rounded-lg">{{ t('common.send') }}</button>
+                <input v-model="newMessage" :placeholder="t('messages.typeMessagePlaceholder')" class="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-button bg-white dark:bg-gray-900 text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                <button class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors">{{ t('common.send') }}</button>
               </div>
             </form>
           </div>
