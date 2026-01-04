@@ -15,8 +15,11 @@
         <div class="bg-gradient-to-r from-brand-500 to-brand-600 text-white p-4 sm:p-6 rounded-t-3xl flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center relative">
-              <svg v-if="!adminMode" class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="props.mode === 'advisor' && !adminMode" class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+              <svg v-else-if="props.mode === 'support' && !adminMode" class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
               <svg v-else class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -24,22 +27,34 @@
               <span class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
             </div>
             <div>
-              <h3 class="font-bold text-base sm:text-lg">{{ adminMode ? adminName : 'Amani - AI Advisor' }}</h3>
+              <h3 class="font-bold text-base sm:text-lg">
+                {{ adminMode ? adminName : (props.mode === 'advisor' ? 'Amani - AI Advisor' : 'Customer Support') }}
+              </h3>
               <p class="text-white/80 text-xs sm:text-sm flex items-center gap-1">
                 <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                {{ adminMode ? `${adminRole} • Live Support` : 'AI • Ready to help' }}
+                {{ adminMode ? `${adminRole} • Live Support` : (props.mode === 'advisor' ? 'AI • Ready to help' : 'Support • Here to assist') }}
               </p>
             </div>
           </div>
           <div class="flex items-center gap-2">
+            <!-- Switch Mode Button -->
+            <button 
+              @click="emit('switchMode')"
+              class="text-white hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors text-xs font-medium"
+              :title="props.mode === 'advisor' ? 'Switch to Support' : 'Switch to Trip Advisor'"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+              </svg>
+            </button>
             <!-- Request Human Support Button -->
             <button 
-              v-if="!adminMode"
+              v-if="!adminMode && props.mode === 'support'"
               @click="requestHumanSupport"
               class="text-white hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors text-xs font-medium"
               title="Talk to a real person"
             >
-              Talk to Support
+              Live Agent
             </button>
             <button @click="minimize" class="text-white hover:bg-white/20 p-2 rounded-full transition-colors" title="Minimize">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,15 +74,25 @@
           <!-- Welcome Message -->
           <div v-if="messages.length === 0" class="text-center py-4">
             <div class="w-20 h-20 bg-gradient-to-br from-brand-50 to-brand-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-slow">
-              <svg class="w-10 h-10 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="props.mode === 'advisor'" class="w-10 h-10 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
+              <svg v-else class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
             </div>
-            <h4 class="font-bold text-gray-900 mb-2 text-base sm:text-lg">Welcome! I'm Amani</h4>
-            <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">Your personal AI Trip Advisor for Rwanda. I'm here to help you plan the perfect adventure!</p>
+            <h4 class="font-bold text-gray-900 mb-2 text-base sm:text-lg">
+              {{ props.mode === 'advisor' ? 'Welcome! I\'m Amani' : 'Customer Support' }}
+            </h4>
+            <p class="text-gray-600 text-sm mb-6 max-w-md mx-auto">
+              {{ props.mode === 'advisor' 
+                ? 'Your personal AI Trip Advisor for Rwanda. I\'m here to help you plan the perfect adventure!' 
+                : 'How can we help you today? Get support with bookings, payments, or any questions you have.' 
+              }}
+            </p>
             
-            <!-- Category Options -->
-            <div class="mb-6">
+            <!-- Category Options for Trip Advisor -->
+            <div v-if="props.mode === 'advisor'" class="mb-6">
               <p class="text-sm font-semibold text-gray-700 mb-3">What can I help you with today?</p>
               <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
                 <button 
@@ -103,13 +128,16 @@
             
             <!-- Quick Questions -->
             <div class="border-t border-gray-200 pt-4 mt-4">
-              <p class="text-xs font-semibold text-gray-600 mb-3">Quick Questions:</p>
+              <p class="text-xs font-semibold text-gray-600 mb-3">
+                {{ props.mode === 'advisor' ? 'Quick Questions:' : 'Common Issues:' }}
+              </p>
               <div class="flex flex-wrap gap-2 justify-center">
                 <button 
-                  v-for="suggestion in quickSuggestions" 
+                  v-for="suggestion in (props.mode === 'advisor' ? advisorSuggestions : supportSuggestions)" 
                   :key="suggestion"
                   @click="sendMessage(suggestion)"
-                  class="px-3 py-1.5 bg-white text-gray-700 rounded-full text-xs hover:bg-brand-500 hover:text-white transition-colors shadow-sm border border-gray-200"
+                  :class="props.mode === 'advisor' ? 'hover:bg-brand-500' : 'hover:bg-blue-500'"
+                  class="px-3 py-1.5 bg-white text-gray-700 rounded-full text-xs hover:text-white transition-colors shadow-sm border border-gray-200"
                 >
                   {{ suggestion }}
                 </button>
@@ -191,10 +219,15 @@ const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
+  },
+  mode: {
+    type: String,
+    default: 'advisor', // 'advisor' or 'support'
+    validator: (value) => ['advisor', 'support'].includes(value)
   }
 })
 
-const emit = defineEmits(['close', 'minimize'])
+const emit = defineEmits(['close', 'minimize', 'switchMode'])
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -217,11 +250,18 @@ const showCartTab = ref(false)
 // Computed
 const cartCount = computed(() => userStore.cartCount)
 
-const quickSuggestions = [
+const advisorSuggestions = [
   'Show me hotels',
   'Gorilla trekking',
-  'I need help',
+  'Airport transfer',
   'Best time to visit'
+]
+
+const supportSuggestions = [
+  'I need help with my booking',
+  'Payment issue',
+  'Cancel reservation',
+  'Change booking dates'
 ]
 
 // Admin clearance levels

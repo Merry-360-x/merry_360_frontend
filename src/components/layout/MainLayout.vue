@@ -499,8 +499,92 @@
       </button>
     </transition>
 
+    <!-- Mode Selector Popup -->
+    <transition name="fade">
+      <div v-if="showModeSelector" class="fixed inset-0 z-50 flex items-center justify-center p-4" @click="showModeSelector = false">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full animate-scale-in" @click.stop>
+          <button @click="showModeSelector = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+          
+          <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">How can we help?</h3>
+            <p class="text-gray-600 text-sm">Choose the service you need</p>
+          </div>
+          
+          <div class="space-y-4">
+            <button 
+              @click="selectMode('advisor')"
+              class="w-full p-6 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-2xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 group"
+            >
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                  </svg>
+                </div>
+                <div class="text-left flex-1">
+                  <h4 class="font-bold text-lg mb-1">AI Trip Advisor</h4>
+                  <p class="text-white/80 text-sm">Get recommendations, plan trips, explore Rwanda</p>
+                </div>
+                <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </div>
+            </button>
+            
+            <button 
+              @click="selectMode('support')"
+              class="w-full p-6 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105 group"
+            >
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                  </svg>
+                </div>
+                <div class="text-left flex-1">
+                  <h4 class="font-bold text-lg mb-1">Customer Support</h4>
+                  <p class="text-white/80 text-sm">Get help with bookings, payments, or issues</p>
+                </div>
+                <svg class="w-6 h-6 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
     <!-- AI Concierge Component -->
-    <AIConcierge :isOpen="showAIConcierge" @close="showAIConcierge = false" @minimize="aiMinimized = true; showAIConcierge = false" />
+    <AIConcierge 
+      :isOpen="showAIConcierge" 
+      :mode="chatMode"
+      @close="showAIConcierge = false" 
+      @minimize="aiMinimized = true; showAIConcierge = false"
+      @switchMode="handleSwitchMode"
+    />
+
+    <!-- Unified Help Button -->
+    <button
+      v-if="!showAIConcierge"
+      @click="showModeSelector = true"
+      class="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all transform hover:scale-110 flex items-center justify-center group"
+    >
+      <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+      </svg>
+      <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></span>
+    </button>
 
     <!-- Footer -->
     <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20 relative overflow-hidden transition-colors duration-200">
@@ -581,6 +665,8 @@ const mobileMenuOpen = ref(false)
 const showAIConcierge = ref(false)
 const showUserMenu = ref(false)
 const aiMinimized = ref(false)
+const showModeSelector = ref(false)
+const chatMode = ref('advisor') // 'advisor' or 'support'
 
 const canSeeStaffPortal = computed(() => {
   const role = userStore.user?.role
@@ -624,6 +710,19 @@ const handleLogout = async () => {
   router.push('/login')
 }
 
+const selectMode = (mode) => {
+  chatMode.value = mode
+  showModeSelector.value = false
+  showAIConcierge.value = true
+}
+
+const handleSwitchMode = () => {
+  showAIConcierge.value = false
+  setTimeout(() => {
+    showModeSelector.value = true
+  }, 300)
+}
+
 // Click outside directive
 const vClickOutside = {
   mounted(el, binding) {
@@ -662,6 +761,33 @@ const vClickOutside = {
 .mobile-menu-enter-active > div:last-child,
 .mobile-menu-leave-active > div:last-child {
   transition: transform 0.3s ease;
+}
+
+/* Fade animation */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Scale animation */
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
 }
 
 .mobile-menu-enter-from,
