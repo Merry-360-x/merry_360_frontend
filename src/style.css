@@ -1,17 +1,17 @@
 /* Google Fonts imports must come first */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-sans: 'Montserrat', Inter, system-ui, -apple-system, sans-serif;
+  --font-sans: 'DM Sans', Inter, system-ui, -apple-system, sans-serif;
   /* Theme-aware semantic text colors (Tailwind: text-text-*) */
-  --text-primary: 17 24 39;
-  --text-secondary: 17 24 39;
-  --text-muted: 17 24 39;
+  --text-primary: 34 34 34;
+  --text-secondary: 113 113 113;
+  --text-muted: 176 176 176;
   
   /* PWA Safe Area Insets */
   --safe-area-inset-top: env(safe-area-inset-top);

@@ -1,11 +1,11 @@
 <template>
   <div 
-    class="bg-white dark:bg-gray-800 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1 border border-transparent dark:border-gray-700"
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-card hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group border border-gray-100 dark:border-gray-700 hover:border-brand-200 dark:hover:border-brand-800"
     @click="goToDetail"
   >
     <!-- Image Gallery -->
     <div 
-      class="relative aspect-square overflow-hidden bg-gray-200 dark:bg-gray-700"
+      class="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800"
       @mouseenter="startAutoScroll"
       @mouseleave="stopAutoScroll"
     >
@@ -24,7 +24,7 @@
             :src="optimizeImage(image)" 
             :alt="`${property.title} - Image ${index + 1}`"
             @error="handleImageError"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
       </div>
@@ -53,7 +53,7 @@
       <!-- Badge -->
       <span 
         v-if="property.badge"
-        class="absolute top-3 left-3 px-2.5 py-1 text-white text-xs font-semibold rounded-full shadow-lg"
+        class="absolute top-3 left-3 px-3 py-1.5 bg-gradient-to-r from-brand-500 to-brand-600 text-white text-xs font-semibold rounded-full shadow-lg backdrop-blur-sm"
         :class="badgeClass"
       >
         {{ property.badge }}
@@ -62,9 +62,9 @@
       <!-- Favorite Icon -->
       <button 
         @click.stop="toggleFavorite"
-        class="absolute top-3 right-3 w-8 h-8 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md hover:scale-110"
+        class="absolute top-3 right-3 w-9 h-9 sm:w-10 sm:h-10 bg-white/95 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white transition-all shadow-lg hover:scale-110 active:scale-95"
       >
-        <svg class="w-4 h-4 sm:w-5 sm:h-5" :class="isFavorite ? 'text-brand-500 fill-current' : 'text-gray-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 sm:w-5 sm:h-5 transition-all" :class="isFavorite ? 'text-brand-500 fill-current scale-110' : 'text-gray-700'" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
         </svg>
       </button>
@@ -91,15 +91,15 @@
     </div>
 
     <!-- Content -->
-    <div class="p-1.5 sm:p-3">
+    <div class="p-3 sm:p-4">
       <!-- Title -->
-      <h3 class="font-bold text-xs sm:text-lg text-text-primary mb-1 sm:mb-2 line-clamp-1 group-hover:text-brand-600 transition-colors">
+      <h3 class="font-bold text-sm sm:text-base text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-1 group-hover:text-brand-500 transition-colors leading-tight">
         {{ property.title }}
       </h3>
 
       <!-- Location -->
-      <p class="flex items-center text-text-secondary text-[10px] sm:text-sm mb-1 sm:mb-4">
-        <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <p class="flex items-center text-gray-600 dark:text-gray-400 text-[11px] sm:text-sm mb-2 sm:mb-3 font-medium">
+        <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
         </svg>
@@ -107,42 +107,42 @@
       </p>
 
       <!-- Details -->
-      <div class="flex items-center justify-between text-[9px] sm:text-sm text-text-secondary mb-1 sm:mb-4 pb-1 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
-        <div class="flex items-center">
-          <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex items-center gap-3 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100 dark:border-gray-700 font-medium">
+        <div class="flex items-center gap-1">
+          <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
           </svg>
-          <span class="whitespace-nowrap">{{ property.beds }} Beds</span>
+          <span>{{ property.beds }}</span>
         </div>
-        <div class="flex items-center">
-          <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center gap-1">
+          <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
           </svg>
-          <span class="whitespace-nowrap">{{ property.baths }} Baths</span>
+          <span>{{ property.baths }}</span>
         </div>
-        <div class="flex items-center">
-          <svg class="w-2.5 h-2.5 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center gap-1">
+          <svg class="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
           </svg>
-          <span class="whitespace-nowrap">{{ property.area }} sqft</span>
+          <span>{{ property.area }} sqft</span>
         </div>
       </div>
 
       <!-- Price -->
-      <div class="flex items-center justify-between flex-wrap gap-1">
-        <div class="flex items-baseline gap-0.5 sm:gap-1">
-          <span class="text-xs sm:text-base font-bold text-brand-600">{{ formatPrice(property.price) }}</span>
-          <span class="text-text-secondary text-[9px] sm:text-xs whitespace-nowrap">/night</span>
+      <div class="flex items-center justify-between">
+        <div class="flex items-baseline gap-1">
+          <span class="text-base sm:text-lg font-bold text-gray-900 dark:text-white">{{ formatPrice(property.price) }}</span>
+          <span class="text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs font-medium">/night</span>
         </div>
         <button 
           @click.stop="addToCart"
-          class="px-1.5 py-1 sm:px-2.5 sm:py-1.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 flex items-center gap-0.5 sm:gap-1 shadow-sm"
+          class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 shadow-md hover:shadow-lg active:scale-95 font-semibold"
           title="Add to Trip"
         >
-          <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8l2 2 4-4"></path>
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
           </svg>
-          <span class="text-[9px] sm:text-xs font-medium">Add</span>
+          <span class="text-[10px] sm:text-xs">Add</span>
         </button>
       </div>
     </div>

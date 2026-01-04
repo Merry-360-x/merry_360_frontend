@@ -8,22 +8,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#FE4F4F', // Brand red color
-        secondary: '#FF3B3B', // Darker red
-        'accent-blue': '#FE4F4F',
-        'accent-green': '#FE4F4F',
-        'accent-teal': '#FE4F4F',
+        primary: '#FF385C', // Modern vibrant coral
+        secondary: '#00A699', // Teal accent
+        'accent-blue': '#0066FF',
+        'accent-green': '#00A699',
+        'accent-teal': '#00A699',
         brand: {
-          50: '#FFF1F1',
-          100: '#FFE1E1',
-          200: '#FFC4C4',
-          300: '#FEA2A2',
-          400: '#FE7676',
-          500: '#FE4F4F', // Peach Red primary
-          600: '#FF3B3B',
-          700: '#F25757',
-          800: '#D83434',
-          900: '#B22222',
+          50: '#FFF5F7',
+          100: '#FFE6EB',
+          200: '#FFD1DA',
+          300: '#FFB3C4',
+          400: '#FF7A98',
+          500: '#FF385C', // Modern coral primary
+          600: '#E0264E',
+          700: '#C21643',
+          800: '#A00F3A',
+          900: '#7D0B2F',
         },
         text: {
           primary: 'rgb(var(--text-primary) / <alpha-value>)',
@@ -32,17 +32,20 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['DM Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['DM Sans', 'Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
-        'card': '24px',
-        'button': '16px',
+        'card': '16px',
+        'button': '12px',
         'organic': '30% 70% 70% 30% / 30% 30% 70% 70%',
+        'xl': '20px',
       },
       boxShadow: {
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+        'card': '0 2px 8px rgba(0, 0, 0, 0.08)',
+        'card-hover': '0 8px 24px rgba(0, 0, 0, 0.12)',
+        'lg': '0 8px 16px rgba(0, 0, 0, 0.1)',
+        'xl': '0 12px 32px rgba(0, 0, 0, 0.12)',
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
