@@ -1085,13 +1085,22 @@ async function deleteStory(story) {
 
     if (error) throw error
 
+    // Update with proper reactivity - create new array
     stories.value = stories.value.filter(s => s.id !== story.id)
+    
     if (activeStory.value?.id === story.id) {
       closeStory()
     }
+    if (currentStory.value?.id === story.id) {
+      closeStoryViewer()
+    }
+    
+    const { success } = useToast()
+    success(t('stories.storyDeleted'))
   } catch (error) {
     console.error('Error deleting story:', error)
-    alert(t('stories.deleteFailed', { error: error?.message || '' }))
+    const { error: showError } = useToast()
+    showError(error.message || t('stories.deleteFailed'))
   } finally {
     deletingStoryId.value = null
   }
@@ -1138,10 +1147,21 @@ async function createStory() {
         isLiked: Boolean(activeStory.value?.isLiked)
       }
 
+      // Update with proper reactivity - create new array
       const idx = stories.value.findIndex(s => s.id === updated.id)
-      if (idx !== -1) stories.value[idx] = { ...stories.value[idx], ...updated }
-      if (activeStory.value?.id === updated.id) activeStory.value = { ...activeStory.value, ...updated }
+      if (idx !== -1) {
+        stories.value = [
+          ...stories.value.slice(0, idx),
+          { ...stories.value[idx], ...updated },
+          ...stories.value.slice(idx + 1)
+        ]
+      }
+      if (activeStory.value?.id === updated.id) {
+        activeStory.value = { ...activeStory.value, ...updated }
+      }
 
+      const { success } = useToast()
+      success(t('stories.storyUpdated'))
       closeCreateModal()
     } else {
       const storyData = {
@@ -1163,20 +1183,26 @@ async function createStory() {
 
       if (error) throw error
 
-      // Add to local list
-      stories.value.unshift({
+      // Add to local list with proper reactivity
+      const newStoryWithCounts = {
         ...data,
         likes_count: 0,
         comments_count: 0,
         isLiked: false
-      })
+      }
+      
+      // Use array spread to ensure reactivity
+      stories.value = [newStoryWithCounts, ...stories.value]
 
+      const { success } = useToast()
+      success(t('stories.storyShared'))
       closeCreateModal()
     }
 
   } catch (error) {
     console.error('Error creating story:', error)
-    alert(isEditing.value ? t('stories.updateFailed') : t('stories.shareFailed'))
+    const { error: showError } = useToast()
+    showError(error.message || (isEditing.value ? t('stories.updateFailed') : t('stories.shareFailed')))
   } finally {
     creating.value = false
   }

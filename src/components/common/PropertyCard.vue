@@ -168,10 +168,14 @@ const router = useRouter()
 const currencyStore = useCurrencyStore()
 const { success } = useToast()
 const userStore = useUserStore()
-const isFavorite = ref(false)
 const currentImageIndex = ref(0)
 const imageError = ref(false)
 let autoScrollInterval = null
+
+// Check if property is in wishlist
+const isFavorite = computed(() => {
+  return userStore.isInWatchlist(props.property.id, 'accommodation')
+})
 
 // Handle multiple images - use property.images array or fallback to single image
 const propertyImages = computed(() => {
@@ -251,7 +255,19 @@ const formatPrice = (price) => {
 }
 
 const toggleFavorite = () => {
-  isFavorite.value = !isFavorite.value
+  if (isFavorite.value) {
+    userStore.removeFromWatchlist(props.property.id, 'accommodation')
+  } else {
+    userStore.addToWatchlist({
+      id: props.property.id,
+      type: 'accommodation',
+      name: props.property.title,
+      location: props.property.location,
+      price: props.property.price,
+      image: props.property.image || props.property.images?.[0]
+    })
+    success('Added to wishlist!')
+  }
 }
 
 const addToCart = () => {
