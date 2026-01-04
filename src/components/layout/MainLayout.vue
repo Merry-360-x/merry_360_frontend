@@ -595,6 +595,7 @@ import { useThemeStore } from '../../stores/theme'
 import { useTranslation } from '../../composables/useTranslation'
 import AIConcierge from '../ai/AIConcierge.vue'
 import { confirmDialog } from '../../composables/useConfirm'
+import { useToast } from '../../composables/useToast'
 
 const router = useRouter()
 const appStore = useAppStore()
@@ -652,10 +653,14 @@ const handleLogout = async () => {
 
   if (!ok) return
 
-  userStore.logout()
+  await userStore.logout()
   showUserMenu.value = false
   mobileMenuOpen.value = false
-  router.push('/login')
+  
+  // Show success toast and redirect to home
+  const { success } = useToast()
+  success(t('auth.logoutSuccess'))
+  router.push('/')
 }
 
 const selectMode = (mode) => {

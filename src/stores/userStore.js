@@ -162,7 +162,11 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   
-  const logout = () => {
+  const logout = async () => {
+    // Sign out from Supabase
+    await supabase.auth.signOut()
+    
+    // Clear local state
     user.value = null
     isAuthenticated.value = false
     watchlist.value = []

@@ -582,6 +582,7 @@ import { signOut as signOutAuth } from '@/services/auth'
 import { supabase } from '@/services/supabase'
 import { confirmDialog } from '@/composables/useConfirm'
 import { useTranslation } from '@/composables/useTranslation'
+import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -845,11 +846,17 @@ const handleLogout = async () => {
   if (ok) {
     try {
       await signOutAuth()
+      await userStore.logout()
+      
+      // Show success toast and redirect to home
+      const { success } = useToast()
+      success(t('auth.logoutSuccess'))
+      router.push('/')
     } catch (err) {
-      console.warn('Error signing out from provider:', err.message)
+      console.error('Error signing out:', err)
+      const { error: showError } = useToast()
+      showError(t('auth.logoutError'))
     }
-    userStore.logout()
-    router.push('/login')
   }
 }
 
