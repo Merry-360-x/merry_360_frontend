@@ -399,11 +399,11 @@ const submitStory = async () => {
     
     const newStory = await api.stories.create(storyData)
     
-    // Add to local array for immediate display
-    stories.value.unshift({
+    // Add to local array for immediate display with proper reactivity
+    stories.value = [{
       ...newStory,
       date: new Date().toLocaleDateString(dateLocale.value, { month: 'short', day: 'numeric', year: 'numeric' })
-    })
+    }, ...stories.value]
     
     // Reset form
     storyForm.value = {
