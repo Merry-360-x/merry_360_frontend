@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 font-sans transition-colors duration-200">
-    <!-- Header -->
-    <header class="hidden lg:block bg-white dark:bg-gray-900 lg:bg-white/95 dark:lg:bg-gray-900/95 lg:backdrop-blur-xl shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 transition-all duration-200">
+    <!-- Desktop Header (hidden on mobile) -->
+    <header v-if="false" class="hidden lg:block bg-white dark:bg-gray-900 lg:bg-white/95 dark:lg:bg-gray-900/95 lg:backdrop-blur-xl shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 transition-all duration-200">
       <div class="container mx-auto px-3 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 sm:h-20">
           <!-- Logo -->
