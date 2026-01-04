@@ -14,8 +14,23 @@
         <div class="lg:col-span-2 space-y-6">
           <!-- Image Gallery -->
           <div class="grid grid-cols-4 gap-2 rounded-card overflow-hidden">
-            <div class="col-span-4 row-span-2 h-96 relative">
-              <img loading="lazy" :src="accommodation.mainImage" :alt="accommodation.name" class="w-full h-full object-cover" />
+            <div class="col-span-4 row-span-2 h-96 relative bg-gray-200 dark:bg-gray-700">
+              <img 
+                loading="lazy" 
+                :src="accommodation.mainImage" 
+                :alt="accommodation.name" 
+                @error="handleMainImageError"
+                class="w-full h-full object-cover" 
+              />
+              <!-- Placeholder when main image fails -->
+              <div v-if="mainImageError" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
+                <div class="text-center">
+                  <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <p class="text-lg text-gray-500 dark:text-gray-400 font-semibold">{{ accommodation.name }}</p>
+                </div>
+              </div>
               <button class="absolute bottom-4 right-4 bg-white px-3 py-1.5 rounded-button shadow-lg flex items-center gap-1.5 hover:bg-gray-50 transition-colors text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -23,8 +38,14 @@
                 View all photos
               </button>
             </div>
-            <div v-for="(img, index) in accommodation.gallery" :key="index" class="h-32">
-              <img loading="lazy" :src="img" :alt="`Gallery ${index + 1}`" class="w-full h-full object-cover" />
+            <div v-for="(img, index) in accommodation.gallery" :key="index" class="h-32 bg-gray-200 dark:bg-gray-700 relative overflow-hidden">
+              <img 
+                loading="lazy" 
+                :src="img" 
+                :alt="`Gallery ${index + 1}`" 
+                @error="(e) => e.target.style.display = 'none'"
+                class="w-full h-full object-cover" 
+              />
             </div>
           </div>
 
@@ -415,6 +436,12 @@ const route = useRoute()
 const currencyStore = useCurrencyStore()
 const userStore = useUserStore()
 const { t } = useTranslation()
+
+const mainImageError = ref(false)
+
+const handleMainImageError = () => {
+  mainImageError.value = true
+}
 
 const stay = ref({
   checkIn: '',
