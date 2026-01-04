@@ -4,8 +4,8 @@
         <!-- Header -->
         <div class="mb-8 flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ t('admin.manageProperties.pageTitle') }}</h1>
-            <p class="text-gray-600">{{ t('admin.manageProperties.pageSubtitle') }}</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ t('admin.manageProperties.pageTitle') }}</h1>
+            <p class="text-gray-600 dark:text-gray-400">{{ t('admin.manageProperties.pageSubtitle') }}</p>
           </div>
           <Button @click="showAddModal = true" variant="primary">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,14 +26,14 @@
             <div class="flex gap-6">
               <!-- Property Images -->
               <div class="w-64 flex-shrink-0">
-                <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 mb-3">
+                <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3">
                   <img 
                     v-if="property.images && property.images[0]" 
                     :src="property.images[0]" 
                     :alt="property.name"
                     class="w-full h-full object-cover"
                   />
-                  <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+                  <div v-else class="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
                     <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
@@ -43,7 +43,7 @@
                 <!-- Image Upload Button -->
                 <button 
                   @click="openImageUpload(property)"
-                  class="w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+                  class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
                 >
                   <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
@@ -55,13 +55,13 @@
                 <div class="mt-2 grid grid-cols-2 gap-2">
                   <button 
                     @click="open360Upload(property)"
-                    class="px-2 py-1.5 text-xs bg-blue-50 border border-blue-200 rounded text-blue-700 hover:bg-blue-100 bg-blue-900/30 transition-colors"
+                    class="px-2 py-1.5 text-xs bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                   >
                     {{ t('admin.manageProperties.tour360') }}
                   </button>
                   <button 
                     @click="openVRUpload(property)"
-                    class="px-2 py-1.5 text-xs bg-purple-50 border border-purple-200 rounded text-purple-700 hover:bg-purple-100 bg-purple-900/30 transition-colors"
+                    class="px-2 py-1.5 text-xs bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 rounded text-purple-700 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors"
                   >
                     {{ t('admin.manageProperties.vrContent') }}
                   </button>
@@ -72,8 +72,8 @@
               <div class="flex-1">
                 <div class="flex items-start justify-between mb-4">
                   <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-1">{{ property.name || t('admin.manageProperties.untitledProperty') }}</h3>
-                    <p class="text-sm text-gray-600">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ property.name || t('admin.manageProperties.untitledProperty') }}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
                       <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -84,7 +84,7 @@
                   <div class="flex gap-2">
                     <button 
                       @click="editProperty(property)"
-                      class="p-2 text-blue-600 hover:bg-blue-50 bg-blue-900/20 rounded-lg transition-colors"
+                      class="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
                       :title="t('admin.manageProperties.editProperty')"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@
                     </button>
                     <button 
                       @click="deleteProperty(property.id)"
-                      class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      class="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                       :title="t('admin.manageProperties.deleteProperty')"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,25 +104,25 @@
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">{{ t('admin.manageProperties.stats.price') }}</p>
-                    <p class="text-lg font-bold text-gray-900">{{ property.price || '—' }}</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ t('admin.manageProperties.stats.price') }}</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.price || '—' }}</p>
                   </div>
-                  <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">{{ t('admin.manageProperties.stats.bedrooms') }}</p>
-                    <p class="text-lg font-bold text-gray-900">{{ property.bedrooms || 0 }}</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ t('admin.manageProperties.stats.bedrooms') }}</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.bedrooms || 0 }}</p>
                   </div>
-                  <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">{{ t('admin.manageProperties.stats.bathrooms') }}</p>
-                    <p class="text-lg font-bold text-gray-900">{{ property.bathrooms || 0 }}</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ t('admin.manageProperties.stats.bathrooms') }}</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.bathrooms || 0 }}</p>
                   </div>
-                  <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">{{ t('admin.manageProperties.stats.type') }}</p>
-                    <p class="text-lg font-bold text-gray-900">{{ property.property_type || '—' }}</p>
+                  <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">{{ t('admin.manageProperties.stats.type') }}</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">{{ property.property_type || '—' }}</p>
                   </div>
                 </div>
 
-                <p class="text-sm text-gray-600 line-clamp-2 mb-3">
+                <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
                   {{ property.description || t('admin.manageProperties.noDescription') }}
                 </p>
 
@@ -131,13 +131,13 @@
                   <span 
                     v-for="amenity in property.amenities.slice(0, 5)" 
                     :key="amenity"
-                    class="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-full"
+                    class="px-2 py-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full"
                   >
                     {{ amenity }}
                   </span>
                   <span 
                     v-if="property.amenities.length > 5"
-                    class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full"
+                    class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full"
                   >
                     +{{ property.amenities.length - 5 }} {{ t('admin.manageProperties.more') }}
                   </span>
@@ -149,11 +149,11 @@
 
         <!-- Empty State -->
         <div v-else class="text-center py-12">
-          <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
           </svg>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ t('admin.manageProperties.emptyTitle') }}</h3>
-          <p class="text-gray-600 mb-4">{{ t('admin.manageProperties.emptySubtitle') }}</p>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ t('admin.manageProperties.emptyTitle') }}</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-4">{{ t('admin.manageProperties.emptySubtitle') }}</p>
           <Button @click="showAddModal = true" variant="primary">{{ t('admin.manageProperties.addProperty') }}</Button>
         </div>
     </div>
@@ -165,13 +165,13 @@
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         @click.self="closeEditModal"
       >
-        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
               {{ editingProperty.id ? t('admin.manageProperties.editPropertyTitle') : t('admin.manageProperties.addPropertyTitle') }}
             </h2>
-            <button @click="closeEditModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button @click="closeEditModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+              <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
@@ -181,34 +181,34 @@
             <form @submit.prevent="saveProperty" class="space-y-6">
               <!-- Basic Info -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.propertyNameLabel') }} *</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.propertyNameLabel') }} *</label>
                 <input 
                   v-model="editingProperty.name" 
                   type="text" 
                   required
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   :placeholder="t('admin.manageProperties.form.propertyNamePlaceholder')"
                 />
               </div>
 
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.locationLabel') }} *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.locationLabel') }} *</label>
                   <input 
                     v-model="editingProperty.location" 
                     type="text" 
                     required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     :placeholder="t('admin.manageProperties.form.locationPlaceholder')"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.priceLabel') }} *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.priceLabel') }} *</label>
                   <input 
                     v-model="editingProperty.price" 
                     type="text" 
                     required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     :placeholder="t('admin.manageProperties.form.pricePlaceholder')"
                   />
                 </div>
@@ -216,29 +216,29 @@
 
               <div class="grid grid-cols-3 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.bedroomsLabel') }}</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.bedroomsLabel') }}</label>
                   <input 
                     v-model.number="editingProperty.bedrooms" 
                     type="number" 
                     min="0"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.bathroomsLabel') }}</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.bathroomsLabel') }}</label>
                   <input 
                     v-model.number="editingProperty.bathrooms" 
                     type="number" 
                     min="0"
                     step="0.5"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.propertyTypeLabel') }}</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.propertyTypeLabel') }}</label>
                   <select 
                     v-model="editingProperty.property_type"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="Hotel">{{ t('admin.manageProperties.propertyType.hotel') }}</option>
                     <option value="Motel">{{ t('admin.manageProperties.propertyType.motel') }}</option>
@@ -254,33 +254,33 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.descriptionLabel') }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.descriptionLabel') }}</label>
                 <textarea 
                   v-model="editingProperty.description" 
                   rows="4"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   :placeholder="t('admin.manageProperties.form.descriptionPlaceholder')"
                 ></textarea>
               </div>
 
               <!-- Amenities -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.amenitiesLabel') }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.amenitiesLabel') }}</label>
                 <input 
                   v-model="amenitiesInput" 
                   type="text"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   :placeholder="t('admin.manageProperties.form.amenitiesPlaceholder')"
                 />
               </div>
 
               <!-- Image URLs -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('admin.manageProperties.form.imageUrlsLabel') }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('admin.manageProperties.form.imageUrlsLabel') }}</label>
                 <textarea 
                   v-model="imagesInput" 
                   rows="3"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white text-gray-900"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   :placeholder="t('admin.manageProperties.form.imageUrlsPlaceholder')"
                 ></textarea>
               </div>
@@ -306,11 +306,11 @@
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         @click.self="closeImageModal"
       >
-        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full">
-          <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900">{{ t('admin.manageProperties.photosTitle') }}</h2>
-            <button @click="closeImageModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full">
+          <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('admin.manageProperties.photosTitle') }}</h2>
+            <button @click="closeImageModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+              <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
