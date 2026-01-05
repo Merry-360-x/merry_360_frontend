@@ -22,6 +22,24 @@ onMounted(async () => {
     console.log('🔄 Auth callback - processing OAuth redirect...')
     console.log('Current URL:', window.location.href)
     console.log('Hash params:', window.location.hash)
+
+    const searchParams = new URLSearchParams(window.location.search)
+    const code = searchParams.get('code')
+    const errorDescription = searchParams.get('error_description')
+
+    if (errorDescription) {
+      throw new Error(errorDescription)
+    }
+
+    // Newer Supabase OAuth uses PKCE and returns a `code` query param.
+    if (code) {
+      console.log('✅ OAuth code found in URL query')
+      const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+      if (exchangeError) {
+        console.error('❌ Code exchange error:', exchangeError)
+        throw exchangeError
+      }
+    }
     
     // Handle hash fragment from OAuth (Supabase uses hash-based redirects)
     const hashParams = new URLSearchParams(window.location.hash.substring(1))

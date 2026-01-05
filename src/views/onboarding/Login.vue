@@ -180,21 +180,16 @@ const handleGoogleSignIn = async () => {
   try {
     console.log('🔵 Google sign-in initiated')
     
-    // Use production URL for OAuth redirect
-    const redirectUrl = window.location.hostname === 'localhost' 
-      ? 'http://localhost:5173/auth/callback'
-      : 'https://merry-360-frontend.vercel.app/auth/callback'
+    // Always redirect back to the current site origin.
+    // This avoids auth getting "stuck" when the app is deployed under a different Vercel/custom domain.
+    const redirectUrl = `${window.location.origin}/auth/callback`
     
     console.log('Redirect URL:', redirectUrl)
     
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: redirectUrl,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
+        redirectTo: redirectUrl
       }
     })
 
