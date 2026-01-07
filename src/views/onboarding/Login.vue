@@ -39,6 +39,15 @@
               placeholder="Enter your password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
             />
+
+            <div class="mt-2 text-right">
+              <router-link
+                to="/forgot-password"
+                class="text-sm text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400"
+              >
+                Forgot password?
+              </router-link>
+            </div>
           </div>
 
           <button
