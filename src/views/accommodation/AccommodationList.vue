@@ -1,31 +1,53 @@
 <template>
   <MainLayout>
     <!-- Header Search (aligned with Home) -->
-    <section class="bg-gray-50 dark:bg-gray-900 pt-6 pb-4">
-      <div class="container mx-auto px-3">
+    <section class="bg-gray-50 dark:bg-gray-900 pt-10 pb-6">
+      <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
-          <div class="bg-white dark:bg-gray-800 backdrop-blur rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-3">
+          <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur rounded-2xl shadow-card border border-gray-200/60 dark:border-gray-700 p-3">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-              <div class="flex-1">
-                <label class="block text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">{{ t('nav.accommodations') }}</label>
+              <div class="relative flex-1 px-2 md:px-4">
+                <label class="block text-xs font-semibold mb-1 text-text-secondary">{{ t('nav.accommodations') }}</label>
                 <input
                   v-model="searchQuery"
                   type="text"
                   :placeholder="t('home.search')"
-                  class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder:text-gray-400 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
-                  @keyup.enter="performSearch"
+                  class="w-full text-sm font-semibold focus:outline-none placeholder:text-text-muted bg-transparent text-text-primary"
+                  @focus="onSearchFocus"
+                  @blur="onSearchBlur"
+                  @keydown.down.prevent="highlightNextSuggestion"
+                  @keydown.up.prevent="highlightPrevSuggestion"
+                  @keydown.enter.prevent="onSearchEnter"
                 />
+
+                <div
+                  v-if="isSearchFocused && searchSuggestions.length"
+                  class="absolute left-2 right-2 md:left-4 md:right-4 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-card z-50 overflow-hidden"
+                  role="listbox"
+                >
+                  <button
+                    v-for="(suggestion, idx) in searchSuggestions"
+                    :key="suggestion"
+                    type="button"
+                    class="w-full text-left px-4 py-2.5 text-sm text-text-primary hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                    :class="idx === highlightedSuggestionIndex ? 'bg-gray-50 dark:bg-gray-900' : ''"
+                    @mousedown.prevent="applySuggestion(suggestion)"
+                    role="option"
+                    :aria-selected="idx === highlightedSuggestionIndex"
+                  >
+                    {{ suggestion }}
+                  </button>
+                </div>
               </div>
               <button
                 type="button"
                 @click="performSearch"
-                class="w-full md:w-auto h-12 px-6 md:px-4 rounded-xl bg-brand-500 text-white flex items-center justify-center gap-2 hover:bg-brand-600 active:scale-95 transition-all shadow-lg font-medium"
+                class="hidden md:flex w-11 h-11 rounded-xl bg-brand-500 text-white items-center justify-center hover:bg-brand-600 transition-colors flex-shrink-0"
                 :aria-label="t('home.search')"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <span class="md:hidden">Search</span>
               </button>
             </div>
           </div>
@@ -89,9 +111,9 @@
 
       <!-- Filters and Search -->
       <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
-        <!-- Filters Sidebar -->
-        <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 lg:sticky lg:top-24">
+        <!-- Filters Sidebar (hidden on mobile) -->
+        <div class="hidden lg:block lg:col-span-1">
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
             <h3 class="font-semibold text-base sm:text-lg mb-4 text-text-primary">{{ t('accommodationList.filters') }}</h3>
             
             <!-- View Toggle -->
@@ -228,7 +250,7 @@
         </div>
 
         <!-- Listings -->
-        <div class="lg:col-span-4">
+        <div class="col-span-1 lg:col-span-4">
           <!-- Loading Spinner -->
           <div v-if="loading && !accommodations.length" class="flex flex-col items-center justify-center py-20">
             <div class="w-16 h-16 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
@@ -274,12 +296,12 @@
           <!-- Grid View (2 rows x 5 columns) -->
           <div v-if="viewMode === 'list'">
             <!-- Loading State -->
-            <div v-if="loading" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
+            <div v-if="loading" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
               <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
             </div>
             
             <!-- Loaded State: Grid Layout -->
-            <div v-else class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
+            <div v-else class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
               <PropertyCard
                 v-for="property in filteredAccommodations"
                 :key="property.id"
@@ -337,6 +359,83 @@ const loading = ref(true)
 const guestCount = ref(null)
 const checkIn = ref('')
 const checkOut = ref('')
+
+const isSearchFocused = ref(false)
+const highlightedSuggestionIndex = ref(-1)
+
+const normalizeForSuggestions = (value) => String(value || '').trim()
+const buildSuggestionList = (rows, query, fields) => {
+  const q = String(query || '').trim().toLowerCase()
+  if (q.length < 2) return []
+
+  const results = []
+  const seen = new Set()
+
+  for (const row of rows || []) {
+    for (const field of fields) {
+      const raw = normalizeForSuggestions(row?.[field])
+      if (!raw) continue
+      const key = raw.toLowerCase()
+      if (seen.has(key)) continue
+
+      const lower = key
+      if (!lower.includes(q)) continue
+
+      const score = lower.startsWith(q) ? 2 : 1
+      results.push({ value: raw, score })
+      seen.add(key)
+    }
+  }
+
+  results.sort((a, b) => (b.score - a.score) || a.value.localeCompare(b.value))
+  return results.slice(0, 6).map(r => r.value)
+}
+
+const searchSuggestions = computed(() => {
+  return buildSuggestionList(accommodations.value || [], searchQuery.value, ['name', 'location', 'type'])
+})
+
+const onSearchFocus = () => {
+  isSearchFocused.value = true
+}
+
+const onSearchBlur = () => {
+  window.setTimeout(() => {
+    isSearchFocused.value = false
+    highlightedSuggestionIndex.value = -1
+  }, 120)
+}
+
+const applySuggestion = async (suggestion) => {
+  searchQuery.value = suggestion
+  isSearchFocused.value = false
+  highlightedSuggestionIndex.value = -1
+  await performSearch()
+}
+
+const highlightNextSuggestion = () => {
+  if (!isSearchFocused.value || !searchSuggestions.value.length) return
+  const next = highlightedSuggestionIndex.value + 1
+  highlightedSuggestionIndex.value = next >= searchSuggestions.value.length ? 0 : next
+}
+
+const highlightPrevSuggestion = () => {
+  if (!isSearchFocused.value || !searchSuggestions.value.length) return
+  const prev = highlightedSuggestionIndex.value - 1
+  highlightedSuggestionIndex.value = prev < 0 ? searchSuggestions.value.length - 1 : prev
+}
+
+const onSearchEnter = async () => {
+  if (isSearchFocused.value && highlightedSuggestionIndex.value >= 0) {
+    const suggestion = searchSuggestions.value[highlightedSuggestionIndex.value]
+    if (suggestion) {
+      await applySuggestion(suggestion)
+      return
+    }
+  }
+
+  await performSearch()
+}
 
 const buildSearchQuery = () => {
   const q = String(searchQuery.value || '').trim()

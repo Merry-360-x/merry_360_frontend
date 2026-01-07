@@ -59,7 +59,7 @@
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 </button>
-                <input ref="avatarInput" type="file" accept="image/*" class="hidden" @change="onAvatarChange" />
+                <input ref="avatarInput" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" @change="onAvatarChange" />
               </div>
               <h2 class="text-xl font-bold mb-1">{{ userStore.user?.name || t('profile.guestUser') }}</h2>
               <p class="text-text-secondary text-sm">{{ userStore.user?.email || t('profile.guestEmail') }}</p>
@@ -110,6 +110,7 @@
                 variant="primary" 
                 size="md" 
                 full-width 
+                data-testid="profile-admin-panel"
                 @click="router.push('/admin')"
                 class="mb-3"
               >
@@ -578,6 +579,8 @@ import Card from '@/components/common/Card.vue'
 import Input from '@/components/common/Input.vue'
 import Button from '@/components/common/Button.vue'
 import { uploadToCloudinary } from '@/services/cloudinary'
+import { optimizeImageFile } from '@/utils/imageOptimization'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 import { signOut as signOutAuth } from '@/services/auth'
 import { supabase } from '@/services/supabase'
 import { confirmDialog } from '@/composables/useConfirm'
@@ -863,6 +866,9 @@ const handleLogout = async () => {
     console.error('Error signing out:', err)
     const { error: showError } = useToast()
     showError(t('auth.logoutError'))
+  } finally {
+    // Ensure the UI updates immediately even if the auth event is delayed.
+    userStore.logout()
   }
 }
 
@@ -873,32 +879,24 @@ const selectAvatar = () => {
 const onAvatarChange = async (e) => {
   const file = e.target.files && e.target.files[0]
   if (!file) return
-  
-  // Validate file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-    error(`File too large (${fileSizeMB}MB). Maximum size is 5MB.`, 2000)
-    return
-  }
-  
-  // Warn if file is large (over 2MB)
-  const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-  if (file.size > 2 * 1024 * 1024) {
-    warning(`Large file detected (${fileSizeMB}MB). Upload may take longer.`, 1000)
-  }
-  
-  // Validate file type
-  if (!file.type.startsWith('image/')) {
-    alert(t('profile.selectImageFile'))
+
+  const inputError = getImageValidationError(file)
+  if (inputError) {
+    error(inputError, 2000)
     return
   }
   
   uploadingAvatar.value = true
   try {
     console.log('🖼️ Uploading profile picture...')
-    
+
+    // Optimize first to keep uploads fast.
+    const optimized = await optimizeImageFile(file, { maxWidth: 512, maxHeight: 512, quality: 0.82 })
+    const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+    if (finalSizeError) throw new Error(finalSizeError)
+
     // Upload to Cloudinary
-    const result = await uploadToCloudinary(file, { folder: 'merry360x/avatars' })
+    const result = await uploadToCloudinary(optimized, { folder: 'merry360x/avatars' })
     const avatarUrl = result.secure_url
     console.log('✅ Image uploaded to Cloudinary:', avatarUrl)
     

@@ -30,9 +30,9 @@ const cardClasses = computed(() => {
   
   const paddingClasses = {
     none: '',
-    sm: 'p-5',
-    md: 'p-6',
-    lg: 'p-8'
+    sm: 'p-4 sm:p-5',
+    md: 'p-4 sm:p-6',
+    lg: 'p-5 sm:p-8'
   }
   
   const hoverClass = props.hover ? 'shadow-card hover:shadow-card-hover hover:border-brand-100 border-brand-500 transform hover:-translate-y-1' : 'shadow-card'

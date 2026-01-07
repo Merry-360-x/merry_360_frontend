@@ -6,6 +6,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
     "test:supabase:connection": "node test-supabase-connection.mjs",
     "test:supabase:real": "node test-real-operations.mjs",
     "test:supabase:db": "node test-database-operations.mjs",
@@ -22,6 +25,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.22",
     "postcss": "^8.5.6",

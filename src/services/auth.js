@@ -116,9 +116,16 @@ export async function signInWithGoogle() {
 }
 
 export async function signOut() {
-  if (USE_SUPABASE) {
-    return await supabaseService.signOutUser()
+  // Always attempt to clear Supabase session (best-effort), because the app
+  // initializes a Supabase auth listener regardless of USE_SUPABASE.
+  try {
+    await supabaseService.signOutUser()
+  } catch (err) {
+    // If Supabase isn't configured, this may throw; ignore and continue.
+    console.warn('Supabase signOut (best-effort) failed:', err)
   }
+
+  if (USE_SUPABASE) return
 
   return await api.auth.logout()
 }

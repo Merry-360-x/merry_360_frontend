@@ -248,6 +248,7 @@ import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 
 const router = useRouter()
 const route = useRoute()
@@ -290,11 +291,12 @@ const handleImageUpload = async (event) => {
   const files = Array.from(event.target.files)
   if (!files.length) return
 
-  // Validate file sizes
-  const oversizedFiles = files.filter(f => f.size > 2 * 1024 * 1024)
-  if (oversizedFiles.length > 0) {
-    const fileNames = oversizedFiles.map(f => `${f.name} (${(f.size / (1024 * 1024)).toFixed(2)}MB)`).join(', ')
-    showToast(`These files exceed 2MB limit: ${fileNames}`, 'error')
+  // Validate inputs early (type + extreme size).
+  const invalid = files
+    .map((f) => ({ file: f, err: getImageValidationError(f) }))
+    .filter((x) => x.err)
+  if (invalid.length > 0) {
+    showToast(invalid[0].err, 'error')
     return
   }
   
@@ -329,6 +331,9 @@ const handleImageUpload = async (event) => {
 
     try {
       const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+
+      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) throw new Error(finalSizeError)
 
       if (isCloudinaryConfigured) {
         const result = await uploadToCloudinary(optimized, { folder: 'merry360x/tours' })

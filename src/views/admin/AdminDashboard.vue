@@ -1,17 +1,17 @@
 <template>
   <AdminLayout>
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-2 text-text-primary">{{ t('adminDashboard.title') }}</h1>
+    <div class="mb-6 sm:mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-text-primary">{{ t('adminDashboard.title') }}</h1>
       <p class="text-text-secondary">{{ t('adminDashboard.subtitle') }}</p>
     </div>
 
       <!-- Stats Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <Card padding="md">
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.totalBookings') }}</p>
-                <p class="text-3xl font-bold">{{ stats.bookings }}</p>
+                <p class="text-2xl sm:text-3xl font-bold">{{ stats.bookings }}</p>
                 <p class="text-success text-sm mt-1">{{ t('adminDashboard.stats.realTimeFromSupabase') }}</p>
               </div>
               <div class="w-12 h-12 bg-brand-500 bg-opacity-10 rounded-full flex items-center justify-center">
@@ -26,7 +26,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.revenue') }}</p>
-                <p class="text-3xl font-bold">{{ currencyStore.formatPrice(stats.revenue) }}</p>
+                <p class="text-2xl sm:text-3xl font-bold">{{ currencyStore.formatPrice(stats.revenue) }}</p>
                 <p class="text-success text-sm mt-1">{{ t('adminDashboard.stats.fromPaidBookings') }}</p>
               </div>
               <div class="w-12 h-12 bg-accent-blue bg-opacity-10 rounded-full flex items-center justify-center">
@@ -41,7 +41,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.activeUsers') }}</p>
-                <p class="text-3xl font-bold">{{ stats.users }}</p>
+                <p class="text-2xl sm:text-3xl font-bold">{{ stats.users }}</p>
                 <p class="text-text-secondary text-sm mt-1">{{ t('adminDashboard.stats.registeredAccounts') }}</p>
               </div>
               <div class="w-12 h-12 bg-success bg-opacity-10 rounded-full flex items-center justify-center">
@@ -56,7 +56,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-text-secondary text-sm mb-1">{{ t('adminDashboard.stats.properties') }}</p>
-                <p class="text-3xl font-bold">{{ stats.properties }}</p>
+                <p class="text-2xl sm:text-3xl font-bold">{{ stats.properties }}</p>
                 <p class="text-text-secondary text-sm mt-1">{{ t('adminDashboard.stats.activeListings') }}</p>
               </div>
               <div class="w-12 h-12 bg-warning bg-opacity-10 rounded-full flex items-center justify-center">
@@ -68,9 +68,9 @@
           </Card>
         </div>
 
-    <div class="mb-8">
+    <div class="mb-6 sm:mb-8">
       <Card padding="md">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <p class="text-text-secondary text-sm mb-1">{{ t('admin.hostApplications') }}</p>
             <p class="text-3xl font-bold text-text-primary">{{ stats.pendingHostApplications }}</p>
@@ -78,7 +78,7 @@
           </div>
           <router-link
             to="/admin/host-applications"
-            class="px-4 py-2 bg-brand-500 text-white rounded-button text-sm"
+            class="px-4 py-2 bg-brand-500 text-white rounded-button text-sm text-center w-full sm:w-auto"
           >
             {{ t('common.view') }}
           </router-link>
@@ -88,17 +88,17 @@
 
     <!-- Recent Activity -->
     <Card padding="lg">
-      <h2 class="text-2xl font-bold mb-6 text-text-primary">{{ t('adminDashboard.recentBookings') }}</h2>
+      <h2 class="text-lg sm:text-2xl font-bold mb-4 sm:mb-6 text-text-primary">{{ t('adminDashboard.recentBookings') }}</h2>
       <div class="overflow-x-auto">
-        <table class="w-full">
+        <table class="w-full min-w-max">
               <thead>
                 <tr class="border-b border-gray-200 text-left">
-                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.bookingId') }}</th>
-                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.customer') }}</th>
-                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.property') }}</th>
-                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.date') }}</th>
-                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.amount') }}</th>
-                  <th class="pb-3 font-semibold text-text-secondary">{{ t('adminDashboard.table.status') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary text-xs sm:text-sm whitespace-nowrap">{{ t('adminDashboard.table.bookingId') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary text-xs sm:text-sm whitespace-nowrap">{{ t('adminDashboard.table.customer') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary text-xs sm:text-sm whitespace-nowrap">{{ t('adminDashboard.table.property') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary text-xs sm:text-sm whitespace-nowrap">{{ t('adminDashboard.table.date') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary text-xs sm:text-sm whitespace-nowrap">{{ t('adminDashboard.table.amount') }}</th>
+                  <th class="pb-3 font-semibold text-text-secondary text-xs sm:text-sm whitespace-nowrap">{{ t('adminDashboard.table.status') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -113,11 +113,11 @@
                   </td>
                 </tr>
                 <tr v-else v-for="booking in recentBookings" :key="booking.id" class="border-b border-gray-100 dark:border-gray-700">
-                  <td class="py-4 text-sm">{{ booking.id.substring(0, 8) }}...</td>
-                  <td class="py-4 text-sm">{{ buildDisplayName(booking.profiles) }}</td>
-                  <td class="py-4 text-sm">{{ booking.listings?.title || t('common.na') }}</td>
-                  <td class="py-4 text-sm">{{ new Date(booking.check_in).toLocaleDateString() }}</td>
-                  <td class="py-4 text-sm font-semibold">{{ currencyStore.formatPrice(booking.total_price) }}</td>
+                  <td class="py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">{{ booking.id.substring(0, 8) }}...</td>
+                  <td class="py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">{{ buildDisplayName(booking.profiles) }}</td>
+                  <td class="py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">{{ booking.listings?.title || t('common.na') }}</td>
+                  <td class="py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">{{ new Date(booking.check_in).toLocaleDateString() }}</td>
+                  <td class="py-3 sm:py-4 text-xs sm:text-sm font-semibold whitespace-nowrap">{{ currencyStore.formatPrice(booking.total_price) }}</td>
                   <td class="py-4">
                     <span :class="[
                       'px-3 py-1 rounded-full text-xs font-medium',

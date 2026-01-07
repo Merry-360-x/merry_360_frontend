@@ -120,18 +120,18 @@
 
         <!-- Main Content -->
         <main class="flex-1 min-w-0 p-4 md:p-8">
-          <div class="mb-8">
-            <h1 class="text-3xl font-bold mb-2 text-text-primary">{{ dashboardTitle }}</h1>
+          <div class="mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 text-text-primary">{{ dashboardTitle }}</h1>
             <p class="text-text-secondary">{{ t('portal.manageListings') }}</p>
           </div>
 
           <!-- Stats Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+          <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 transition-colors duration-200">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-text-secondary text-sm mb-1">{{ t('portal.myProperties') }}</p>
-                  <p class="text-3xl font-bold text-text-primary">{{ stats.properties }}</p>
+                  <p class="text-2xl sm:text-3xl font-bold text-text-primary">{{ stats.properties }}</p>
                   <p class="text-green-600 dark:text-green-400 text-sm mt-1">{{ t('portal.activeListings') }}</p>
                 </div>
                 <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center">
@@ -142,11 +142,11 @@
               </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 transition-colors duration-200">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-text-secondary text-sm mb-1">{{ t('vendor.totalBookings') }}</p>
-                  <p class="text-3xl font-bold text-text-primary">{{ stats.bookings }}</p>
+                  <p class="text-2xl sm:text-3xl font-bold text-text-primary">{{ stats.bookings }}</p>
                   <p class="text-text-muted text-sm mt-1">{{ t('vendor.thisMonth') }}</p>
                 </div>
                 <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
@@ -157,11 +157,11 @@
               </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 transition-colors duration-200">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-text-secondary text-sm mb-1">{{ t('vendor.revenue') }}</p>
-                  <p class="text-3xl font-bold text-text-primary">{{ currencyStore.formatPrice(stats.revenue) }}</p>
+                  <p class="text-2xl sm:text-3xl font-bold text-text-primary">{{ currencyStore.formatPrice(stats.revenue) }}</p>
                   <p class="text-text-muted text-sm mt-1">{{ t('portal.fromYourProperties') }}</p>
                 </div>
                 <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center">
@@ -174,12 +174,12 @@
           </div>
 
           <!-- Quick Actions -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 transition-colors duration-200">
-            <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('portal.quickActions') }}</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 transition-colors duration-200">
+            <h2 class="text-lg sm:text-xl font-bold text-text-primary mb-3 sm:mb-4">{{ t('portal.quickActions') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <router-link 
                 :to="addPropertyPath"
-                class="flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors justify-center"
+                class="flex items-center gap-2 px-4 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -188,7 +188,7 @@
               </router-link>
               <router-link 
                 :to="`${basePath}/create-tour`"
-                class="flex items-center gap-2 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors justify-center"
+                class="flex items-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -197,7 +197,7 @@
               </router-link>
               <router-link 
                 :to="`${basePath}/create-transport`"
-                class="flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors justify-center"
+                class="flex items-center gap-2 px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors justify-center"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
@@ -208,8 +208,8 @@
           </div>
 
           <!-- Recent Properties -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-200">
-            <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('portal.myRecentProperties') }}</h2>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 transition-colors duration-200">
+            <h2 class="text-lg sm:text-xl font-bold text-text-primary mb-3 sm:mb-4">{{ t('portal.myRecentProperties') }}</h2>
             
             <div v-if="loading" class="text-center py-8">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>

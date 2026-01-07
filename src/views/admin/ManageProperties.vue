@@ -323,7 +323,7 @@
                 <input 
                   type="file" 
                   @change="handleImageUpload"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   multiple
                   class="hidden"
                   ref="imageInput"
@@ -388,7 +388,7 @@
                 <input 
                   type="file" 
                   @change="handle360Upload"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   multiple
                   class="hidden"
                   ref="tour360Input"
@@ -441,7 +441,7 @@
                 <input 
                   type="file" 
                   @change="handleVRUpload"
-                  accept="image/*,video/*"
+                  accept="image/jpeg,image/png,image/webp,video/*"
                   multiple
                   class="hidden"
                   ref="vrInput"
@@ -496,6 +496,9 @@ import LoadingSpinner from '../../components/common/LoadingSpinner.vue'
 import ToastNotification from '../../components/common/ToastNotification.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 import { useTranslation } from '@/composables/useTranslation'
+import { uploadToCloudinary } from '@/services/cloudinary'
+import { optimizeImageFile, fileToDataUrl } from '@/utils/imageOptimization'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 
 const properties = ref([])
 const loading = ref(true)
@@ -666,17 +669,60 @@ const openImageUpload = (property) => {
 }
 
 const handleImageUpload = async (event) => {
-  const files = Array.from(event.target.files)
-  
-  // Check for large files and warn
-  const largeFiles = files.filter(file => file.size > 2 * 1024 * 1024)
-  if (largeFiles.length > 0) {
-    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
-    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  const files = Array.from(event.target.files || [])
+  event.target.value = ''
+
+  if (!selectedProperty.value?.id) {
+    showToast(t('admin.manageProperties.saveFailed'), 'error')
+    return
   }
-  
-  // Here you would upload to Cloudinary or Supabase Storage
-  showToast(t('admin.manageProperties.imageUploadInfo'), 'info')
+  if (!files.length) return
+
+  const invalid = files
+    .map((f) => ({ file: f, err: getImageValidationError(f) }))
+    .filter((x) => x.err)
+  if (invalid.length > 0) {
+    showToast(invalid[0].err, 'error')
+    return
+  }
+
+  const isCloudinaryConfigured = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+
+  try {
+    showToast(t('admin.manageProperties.imageUploadInfo'), 'info')
+
+    const uploadedUrls = []
+    for (const file of files) {
+      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) throw new Error(finalSizeError)
+
+      if (isCloudinaryConfigured) {
+        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
+        uploadedUrls.push(result.secure_url)
+      } else {
+        uploadedUrls.push(await fileToDataUrl(optimized))
+      }
+    }
+
+    const nextImages = [...(selectedProperty.value.images || []), ...uploadedUrls]
+    selectedProperty.value.images = nextImages
+
+    const { error } = await supabase
+      .from('properties')
+      .update({ images: nextImages })
+      .eq('id', selectedProperty.value.id)
+
+    if (error) throw error
+
+    showToast(t('admin.manageProperties.updated'), 'success')
+    await loadProperties()
+  } catch (error) {
+    console.error('Error uploading images:', error)
+    showToast(String(error?.message || t('admin.manageProperties.saveFailed')), 'error')
+  }
 }
 
 const removeImage = async (index) => {

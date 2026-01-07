@@ -6,13 +6,13 @@
     <!-- Content Skeleton -->
     <div class="p-2 sm:p-3">
       <!-- Title -->
-      <div class="h-5 sm:h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+      <div class="h-4 sm:h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
       
       <!-- Location -->
-      <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3 sm:mb-4"></div>
+      <div class="hidden sm:block h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3 sm:mb-4"></div>
       
       <!-- Details -->
-      <div class="flex items-center justify-between mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
+      <div class="hidden sm:flex items-center justify-between mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
         <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
         <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
         <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>

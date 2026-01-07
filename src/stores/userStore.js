@@ -164,6 +164,14 @@ export const useUserStore = defineStore('user', () => {
     tripCart.value = []
     loyaltyPoints.value = 0
     loyaltyTier.value = 'bronze'
+
+    // Best-effort cleanup for any legacy/mock persistence.
+    try {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+    } catch {
+      // ignore
+    }
   }
   
   const addToWatchlist = async (item) => {

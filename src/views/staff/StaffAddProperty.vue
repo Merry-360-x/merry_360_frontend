@@ -360,6 +360,7 @@ import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
 import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast'
 import { useCurrencyStore } from '../../stores/currency'
@@ -434,18 +435,13 @@ async function handleImageUpload(event) {
   const files = Array.from(event.target.files || [])
   if (!files.length) return
 
-  // Validate file sizes BEFORE processing
-  const maxSize = 2 * 1024 * 1024 // 2MB
-  const oversizedFiles = files.filter(file => file.size > maxSize)
-  
-  if (oversizedFiles.length > 0) {
-    const fileNames = oversizedFiles.map(f => {
-      const sizeMB = (f.size / (1024 * 1024)).toFixed(2)
-      return `${f.name} (${sizeMB}MB)`
-    }).join(', ')
-    
-    error(`The following images exceed 2MB: ${fileNames}. Please compress them before uploading.`)
-    event.target.value = '' // Reset input
+  // Validate inputs early (type + extreme size).
+  const invalid = files
+    .map((f) => ({ file: f, err: getImageValidationError(f) }))
+    .filter((x) => x.err)
+  if (invalid.length > 0) {
+    error(invalid[0].err)
+    event.target.value = ''
     return
   }
   
@@ -490,6 +486,9 @@ async function handleImageUpload(event) {
 
     try {
       const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+
+      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) throw new Error(finalSizeError)
 
       if (isCloudinaryConfigured) {
         const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })

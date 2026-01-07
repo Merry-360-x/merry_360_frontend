@@ -6,15 +6,38 @@
         <div class="max-w-4xl mx-auto">
           <div class="bg-white dark:bg-gray-800 backdrop-blur rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-3">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-              <div class="flex-1">
+              <div class="relative flex-1">
                 <label class="block text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">Transport</label>
                 <input
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search transport services"
                   class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder:text-gray-400 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
-                  @keyup.enter="performSearch"
+                  @focus="onSearchFocus"
+                  @blur="onSearchBlur"
+                  @keydown.down.prevent="highlightNextSuggestion"
+                  @keydown.up.prevent="highlightPrevSuggestion"
+                  @keydown.enter.prevent="onSearchEnter"
                 />
+
+                <div
+                  v-if="isSearchFocused && searchSuggestions.length"
+                  class="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-card z-50 overflow-hidden"
+                  role="listbox"
+                >
+                  <button
+                    v-for="(suggestion, idx) in searchSuggestions"
+                    :key="suggestion"
+                    type="button"
+                    class="w-full text-left px-4 py-2.5 text-sm text-text-primary hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                    :class="idx === highlightedSuggestionIndex ? 'bg-gray-50 dark:bg-gray-900' : ''"
+                    @mousedown.prevent="applySuggestion(suggestion)"
+                    role="option"
+                    :aria-selected="idx === highlightedSuggestionIndex"
+                  >
+                    {{ suggestion }}
+                  </button>
+                </div>
               </div>
               <button
                 type="button"
@@ -78,12 +101,73 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 
 const searchQuery = ref('')
+
+const isSearchFocused = ref(false)
+const highlightedSuggestionIndex = ref(-1)
+
+const baseSuggestions = ['Taxi', 'Shuttle', 'Car Rental']
+
+const searchSuggestions = computed(() => {
+  const q = String(searchQuery.value || '').trim().toLowerCase()
+  if (q.length < 2) return []
+  return baseSuggestions
+    .filter((s) => s.toLowerCase().includes(q))
+    .sort((a, b) => {
+      const aKey = a.toLowerCase()
+      const bKey = b.toLowerCase()
+      const aScore = aKey.startsWith(q) ? 2 : 1
+      const bScore = bKey.startsWith(q) ? 2 : 1
+      return (bScore - aScore) || a.localeCompare(b)
+    })
+    .slice(0, 6)
+})
+
+const onSearchFocus = () => {
+  isSearchFocused.value = true
+}
+
+const onSearchBlur = () => {
+  window.setTimeout(() => {
+    isSearchFocused.value = false
+    highlightedSuggestionIndex.value = -1
+  }, 120)
+}
+
+const applySuggestion = (suggestion) => {
+  searchQuery.value = suggestion
+  isSearchFocused.value = false
+  highlightedSuggestionIndex.value = -1
+  performSearch()
+}
+
+const highlightNextSuggestion = () => {
+  if (!isSearchFocused.value || !searchSuggestions.value.length) return
+  const next = highlightedSuggestionIndex.value + 1
+  highlightedSuggestionIndex.value = next >= searchSuggestions.value.length ? 0 : next
+}
+
+const highlightPrevSuggestion = () => {
+  if (!isSearchFocused.value || !searchSuggestions.value.length) return
+  const prev = highlightedSuggestionIndex.value - 1
+  highlightedSuggestionIndex.value = prev < 0 ? searchSuggestions.value.length - 1 : prev
+}
+
+const onSearchEnter = () => {
+  if (isSearchFocused.value && highlightedSuggestionIndex.value >= 0) {
+    const suggestion = searchSuggestions.value[highlightedSuggestionIndex.value]
+    if (suggestion) {
+      applySuggestion(suggestion)
+      return
+    }
+  }
+  performSearch()
+}
 
 const performSearch = () => {
   if (searchQuery.value.trim()) {

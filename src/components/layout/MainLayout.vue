@@ -699,6 +699,9 @@ const handleLogout = async () => {
     } catch (error) {
       console.error('Logout error:', error)
       showError(t('auth.logoutError') || 'Failed to logout')
+    } finally {
+      // Always clear local state so UI updates immediately.
+      userStore.logout()
     }
     return
   }
@@ -726,6 +729,9 @@ const handleLogout = async () => {
   } catch (error) {
     console.error('Logout error:', error)
     showError(t('auth.logoutError') || 'Failed to logout')
+  } finally {
+    // Always clear local state so UI updates immediately.
+    userStore.logout()
   }
 }
 

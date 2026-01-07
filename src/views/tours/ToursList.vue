@@ -6,15 +6,38 @@
         <div class="max-w-4xl mx-auto">
           <div class="bg-white dark:bg-gray-800 backdrop-blur rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-3">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-              <div class="flex-1">
+              <div class="relative flex-1">
                 <label class="block text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">Tours</label>
                 <input
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search tours"
                   class="w-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder:text-gray-400 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 min-h-[48px] px-4 rounded-xl border border-gray-300 dark:border-gray-600"
-                  @keyup.enter="performSearch"
+                  @focus="onSearchFocus"
+                  @blur="onSearchBlur"
+                  @keydown.down.prevent="highlightNextSuggestion"
+                  @keydown.up.prevent="highlightPrevSuggestion"
+                  @keydown.enter.prevent="onSearchEnter"
                 />
+
+                <div
+                  v-if="isSearchFocused && searchSuggestions.length"
+                  class="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-card z-50 overflow-hidden"
+                  role="listbox"
+                >
+                  <button
+                    v-for="(suggestion, idx) in searchSuggestions"
+                    :key="suggestion"
+                    type="button"
+                    class="w-full text-left px-4 py-2.5 text-sm text-text-primary hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                    :class="idx === highlightedSuggestionIndex ? 'bg-gray-50 dark:bg-gray-900' : ''"
+                    @mousedown.prevent="applySuggestion(suggestion)"
+                    role="option"
+                    :aria-selected="idx === highlightedSuggestionIndex"
+                  >
+                    {{ suggestion }}
+                  </button>
+                </div>
               </div>
               <button
                 type="button"
@@ -72,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import MainLayout from '../../components/layout/MainLayout.vue'
@@ -84,14 +107,83 @@ const currencyStore = useCurrencyStore()
 
 const searchQuery = ref('')
 
+const tours = ref([])
+const loading = ref(true)
+
+const isSearchFocused = ref(false)
+const highlightedSuggestionIndex = ref(-1)
+
+const normalizeForSuggestions = (value) => String(value || '').trim()
+const buildSuggestionList = (rows, query) => {
+  const q = String(query || '').trim().toLowerCase()
+  if (q.length < 2) return []
+
+  const results = []
+  const seen = new Set()
+
+  for (const row of rows || []) {
+    const candidates = [normalizeForSuggestions(row?.title), normalizeForSuggestions(row?.category)].filter(Boolean)
+    for (const raw of candidates) {
+      const key = raw.toLowerCase()
+      if (seen.has(key)) continue
+      if (!key.includes(q)) continue
+      results.push({ value: raw, score: key.startsWith(q) ? 2 : 1 })
+      seen.add(key)
+    }
+  }
+
+  results.sort((a, b) => (b.score - a.score) || a.value.localeCompare(b.value))
+  return results.slice(0, 6).map(r => r.value)
+}
+
+const searchSuggestions = computed(() => buildSuggestionList(tours.value || [], searchQuery.value))
+
+const onSearchFocus = () => {
+  isSearchFocused.value = true
+}
+
+const onSearchBlur = () => {
+  window.setTimeout(() => {
+    isSearchFocused.value = false
+    highlightedSuggestionIndex.value = -1
+  }, 120)
+}
+
+const applySuggestion = (suggestion) => {
+  searchQuery.value = suggestion
+  isSearchFocused.value = false
+  highlightedSuggestionIndex.value = -1
+  performSearch()
+}
+
+const highlightNextSuggestion = () => {
+  if (!isSearchFocused.value || !searchSuggestions.value.length) return
+  const next = highlightedSuggestionIndex.value + 1
+  highlightedSuggestionIndex.value = next >= searchSuggestions.value.length ? 0 : next
+}
+
+const highlightPrevSuggestion = () => {
+  if (!isSearchFocused.value || !searchSuggestions.value.length) return
+  const prev = highlightedSuggestionIndex.value - 1
+  highlightedSuggestionIndex.value = prev < 0 ? searchSuggestions.value.length - 1 : prev
+}
+
+const onSearchEnter = () => {
+  if (isSearchFocused.value && highlightedSuggestionIndex.value >= 0) {
+    const suggestion = searchSuggestions.value[highlightedSuggestionIndex.value]
+    if (suggestion) {
+      applySuggestion(suggestion)
+      return
+    }
+  }
+  performSearch()
+}
+
 const performSearch = () => {
   if (searchQuery.value.trim()) {
     console.log('Searching tours for:', searchQuery.value)
   }
 }
-
-const tours = ref([])
-const loading = ref(true)
 
 const loadTours = async () => {
   try {

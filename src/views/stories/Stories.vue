@@ -60,6 +60,8 @@
                   :src="userStory.avatar"
                   :alt="userStory.author"
                   class="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span v-else class="w-full h-full flex items-center justify-center text-white font-bold text-xl">
                   {{ (userStory.author || 'U').charAt(0).toUpperCase() }}
@@ -118,6 +120,8 @@
                   :src="story.user_avatar"
                   :alt="story.author"
                   class="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span v-else class="w-full h-full flex items-center justify-center text-white font-bold text-sm">
                   {{ (story.author || 'U').charAt(0).toUpperCase() }}
@@ -235,7 +239,7 @@
               <input 
                 ref="storyImageInput"
                 type="file" 
-                accept="image/*,video/*" 
+                accept="image/jpeg,image/png,image/webp,video/*" 
                 class="hidden" 
                 @change="handleStoryImage"
               />
@@ -381,6 +385,8 @@
                   :class="currentStory.isLiked ? 'text-red-500 fill-current' : ''"
                   :fill="currentStory.isLiked ? 'currentColor' : 'none'" 
                   stroke="currentColor" 
+                  loading="lazy"
+                  decoding="async"
                   viewBox="0 0 24 24"
                 >
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
@@ -649,6 +655,7 @@ import { confirmDialog } from '../../composables/useConfirm'
 import { useTranslation } from '@/composables/useTranslation'
 import { optimizeImageFile } from '../../utils/imageOptimization'
 import { useToast } from '../../composables/useToast'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 
 const { warning } = useToast()
 
@@ -887,9 +894,10 @@ async function loadStories() {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     const { data, error } = await supabase
       .from('stories')
-      .select('*, story_likes(count), story_comments(count)')
+      .select('id, user_id, author, user_avatar, title, location, content, image, images, created_at, updated_at, story_likes(count), story_comments(count)')
       .gte('created_at', since)
       .order('created_at', { ascending: false })
+      .limit(60)
 
     if (error) {
       // Table might not exist yet
@@ -904,12 +912,14 @@ async function loadStories() {
         comments_count: (story.story_comments || story.comments)?.[0]?.count || 0
       }))
 
-      // Check which stories user has liked
-      if (userStore.user?.id) {
+      // Check which loaded stories the user has liked (scope to current IDs for speed)
+      const storyIds = (stories.value || []).map(s => s.id).filter(Boolean)
+      if (userStore.user?.id && storyIds.length) {
         const { data: userLikes } = await supabase
           .from('story_likes')
           .select('story_id')
           .eq('user_id', userStore.user.id)
+          .in('story_id', storyIds)
 
         const likedIds = new Set((userLikes || []).map(l => l.story_id))
         stories.value = stories.value.map(s => ({ ...s, isLiked: likedIds.has(s.id) }))
@@ -941,20 +951,29 @@ async function handleStoryImage(event) {
 
   try {
     let fileToUpload = file
-    
-    // Check file size and warn if large
-    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-    const sizeLimit = newStory.value.mediaType === 'video' ? 100 : 10
-    
-    if (file.size > sizeLimit * 1024 * 1024) {
-      const { error: showError } = useToast()
-      showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
-      uploadingMedia.value = false
-      return
-    }
-    
-    if (file.size > 5 * 1024 * 1024) {
-      warning(`Uploading ${fileSizeMB}MB file...`, 1000)
+
+    // Validate early.
+    if (newStory.value.mediaType === 'image') {
+      const inputError = getImageValidationError(file, IMAGE_UPLOAD_RULES)
+      if (inputError) {
+        const { error: showError } = useToast()
+        showError(inputError)
+        uploadingMedia.value = false
+        return
+      }
+    } else {
+      // Videos keep existing 100MB limit.
+      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+      const sizeLimit = 100
+      if (file.size > sizeLimit * 1024 * 1024) {
+        const { error: showError } = useToast()
+        showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
+        uploadingMedia.value = false
+        return
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        warning(`Uploading ${fileSizeMB}MB file...`, 1000)
+      }
     }
     
     // Optimize images before upload for faster processing
@@ -964,6 +983,13 @@ async function handleStoryImage(event) {
         maxHeight: 1200, 
         quality: 0.85 
       })
+      const finalSizeError = getFinalImageSizeError(fileToUpload, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) {
+        const { error: showError } = useToast()
+        showError(finalSizeError)
+        uploadingMedia.value = false
+        return
+      }
       console.log(`Image optimized: ${(file.size / 1024).toFixed(1)}KB → ${(fileToUpload.size / 1024).toFixed(1)}KB`)
     }
     

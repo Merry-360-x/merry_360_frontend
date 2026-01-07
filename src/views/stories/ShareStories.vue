@@ -98,7 +98,7 @@
             <div>
               <label class="block text-sm font-semibold text-text-brand-600 mb-2">{{ t('stories.form.uploadPhotosLabel') }}</label>
               <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-teal-500 transition-colors cursor-pointer">
-                <input type="file" accept="image/*,video/*" multiple class="hidden" id="photo-upload" @change="handlePhotoUpload" />
+                <input type="file" accept="image/jpeg,image/png,image/webp,video/*" multiple class="hidden" id="photo-upload" @change="handlePhotoUpload" />
                 <label for="photo-upload" class="cursor-pointer">
                   <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -247,6 +247,7 @@ import { optimizeImageFile } from '../../utils/imageOptimization'
 import { useToast } from '../../composables/useToast'
 import api from '../../services/api'
 import { useTranslation } from '@/composables/useTranslation'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 
 const { warning } = useToast()
 
@@ -289,19 +290,28 @@ const handlePhotoUpload = async (event) => {
     const file = files[i]
     
     const isVideo = file.type?.startsWith('video/')
-    const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-    const sizeLimit = isVideo ? 100 : 10
-    
-    // Check file size limit
-    if (file.size > sizeLimit * 1024 * 1024) {
-      const { error: showError } = useToast()
-      showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
-      continue
-    }
-    
-    // Warn if large
-    if (file.size > 5 * 1024 * 1024) {
-      warning(`Uploading ${fileSizeMB}MB file...`, 1000)
+    if (!isVideo) {
+      const inputError = getImageValidationError(file, IMAGE_UPLOAD_RULES)
+      if (inputError) {
+        const { error: showError } = useToast()
+        showError(inputError)
+        continue
+      }
+    } else {
+      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
+      const sizeLimit = 100
+
+      // Check video size limit
+      if (file.size > sizeLimit * 1024 * 1024) {
+        const { error: showError } = useToast()
+        showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
+        continue
+      }
+
+      // Warn if large
+      if (file.size > 5 * 1024 * 1024) {
+        warning(`Uploading ${fileSizeMB}MB file...`, 1000)
+      }
     }
     
     // Optimize image before upload (skip videos)
@@ -312,6 +322,12 @@ const handlePhotoUpload = async (event) => {
         maxHeight: 1200, 
         quality: 0.85 
       })
+      const finalSizeError = getFinalImageSizeError(fileToUpload, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) {
+        const { error: showError } = useToast()
+        showError(finalSizeError)
+        continue
+      }
       console.log(`Image optimized: ${(file.size / 1024).toFixed(1)}KB → ${(fileToUpload.size / 1024).toFixed(1)}KB`)
     }
     

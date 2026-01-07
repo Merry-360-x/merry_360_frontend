@@ -5,6 +5,162 @@
 
 import { createClient } from '@supabase/supabase-js'
 
+function createSupabaseStubClient() {
+  const notConfiguredError = new Error('Supabase is not configured (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).')
+
+  const queryBuilder = () => {
+    const state = { single: false, write: false }
+    const builder = {
+      select() {
+        return builder
+      },
+      insert() {
+        state.write = true
+        return builder
+      },
+      update() {
+        state.write = true
+        return builder
+      },
+      upsert() {
+        state.write = true
+        return builder
+      },
+      delete() {
+        state.write = true
+        return builder
+      },
+      eq() {
+        return builder
+      },
+      match() {
+        return builder
+      },
+      order() {
+        return builder
+      },
+      in() {
+        return builder
+      },
+      ilike() {
+        return builder
+      },
+      limit() {
+        return builder
+      },
+      range() {
+        return builder
+      },
+      single() {
+        state.single = true
+        return builder
+      },
+      maybeSingle() {
+        state.single = true
+        return builder
+      },
+      then(onFulfilled, onRejected) {
+        const payload = state.write
+          ? { data: null, error: notConfiguredError }
+          : state.single
+            ? { data: null, error: null }
+            : { data: [], error: null }
+
+        try {
+          return Promise.resolve(onFulfilled ? onFulfilled(payload) : payload)
+        } catch (err) {
+          return onRejected ? Promise.resolve(onRejected(err)) : Promise.reject(err)
+        }
+      }
+    }
+    return builder
+  }
+
+  const noopSubscription = () => ({
+    unsubscribe() {}
+  })
+
+  return {
+    auth: {
+      async getSession() {
+        return { data: { session: null }, error: null }
+      },
+      async getUser() {
+        return { data: { user: null }, error: null }
+      },
+      async signInWithPassword() {
+        return { data: null, error: notConfiguredError }
+      },
+      async signUp() {
+        return { data: null, error: notConfiguredError }
+      },
+      async signInWithOAuth() {
+        return { data: null, error: notConfiguredError }
+      },
+      async signOut() {
+        return { error: null }
+      },
+      async resetPasswordForEmail() {
+        return { data: null, error: notConfiguredError }
+      },
+      async updateUser() {
+        return { data: null, error: notConfiguredError }
+      },
+      async exchangeCodeForSession() {
+        return { data: null, error: notConfiguredError }
+      },
+      async setSession() {
+        return { data: null, error: notConfiguredError }
+      },
+      onAuthStateChange() {
+        return { data: { subscription: noopSubscription() }, error: null }
+      }
+    },
+    from() {
+      return queryBuilder()
+    },
+    rpc() {
+      return Promise.resolve({ data: null, error: notConfiguredError })
+    },
+    functions: {
+      async invoke() {
+        return { data: null, error: notConfiguredError }
+      }
+    },
+    storage: {
+      from() {
+        return {
+          async upload() {
+            return { data: null, error: notConfiguredError }
+          },
+          async remove() {
+            return { data: null, error: notConfiguredError }
+          },
+          getPublicUrl() {
+            return { data: { publicUrl: '' } }
+          },
+          createSignedUrl() {
+            return Promise.resolve({ data: null, error: notConfiguredError })
+          }
+        }
+      }
+    },
+    channel() {
+      return {
+        on() {
+          return this
+        },
+        subscribe() {
+          return this
+        }
+      }
+    },
+    removeChannel() {
+      return true
+    }
+  }
+}
+
 const sanitizeEnv = (value) => String(value || '')
   .replace(/\\n/g, '')
   .replace(/\r/g, '')
@@ -20,10 +176,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Set' : 'Missing')
 }
 
-console.log('✅ Supabase initialized:', supabaseUrl)
-
-// Initialize Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Initialize Supabase client (or a safe stub when env is missing).
+export const supabase = (supabaseUrl && supabaseAnonKey)
+  ? (console.log('✅ Supabase initialized:', supabaseUrl), createClient(supabaseUrl, supabaseAnonKey))
+  : (console.warn('⚠️ Supabase disabled: missing env vars; app will run in limited mode.'), createSupabaseStubClient())
 
 // ============ Auth ============
 export async function signUpWithEmail(email, password, metadata = {}) {
@@ -62,7 +218,9 @@ export async function googleSignIn() {
 }
 
 export async function signOutUser() {
-  const { error } = await supabase.auth.signOut()
+  // Prefer a local-only sign out so logout works even if the network is flaky.
+  // This prevents the common “logout only after refresh” UX.
+  const { error } = await supabase.auth.signOut({ scope: 'local' })
   if (error) throw error
 }
 
