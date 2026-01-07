@@ -45,7 +45,7 @@
       </div>
 
       <!-- Selected Location Info -->
-      <div v-if="localLocation.lat && localLocation.lng" class="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+      <div v-if="localLocation.lat != null && localLocation.lng != null" class="absolute bottom-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-semibold text-text-primary">Selected Location</p>
@@ -118,6 +118,18 @@ const localAddress = ref(props.address || '')
 
 let map = null
 let marker = null
+
+const clampLat = (lat) => {
+  if (!Number.isFinite(lat)) return null
+  // Leaflet default CRS (EPSG:3857) supports roughly this latitude range
+  return Math.max(-85.05112878, Math.min(85.05112878, lat))
+}
+
+const normalizeLng = (lng) => {
+  if (!Number.isFinite(lng)) return null
+  // Normalize to [-180, 180)
+  return ((((lng + 180) % 360) + 360) % 360) - 180
+}
 
 // Custom price marker icon
 const createPriceMarkerIcon = (price) => {
@@ -192,8 +204,10 @@ const addMarker = (lat, lng) => {
 }
 
 const updateLocation = (lat, lng) => {
-  localLocation.value = { lat, lng }
-  emit('update:modelValue', { lat, lng })
+  const safeLat = clampLat(Number(lat))
+  const safeLng = normalizeLng(Number(lng))
+  localLocation.value = { lat: safeLat, lng: safeLng }
+  emit('update:modelValue', { lat: safeLat, lng: safeLng })
 }
 
 const updatePrice = () => {

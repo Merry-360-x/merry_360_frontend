@@ -828,15 +828,30 @@ const validateCurrentStep = () => {
     }
 
     if (formData.applicantType === 'business') {
-      if (!formData.businessName || !formData.taxId || !businessRegCertFile.value) {
+      if (!formData.businessName || !formData.taxId || !businessRegCertDoc.value) {
         alert(t('hostApplication.validation.step2Required'))
         return false
       }
     }
   } else if (currentStep.value === 3) {
-    if (!formData.propertyLocation || !formData.capacity) {
-      alert(t('hostApplication.validation.step3Required'))
-      return false
+    if (formData.hostingType === 'accommodation') {
+      const lat = Number(formData.location?.lat)
+      const lng = Number(formData.location?.lng)
+      const price = Number(formData.price)
+      const address = String(formData.propertyAddress || '').trim()
+
+      const hasCoords = Number.isFinite(lat) && Number.isFinite(lng)
+      const hasPrice = Number.isFinite(price) && price > 0
+
+      if (!hasCoords || !hasPrice || !address) {
+        alert(t('hostApplication.validation.step3Required'))
+        return false
+      }
+    } else {
+      if (!formData.propertyLocation || !formData.capacity) {
+        alert(t('hostApplication.validation.step3Required'))
+        return false
+      }
     }
   } else if (currentStep.value === 4) {
     if (!formData.description) {
@@ -922,8 +937,16 @@ const handleSubmit = async () => {
         email: formData.email,
         phone: formData.phone,
         hostingType: formData.hostingType,
-        propertyLocation: formData.propertyLocation,
-        capacity: formData.capacity,
+        // Non-accommodation listing basics
+        propertyLocation: formData.hostingType === 'accommodation' ? null : formData.propertyLocation,
+        capacity: formData.hostingType === 'accommodation' ? null : formData.capacity,
+
+        // Accommodation listing basics
+        amenities: formData.hostingType === 'accommodation' ? (formData.amenities || []) : null,
+        propertyDetails: formData.hostingType === 'accommodation' ? (formData.propertyDetails || null) : null,
+        location: formData.hostingType === 'accommodation' ? (formData.location || null) : null,
+        price: formData.hostingType === 'accommodation' ? (formData.price || 0) : null,
+        propertyAddress: formData.hostingType === 'accommodation' ? (formData.propertyAddress || '') : null,
         description: formData.description,
         additionalFilesCount: uploadedFiles.value?.length || 0
       }
@@ -951,8 +974,8 @@ const handleSubmit = async () => {
       }
     })
 
-    idDocumentFile.value = null
-    businessRegCertFile.value = null
+    idDocumentDoc.value = null
+    businessRegCertDoc.value = null
     uploadedFiles.value = []
     
     // Redirect to home
