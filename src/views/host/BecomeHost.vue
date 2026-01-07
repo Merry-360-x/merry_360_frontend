@@ -330,6 +330,17 @@
                         class="mt-8"
                       />
 
+                      <!-- Location and Price Picker -->
+                      <LocationPicker
+                        v-if="formData.hostingType === 'accommodation'"
+                        v-model="formData.location"
+                        v-model:price="formData.price"
+                        v-model:address="formData.propertyAddress"
+                        title="Where is your property located?"
+                        subtitle="Pin your exact location and set your nightly rate"
+                        class="mt-8"
+                      />
+
                       <!-- Fallback for non-accommodation types -->
                       <div v-if="formData.hostingType !== 'accommodation'">
                         <div>
@@ -517,6 +528,7 @@ import AmenitiesSelector from '../../components/host/AmenitiesSelector.vue'
 import PropertyDetails from '../../components/host/PropertyDetails.vue'
 import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import DocumentUpload from '../../components/host/DocumentUpload.vue'
+import LocationPicker from '../../components/host/LocationPicker.vue'
 import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
 import isoCountries from 'i18n-iso-countries'
@@ -777,7 +789,10 @@ const formData = reactive({
   // New fields for Airbnb-style flow
   amenities: [],
   propertyDetails: { guests: 4, bedrooms: 1, beds: 1, bathrooms: 1 },
-  photos: []
+  photos: [],
+  location: { lat: null, lng: null },
+  price: 0,
+  propertyAddress: ''
 })
 
 const uploadedFiles = ref([])
