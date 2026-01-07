@@ -319,34 +319,65 @@
                   <!-- Step 3: Listing Basics -->
                   <div v-show="currentStep === 3" class="animate-fade-in">
                     <div class="space-y-4">
-                      <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.locationLabel }} *</label>
-                        <input 
-                          v-model="formData.propertyLocation"
-                          type="text" 
-                          required
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                          :placeholder="listingLabels.locationPlaceholder"
-                        />
-                      </div>
+                      <!-- Amenities Selector -->
+                      <AmenitiesSelector
+                        v-if="formData.hostingType === 'accommodation'"
+                        v-model="formData.amenities"
+                        title="Tell guests what your place has to offer"
+                        subtitle="You can add more amenities after you publish your listing."
+                      />
+                      
+                      <!-- Property Details Counters -->
+                      <PropertyDetails
+                        v-if="formData.hostingType === 'accommodation'"
+                        v-model="formData.propertyDetails"
+                        title="Share some basics about your place"
+                        subtitle="You'll add more details later, like bed types."
+                        class="mt-8"
+                      />
 
-                      <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.capacityLabel }} *</label>
-                        <input 
-                          v-model="formData.capacity"
-                          type="number" 
-                          required
-                          min="1"
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                          :placeholder="listingLabels.capacityPlaceholder"
-                        />
+                      <!-- Fallback for non-accommodation types -->
+                      <div v-if="formData.hostingType !== 'accommodation'">
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.locationLabel }} *</label>
+                          <input 
+                            v-model="formData.propertyLocation"
+                            type="text" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="listingLabels.locationPlaceholder"
+                          />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.capacityLabel }} *</label>
+                          <input 
+                            v-model="formData.capacity"
+                            type="number" 
+                            required
+                            min="1"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="listingLabels.capacityPlaceholder"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <!-- Step 4: Listing Details -->
                   <div v-show="currentStep === 4" class="animate-fade-in">
-                    <div class="space-y-4">
+                    <div class="space-y-8">
+                      <!-- Photo Uploader -->
+                      <PhotoUploader
+                        v-if="formData.hostingType === 'accommodation'"
+                        v-model="formData.photos"
+                        title="Choose at least 5 photos"
+                        subtitle="Drag to reorder"
+                        :min-photos="5"
+                        :max-photos="20"
+                      />
+
+                      <!-- Description -->
                       <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.descriptionLabel }} *</label>
                         <textarea 
@@ -358,7 +389,8 @@
                         ></textarea>
                       </div>
 
-                      <div>
+                      <!-- Fallback file upload for non-accommodation -->
+                      <div v-if="formData.hostingType !== 'accommodation'">
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.uploadLabel }}</label>
                         <input 
                           type="file"
@@ -487,6 +519,9 @@
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
+import AmenitiesSelector from '../../components/host/AmenitiesSelector.vue'
+import PropertyDetails from '../../components/host/PropertyDetails.vue'
+import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
 import isoCountries from 'i18n-iso-countries'
@@ -742,7 +777,12 @@ const formData = reactive({
   propertyLocation: '',
   capacity: '',
   description: '',
-  agreeToTerms: false
+  agreeToTerms: false,
+  
+  // New fields for Airbnb-style flow
+  amenities: [],
+  propertyDetails: { guests: 4, bedrooms: 1, beds: 1, bathrooms: 1 },
+  photos: []
 })
 
 const uploadedFiles = ref([])
