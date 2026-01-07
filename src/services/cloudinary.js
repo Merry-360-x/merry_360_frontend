@@ -1,10 +1,58 @@
-export async function uploadToCloudinary(file, options = {}) {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+function getCloudinaryConfig() {
+  const cloudName = String(import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '').trim()
+  const uploadPreset = String(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || '').trim()
 
   if (!cloudName || !uploadPreset) {
-    throw new Error('Cloudinary is not configured (VITE_CLOUDINARY_CLOUD_NAME / VITE_CLOUDINARY_UPLOAD_PRESET)')
+    throw new Error('Uploads are not configured yet. Please try again later.')
   }
+
+  return { cloudName, uploadPreset }
+}
+
+async function readErrorMessage(response) {
+  try {
+    const data = await response.json()
+    return data?.error?.message || ''
+  } catch {
+    try {
+      const text = await response.text()
+      return String(text || '').slice(0, 300)
+    } catch {
+      return ''
+    }
+  }
+}
+
+function toUserMessage(rawMessage, { status } = {}) {
+  const message = String(rawMessage || '').trim()
+  const lower = message.toLowerCase()
+
+  if (!message) return 'Upload failed. Please try again.'
+
+  // Common Cloudinary configuration errors (keep non-technical wording).
+  if (lower.includes('upload preset') && (lower.includes('not found') || lower.includes('invalid') || lower.includes('must be specified'))) {
+    return 'Uploads are not enabled yet. Please try again later.'
+  }
+  if (lower.includes('unsigned') && lower.includes('disabled')) {
+    return 'Uploads are not enabled yet. Please try again later.'
+  }
+  if (lower.includes('must supply') && (lower.includes('api_key') || lower.includes('api key'))) {
+    return 'Uploads are not enabled yet. Please try again later.'
+  }
+  if (status === 413 || lower.includes('file size') || lower.includes('too large')) {
+    return 'This file is too large. Please choose a smaller file.'
+  }
+
+  // Avoid leaking technical details to end users.
+  if (/(cors|preflight|network error|failed to fetch)/i.test(message)) {
+    return 'Network error while uploading. Please check your connection and try again.'
+  }
+
+  return message
+}
+
+export async function uploadToCloudinary(file, options = {}) {
+  const { cloudName, uploadPreset } = getCloudinaryConfig()
 
   // Detect if file is video
   const isVideo = file.type?.startsWith('video/')
@@ -71,8 +119,8 @@ export async function uploadToCloudinary(file, options = {}) {
   }
 
   if (!response.ok) {
-    const data = await response.json()
-    throw new Error(data.error?.message || 'Cloudinary upload failed')
+    const rawMessage = await readErrorMessage(response)
+    throw new Error(toUserMessage(rawMessage || 'Cloudinary upload failed', { status: response.status }))
   }
 
   const data = await response.json()
@@ -82,12 +130,7 @@ export async function uploadToCloudinary(file, options = {}) {
 // Upload PDFs and other non-image documents to Cloudinary.
 // Uses resource type 'raw' for PDFs and keeps images as 'image'.
 export async function uploadDocumentToCloudinary(file, options = {}) {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
-
-  if (!cloudName || !uploadPreset) {
-    throw new Error('Cloudinary is not configured (VITE_CLOUDINARY_CLOUD_NAME / VITE_CLOUDINARY_UPLOAD_PRESET)')
-  }
+  const { cloudName, uploadPreset } = getCloudinaryConfig()
 
   const mime = String(file?.type || '').toLowerCase()
   const isImage = mime.startsWith('image/')
@@ -134,8 +177,8 @@ export async function uploadDocumentToCloudinary(file, options = {}) {
   }
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({}))
-    throw new Error(data.error?.message || 'Cloudinary upload failed')
+    const rawMessage = await readErrorMessage(response)
+    throw new Error(toUserMessage(rawMessage || 'Cloudinary upload failed', { status: response.status }))
   }
 
   const data = await response.json()

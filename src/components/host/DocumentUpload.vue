@@ -238,7 +238,8 @@ const confirmUpload = async () => {
   }
 
   const hasCloudinary = Boolean(
-    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+    String(import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '').trim() &&
+      String(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || '').trim()
   )
 
   if (!hasCloudinary) {
