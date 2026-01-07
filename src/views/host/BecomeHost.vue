@@ -79,7 +79,7 @@
                   </svg>
                   <span v-else>3</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.listingBasics') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ listingStepLabels.step3 }}</span>
               </div>
 
               <!-- Connector Line 3 -->
@@ -96,7 +96,7 @@
                   </svg>
                   <span v-else>4</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.listingDetails') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ listingStepLabels.step4 }}</span>
               </div>
 
               <!-- Connector Line 4 -->
@@ -593,7 +593,7 @@ const stepMeta = computed(() => {
 
   if (currentStep.value === 3) {
     return {
-      title: t('hostApplication.stepTitles.listingBasics'),
+      title: listingStepLabels.value.step3Title,
       description: t(listingDescKey),
       checklist: [listingLabels.value.locationLabel, listingLabels.value.capacityLabel]
     }
@@ -601,7 +601,7 @@ const stepMeta = computed(() => {
 
   if (currentStep.value === 4) {
     return {
-      title: t('hostApplication.stepTitles.listingDetails'),
+      title: listingStepLabels.value.step4Title,
       description: t('hostApplication.layout.listingDetailsDesc'),
       checklist: [listingLabels.value.descriptionLabel, listingLabels.value.uploadLabel]
     }
@@ -664,6 +664,61 @@ const listingLabels = computed(() => {
     descriptionPlaceholder: t('hostApplication.placeholder.listingDescriptionAccommodation'),
     uploadLabel: t('hostApplication.labels.uploadListingMediaAccommodation'),
     uploadHint: t('hostApplication.uploadHintListingMediaAccommodation')
+  }
+})
+
+const listingStepLabels = computed(() => {
+  const type = formData.hostingType
+
+  const step3Key =
+    type === 'tour'
+      ? 'hostApplication.steps.listingBasicsTour'
+      : type === 'transport'
+        ? 'hostApplication.steps.listingBasicsTransport'
+        : type === 'service'
+          ? 'hostApplication.steps.listingBasicsService'
+          : type === 'accommodation'
+            ? 'hostApplication.steps.listingBasicsAccommodation'
+            : 'hostApplication.steps.listingBasics'
+
+  const step4Key =
+    type === 'tour'
+      ? 'hostApplication.steps.listingDetailsTour'
+      : type === 'transport'
+        ? 'hostApplication.steps.listingDetailsTransport'
+        : type === 'service'
+          ? 'hostApplication.steps.listingDetailsService'
+          : type === 'accommodation'
+            ? 'hostApplication.steps.listingDetailsAccommodation'
+            : 'hostApplication.steps.listingDetails'
+
+  const step3TitleKey =
+    type === 'tour'
+      ? 'hostApplication.stepTitles.listingBasicsTour'
+      : type === 'transport'
+        ? 'hostApplication.stepTitles.listingBasicsTransport'
+        : type === 'service'
+          ? 'hostApplication.stepTitles.listingBasicsService'
+          : type === 'accommodation'
+            ? 'hostApplication.stepTitles.listingBasicsAccommodation'
+            : 'hostApplication.stepTitles.listingBasics'
+
+  const step4TitleKey =
+    type === 'tour'
+      ? 'hostApplication.stepTitles.listingDetailsTour'
+      : type === 'transport'
+        ? 'hostApplication.stepTitles.listingDetailsTransport'
+        : type === 'service'
+          ? 'hostApplication.stepTitles.listingDetailsService'
+          : type === 'accommodation'
+            ? 'hostApplication.stepTitles.listingDetailsAccommodation'
+            : 'hostApplication.stepTitles.listingDetails'
+
+  return {
+    step3: t(step3Key),
+    step4: t(step4Key),
+    step3Title: t(step3TitleKey),
+    step4Title: t(step4TitleKey)
   }
 })
 
