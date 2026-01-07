@@ -79,7 +79,41 @@
                   </svg>
                   <span v-else>3</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.propertyDetails') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.listingBasics') }}</span>
+              </div>
+
+              <!-- Connector Line 3 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 4 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 4 -->
+              <div class="flex flex-col items-center flex-1">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 4 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                >
+                  <svg v-if="currentStep > 4" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>4</span>
+                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.listingDetails') }}</span>
+              </div>
+
+              <!-- Connector Line 4 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 5 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 5 -->
+              <div class="flex flex-col items-center flex-1">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 5 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                >
+                  <svg v-if="currentStep > 5" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>5</span>
+                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.submit') }}</span>
               </div>
             </div>
           </div>
@@ -282,7 +316,7 @@
                     </div>
                   </div>
 
-                  <!-- Step 3: Property/Service Details -->
+                  <!-- Step 3: Listing Basics -->
                   <div v-show="currentStep === 3" class="animate-fade-in">
                     <div class="space-y-4">
                       <div>
@@ -307,7 +341,12 @@
                           :placeholder="listingLabels.capacityPlaceholder"
                         />
                       </div>
+                    </div>
+                  </div>
 
+                  <!-- Step 4: Listing Details -->
+                  <div v-show="currentStep === 4" class="animate-fade-in">
+                    <div class="space-y-4">
                       <div>
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.descriptionLabel }} *</label>
                         <textarea 
@@ -330,8 +369,13 @@
                         />
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ listingLabels.uploadHint }}</p>
                       </div>
+                    </div>
+                  </div>
 
-                      <div class="mt-6">
+                  <!-- Step 5: Review & Submit -->
+                  <div v-show="currentStep === 5" class="animate-fade-in">
+                    <div class="space-y-4">
+                      <div>
                         <label class="flex items-start gap-3 cursor-pointer">
                           <input 
                             v-model="formData.agreeToTerms"
@@ -361,7 +405,7 @@
                   <div v-else></div>
 
                   <button 
-                    v-if="currentStep < 3"
+                    v-if="currentStep < TOTAL_STEPS"
                     type="button"
                     @click="nextStep"
                     class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-all shadow-lg"
@@ -455,7 +499,7 @@ const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(1)
 
-const TOTAL_STEPS = 3
+const TOTAL_STEPS = 5
 
 isoCountries.registerLocale(enIsoCountries)
 
@@ -547,15 +591,26 @@ const stepMeta = computed(() => {
           ? 'hostApplication.layout.listingServiceDesc'
           : 'hostApplication.layout.listingAccommodationDesc'
 
+  if (currentStep.value === 3) {
+    return {
+      title: t('hostApplication.stepTitles.listingBasics'),
+      description: t(listingDescKey),
+      checklist: [listingLabels.value.locationLabel, listingLabels.value.capacityLabel]
+    }
+  }
+
+  if (currentStep.value === 4) {
+    return {
+      title: t('hostApplication.stepTitles.listingDetails'),
+      description: t('hostApplication.layout.listingDetailsDesc'),
+      checklist: [listingLabels.value.descriptionLabel, listingLabels.value.uploadLabel]
+    }
+  }
+
   return {
-    title: t('hostApplication.stepTitles.propertyServiceDetails'),
-    description: t(listingDescKey),
-    checklist: [
-      listingLabels.value.locationLabel,
-      listingLabels.value.capacityLabel,
-      listingLabels.value.descriptionLabel,
-      t('hostApplication.layout.termsChecklist')
-    ]
+    title: t('hostApplication.stepTitles.reviewSubmit'),
+    description: t('hostApplication.layout.reviewSubmitDesc'),
+    checklist: [t('hostApplication.layout.termsChecklist')]
   }
 })
 
@@ -672,6 +727,16 @@ const validateCurrentStep = () => {
         alert(t('hostApplication.validation.step2Required'))
         return false
       }
+    }
+  } else if (currentStep.value === 3) {
+    if (!formData.propertyLocation || !formData.capacity) {
+      alert(t('hostApplication.validation.step3Required'))
+      return false
+    }
+  } else if (currentStep.value === 4) {
+    if (!formData.description) {
+      alert(t('hostApplication.validation.step4Required'))
+      return false
     }
   }
   return true
