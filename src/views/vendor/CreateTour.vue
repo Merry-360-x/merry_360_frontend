@@ -122,27 +122,14 @@
 
             <!-- Images -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Images</h2>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Images *</label>
-                <div 
-                  class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-brand-500 transition-colors cursor-pointer"
-                  @click="$refs.tourImageInput.click()"
-                >
-                  <input 
-                    ref="tourImageInput"
-                    type="file" 
-                    accept="image/jpeg,image/png,image/webp" 
-                    multiple 
-                    class="hidden" 
-                    @change="handleImageUpload"
-                  />
-                  <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                  </svg>
-                  <p class="text-gray-600 font-medium mb-1">Click to upload images</p>
-                  <p class="text-sm text-gray-500">Maximum 2MB per image (JPEG, PNG, WebP)</p>
+              <PhotoUploader
+                v-model="tourImages"
+                title="Upload Tour Images"
+                subtitle="Add photos to showcase your tour"
+                :min-photos="1"
+                :max-photos="10"
+              />
+              <div class="hidden">
                 </div>
                 <p v-if="errors.image" class="mt-2 text-sm text-red-600">{{ errors.image }}</p>
                 <p v-if="uploading" class="mt-2 text-sm text-brand-600">Uploading images...</p>
