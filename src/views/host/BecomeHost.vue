@@ -157,7 +157,7 @@
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                       >
                         <option value="">{{ t('hostApplication.options.selectNationality') }}</option>
-                        <option v-for="n in nationalities" :key="n" :value="n">{{ n }}</option>
+                        <option v-for="n in nationalityOptions" :key="n.value" :value="n.value">{{ n.label }}</option>
                       </select>
                     </div>
 
@@ -423,6 +423,7 @@ import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
 import isoCountries from 'i18n-iso-countries'
 import enIsoCountries from 'i18n-iso-countries/langs/en.json'
+import worldCountries from 'world-countries'
 
 const router = useRouter()
 const { t } = useTranslation()
@@ -459,13 +460,23 @@ const fallbackNationalities = [
   'Zambia','Zimbabwe'
 ]
 
-const nationalities = computed(() => {
+const nationalityOptions = computed(() => {
   try {
-    const names = isoCountries.getNames('en', { select: 'official' })
-    const list = Array.from(new Set(Object.values(names).filter(Boolean)))
-    return list.sort((a, b) => a.localeCompare(b))
+    const namesByIso2 = isoCountries.getNames('en', { select: 'official' })
+    const options = Object.entries(namesByIso2)
+      .map(([cca2, countryName]) => {
+        const match = worldCountries.find((c) => c.cca2 === cca2)
+        const demonym = match?.demonyms?.eng?.m
+        const label = demonym || countryName
+        return { value: label, label }
+      })
+
+    // Ensure unique list (some demonyms may repeat)
+    const unique = new Map(options.map((o) => [o.value, o]))
+    return Array.from(unique.values()).sort((a, b) => a.label.localeCompare(b.label))
   } catch (e) {
-    return fallbackNationalities
+    const unique = new Map(fallbackNationalities.map((n) => [n, { value: n, label: n }]))
+    return Array.from(unique.values()).sort((a, b) => a.label.localeCompare(b.label))
   }
 })
 
