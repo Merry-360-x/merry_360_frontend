@@ -199,6 +199,20 @@
                           </select>
                         </div>
                       </div>
+                      <div>
+                        <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
+                        <select 
+                          v-model="formData.hostingType"
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        >
+                          <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
+                          <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
+                          <option value="tour">{{ t('hostApplication.options.hostingTour') }}</option>
+                          <option value="transport">{{ t('hostApplication.options.hostingTransport') }}</option>
+                          <option value="service">{{ t('hostApplication.options.hostingOther') }}</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -272,56 +286,41 @@
                   <div v-show="currentStep === 3" class="animate-fade-in">
                     <div class="space-y-4">
                       <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
-                        <select 
-                          v-model="formData.hostingType"
-                          required
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        >
-                          <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
-                          <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
-                          <option value="tour">{{ t('hostApplication.options.hostingTour') }}</option>
-                          <option value="transport">{{ t('hostApplication.options.hostingTransport') }}</option>
-                          <option value="service">{{ t('hostApplication.options.hostingOther') }}</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.propertyLocation') }} *</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.locationLabel }} *</label>
                         <input 
                           v-model="formData.propertyLocation"
                           type="text" 
                           required
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                          :placeholder="t('hostApplication.placeholder.propertyLocation')"
+                          :placeholder="listingLabels.locationPlaceholder"
                         />
                       </div>
 
                       <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.capacity') }} *</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.capacityLabel }} *</label>
                         <input 
                           v-model="formData.capacity"
                           type="number" 
                           required
                           min="1"
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                          :placeholder="t('hostApplication.placeholder.capacity')"
+                          :placeholder="listingLabels.capacityPlaceholder"
                         />
                       </div>
 
                       <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.description') }} *</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.descriptionLabel }} *</label>
                         <textarea 
                           v-model="formData.description"
                           required
                           rows="5"
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                          :placeholder="t('hostApplication.placeholder.description')"
+                          :placeholder="listingLabels.descriptionPlaceholder"
                         ></textarea>
                       </div>
 
                       <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadPhotos') }}</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.uploadLabel }}</label>
                         <input 
                           type="file"
                           @change="handleFileUpload"
@@ -329,7 +328,7 @@
                           accept="image/*,.pdf"
                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         />
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHint') }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ listingLabels.uploadHint }}</p>
                       </div>
 
                       <div class="mt-6">
@@ -539,16 +538,77 @@ const stepMeta = computed(() => {
     return { ...base, checklist }
   }
 
+  const listingDescKey =
+    formData.hostingType === 'tour'
+      ? 'hostApplication.layout.listingTourDesc'
+      : formData.hostingType === 'transport'
+        ? 'hostApplication.layout.listingTransportDesc'
+        : formData.hostingType === 'service'
+          ? 'hostApplication.layout.listingServiceDesc'
+          : 'hostApplication.layout.listingAccommodationDesc'
+
   return {
     title: t('hostApplication.stepTitles.propertyServiceDetails'),
-    description: t('hostApplication.layout.propertyDetailsDesc'),
+    description: t(listingDescKey),
     checklist: [
-      t('hostApplication.labels.hostingType'),
-      t('hostApplication.labels.propertyLocation'),
-      t('hostApplication.labels.capacity'),
-      t('hostApplication.labels.description'),
+      listingLabels.value.locationLabel,
+      listingLabels.value.capacityLabel,
+      listingLabels.value.descriptionLabel,
       t('hostApplication.layout.termsChecklist')
     ]
+  }
+})
+
+const listingLabels = computed(() => {
+  const type = formData.hostingType
+  if (type === 'tour') {
+    return {
+      locationLabel: t('hostApplication.labels.listingLocationTour'),
+      locationPlaceholder: t('hostApplication.placeholder.listingLocationTour'),
+      capacityLabel: t('hostApplication.labels.listingCapacityTour'),
+      capacityPlaceholder: t('hostApplication.placeholder.listingCapacityTour'),
+      descriptionLabel: t('hostApplication.labels.listingDescriptionTour'),
+      descriptionPlaceholder: t('hostApplication.placeholder.listingDescriptionTour'),
+      uploadLabel: t('hostApplication.labels.uploadListingMediaTour'),
+      uploadHint: t('hostApplication.uploadHintListingMediaTour')
+    }
+  }
+
+  if (type === 'transport') {
+    return {
+      locationLabel: t('hostApplication.labels.listingLocationTransport'),
+      locationPlaceholder: t('hostApplication.placeholder.listingLocationTransport'),
+      capacityLabel: t('hostApplication.labels.listingCapacityTransport'),
+      capacityPlaceholder: t('hostApplication.placeholder.listingCapacityTransport'),
+      descriptionLabel: t('hostApplication.labels.listingDescriptionTransport'),
+      descriptionPlaceholder: t('hostApplication.placeholder.listingDescriptionTransport'),
+      uploadLabel: t('hostApplication.labels.uploadListingMediaTransport'),
+      uploadHint: t('hostApplication.uploadHintListingMediaTransport')
+    }
+  }
+
+  if (type === 'service') {
+    return {
+      locationLabel: t('hostApplication.labels.listingLocationService'),
+      locationPlaceholder: t('hostApplication.placeholder.listingLocationService'),
+      capacityLabel: t('hostApplication.labels.listingCapacityService'),
+      capacityPlaceholder: t('hostApplication.placeholder.listingCapacityService'),
+      descriptionLabel: t('hostApplication.labels.listingDescriptionService'),
+      descriptionPlaceholder: t('hostApplication.placeholder.listingDescriptionService'),
+      uploadLabel: t('hostApplication.labels.uploadListingMediaService'),
+      uploadHint: t('hostApplication.uploadHintListingMediaService')
+    }
+  }
+
+  return {
+    locationLabel: t('hostApplication.labels.listingLocationAccommodation'),
+    locationPlaceholder: t('hostApplication.placeholder.listingLocationAccommodation'),
+    capacityLabel: t('hostApplication.labels.listingCapacityAccommodation'),
+    capacityPlaceholder: t('hostApplication.placeholder.listingCapacityAccommodation'),
+    descriptionLabel: t('hostApplication.labels.listingDescriptionAccommodation'),
+    descriptionPlaceholder: t('hostApplication.placeholder.listingDescriptionAccommodation'),
+    uploadLabel: t('hostApplication.labels.uploadListingMediaAccommodation'),
+    uploadHint: t('hostApplication.uploadHintListingMediaAccommodation')
   }
 })
 
@@ -597,7 +657,7 @@ const previousStep = () => {
 
 const validateCurrentStep = () => {
   if (currentStep.value === 1) {
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality || !formData.applicantType) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality || !formData.applicantType || !formData.hostingType) {
       alert(t('hostApplication.validation.step1Required'))
       return false
     }
