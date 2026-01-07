@@ -120,7 +120,7 @@
 
           <!-- Form Card -->
           <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors duration-200">
-            <form @submit.prevent="handleSubmit">
+            <form @submit.prevent="handleSubmit" novalidate>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Left: Guidance Panel -->
                 <div class="md:pr-8 md:border-r border-gray-200 dark:border-gray-700">
