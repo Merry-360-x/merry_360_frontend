@@ -82,9 +82,16 @@
                   </label>
                   <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-lg p-3 mb-3">
                     <p class="text-sm text-brand-800 dark:text-brand-300">
-                      💡 <strong>Tip:</strong> Enter the coordinates to show a pinpoint on the map for guests.
+                      💡 <strong>Tip:</strong> Click on the map to drop a pin (or drag it) to set the exact location guests will see.
                     </p>
                   </div>
+
+                  <MapboxCoordinatePicker
+                    v-model="coordsModel"
+                    title=""
+                    subtitle=""
+                  />
+
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label class="block text-xs text-text-muted mb-1">Latitude</label>
@@ -107,9 +114,6 @@
                       />
                     </div>
                   </div>
-                  <p class="text-xs text-text-muted mt-2">
-                    Get coordinates: Right-click on <a href="https://www.google.com/maps" target="_blank" class="text-brand-500 hover:underline">Google Maps</a> → Click location → Copy coordinates
-                  </p>
                 </div>
 
                 <div>
@@ -356,6 +360,7 @@ import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import ImageSizeValidator from '../../components/common/ImageSizeValidator.vue'
+import MapboxCoordinatePicker from '../../components/common/MapboxCoordinatePicker.vue'
 import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
@@ -394,6 +399,19 @@ const form = ref({
   vrTourType: '',
   latitude: null,
   longitude: null
+})
+
+const coordsModel = computed({
+  get() {
+    return { lat: form.value.latitude ?? null, lng: form.value.longitude ?? null }
+  },
+  set(next) {
+    const nextLat = Number(next?.lat)
+    const nextLng = Number(next?.lng)
+
+    form.value.latitude = Number.isFinite(nextLat) ? nextLat : null
+    form.value.longitude = Number.isFinite(nextLng) ? nextLng : null
+  }
 })
 
 const uploadedImages = ref([])

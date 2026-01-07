@@ -330,16 +330,48 @@
                         class="mt-8"
                       />
 
-                      <!-- Location and Price Picker -->
-                      <LocationPicker
-                        v-if="formData.hostingType === 'accommodation'"
-                        v-model="formData.location"
-                        v-model:price="formData.price"
-                        v-model:address="formData.propertyAddress"
-                        title="Where is your property located?"
-                        subtitle="Pin your exact location and set your nightly rate"
-                        class="mt-8"
-                      />
+                      <!-- Location and Price (typed) -->
+                      <div v-if="formData.hostingType === 'accommodation'" class="mt-8">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                          <h3 class="text-xl font-bold text-text-primary mb-2">Where is your property located?</h3>
+                          <p class="text-sm text-text-muted mb-6">Type the location now. You’ll pin it on the map later when adding the property from your dashboard.</p>
+
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="md:col-span-2">
+                              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Location *</label>
+                              <input
+                                v-model="formData.propertyLocation"
+                                type="text"
+                                required
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                                placeholder="e.g., Kigali, Kicukiro"
+                              />
+                            </div>
+
+                            <div>
+                              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nightly Price *</label>
+                              <input
+                                v-model.number="formData.price"
+                                type="number"
+                                min="1"
+                                required
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                                placeholder="e.g., 50"
+                              />
+                            </div>
+
+                            <div>
+                              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Street Address (optional)</label>
+                              <input
+                                v-model="formData.propertyAddress"
+                                type="text"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                                placeholder="e.g., KK 309 Street"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                       <!-- Fallback for non-accommodation types -->
                       <div v-if="formData.hostingType !== 'accommodation'">
@@ -528,7 +560,7 @@ import AmenitiesSelector from '../../components/host/AmenitiesSelector.vue'
 import PropertyDetails from '../../components/host/PropertyDetails.vue'
 import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import DocumentUpload from '../../components/host/DocumentUpload.vue'
-import LocationPicker from '../../components/host/LocationPicker.vue'
+// Map is selected later when creating a property in dashboard.
 import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
 import isoCountries from 'i18n-iso-countries'
@@ -835,15 +867,11 @@ const validateCurrentStep = () => {
     }
   } else if (currentStep.value === 3) {
     if (formData.hostingType === 'accommodation') {
-      const lat = Number(formData.location?.lat)
-      const lng = Number(formData.location?.lng)
       const price = Number(formData.price)
-      const address = String(formData.propertyAddress || '').trim()
-
-      const hasCoords = Number.isFinite(lat) && Number.isFinite(lng)
+      const locationText = String(formData.propertyLocation || '').trim()
       const hasPrice = Number.isFinite(price) && price > 0
 
-      if (!hasCoords || !hasPrice || !address) {
+      if (!locationText || !hasPrice) {
         alert(t('hostApplication.validation.step3Required'))
         return false
       }
@@ -937,14 +965,14 @@ const handleSubmit = async () => {
         email: formData.email,
         phone: formData.phone,
         hostingType: formData.hostingType,
-        // Non-accommodation listing basics
-        propertyLocation: formData.hostingType === 'accommodation' ? null : formData.propertyLocation,
+        // Listing basics
+        propertyLocation: formData.propertyLocation || null,
         capacity: formData.hostingType === 'accommodation' ? null : formData.capacity,
 
         // Accommodation listing basics
         amenities: formData.hostingType === 'accommodation' ? (formData.amenities || []) : null,
         propertyDetails: formData.hostingType === 'accommodation' ? (formData.propertyDetails || null) : null,
-        location: formData.hostingType === 'accommodation' ? (formData.location || null) : null,
+        location: null,
         price: formData.hostingType === 'accommodation' ? (formData.price || 0) : null,
         propertyAddress: formData.hostingType === 'accommodation' ? (formData.propertyAddress || '') : null,
         description: formData.description,
