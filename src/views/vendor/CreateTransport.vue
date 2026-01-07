@@ -249,12 +249,12 @@
 
             <!-- Submit Buttons -->
             <div class="flex gap-4">
-              <Button type="submit" variant="primary" :disabled="isSubmitting">
+              <Button type="submit" variant="primary" :disabled="isSubmitting || uploading">
                 <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isSubmitting ? 'Creating...' : 'Create Service' }}
+                {{ isSubmitting ? 'Creating...' : (uploading ? 'Uploading...' : 'Create Service') }}
               </Button>
               <Button type="button" variant="secondary" @click="$router.push(dashboardPath)">
                 Cancel
@@ -268,7 +268,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from '../../composables/useToast'
 import { useUserStore } from '../../stores/userStore'
@@ -278,8 +278,9 @@ import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
-import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
+import { optimizeImageFile } from '../../utils/imageOptimization'
 import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
+import { beginGlobalUpload, endGlobalUpload } from '@/utils/globalUploadState'
 
 const router = useRouter()
 const route = useRoute()
@@ -349,6 +350,11 @@ const handleImageUpload = async (event) => {
   const isCloudinaryConfigured = Boolean(
     import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
   )
+  if (!isCloudinaryConfigured) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    uploading.value = false
+    return
+  }
 
   const tasks = files.map((file) => async () => {
     const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`
@@ -371,28 +377,12 @@ const handleImageUpload = async (event) => {
       const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
       if (finalSizeError) throw new Error(finalSizeError)
 
-      if (isCloudinaryConfigured) {
-        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/transport' })
-        updateById({ url: result.secure_url, status: 'ready' })
-      } else {
-        const dataUrl = await fileToDataUrl(optimized)
-        updateById({ url: dataUrl, status: 'ready' })
-      }
+      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/transport' })
+      updateById({ url: result.secure_url, status: 'ready' })
     } catch (error) {
       console.error('Upload error:', error)
-      try {
-        const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
-        const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
-        if (finalSizeError) throw new Error(finalSizeError)
-
-        const dataUrl = await fileToDataUrl(optimized)
-        updateById({ url: dataUrl, status: 'ready' })
-        showToast('Cloud upload failed — using local image preview instead.', 'warning', 1200)
-      } catch (fallbackError) {
-        console.error('Upload fallback error:', fallbackError)
-        updateById({ status: 'error' })
-        showToast(`Failed to upload ${file.name}`, 'error')
-      }
+      updateById({ status: 'error' })
+      showToast(error?.message || `Failed to upload ${file.name}`, 'error')
     } finally {
       if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
@@ -432,6 +422,10 @@ const validateForm = () => {
 }
 
 const handleSubmit = async () => {
+  if (uploading.value) {
+    showToast('Please wait for image uploads to finish.', 'error')
+    return
+  }
   if (!validateForm()) {
     showToast('Please fix all errors', 'error')
     return
@@ -477,4 +471,26 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
+
+const isTrackedGlobally = ref(false)
+watch(
+  uploading,
+  (v) => {
+    if (v && !isTrackedGlobally.value) {
+      beginGlobalUpload()
+      isTrackedGlobally.value = true
+    } else if (!v && isTrackedGlobally.value) {
+      endGlobalUpload()
+      isTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
+
+onUnmounted(() => {
+  if (isTrackedGlobally.value) {
+    endGlobalUpload()
+    isTrackedGlobally.value = false
+  }
+})
 </script>

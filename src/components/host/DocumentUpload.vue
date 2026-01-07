@@ -103,15 +103,21 @@
           <div class="flex gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
             <button
               @click="cancelUpload"
+              :disabled="isUploading"
               class="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-text-primary font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
             >
               Cancel
             </button>
             <button
               @click="confirmUpload"
+              :disabled="isUploading"
               class="flex-1 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all"
             >
-              Upload
+              <span v-if="isUploading" class="inline-flex items-center gap-2">
+                <span class="animate-spin w-4 h-4 border-2 border-white/80 dark:border-gray-900/80 border-t-transparent rounded-full"></span>
+                Uploading...
+              </span>
+              <span v-else>Upload</span>
             </button>
           </div>
         </div>
@@ -147,7 +153,11 @@
 </template>
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
+import { useToast } from '../../composables/useToast'
+import { uploadDocumentToCloudinary } from '../../services/cloudinary'
+import { getDocumentValidationError } from '../../utils/documentUploadRules'
+import { beginGlobalUpload, endGlobalUpload } from '../../utils/globalUploadState'
 
 const props = defineProps({
   modelValue: {
@@ -175,6 +185,24 @@ const document = ref(props.modelValue)
 const pendingDocument = ref(null)
 const showUploadModal = ref(false)
 const showViewModal = ref(false)
+const isUploading = ref(false)
+
+const isTrackedGlobally = ref(false)
+watch(
+  isUploading,
+  (v) => {
+    if (v && !isTrackedGlobally.value) {
+      beginGlobalUpload()
+      isTrackedGlobally.value = true
+    } else if (!v && isTrackedGlobally.value) {
+      endGlobalUpload()
+      isTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
+
+const { showToast } = useToast()
 
 const triggerFileInput = () => {
   fileInput.value?.click()
@@ -183,6 +211,13 @@ const triggerFileInput = () => {
 const handleFileSelect = (event) => {
   const file = event.target.files?.[0]
   if (file) {
+    const err = getDocumentValidationError(file)
+    if (err) {
+      showToast(err, 'error')
+      event.target.value = ''
+      return
+    }
+
     pendingDocument.value = {
       file: file,
       preview: URL.createObjectURL(file)
@@ -192,14 +227,52 @@ const handleFileSelect = (event) => {
   event.target.value = ''
 }
 
-const confirmUpload = () => {
-  document.value = pendingDocument.value
-  emit('update:modelValue', document.value)
-  showUploadModal.value = false
-  pendingDocument.value = null
+const confirmUpload = async () => {
+  if (!pendingDocument.value?.file) return
+
+  const file = pendingDocument.value.file
+  const err = getDocumentValidationError(file)
+  if (err) {
+    showToast(err, 'error')
+    return
+  }
+
+  const hasCloudinary = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+
+  if (!hasCloudinary) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    return
+  }
+
+  isUploading.value = true
+  try {
+    const result = await uploadDocumentToCloudinary(file, { folder: 'merry360x/documents' })
+    const uploadedUrl = result?.secure_url || result?.url || null
+
+    if (!uploadedUrl) {
+      throw new Error('Upload failed. Please try again.')
+    }
+
+    document.value = {
+      ...pendingDocument.value,
+      url: uploadedUrl,
+      status: 'ready'
+    }
+    emit('update:modelValue', document.value)
+    showUploadModal.value = false
+    pendingDocument.value = null
+  } catch (e) {
+    console.error('Document upload failed:', e)
+    showToast(e?.message || 'Upload failed. Please try again.', 'error')
+  } finally {
+    isUploading.value = false
+  }
 }
 
 const cancelUpload = () => {
+  if (isUploading.value) return
   if (pendingDocument.value) {
     URL.revokeObjectURL(pendingDocument.value.preview)
     pendingDocument.value = null
@@ -231,6 +304,11 @@ const formatFileSize = (bytes) => {
 
 // Cleanup on unmount
 onUnmounted(() => {
+  if (isTrackedGlobally.value) {
+    endGlobalUpload()
+    isTrackedGlobally.value = false
+  }
+
   if (document.value) {
     URL.revokeObjectURL(document.value.preview)
   }

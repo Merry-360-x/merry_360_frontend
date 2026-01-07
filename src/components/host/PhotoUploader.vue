@@ -170,7 +170,11 @@
         <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl max-w-md w-full shadow-2xl">
           <!-- Header -->
           <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-            <button @click="cancelUpload" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+            <button
+              @click="cancelUpload"
+              :disabled="uploading"
+              class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -179,7 +183,11 @@
               <h3 class="font-semibold text-lg text-text-primary">Upload photos</h3>
               <p class="text-sm text-text-secondary">{{ pendingPhotos.length }} {{ pendingPhotos.length === 1 ? 'item' : 'items' }} selected</p>
             </div>
-            <button @click="triggerFileInput" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+            <button
+              @click="triggerFileInput"
+              :disabled="uploading"
+              class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
@@ -201,7 +209,8 @@
                 />
                 <button
                   @click="removePendingPhoto(index)"
-                  class="absolute top-2 right-2 w-8 h-8 bg-gray-900/80 hover:bg-gray-900 rounded-full flex items-center justify-center text-white transition-all"
+                  :disabled="uploading"
+                  class="absolute top-2 right-2 w-8 h-8 bg-gray-900/80 hover:bg-gray-900 rounded-full flex items-center justify-center text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -215,15 +224,18 @@
           <div class="flex gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
             <button
               @click="cancelUpload"
+              :disabled="uploading"
               class="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-text-primary font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
             >
               Cancel
             </button>
             <button
               @click="confirmUpload"
+              :disabled="uploading"
               class="flex-1 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all"
             >
-              Upload
+              <span v-if="uploading">Uploading…</span>
+              <span v-else>Upload</span>
             </button>
           </div>
         </div>
@@ -258,7 +270,12 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue'
+import { ref, defineProps, defineEmits, watch, onUnmounted } from 'vue'
+import { useToast } from '../../composables/useToast'
+import { uploadToCloudinary } from '../../services/cloudinary'
+import { optimizeImageFile } from '../../utils/imageOptimization'
+import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '../../utils/imageUploadRules'
+import { beginGlobalUpload, endGlobalUpload } from '../../utils/globalUploadState'
 
 const props = defineProps({
   modelValue: {
@@ -280,10 +297,14 @@ const props = defineProps({
   maxPhotos: {
     type: Number,
     default: 20
+  },
+  uploading: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:uploading'])
 
 const photos = ref([])
 const pendingPhotos = ref([])
@@ -298,6 +319,28 @@ const totalUploads = ref(0)
 
 let photoIdCounter = 0
 
+const { showToast } = useToast()
+
+const isCloudinaryConfigured = () =>
+  Boolean(import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+
+watch(uploading, (v) => emit('update:uploading', Boolean(v)))
+
+const isTrackedGlobally = ref(false)
+watch(
+  uploading,
+  (v) => {
+    if (v && !isTrackedGlobally.value) {
+      beginGlobalUpload()
+      isTrackedGlobally.value = true
+    } else if (!v && isTrackedGlobally.value) {
+      endGlobalUpload()
+      isTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
+
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
@@ -305,12 +348,23 @@ const triggerFileInput = () => {
 const openUploadModal = async (event) => {
   const files = Array.from(event.target.files || [])
   if (files.length > 0) {
+    const remainingSlots = props.maxPhotos - photos.value.length
+    const filesToUse = files.slice(0, Math.max(0, remainingSlots))
+
+    const invalid = filesToUse
+      .map((f) => ({ file: f, err: getImageValidationError(f, IMAGE_UPLOAD_RULES) }))
+      .filter((x) => x.err)
+    if (invalid.length > 0) {
+      showToast(invalid[0].err, 'error')
+      event.target.value = ''
+      return
+    }
+
     // Create pending photos
-    pendingPhotos.value = files.map(file => ({
+    pendingPhotos.value = filesToUse.map((file) => ({
       id: photoIdCounter++,
-      file: file,
-      preview: URL.createObjectURL(file),
-      uploaded: false
+      file,
+      preview: URL.createObjectURL(file)
     }))
     showUploadModal.value = true
   }
@@ -328,17 +382,64 @@ const removePendingPhoto = (index) => {
   }
 }
 
-const confirmUpload = () => {
-  // Add pending photos to main photos array
-  photos.value.push(...pendingPhotos.value)
-  emit('update:modelValue', photos.value)
-  
-  // Close modal
-  showUploadModal.value = false
-  pendingPhotos.value = []
+const confirmUpload = async () => {
+  if (!pendingPhotos.value.length) return
+
+  uploading.value = true
+  totalUploads.value = pendingPhotos.value.length
+  uploadProgress.value = 0
+
+  const useCloudinary = isCloudinaryConfigured()
+  if (!useCloudinary) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    uploading.value = false
+    return
+  }
+
+  try {
+    const uploaded = []
+
+    for (const item of pendingPhotos.value) {
+      const file = item.file
+      const inputErr = getImageValidationError(file, IMAGE_UPLOAD_RULES)
+      if (inputErr) throw new Error(inputErr)
+
+      // Optimize to keep under 2MB before upload.
+      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) throw new Error(finalSizeError)
+
+      let url
+      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/uploads' })
+      url = result.secure_url
+
+      uploaded.push({
+        id: ++photoIdCounter,
+        preview: url,
+        url
+      })
+
+      uploadProgress.value++
+
+      // Clean up local preview URL after upload
+      if (item.preview) URL.revokeObjectURL(item.preview)
+    }
+
+    photos.value.push(...uploaded)
+    emit('update:modelValue', photos.value)
+
+    showUploadModal.value = false
+    pendingPhotos.value = []
+  } catch (e) {
+    console.error('Photo upload failed:', e)
+    showToast(e?.message || 'Upload failed. Please try again.', 'error')
+  } finally {
+    uploading.value = false
+  }
 }
 
 const cancelUpload = () => {
+  if (uploading.value) return
   // Clean up pending photos
   pendingPhotos.value.forEach(photo => {
     URL.revokeObjectURL(photo.preview)
@@ -347,52 +448,33 @@ const cancelUpload = () => {
   showUploadModal.value = false
 }
 
-const handleFileSelect = async (event) => {
-  const files = Array.from(event.target.files || [])
-  await processFiles(files)
-  // Reset input so same file can be selected again
-  event.target.value = ''
-}
-
 const handleDrop = async (event) => {
   isDragging.value = false
-  const files = Array.from(event.dataTransfer.files || []).filter(f => f.type.startsWith('image/'))
-  await processFiles(files)
-}
+  const files = Array.from(event.dataTransfer.files || []).filter((f) => f.type.startsWith('image/'))
 
-const processFiles = async (files) => {
   const remainingSlots = props.maxPhotos - photos.value.length
-  const filesToProcess = files.slice(0, remainingSlots)
+  const filesToUse = files.slice(0, Math.max(0, remainingSlots))
+  if (!filesToUse.length) return
 
-  if (filesToProcess.length === 0) return
-
-  uploading.value = true
-  totalUploads.value = filesToProcess.length
-  uploadProgress.value = 0
-
-  for (const file of filesToProcess) {
-    const preview = URL.createObjectURL(file)
-    photos.value.push({
-      id: ++photoIdCounter,
-      file,
-      preview,
-      uploaded: false
-    })
-    uploadProgress.value++
-
-    // Simulate upload delay (remove in production)
-    await new Promise(resolve => setTimeout(resolve, 300))
+  const invalid = filesToUse
+    .map((f) => ({ file: f, err: getImageValidationError(f, IMAGE_UPLOAD_RULES) }))
+    .filter((x) => x.err)
+  if (invalid.length > 0) {
+    showToast(invalid[0].err, 'error')
+    return
   }
 
-  uploading.value = false
-  emit('update:modelValue', photos.value)
+  pendingPhotos.value = filesToUse.map((file) => ({
+    id: photoIdCounter++,
+    file,
+    preview: URL.createObjectURL(file)
+  }))
+  showUploadModal.value = true
 }
 
 const removePhoto = (index) => {
   const photo = photos.value[index]
-  if (photo.preview) {
-    URL.revokeObjectURL(photo.preview)
-  }
+  if (String(photo?.preview || '').startsWith('blob:')) URL.revokeObjectURL(photo.preview)
   photos.value.splice(index, 1)
   emit('update:modelValue', photos.value)
 }
@@ -427,12 +509,15 @@ watch(() => props.modelValue, (newVal) => {
 }, { deep: true })
 
 // Cleanup on unmount
-import { onUnmounted } from 'vue'
 onUnmounted(() => {
+  if (isTrackedGlobally.value) {
+    endGlobalUpload()
+    isTrackedGlobally.value = false
+  }
+
   photos.value.forEach(photo => {
-    if (photo.preview) {
-      URL.revokeObjectURL(photo.preview)
-    }
+    // Only revoke blob: URLs; Cloudinary/Data URLs should not be revoked.
+    if (String(photo.preview || '').startsWith('blob:')) URL.revokeObjectURL(photo.preview)
   })
 })
 </script>

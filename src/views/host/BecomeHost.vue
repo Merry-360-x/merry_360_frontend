@@ -408,6 +408,7 @@
                       <PhotoUploader
                         v-if="formData.hostingType === 'accommodation'"
                         v-model="formData.photos"
+                        v-model:uploading="photosUploading"
                         title="Choose at least 5 photos"
                         subtitle="Drag to reorder"
                         :min-photos="5"
@@ -477,14 +478,15 @@
                     v-if="currentStep < TOTAL_STEPS"
                     type="button"
                     @click="nextStep"
-                    class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-all shadow-lg"
+                    :disabled="currentStep === 4 && photosUploading"
+                    class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
                   >
                     {{ t('hostApplication.nextStep') }}
                   </button>
                   <button 
                     v-else
                     type="submit"
-                    :disabled="isSubmitting"
+                    :disabled="isSubmitting || photosUploading"
                     class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
                   >
                     {{ isSubmitting ? t('hostApplication.submitting') : t('hostApplication.submitApplication') }}
@@ -831,12 +833,17 @@ const formData = reactive({
 const uploadedFiles = ref([])
 const idDocumentDoc = ref(null)
 const businessRegCertDoc = ref(null)
+const photosUploading = ref(false)
 
 const scrollToForm = () => {
   formSection.value?.scrollIntoView({ behavior: 'smooth' })
 }
 
 const nextStep = () => {
+  if (currentStep.value === 4 && photosUploading.value) {
+    alert('Please wait for your photo uploads to finish.')
+    return
+  }
   if (validateCurrentStep()) {
     currentStep.value++
     scrollToForm()

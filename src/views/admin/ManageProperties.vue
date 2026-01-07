@@ -304,12 +304,12 @@
       <div 
         v-if="showImageModal" 
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        @click.self="closeImageModal"
+        @click.self="requestCloseImageModal"
       >
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full">
           <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ t('admin.manageProperties.photosTitle') }}</h2>
-            <button @click="closeImageModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <button @click="requestCloseImageModal" :disabled="uploadingImages" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -358,7 +358,7 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-              <Button @click="closeImageModal" variant="primary">{{ t('common.done') }}</Button>
+              <Button @click="requestCloseImageModal" :disabled="uploadingImages" variant="primary">{{ t('common.done') }}</Button>
             </div>
           </div>
         </div>
@@ -370,12 +370,12 @@
       <div 
         v-if="show360Modal" 
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        @click.self="close360Modal"
+        @click.self="requestClose360Modal"
       >
         <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full">
           <div class="p-6 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900">{{ t('admin.manageProperties.tour360Title') }}</h2>
-            <button @click="close360Modal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button @click="requestClose360Modal" :disabled="uploading360" class="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -411,7 +411,7 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-              <Button @click="close360Modal" variant="primary">{{ t('common.done') }}</Button>
+              <Button @click="requestClose360Modal" :disabled="uploading360" variant="primary">{{ t('common.done') }}</Button>
             </div>
           </div>
         </div>
@@ -423,12 +423,12 @@
       <div 
         v-if="showVRModal" 
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        @click.self="closeVRModal"
+        @click.self="requestCloseVRModal"
       >
         <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full">
           <div class="p-6 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900">{{ t('admin.manageProperties.vrTitle') }}</h2>
-            <button @click="closeVRModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button @click="requestCloseVRModal" :disabled="uploadingVR" class="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -469,7 +469,7 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-              <Button @click="closeVRModal" variant="primary">{{ t('common.done') }}</Button>
+              <Button @click="requestCloseVRModal" :disabled="uploadingVR" variant="primary">{{ t('common.done') }}</Button>
             </div>
           </div>
         </div>
@@ -487,7 +487,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue'
 import { supabase } from '../../services/supabase'
 import AdminLayout from '../../components/layout/AdminLayout.vue'
 import Card from '../../components/common/Card.vue'
@@ -497,8 +497,9 @@ import ToastNotification from '../../components/common/ToastNotification.vue'
 import { confirmDialog } from '../../composables/useConfirm'
 import { useTranslation } from '@/composables/useTranslation'
 import { uploadToCloudinary } from '@/services/cloudinary'
-import { optimizeImageFile, fileToDataUrl } from '@/utils/imageOptimization'
+import { optimizeImageFile } from '@/utils/imageOptimization'
 import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
+import { beginGlobalUpload, endGlobalUpload } from '@/utils/globalUploadState'
 
 const properties = ref([])
 const loading = ref(true)
@@ -509,6 +510,27 @@ const showAddModal = ref(false)
 const showImageModal = ref(false)
 const show360Modal = ref(false)
 const showVRModal = ref(false)
+
+const uploadingImages = ref(false)
+const uploading360 = ref(false)
+const uploadingVR = ref(false)
+
+const anyUploadsInProgress = computed(() => uploadingImages.value || uploading360.value || uploadingVR.value)
+
+const isTrackedGlobally = ref(false)
+watch(
+  anyUploadsInProgress,
+  (v) => {
+    if (v && !isTrackedGlobally.value) {
+      beginGlobalUpload()
+      isTrackedGlobally.value = true
+    } else if (!v && isTrackedGlobally.value) {
+      endGlobalUpload()
+      isTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
 
 const editingProperty = ref({
   name: '',
@@ -690,7 +712,13 @@ const handleImageUpload = async (event) => {
     import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
   )
 
+  if (!isCloudinaryConfigured) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    return
+  }
+
   try {
+    uploadingImages.value = true
     showToast(t('admin.manageProperties.imageUploadInfo'), 'info')
 
     const uploadedUrls = []
@@ -699,12 +727,8 @@ const handleImageUpload = async (event) => {
       const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
       if (finalSizeError) throw new Error(finalSizeError)
 
-      if (isCloudinaryConfigured) {
-        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
-        uploadedUrls.push(result.secure_url)
-      } else {
-        uploadedUrls.push(await fileToDataUrl(optimized))
-      }
+      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
+      uploadedUrls.push(result.secure_url)
     }
 
     const nextImages = [...(selectedProperty.value.images || []), ...uploadedUrls]
@@ -722,6 +746,8 @@ const handleImageUpload = async (event) => {
   } catch (error) {
     console.error('Error uploading images:', error)
     showToast(String(error?.message || t('admin.manageProperties.saveFailed')), 'error')
+  } finally {
+    uploadingImages.value = false
   }
 }
 
@@ -752,16 +778,62 @@ const open360Upload = (property) => {
 }
 
 const handle360Upload = async (event) => {
-  const files = Array.from(event.target.files)
-  
-  // Check for large files and warn
-  const largeFiles = files.filter(file => file.size > 5 * 1024 * 1024)
-  if (largeFiles.length > 0) {
-    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
-    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  const files = Array.from(event.target.files || [])
+  event.target.value = ''
+
+  if (!selectedProperty.value?.id) {
+    showToast(t('admin.manageProperties.saveFailed'), 'error')
+    return
   }
-  
-  showToast(t('admin.manageProperties.tour360UploadInfo'), 'info')
+  if (!files.length) return
+
+  const invalid = files
+    .map((f) => ({ file: f, err: getImageValidationError(f) }))
+    .filter((x) => x.err)
+  if (invalid.length > 0) {
+    showToast(invalid[0].err, 'error')
+    return
+  }
+
+  const isCloudinaryConfigured = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+  if (!isCloudinaryConfigured) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    return
+  }
+
+  try {
+    uploading360.value = true
+    showToast(t('admin.manageProperties.tour360UploadInfo'), 'info')
+
+    const uploadedUrls = []
+    for (const file of files) {
+      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) throw new Error(finalSizeError)
+
+      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties/360' })
+      uploadedUrls.push(result.secure_url)
+    }
+
+    const next = [...(selectedProperty.value.tour360 || []), ...uploadedUrls]
+    selectedProperty.value.tour360 = next
+
+    const { error } = await supabase
+      .from('properties')
+      .update({ tour360: next })
+      .eq('id', selectedProperty.value.id)
+
+    if (error) throw error
+    showToast(t('admin.manageProperties.updated'), 'success')
+    await loadProperties()
+  } catch (error) {
+    console.error('Error uploading 360 tour media:', error)
+    showToast(String(error?.message || t('admin.manageProperties.saveFailed')), 'error')
+  } finally {
+    uploading360.value = false
+  }
 }
 
 // VR Content management
@@ -771,16 +843,63 @@ const openVRUpload = (property) => {
 }
 
 const handleVRUpload = async (event) => {
-  const files = Array.from(event.target.files)
-  
-  // Check for large files and warn
-  const largeFiles = files.filter(file => file.size > 5 * 1024 * 1024)
-  if (largeFiles.length > 0) {
-    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
-    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
+  const files = Array.from(event.target.files || [])
+  event.target.value = ''
+
+  if (!selectedProperty.value?.id) {
+    showToast(t('admin.manageProperties.saveFailed'), 'error')
+    return
   }
-  
-  showToast(t('admin.manageProperties.vrUploadInfo'), 'info')
+  if (!files.length) return
+
+  // Enforce image-only here (2MB JPG/PNG/WebP) to match global rule.
+  const invalid = files
+    .map((f) => ({ file: f, err: getImageValidationError(f) }))
+    .filter((x) => x.err)
+  if (invalid.length > 0) {
+    showToast(invalid[0].err, 'error')
+    return
+  }
+
+  const isCloudinaryConfigured = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+  if (!isCloudinaryConfigured) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    return
+  }
+
+  try {
+    uploadingVR.value = true
+    showToast(t('admin.manageProperties.vrUploadInfo'), 'info')
+
+    const uploadedUrls = []
+    for (const file of files) {
+      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+      if (finalSizeError) throw new Error(finalSizeError)
+
+      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties/vr' })
+      uploadedUrls.push(result.secure_url)
+    }
+
+    const next = [...(selectedProperty.value.vrContent || []), ...uploadedUrls]
+    selectedProperty.value.vrContent = next
+
+    const { error } = await supabase
+      .from('properties')
+      .update({ vrContent: next })
+      .eq('id', selectedProperty.value.id)
+
+    if (error) throw error
+    showToast(t('admin.manageProperties.updated'), 'success')
+    await loadProperties()
+  } catch (error) {
+    console.error('Error uploading VR media:', error)
+    showToast(String(error?.message || t('admin.manageProperties.saveFailed')), 'error')
+  } finally {
+    uploadingVR.value = false
+  }
 }
 
 // Modal controls
@@ -816,6 +935,37 @@ const closeVRModal = () => {
   showVRModal.value = false
   selectedProperty.value = null
 }
+
+const requestCloseImageModal = () => {
+  if (uploadingImages.value) {
+    showToast('Please wait for the upload to finish.', 'error')
+    return
+  }
+  closeImageModal()
+}
+
+const requestClose360Modal = () => {
+  if (uploading360.value) {
+    showToast('Please wait for the upload to finish.', 'error')
+    return
+  }
+  close360Modal()
+}
+
+const requestCloseVRModal = () => {
+  if (uploadingVR.value) {
+    showToast('Please wait for the upload to finish.', 'error')
+    return
+  }
+  closeVRModal()
+}
+
+onUnmounted(() => {
+  if (isTrackedGlobally.value) {
+    endGlobalUpload()
+    isTrackedGlobally.value = false
+  }
+})
 
 // Toast notification
 const showToast = (message, type = 'success') => {

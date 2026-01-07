@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { supabase } from '@/services/supabase'
 import { useUserStore } from '@/stores/userStore'
 import { useTranslation } from '@/composables/useTranslation'
+import { isGlobalUploading } from '@/utils/globalUploadState'
 
 // Critical routes - load immediately
 import Home from '../views/home/Home.vue'
@@ -431,6 +432,12 @@ const router = createRouter({
 
 // Navigation guard for admin routes
 router.beforeEach(async (to, from, next) => {
+  if (isGlobalUploading.value) {
+    alert('Please wait for the upload to finish.')
+    next(false)
+    return
+  }
+
   const { t } = useTranslation()
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
   const requiresStaff = to.matched.some(record => record.meta.requiresStaff)

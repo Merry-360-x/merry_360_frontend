@@ -5,12 +5,21 @@ import App from './App.vue'
 import router from './router'
 import { supabase } from './services/supabase'
 import { initAlertToToast } from './lib/alertToToast'
+import { isGlobalUploading } from './utils/globalUploadState'
 
 // Scroll to top on initial page load
 window.scrollTo(0, 0)
 
 // Replace blocking alert() popups with toast notifications globally
 initAlertToToast()
+
+// Block closing/reloading while uploads are in progress.
+window.addEventListener('beforeunload', (e) => {
+  if (!isGlobalUploading.value) return
+  e.preventDefault()
+  // Most browsers ignore custom text; setting returnValue triggers the prompt.
+  e.returnValue = ''
+})
 
 const app = createApp(App)
 const pinia = createPinia()

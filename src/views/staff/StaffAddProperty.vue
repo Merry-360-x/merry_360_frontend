@@ -356,7 +356,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import ImageSizeValidator from '../../components/common/ImageSizeValidator.vue'
@@ -364,11 +364,12 @@ import MapboxCoordinatePicker from '../../components/common/MapboxCoordinatePick
 import api from '../../services/api'
 import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
-import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
+import { optimizeImageFile } from '../../utils/imageOptimization'
 import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast'
 import { useCurrencyStore } from '../../stores/currency'
+import { beginGlobalUpload, endGlobalUpload } from '@/utils/globalUploadState'
 
 const router = useRouter()
 const route = useRoute()
@@ -419,6 +420,28 @@ const isSubmitting = ref(false)
 const showSuccess = ref(false)
 const uploading = computed(() => uploadedImages.value.some((img) => img.status === 'uploading'))
 
+const isTrackedGlobally = ref(false)
+watch(
+  uploading,
+  (v) => {
+    if (v && !isTrackedGlobally.value) {
+      beginGlobalUpload()
+      isTrackedGlobally.value = true
+    } else if (!v && isTrackedGlobally.value) {
+      endGlobalUpload()
+      isTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
+
+onUnmounted(() => {
+  if (isTrackedGlobally.value) {
+    endGlobalUpload()
+    isTrackedGlobally.value = false
+  }
+})
+
 const availableAmenities = [
   'WiFi', 'Pool', 'Restaurant', 'Spa', 'Gym', 'Room Service', 
   'Air Conditioning', 'Parking', 'Kitchen', 'Beach Access', 
@@ -458,7 +481,7 @@ async function handleImageUpload(event) {
     .map((f) => ({ file: f, err: getImageValidationError(f) }))
     .filter((x) => x.err)
   if (invalid.length > 0) {
-    error(invalid[0].err)
+    showToast(invalid[0].err, 'error')
     event.target.value = ''
     return
   }
@@ -467,7 +490,7 @@ async function handleImageUpload(event) {
   const largeFiles = files.filter(file => file.size > 1 * 1024 * 1024)
   if (largeFiles.length > 0) {
     const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
-    warning(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 1000)
+    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
   }
 
   // allow selecting the same files again
@@ -476,6 +499,10 @@ async function handleImageUpload(event) {
   const isCloudinaryConfigured = Boolean(
     import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
   )
+  if (!isCloudinaryConfigured) {
+    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
+    return
+  }
 
   const runWithConcurrency = async (tasks, limit = 4) => {
     const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
@@ -508,23 +535,12 @@ async function handleImageUpload(event) {
       const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
       if (finalSizeError) throw new Error(finalSizeError)
 
-      if (isCloudinaryConfigured) {
-        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
-        updateById({ url: result.secure_url, status: 'ready' })
-      } else {
-        const dataUrl = await fileToDataUrl(optimized)
-        updateById({ url: dataUrl, status: 'ready' })
-      }
+      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
+      updateById({ url: result.secure_url, status: 'ready' })
     } catch (error) {
       console.error('Upload error:', error)
-      try {
-        const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
-        const dataUrl = await fileToDataUrl(optimized)
-        updateById({ url: dataUrl, status: 'ready' })
-      } catch (fallbackError) {
-        console.error('Upload fallback error:', fallbackError)
-        updateById({ status: 'error' })
-      }
+      updateById({ status: 'error' })
+      showToast(error?.message || 'Upload failed. Please try again.', 'error')
     } finally {
       if (previewUrl) URL.revokeObjectURL(previewUrl)
     }

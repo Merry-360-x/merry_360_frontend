@@ -124,6 +124,7 @@
             <div class="mb-8">
               <PhotoUploader
                 v-model="tourImages"
+                v-model:uploading="imagesUploading"
                 title="Upload Tour Images"
                 subtitle="Add photos to showcase your tour"
                 :min-photos="1"
@@ -161,12 +162,12 @@
 
             <!-- Submit Buttons -->
             <div class="flex gap-4">
-              <Button type="submit" variant="primary" :disabled="isSubmitting">
+              <Button type="submit" variant="primary" :disabled="isSubmitting || imagesUploading">
                 <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isSubmitting ? 'Creating...' : 'Create Tour' }}
+                {{ isSubmitting ? 'Creating...' : (imagesUploading ? 'Uploading...' : 'Create Tour') }}
               </Button>
               <Button type="button" variant="secondary" @click="$router.push(dashboardPath)">
                 Cancel
@@ -180,7 +181,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from '../../composables/useToast'
 import { useUserStore } from '../../stores/userStore'
@@ -189,9 +190,6 @@ import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
-import { uploadToCloudinary } from '../../services/cloudinary'
-import { optimizeImageFile, fileToDataUrl } from '../../utils/imageOptimization'
-import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 
 const router = useRouter()
 const route = useRoute()
@@ -221,116 +219,16 @@ const form = ref({
 const errors = ref({})
 const isSubmitting = ref(false)
 const showSuccess = ref(false)
-const uploading = ref(false)
-const uploadedImages = ref([])
 const tourImages = ref([])
+const imagesUploading = ref(false)
 
-// Watch for tour images changes
-watch(tourImages, (newImages) => {
-  if (newImages.length > 0) {
-    tourData.value.images = newImages.map(img => img.preview)
-  }
-}, { deep: true })
+
 
 const availableInclusions = [
   'Accommodation', 'Meals', 'Transport', 'Guide', 
   'Park Fees', 'Equipment', 'Insurance', 'Water',
   'Snacks', 'Photography', 'First Aid', 'Permits'
 ]
-
-const handleImageUpload = async (event) => {
-  const files = Array.from(event.target.files)
-  if (!files.length) return
-
-  // Validate inputs early (type + extreme size).
-  const invalid = files
-    .map((f) => ({ file: f, err: getImageValidationError(f) }))
-    .filter((x) => x.err)
-  if (invalid.length > 0) {
-    showToast(invalid[0].err, 'error')
-    return
-  }
-  
-  // Warn about large files (over 1MB)
-  const largeFiles = files.filter(file => file.size > 1 * 1024 * 1024)
-  if (largeFiles.length > 0) {
-    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
-    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
-  }
-
-  uploading.value = true
-  event.target.value = ''
-
-  const isCloudinaryConfigured = Boolean(
-    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
-  )
-
-  const tasks = files.map((file) => async () => {
-    const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`
-    const previewUrl = URL.createObjectURL(file)
-
-    uploadedImages.value.push({ id, url: previewUrl, status: 'uploading' })
-
-    const updateById = (patch) => {
-      const idx = uploadedImages.value.findIndex((img) => img.id === id)
-      if (idx === -1) {
-        if (previewUrl) URL.revokeObjectURL(previewUrl)
-        return
-      }
-      uploadedImages.value[idx] = { ...uploadedImages.value[idx], ...patch }
-    }
-
-    try {
-      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
-
-      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
-      if (finalSizeError) throw new Error(finalSizeError)
-
-      if (isCloudinaryConfigured) {
-        const result = await uploadToCloudinary(optimized, { folder: 'merry360x/tours' })
-        updateById({ url: result.secure_url, status: 'ready' })
-      } else {
-        const dataUrl = await fileToDataUrl(optimized)
-        updateById({ url: dataUrl, status: 'ready' })
-      }
-    } catch (error) {
-      console.error('Upload error:', error)
-      try {
-        const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
-        const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
-        if (finalSizeError) throw new Error(finalSizeError)
-
-        const dataUrl = await fileToDataUrl(optimized)
-        updateById({ url: dataUrl, status: 'ready' })
-        showToast('Cloud upload failed — using local image preview instead.', 'warning', 1200)
-      } catch (fallbackError) {
-        console.error('Upload fallback error:', fallbackError)
-        updateById({ status: 'error' })
-        showToast(`Failed to upload ${file.name}`, 'error')
-      }
-    } finally {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  })
-
-  // Run uploads with concurrency limit
-  const runWithConcurrency = async (tasks, limit = 3) => {
-    const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
-      while (tasks.length) {
-        const task = tasks.shift()
-        if (task) await task()
-      }
-    })
-    await Promise.all(workers)
-  }
-
-  await runWithConcurrency(tasks, 3)
-  uploading.value = false
-}
-
-const removeImage = (index) => {
-  uploadedImages.value.splice(index, 1)
-}
 
 const validateForm = () => {
   errors.value = {}
@@ -342,12 +240,16 @@ const validateForm = () => {
   if (!form.value.difficulty) errors.value.difficulty = 'Difficulty level is required'
   if (!form.value.price || form.value.price <= 0) errors.value.price = 'Valid price is required'
   if (!form.value.groupSize || form.value.groupSize <= 0) errors.value.groupSize = 'Group size is required'
-  if (uploadedImages.value.length === 0) errors.value.image = 'At least one image is required'
+  if (tourImages.value.length === 0) errors.value.image = 'At least one image is required'
   
   return Object.keys(errors.value).length === 0
 }
 
 const handleSubmit = async () => {
+  if (imagesUploading.value) {
+    showToast('Please wait for image uploads to finish.', 'error')
+    return
+  }
   if (!validateForm()) {
     showToast('Please fix all errors', 'error')
     return
@@ -356,10 +258,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
-    // Get all uploaded image URLs
-    const imageUrls = uploadedImages.value
-      .filter(img => img.status === 'ready')
-      .map(img => img.url)
+    const imageUrls = tourImages.value.map((img) => img.url || img.preview).filter(Boolean)
 
     const tourData = {
       title: form.value.title,

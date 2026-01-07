@@ -569,7 +569,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import { useCurrencyStore } from '@/stores/currency'
@@ -586,12 +586,14 @@ import { supabase } from '@/services/supabase'
 import { confirmDialog } from '@/composables/useConfirm'
 import { useTranslation } from '@/composables/useTranslation'
 import { useToast } from '@/composables/useToast'
+import { beginGlobalUpload, endGlobalUpload } from '@/utils/globalUploadState'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const languageStore = useLanguageStore()
 const { t } = useTranslation()
+const { error: toastError } = useToast()
 
 const activeProfileTab = ref('trips')
 const activeTripTab = ref('upcoming')
@@ -602,6 +604,28 @@ const show2FASetup = ref(false)
 // Avatar upload refs
 const avatarInput = ref(null)
 const uploadingAvatar = ref(false)
+const isAvatarTrackedGlobally = ref(false)
+
+watch(
+  uploadingAvatar,
+  (v) => {
+    if (v && !isAvatarTrackedGlobally.value) {
+      beginGlobalUpload()
+      isAvatarTrackedGlobally.value = true
+    } else if (!v && isAvatarTrackedGlobally.value) {
+      endGlobalUpload()
+      isAvatarTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
+
+onUnmounted(() => {
+  if (isAvatarTrackedGlobally.value) {
+    endGlobalUpload()
+    isAvatarTrackedGlobally.value = false
+  }
+})
 
 const profileTabs = computed(() => [
   { id: 'trips', name: t('profile.myTrips') },
@@ -885,7 +909,7 @@ const onAvatarChange = async (e) => {
 
   const inputError = getImageValidationError(file)
   if (inputError) {
-    error(inputError, 2000)
+    toastError(inputError, 2000)
     return
   }
   

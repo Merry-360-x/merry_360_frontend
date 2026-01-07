@@ -188,7 +188,7 @@
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
           <div class="flex items-center justify-between">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ isEditing ? t('stories.editStory') : t('stories.shareYourStory') }}</h2>
-            <button @click="closeCreateModal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <button @click="requestCloseCreateModal" :disabled="creating || uploadingMedia" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -267,8 +267,9 @@
           <div class="flex gap-4 pt-4">
             <button 
               type="button"
-              @click="showCreateModal = false"
-              class="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors"
+              @click="requestCloseCreateModal"
+              :disabled="creating || uploadingMedia"
+              class="flex-1 px-4 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ t('common.cancel') }}
             </button>
@@ -646,7 +647,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, onBeforeUnmount, watch, nextTick } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount, watch, nextTick, onUnmounted } from 'vue'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
 import { uploadToCloudinary } from '../../services/cloudinary'
@@ -656,6 +657,7 @@ import { useTranslation } from '@/composables/useTranslation'
 import { optimizeImageFile } from '../../utils/imageOptimization'
 import { useToast } from '../../composables/useToast'
 import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
+import { beginGlobalUpload, endGlobalUpload } from '@/utils/globalUploadState'
 
 const { warning } = useToast()
 
@@ -681,6 +683,21 @@ const storyComments = ref([])
 const newComment = ref('')
 const addingComment = ref(false)
 const uploadingMedia = ref(false)
+
+const isTrackedGlobally = ref(false)
+watch(
+  uploadingMedia,
+  (v) => {
+    if (v && !isTrackedGlobally.value) {
+      beginGlobalUpload()
+      isTrackedGlobally.value = true
+    } else if (!v && isTrackedGlobally.value) {
+      endGlobalUpload()
+      isTrackedGlobally.value = false
+    }
+  },
+  { immediate: true }
+)
 const deletingStoryId = ref(null)
 const isEditing = ref(false)
 const editingStoryId = ref(null)
@@ -758,6 +775,22 @@ function closeCreateModal() {
   showCreateModal.value = false
   resetStoryForm()
 }
+
+function requestCloseCreateModal() {
+  if (uploadingMedia.value) {
+    alert('Please wait for the upload to finish.')
+    return
+  }
+  if (creating.value) return
+  closeCreateModal()
+}
+
+onUnmounted(() => {
+  if (isTrackedGlobally.value) {
+    endGlobalUpload()
+    isTrackedGlobally.value = false
+  }
+})
 
 // Instagram-style story viewer functions
 function openUserStories(userStory) {
@@ -949,6 +982,17 @@ async function handleStoryImage(event) {
   uploadingMedia.value = true
   newStory.value.mediaType = file.type?.startsWith('video/') ? 'video' : 'image'
 
+  const hasCloudinary = Boolean(
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+  )
+
+  if (!hasCloudinary) {
+    alert(t('stories.videoRequiresCloudinary'))
+    uploadingMedia.value = false
+    event.target.value = ''
+    return
+  }
+
   try {
     let fileToUpload = file
 
@@ -993,36 +1037,16 @@ async function handleStoryImage(event) {
       console.log(`Image optimized: ${(file.size / 1024).toFixed(1)}KB → ${(fileToUpload.size / 1024).toFixed(1)}KB`)
     }
     
-    // Show preview
-    if (newStory.value.mediaType === 'video') {
-      newStory.value.imagePreview = URL.createObjectURL(file)
-    } else {
-      const preview = await new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = (e) => resolve(e.target.result)
-        reader.onerror = () => reject(new Error('Failed to read file'))
-        reader.readAsDataURL(fileToUpload)
-      })
-      newStory.value.imagePreview = preview
+    // Show preview (local blob) while upload runs
+    if (newStory.value.imagePreview?.startsWith('blob:')) {
+      URL.revokeObjectURL(newStory.value.imagePreview)
     }
+    newStory.value.imagePreview = URL.createObjectURL(fileToUpload)
 
-    // Upload to Cloudinary if configured
-    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-      console.log(`Uploading ${newStory.value.mediaType} to Cloudinary...`)
-      const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
-      newStory.value.image = result.secure_url
-      console.log('Upload successful:', result.secure_url)
-    } else {
-      // Without Cloudinary, videos cannot be stored reliably
-      if (newStory.value.mediaType === 'video') {
-        alert(t('stories.videoRequiresCloudinary'))
-        newStory.value.image = null
-        newStory.value.imagePreview = null
-        newStory.value.mediaType = 'image'
-      } else {
-        newStory.value.image = newStory.value.imagePreview
-      }
-    }
+    console.log(`Uploading ${newStory.value.mediaType} to Cloudinary...`)
+    const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
+    newStory.value.image = result.secure_url
+    console.log('Upload successful:', result.secure_url)
   } catch (error) {
     console.error('Upload error:', error)
     const { error: showError } = useToast()

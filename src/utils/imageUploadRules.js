@@ -6,7 +6,7 @@ export const IMAGE_UPLOAD_RULES = {
   maxBytes: 2 * 1024 * 1024, // 2MB
 
   // If a user selects something enormous, fail fast.
-  maxInputBytes: 10 * 1024 * 1024, // 10MB
+  maxInputBytes: 2 * 1024 * 1024, // 2MB
 
   // Only allow common web-safe formats.
   allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp']

@@ -39,11 +39,11 @@
       enter-from-class="opacity-0"
       leave-to-class="opacity-0"
     >
-      <div v-if="showShareForm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" @click.self="showShareForm = false">
+      <div v-if="showShareForm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" @click.self="requestCloseShareForm">
         <Card class="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-text-brand-600">{{ t('stories.shareYourStory') }}</h2>
-            <button @click="showShareForm = false" class="text-gray-400 hover:text-gray-600 text-gray-400">
+            <button @click="requestCloseShareForm" :disabled="mediaUploading || isSubmitting" class="text-gray-400 hover:text-gray-600 text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -98,6 +98,7 @@
             <div>
               <PhotoUploader
                 v-model="storyPhotos"
+                v-model:uploading="mediaUploading"
                 title="Upload photos or videos"
                 subtitle="Share your travel moments"
                 :min-photos="1"
@@ -106,10 +107,10 @@
             </div>
 
             <div class="flex gap-3">
-              <Button type="button" variant="secondary" full-width @click="showShareForm = false">
+              <Button type="button" variant="secondary" full-width :disabled="mediaUploading || isSubmitting" @click="requestCloseShareForm">
                 {{ t('common.cancel') }}
               </Button>
-              <Button type="submit" variant="primary" full-width class="bg-gradient-to-r from-teal-500 to-cyan-600" :disabled="isSubmitting">
+              <Button type="submit" variant="primary" full-width class="bg-gradient-to-r from-teal-500 to-cyan-600" :disabled="isSubmitting || mediaUploading">
                 {{ isSubmitting ? t('stories.sharing') : t('stories.shareStory') }}
               </Button>
             </div>
@@ -217,14 +218,10 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
-import { uploadToCloudinary } from '@/services/cloudinary'
-import { optimizeImageFile } from '../../utils/imageOptimization'
 import { useToast } from '../../composables/useToast'
 import api from '../../services/api'
 import { useTranslation } from '@/composables/useTranslation'
-import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
-
-const { warning } = useToast()
+const { error: showError } = useToast()
 
 const router = useRouter()
 const { t, currentLanguage } = useTranslation()
@@ -241,6 +238,7 @@ const showShareForm = ref(false)
 const filterCategory = ref('all')
 const isSubmitting = ref(false)
 const storyPhotos = ref([])
+const mediaUploading = ref(false)
 
 const storyForm = ref({
   name: '',
@@ -252,7 +250,7 @@ const storyForm = ref({
 
 // Watch for photo changes and update form
 watch(storyPhotos, (newPhotos) => {
-  storyForm.value.photos = newPhotos.map(p => p.preview)
+  storyForm.value.photos = newPhotos.map(p => p.url || p.preview).filter(Boolean)
 }, { deep: true })
 
 // Stories loaded from database
@@ -265,89 +263,13 @@ const filteredStories = computed(() => {
   return stories.value.filter(story => story.category === filterCategory.value)
 })
 
-const handlePhotoUpload = async (event) => {
-  const files = event.target.files
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]
-    
-    const isVideo = file.type?.startsWith('video/')
-    if (!isVideo) {
-      const inputError = getImageValidationError(file, IMAGE_UPLOAD_RULES)
-      if (inputError) {
-        const { error: showError } = useToast()
-        showError(inputError)
-        continue
-      }
-    } else {
-      const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2)
-      const sizeLimit = 100
-
-      // Check video size limit
-      if (file.size > sizeLimit * 1024 * 1024) {
-        const { error: showError } = useToast()
-        showError(`File too large (${fileSizeMB}MB). Maximum: ${sizeLimit}MB`)
-        continue
-      }
-
-      // Warn if large
-      if (file.size > 5 * 1024 * 1024) {
-        warning(`Uploading ${fileSizeMB}MB file...`, 1000)
-      }
-    }
-    
-    // Optimize image before upload (skip videos)
-    let fileToUpload = file
-    if (file.type.startsWith('image/')) {
-      fileToUpload = await optimizeImageFile(file, { 
-        maxWidth: 1200, 
-        maxHeight: 1200, 
-        quality: 0.85 
-      })
-      const finalSizeError = getFinalImageSizeError(fileToUpload, IMAGE_UPLOAD_RULES)
-      if (finalSizeError) {
-        const { error: showError } = useToast()
-        showError(finalSizeError)
-        continue
-      }
-      console.log(`Image optimized: ${(file.size / 1024).toFixed(1)}KB → ${(fileToUpload.size / 1024).toFixed(1)}KB`)
-    }
-    
-    if (import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET) {
-      try {
-        console.log(`Uploading ${isVideo ? 'video' : 'image'} to Cloudinary...`)
-        const result = await uploadToCloudinary(fileToUpload, { folder: 'merry360x/stories' })
-        storyForm.value.photos.push(result.secure_url)
-        console.log('Upload successful:', result.secure_url)
-      } catch (err) {
-        console.error('Cloudinary upload failed:', err)
-        const { error: showError } = useToast()
-        showError(err.message || 'Upload failed')
-        
-        // Fallback for images only (not videos)
-        if (!isVideo) {
-          const reader = new FileReader()
-          reader.onload = (e) => {
-            storyForm.value.photos.push(e.target.result)
-          }
-          reader.readAsDataURL(fileToUpload)
-        }
-      }
-    } else {
-      if (isVideo) {
-        alert('Video uploads require Cloudinary configuration')
-        continue
-      }
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        storyForm.value.photos.push(e.target.result)
-      }
-      reader.readAsDataURL(fileToUpload)
-    }
+const requestCloseShareForm = () => {
+  if (mediaUploading.value) {
+    alert('Please wait for your uploads to finish.')
+    return
   }
-}
-
-const removePhoto = (index) => {
-  storyForm.value.photos.splice(index, 1)
+  if (isSubmitting.value) return
+  showShareForm.value = false
 }
 
 function storyPrimaryMedia(story) {
@@ -378,6 +300,11 @@ onMounted(async () => {
 
 const submitStory = async () => {
   if (isSubmitting.value) return
+
+  if (mediaUploading.value) {
+    alert('Please wait for your uploads to finish.')
+    return
+  }
   
   isSubmitting.value = true
   
@@ -416,7 +343,7 @@ const submitStory = async () => {
     
   } catch (error) {
     console.error('Story submission error:', error)
-    alert(t('stories.shareFailed'))
+    showError(t('stories.shareFailed'))
   } finally {
     isSubmitting.value = false
   }
