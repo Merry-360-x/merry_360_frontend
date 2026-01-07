@@ -629,76 +629,141 @@ const accommodation = ref({
 
 import api from '../../services/api'
 
-// Leaflet map instance
+// Google Map instance
 let map = null
+let marker = null
+
+// Load Google Maps API
+const loadGoogleMapsScript = () => {
+  return new Promise((resolve, reject) => {
+    // Check if already loaded
+    if (window.google && window.google.maps) {
+      resolve()
+      return
+    }
+
+    // Check if script is already being loaded
+    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+      // Wait for it to load
+      const checkInterval = setInterval(() => {
+        if (window.google && window.google.maps) {
+          clearInterval(checkInterval)
+          resolve()
+        }
+      }, 100)
+      return
+    }
+
+    // Create and load script
+    const script = document.createElement('script')
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+    
+    // Use free tier - no API key required for basic usage, or use provided key
+    if (apiKey && apiKey !== 'your_google_maps_api_key_here') {
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`
+    } else {
+      // For free usage without API key (limited features but works)
+      script.src = 'https://maps.googleapis.com/maps/api/js'
+    }
+    
+    script.async = true
+    script.defer = true
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Failed to load Google Maps'))
+    document.head.appendChild(script)
+  })
+}
 
 // Initialize map when accommodation has coordinates
-const initializeMap = () => {
+const initializeMap = async () => {
   if (!accommodation.value.latitude || !accommodation.value.longitude) return
   
-  // Wait for next tick to ensure DOM is ready
-  setTimeout(() => {
+  try {
+    // Wait for DOM and load Google Maps
+    await new Promise(resolve => setTimeout(resolve, 100))
     const mapElement = document.getElementById('property-map')
-    if (!mapElement || map) return
+    if (!mapElement) return
     
-    try {
-      // Load Leaflet dynamically
-      if (!window.L) {
-        const script = document.createElement('script')
-        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-        script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
-        script.crossOrigin = ''
-        script.onload = () => createMap()
-        document.head.appendChild(script)
-      } else {
-        createMap()
-      }
-    } catch (error) {
-      console.error('Error initializing map:', error)
+    // Load Google Maps script
+    await loadGoogleMapsScript()
+    
+    // Create map if not already created
+    if (!map) {
+      createMap()
     }
-  }, 100)
+  } catch (error) {
+    console.error('Error initializing Google Map:', error)
+  }
 }
 
 const createMap = () => {
-  if (map) return
+  if (map || !window.google || !window.google.maps) return
   
   const lat = accommodation.value.latitude
   const lng = accommodation.value.longitude
+  const position = { lat, lng }
   
   // Create map centered on property
-  map = window.L.map('property-map').setView([lat, lng], 15)
-  
-  // Add OpenStreetMap tiles
-  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(map)
-  
-  // Custom marker icon
-  const markerIcon = window.L.divIcon({
-    className: 'custom-map-marker',
-    html: `
-      <div style="position: relative;">
-        <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 0C8.95 0 0 8.95 0 20C0 35 20 50 20 50C20 50 40 35 40 20C40 8.95 31.05 0 20 0Z" fill="#EF4444"/>
-          <circle cx="20" cy="20" r="8" fill="white"/>
-          <circle cx="20" cy="20" r="5" fill="#EF4444"/>
-        </svg>
-      </div>
-    `,
-    iconSize: [40, 50],
-    iconAnchor: [20, 50],
-    popupAnchor: [0, -50]
+  map = new google.maps.Map(document.getElementById('property-map'), {
+    center: position,
+    zoom: 15,
+    mapTypeControl: true,
+    streetViewControl: true,
+    fullscreenControl: true,
+    zoomControl: true,
+    styles: [
+      {
+        featureType: 'poi',
+        elementType: 'labels',
+        stylers: [{ visibility: 'on' }]
+      }
+    ]
   })
   
-  // Add marker with popup
-  const marker = window.L.marker([lat, lng], { icon: markerIcon }).addTo(map)
-  marker.bindPopup(`
-    <div style="text-align: center; padding: 8px;">
-      <strong style="font-size: 14px;">${accommodation.value.name}</strong><br>
-      <span style="font-size: 12px; color: #666;">${accommodation.value.location}</span>
-    </div>
-  `).openPopup()
+  // Create custom marker icon
+  const markerIcon = {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: 12,
+    fillColor: '#EF4444',
+    fillOpacity: 1,
+    strokeColor: '#ffffff',
+    strokeWeight: 3
+  }
+  
+  // Add marker
+  marker = new google.maps.Marker({
+    position: position,
+    map: map,
+    icon: markerIcon,
+    title: accommodation.value.name,
+    animation: google.maps.Animation.DROP
+  })
+  
+  // Create info window
+  const infoWindow = new google.maps.InfoWindow({
+    content: `
+      <div style="padding: 12px; max-width: 250px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #1f2937;">
+          ${accommodation.value.name}
+        </h3>
+        <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">
+          📍 ${accommodation.value.location}
+        </p>
+        <p style="margin: 0; font-size: 18px; font-weight: bold; color: #EF4444;">
+          $${accommodation.value.price}
+          <span style="font-size: 12px; font-weight: normal; color: #6b7280;">/night</span>
+        </p>
+      </div>
+    `
+  })
+  
+  // Show info window on marker click
+  marker.addListener('click', () => {
+    infoWindow.open(map, marker)
+  })
+  
+  // Open info window by default
+  infoWindow.open(map, marker)
 }
 
 onMounted(async () => {
