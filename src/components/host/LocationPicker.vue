@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -118,6 +118,7 @@ const localAddress = ref(props.address || '')
 
 let map = null
 let marker = null
+let observer = null
 
 const clampLat = (lat) => {
   if (!Number.isFinite(lat)) return null
@@ -129,6 +130,23 @@ const normalizeLng = (lng) => {
   if (!Number.isFinite(lng)) return null
   // Normalize to [-180, 180)
   return ((((lng + 180) % 360) + 360) % 360) - 180
+}
+
+const getTileConfig = () => {
+  const key = String(import.meta.env.VITE_GEOAPIFY_API_KEY || '').trim()
+  const hasKey = key && key !== 'your_geoapify_api_key_here'
+
+  if (hasKey) {
+    return {
+      url: `https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?apiKey=${encodeURIComponent(key)}`,
+      attribution: '© OpenStreetMap contributors © Geoapify'
+    }
+  }
+
+  return {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '© OpenStreetMap contributors'
+  }
 }
 
 // Custom price marker icon
@@ -156,6 +174,9 @@ const createPriceMarkerIcon = (price) => {
 
 const initMap = () => {
   if (!mapContainer.value) return
+  // If the component is mounted inside a hidden step (v-show), Leaflet will compute a 0-size map.
+  // Only initialize once the container has real dimensions.
+  if (mapContainer.value.offsetWidth === 0 || mapContainer.value.offsetHeight === 0) return
 
   // Default center (you can change this to any location)
   const defaultCenter = props.modelValue.lat && props.modelValue.lng 
@@ -165,9 +186,10 @@ const initMap = () => {
   // Initialize map
   map = L.map(mapContainer.value).setView(defaultCenter, 13)
 
-  // Add tile layer (OpenStreetMap)
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
+  const tiles = getTileConfig()
+
+  L.tileLayer(tiles.url, {
+    attribution: tiles.attribution,
     maxZoom: 19
   }).addTo(map)
 
@@ -251,10 +273,39 @@ watch(() => props.modelValue, (newLocation) => {
 }, { deep: true })
 
 onMounted(() => {
-  // Small delay to ensure DOM is ready
-  setTimeout(() => {
+  const tryInit = () => {
+    if (map) return
     initMap()
-  }, 100)
+    if (map) {
+      setTimeout(() => map?.invalidateSize(), 50)
+      return
+    }
+    requestAnimationFrame(tryInit)
+  }
+
+  tryInit()
+
+  // When Step 3 becomes visible again, fix layout and re-render tiles.
+  if (mapContainer.value && 'IntersectionObserver' in window) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry?.isIntersecting) return
+        setTimeout(() => map?.invalidateSize(), 50)
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(mapContainer.value)
+  }
+})
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
+  observer = null
+  if (map) {
+    map.remove()
+    map = null
+  }
 })
 </script>
 

@@ -105,6 +105,23 @@ const loadLeaflet = () => {
   return leafletLoadingPromise
 }
 
+const getTileConfig = () => {
+  const key = String(import.meta.env.VITE_GEOAPIFY_API_KEY || '').trim()
+  const hasKey = key && key !== 'your_geoapify_api_key_here'
+
+  if (hasKey) {
+    return {
+      url: `https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?apiKey=${encodeURIComponent(key)}`,
+      attribution: '© OpenStreetMap contributors © Geoapify'
+    }
+  }
+
+  return {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '© OpenStreetMap contributors'
+  }
+}
+
 const ensureMap = async () => {
   if (!mapEl.value || map) return
   if (!hasAnyCoords.value) return
@@ -114,8 +131,10 @@ const ensureMap = async () => {
 
   L.control.zoom({ position: 'topright' }).addTo(map)
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
+  const tiles = getTileConfig()
+
+  L.tileLayer(tiles.url, {
+    attribution: tiles.attribution,
     maxZoom: 19
   }).addTo(map)
 
