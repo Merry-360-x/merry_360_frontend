@@ -314,9 +314,13 @@ export function subscribeToListings(callback) {
 
 // ============ Storage ============
 export async function uploadFile(bucket, path, file) {
+  const options = {}
+  if (file?.type) options.contentType = file.type
+
+  // Use upsert to avoid rare collisions (e.g. retries with same path)
   const { data, error } = await supabase.storage
     .from(bucket)
-    .upload(path, file)
+    .upload(path, file, { upsert: true, ...options })
   
   if (error) throw error
   return data

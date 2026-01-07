@@ -562,6 +562,7 @@ import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import DocumentUpload from '../../components/host/DocumentUpload.vue'
 // Map is selected later when creating a property in dashboard.
 import { supabase, uploadFile } from '../../services/supabase'
+import { uploadDocumentToCloudinary } from '../../services/cloudinary'
 import { useTranslation } from '@/composables/useTranslation'
 import isoCountries from 'i18n-iso-countries'
 import enIsoCountries from 'i18n-iso-countries/langs/en.json'
@@ -895,13 +896,37 @@ const handleFileUpload = (event) => {
 }
 
 const uploadHostDocument = async (userId, kind, file) => {
-  const bucket = 'host-documents'
+  const bucket = import.meta.env.VITE_HOST_DOCUMENTS_BUCKET || 'host-documents'
   const originalName = file?.name || ''
   const ext = originalName.includes('.') ? originalName.split('.').pop() : ''
   const safeExt = ext ? `.${ext.toLowerCase()}` : ''
   const path = `host-applications/${userId}/${kind}-${Date.now()}${safeExt}`
-  await uploadFile(bucket, path, file)
-  return path
+
+  // Prefer Supabase Storage (private bucket recommended). If bucket/policies are not set up,
+  // fall back to Cloudinary to avoid blocking host registration.
+  try {
+    await uploadFile(bucket, path, file)
+    return `${bucket}:${path}`
+  } catch (err) {
+    console.error('Supabase storage upload failed for host document:', {
+      bucket,
+      path,
+      message: err?.message,
+      status: err?.status,
+      name: err?.name
+    })
+
+    try {
+      const result = await uploadDocumentToCloudinary(file, { folder: 'merry360x/host-documents' })
+      return result?.secure_url || result?.url || null
+    } catch (cloudErr) {
+      console.error('Cloudinary fallback upload failed for host document:', {
+        message: cloudErr?.message,
+        name: cloudErr?.name
+      })
+      throw err
+    }
+  }
 }
 
 const handleSubmit = async () => {
