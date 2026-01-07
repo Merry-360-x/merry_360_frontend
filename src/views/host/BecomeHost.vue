@@ -416,11 +416,13 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
+import isoCountries from 'i18n-iso-countries'
+import enIsoCountries from 'i18n-iso-countries/langs/en.json'
 
 const router = useRouter()
 const { t } = useTranslation()
@@ -428,7 +430,9 @@ const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(1)
 
-const nationalities = [
+isoCountries.registerLocale(enIsoCountries)
+
+const fallbackNationalities = [
   'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
   'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
   'Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo (Congo-Brazzaville)','Costa Rica','Côte d’Ivoire','Croatia','Cuba','Cyprus','Czechia',
@@ -454,6 +458,16 @@ const nationalities = [
   'Yemen',
   'Zambia','Zimbabwe'
 ]
+
+const nationalities = computed(() => {
+  try {
+    const names = isoCountries.getNames('en', { select: 'official' })
+    const list = Array.from(new Set(Object.values(names).filter(Boolean)))
+    return list.sort((a, b) => a.localeCompare(b))
+  } catch (e) {
+    return fallbackNationalities
+  }
+})
 
 const formData = reactive({
   // Step 1: Personal Info
