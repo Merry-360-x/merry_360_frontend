@@ -692,10 +692,15 @@ const handleLogout = async () => {
   // Mobile fallback: force logout without confirm.
   if (isMobileViewport) {
     try {
-      info('Signing out…', 1200)
+      info('Signing out…', 800)
+
+      // Immediately update UI + redirect; do not block on network.
+      userStore.logout()
+      router.push('/')
+
+      // Best-effort sign out (won't block due to timeouts in auth service).
       await signOutAuth()
       success(t('auth.logoutSuccess'))
-      router.push('/')
     } catch (error) {
       console.error('Logout error:', error)
       showError(t('auth.logoutError') || 'Failed to logout')
@@ -719,13 +724,15 @@ const handleLogout = async () => {
   if (!ok) return
 
   try {
-    info('Signing out…', 1200)
+    info('Signing out…', 800)
 
-    // Sign out from Supabase (this triggers SIGNED_OUT event which calls store.logout())
-    await signOutAuth()
-
-    success(t('auth.logoutSuccess'))
+    // Immediately update UI + redirect; do not block on network.
+    userStore.logout()
     router.push('/')
+
+    // Best-effort sign out (won't block due to timeouts in auth service).
+    await signOutAuth()
+    success(t('auth.logoutSuccess'))
   } catch (error) {
     console.error('Logout error:', error)
     showError(t('auth.logoutError') || 'Failed to logout')

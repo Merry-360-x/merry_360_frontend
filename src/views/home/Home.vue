@@ -307,7 +307,11 @@
       <Transition name="slide-up">
         <div v-if="isMobileSearchOpen" class="fixed inset-0 z-[9999] md:hidden">
           <div class="absolute inset-0 bg-black/40" @click="closeMobile"></div>
-          <div class="absolute inset-x-0 top-0 bottom-0 bg-white dark:bg-gray-900 flex flex-col" @click.stop>
+          <div
+            class="absolute inset-x-0 bg-white dark:bg-gray-900 flex flex-col"
+            :class="mobileStep === 'where' || mobileStep === 'when' ? 'bottom-0 h-[85vh] rounded-t-3xl' : 'top-0 bottom-0 rounded-none'"
+            @click.stop
+          >
             <div class="flex-shrink-0 px-4 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
               <button @click="closeMobile" class="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
               <h3 class="text-base font-bold text-gray-900 dark:text-gray-100">Search</h3>

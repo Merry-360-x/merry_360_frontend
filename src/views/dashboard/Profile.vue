@@ -855,13 +855,16 @@ const handleLogout = async () => {
   }
 
   try {
-    // signOutAuth() calls supabase.auth.signOut() which triggers SIGNED_OUT event
-    // The event listener in main.js will call userStore.logout()
-    await signOutAuth()
+    const { info, success } = useToast()
+    info('Signing out…', 800)
 
-    const { success } = useToast()
-    success(t('auth.logoutSuccess'))
+    // Immediately update UI + redirect; do not block on network.
+    userStore.logout()
     router.push('/')
+
+    // Best-effort sign out (won't block due to timeouts in auth service).
+    await signOutAuth()
+    success(t('auth.logoutSuccess'))
   } catch (err) {
     console.error('Error signing out:', err)
     const { error: showError } = useToast()

@@ -5,6 +5,22 @@ import mockApiService from './mockApi'
 const USE_FIREBASE = false
 const USE_SUPABASE = String(import.meta.env.VITE_USE_SUPABASE || '').trim() === 'true'
 
+async function bestEffort(promise, { timeoutMs = 2500, label = 'operation' } = {}) {
+  let timer = null
+  try {
+    await Promise.race([
+      promise,
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`${label} timed out`)), timeoutMs)
+      })
+    ])
+  } catch (err) {
+    console.warn(`${label} failed (ignored):`, err)
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+}
+
 // Debug logging for environment variables
 console.log('🔧 Auth Service Environment:', {
   USE_FIREBASE,
@@ -118,16 +134,19 @@ export async function signInWithGoogle() {
 export async function signOut() {
   // Always attempt to clear Supabase session (best-effort), because the app
   // initializes a Supabase auth listener regardless of USE_SUPABASE.
-  try {
-    await supabaseService.signOutUser()
-  } catch (err) {
-    // If Supabase isn't configured, this may throw; ignore and continue.
-    console.warn('Supabase signOut (best-effort) failed:', err)
-  }
+  await bestEffort(supabaseService.signOutUser(), {
+    timeoutMs: 2500,
+    label: 'Supabase sign out'
+  })
 
+  // If we're using Supabase-only auth, we're done.
   if (USE_SUPABASE) return
 
-  return await api.auth.logout()
+  // API logout is best-effort: never block the UI on this.
+  await bestEffort(api.auth.logout(), {
+    timeoutMs: 2500,
+    label: 'Server logout'
+  })
 }
 
 export function onAuthChanged(cb) {
