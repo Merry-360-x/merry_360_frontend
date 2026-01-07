@@ -87,272 +87,297 @@
           <!-- Form Card -->
           <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors duration-200">
             <form @submit.prevent="handleSubmit">
-              <!-- Step 1: Personal Information -->
-              <div v-show="currentStep === 1" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-text-primary mb-6">{{ t('hostApplication.stepTitles.personalInformation') }}</h3>
-                <div class="space-y-4">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.firstName') }} *</label>
-                      <input 
-                        v-model="formData.firstName"
-                        type="text" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.firstName')"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.lastName') }} *</label>
-                      <input 
-                        v-model="formData.lastName"
-                        type="text" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.lastName')"
-                      />
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left: Guidance Panel -->
+                <div class="md:pr-8 md:border-r border-gray-200 dark:border-gray-700">
+                  <p class="text-sm font-semibold text-text-secondary">
+                    {{ t('hostApplication.layout.stepCount', { current: currentStep, total: TOTAL_STEPS }) }}
+                  </p>
+                  <h3 class="text-2xl font-bold text-text-primary mt-2">
+                    {{ stepMeta.title }}
+                  </h3>
+                  <p class="text-base text-text-secondary mt-3">
+                    {{ stepMeta.description }}
+                  </p>
+
+                  <div v-if="stepMeta.checklist?.length" class="mt-8">
+                    <p class="text-sm font-semibold text-text-primary">{{ t('hostApplication.layout.checklistTitle') }}</p>
+                    <ul class="mt-3 space-y-2">
+                      <li v-for="item in stepMeta.checklist" :key="item" class="flex items-start gap-3 text-sm text-text-secondary">
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+                        <span>{{ item }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Right: Inputs -->
+                <div>
+                  <!-- Step 1: Personal Information -->
+                  <div v-show="currentStep === 1" class="animate-fade-in">
+                    <div class="space-y-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.firstName') }} *</label>
+                          <input 
+                            v-model="formData.firstName"
+                            type="text" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.firstName')"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.lastName') }} *</label>
+                          <input 
+                            v-model="formData.lastName"
+                            type="text" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.lastName')"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.emailAddress') }} *</label>
+                          <input 
+                            v-model="formData.email"
+                            type="email" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.email')"
+                          />
+                        </div>
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.phoneNumber') }} *</label>
+                          <input 
+                            v-model="formData.phone"
+                            type="tel" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.phone')"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.address') }} *</label>
+                        <input 
+                          v-model="formData.address"
+                          type="text" 
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          :placeholder="t('hostApplication.placeholder.address')"
+                        />
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
+                          <select
+                            v-model="formData.nationality"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          >
+                            <option value="">{{ t('hostApplication.options.selectNationality') }}</option>
+                            <option v-for="n in nationalityOptions" :key="n.value" :value="n.value">{{ n.label }}</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.applicantType') }} *</label>
+                          <select
+                            v-model="formData.applicantType"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          >
+                            <option value="">{{ t('hostApplication.options.selectApplicantType') }}</option>
+                            <option value="individual">{{ t('hostApplication.options.applicantTypeIndividual') }}</option>
+                            <option value="business">{{ t('hostApplication.options.applicantTypeBusiness') }}</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.emailAddress') }} *</label>
-                      <input 
-                        v-model="formData.email"
-                        type="email" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.email')"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.phoneNumber') }} *</label>
-                      <input 
-                        v-model="formData.phone"
-                        type="tel" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.phone')"
-                      />
+                  <!-- Step 2: Verification -->
+                  <div v-show="currentStep === 2" class="animate-fade-in">
+                    <div class="space-y-4">
+                      <div v-if="formData.applicantType === 'business'" class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
+                          <input 
+                            v-model="formData.businessName"
+                            type="text" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.businessName')"
+                          />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.taxId') }} *</label>
+                          <input 
+                            v-model="formData.taxId"
+                            type="text" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.taxId')"
+                          />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.businessRegistrationCertificate') }} *</label>
+                          <input
+                            type="file"
+                            @change="handleBusinessCertUpload"
+                            accept="image/*,.pdf"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          />
+                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintBusinessCert') }}</p>
+                        </div>
+                      </div>
+
+                      <div class="space-y-4">
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.idNumber') }} *</label>
+                          <input
+                            v-model="formData.idNumber"
+                            type="text"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            :placeholder="t('hostApplication.placeholder.idNumber')"
+                          />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadIdDocument') }} *</label>
+                          <input
+                            type="file"
+                            @change="handleIdUpload"
+                            accept="image/*,.pdf"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          />
+                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintId') }}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.address') }} *</label>
-                    <input 
-                      v-model="formData.address"
-                      type="text" 
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.address')"
-                    />
-                  </div>
+                  <!-- Step 3: Property/Service Details -->
+                  <div v-show="currentStep === 3" class="animate-fade-in">
+                    <div class="space-y-4">
+                      <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
+                        <select 
+                          v-model="formData.hostingType"
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        >
+                          <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
+                          <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
+                          <option value="tour">{{ t('hostApplication.options.hostingTour') }}</option>
+                          <option value="transport">{{ t('hostApplication.options.hostingTransport') }}</option>
+                          <option value="service">{{ t('hostApplication.options.hostingOther') }}</option>
+                        </select>
+                      </div>
 
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
-                      <select
-                        v-model="formData.nationality"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      >
-                        <option value="">{{ t('hostApplication.options.selectNationality') }}</option>
-                        <option v-for="n in nationalityOptions" :key="n.value" :value="n.value">{{ n.label }}</option>
-                      </select>
-                    </div>
+                      <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.propertyLocation') }} *</label>
+                        <input 
+                          v-model="formData.propertyLocation"
+                          type="text" 
+                          required
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          :placeholder="t('hostApplication.placeholder.propertyLocation')"
+                        />
+                      </div>
 
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.applicantType') }} *</label>
-                      <select
-                        v-model="formData.applicantType"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      >
-                        <option value="">{{ t('hostApplication.options.selectApplicantType') }}</option>
-                        <option value="individual">{{ t('hostApplication.options.applicantTypeIndividual') }}</option>
-                        <option value="business">{{ t('hostApplication.options.applicantTypeBusiness') }}</option>
-                      </select>
+                      <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.capacity') }} *</label>
+                        <input 
+                          v-model="formData.capacity"
+                          type="number" 
+                          required
+                          min="1"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          :placeholder="t('hostApplication.placeholder.capacity')"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.description') }} *</label>
+                        <textarea 
+                          v-model="formData.description"
+                          required
+                          rows="5"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          :placeholder="t('hostApplication.placeholder.description')"
+                        ></textarea>
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadPhotos') }}</label>
+                        <input 
+                          type="file"
+                          @change="handleFileUpload"
+                          multiple
+                          accept="image/*,.pdf"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        />
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHint') }}</p>
+                      </div>
+
+                      <div class="mt-6">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                          <input 
+                            v-model="formData.agreeToTerms"
+                            type="checkbox" 
+                            required
+                            class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
+                          />
+                          <span class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ t('hostApplication.termsAgreement') }} *
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- Step 2: Business Information -->
-              <div v-show="currentStep === 2" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-text-primary mb-6">{{ t('hostApplication.stepTitles.verification') }}</h3>
-                <div class="space-y-4">
-                  <div v-if="formData.applicantType === 'business'" class="space-y-4">
-                    <div>
-                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
-                      <input 
-                        v-model="formData.businessName"
-                        type="text" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.businessName')"
-                      />
-                    </div>
+                <!-- Navigation Buttons -->
+                <div class="md:col-span-2 flex items-center justify-between mt-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <button 
+                    v-if="currentStep > 1"
+                    type="button"
+                    @click="previousStep"
+                    class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-all"
+                  >
+                    {{ t('hostApplication.previous') }}
+                  </button>
+                  <div v-else></div>
 
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.taxId') }} *</label>
-                      <input 
-                        v-model="formData.taxId"
-                        type="text" 
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.taxId')"
-                      />
-                    </div>
-
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.businessRegistrationCertificate') }} *</label>
-                      <input
-                        type="file"
-                        @change="handleBusinessCertUpload"
-                        accept="image/*,.pdf"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      />
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintBusinessCert') }}</p>
-                    </div>
-                  </div>
-
-                  <div class="space-y-4">
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.idNumber') }} *</label>
-                      <input
-                        v-model="formData.idNumber"
-                        type="text"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        :placeholder="t('hostApplication.placeholder.idNumber')"
-                      />
-                    </div>
-
-                    <div>
-                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadIdDocument') }} *</label>
-                      <input
-                        type="file"
-                        @change="handleIdUpload"
-                        accept="image/*,.pdf"
-                        required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      />
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintId') }}</p>
-                    </div>
-                  </div>
+                  <button 
+                    v-if="currentStep < 3"
+                    type="button"
+                    @click="nextStep"
+                    class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-all shadow-lg"
+                  >
+                    {{ t('hostApplication.nextStep') }}
+                  </button>
+                  <button 
+                    v-else
+                    type="submit"
+                    :disabled="isSubmitting"
+                    class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
+                  >
+                    {{ isSubmitting ? t('hostApplication.submitting') : t('hostApplication.submitApplication') }}
+                  </button>
                 </div>
-              </div>
-
-              <!-- Step 3: Property/Service Details -->
-              <div v-show="currentStep === 3" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ t('hostApplication.stepTitles.propertyServiceDetails') }}</h3>
-                <div class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
-                    <select 
-                      v-model="formData.hostingType"
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    >
-                      <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
-                      <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
-                      <option value="tour">{{ t('hostApplication.options.hostingTour') }}</option>
-                      <option value="transport">{{ t('hostApplication.options.hostingTransport') }}</option>
-                      <option value="service">{{ t('hostApplication.options.hostingOther') }}</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.propertyLocation') }} *</label>
-                    <input 
-                      v-model="formData.propertyLocation"
-                      type="text" 
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.propertyLocation')"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.capacity') }} *</label>
-                    <input 
-                      v-model="formData.capacity"
-                      type="number" 
-                      required
-                      min="1"
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.capacity')"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.description') }} *</label>
-                    <textarea 
-                      v-model="formData.description"
-                      required
-                      rows="5"
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.description')"
-                    ></textarea>
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadPhotos') }}</label>
-                    <input 
-                      type="file"
-                      @change="handleFileUpload"
-                      multiple
-                      accept="image/*,.pdf"
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    />
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHint') }}</p>
-                  </div>
-
-                  <div class="mt-6">
-                    <label class="flex items-start gap-3 cursor-pointer">
-                      <input 
-                        v-model="formData.agreeToTerms"
-                        type="checkbox" 
-                        required
-                        class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
-                      />
-                      <span class="text-sm text-gray-600 dark:text-gray-400">
-                        {{ t('hostApplication.termsAgreement') }} *
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Navigation Buttons -->
-              <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <button 
-                  v-if="currentStep > 1"
-                  type="button"
-                  @click="previousStep"
-                  class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-all"
-                >
-                  {{ t('hostApplication.previous') }}
-                </button>
-                <div v-else></div>
-
-                <button 
-                  v-if="currentStep < 3"
-                  type="button"
-                  @click="nextStep"
-                  class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-all shadow-lg"
-                >
-                  {{ t('hostApplication.nextStep') }}
-                </button>
-                <button 
-                  v-else
-                  type="submit"
-                  :disabled="isSubmitting"
-                  class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
-                >
-                  {{ isSubmitting ? t('hostApplication.submitting') : t('hostApplication.submitApplication') }}
-                </button>
               </div>
             </form>
           </div>
@@ -431,6 +456,8 @@ const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(1)
 
+const TOTAL_STEPS = 3
+
 isoCountries.registerLocale(enIsoCountries)
 
 const fallbackNationalities = [
@@ -477,6 +504,51 @@ const nationalityOptions = computed(() => {
   } catch (e) {
     const unique = new Map(fallbackNationalities.map((n) => [n, { value: n, label: n }]))
     return Array.from(unique.values()).sort((a, b) => a.label.localeCompare(b.label))
+  }
+})
+
+const stepMeta = computed(() => {
+  if (currentStep.value === 1) {
+    return {
+      title: t('hostApplication.stepTitles.personalInformation'),
+      description: t('hostApplication.layout.personalInfoDesc'),
+      checklist: []
+    }
+  }
+
+  if (currentStep.value === 2) {
+    const base = {
+      title: t('hostApplication.stepTitles.verification'),
+      description:
+        formData.applicantType === 'business'
+          ? t('hostApplication.layout.verificationBusinessDesc')
+          : t('hostApplication.layout.verificationIndividualDesc')
+    }
+
+    const checklist =
+      formData.applicantType === 'business'
+        ? [
+            t('hostApplication.labels.businessName'),
+            t('hostApplication.labels.taxId'),
+            t('hostApplication.labels.businessRegistrationCertificate'),
+            t('hostApplication.labels.idNumber'),
+            t('hostApplication.labels.uploadIdDocument')
+          ]
+        : [t('hostApplication.labels.idNumber'), t('hostApplication.labels.uploadIdDocument')]
+
+    return { ...base, checklist }
+  }
+
+  return {
+    title: t('hostApplication.stepTitles.propertyServiceDetails'),
+    description: t('hostApplication.layout.propertyDetailsDesc'),
+    checklist: [
+      t('hostApplication.labels.hostingType'),
+      t('hostApplication.labels.propertyLocation'),
+      t('hostApplication.labels.capacity'),
+      t('hostApplication.labels.description'),
+      t('hostApplication.layout.termsChecklist')
+    ]
   }
 })
 
