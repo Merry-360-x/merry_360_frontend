@@ -220,6 +220,8 @@ const translations = {
     'dashboard.welcome': 'Welcome back',
 
     'booking.confirmed': 'Confirmed',
+
+    'profile.title': 'My Profile',
     'profile.subtitle': 'Manage your account information and preferences',
     'profile.completeYourProfile': 'Complete Your Profile',
     'profile.completeYourProfileDesc': 'Please add your phone number and date of birth to help us serve you better and unlock all features.',
@@ -3939,10 +3941,43 @@ export function useTranslation() {
   const languageStore = useLanguageStore()
   
   const currentLanguage = computed(() => languageStore.currentLanguage)
+
+  const allDictionaries = Object.values(translations)
+
+  const findAnyTranslation = (key) => {
+    for (const dict of allDictionaries) {
+      if (dict && Object.prototype.hasOwnProperty.call(dict, key)) return dict[key]
+    }
+    return undefined
+  }
+
+  const prettifyKey = (key) => {
+    if (typeof key !== 'string' || !key) return ''
+    const lastSegment = key.split('.').filter(Boolean).pop() || key
+    return lastSegment
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/^./, (c) => c.toUpperCase())
+  }
   
   const t = (key, params) => {
     const lang = currentLanguage.value
-    const value = translations[lang]?.[key] || translations.EN[key] || key
+    const value =
+      translations[lang]?.[key] ??
+      translations.EN?.[key] ??
+      findAnyTranslation(key) ??
+      prettifyKey(key)
+
+    if (import.meta?.env?.DEV) {
+      const hasExact = Boolean(translations[lang]?.[key])
+      const hasEn = Boolean(translations.EN?.[key])
+      if (!hasExact && !hasEn) {
+        // eslint-disable-next-line no-console
+        console.warn(`[i18n] Missing translation for key "${key}" (lang=${lang})`)
+      }
+    }
 
     if (!params || typeof value !== 'string') return value
 
