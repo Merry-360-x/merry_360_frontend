@@ -29,6 +29,10 @@ function toUserMessage(rawMessage, { status } = {}) {
 
   if (!message) return 'Upload failed. Please try again.'
 
+  if (status === 401) {
+    return 'Uploads are not enabled yet. Please try again later.'
+  }
+
   // Common Cloudinary configuration errors (keep non-technical wording).
   if (lower.includes('upload preset') && (lower.includes('not found') || lower.includes('invalid') || lower.includes('must be specified'))) {
     return 'Uploads are not enabled yet. Please try again later.'

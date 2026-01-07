@@ -247,6 +247,7 @@ const showStaffJoinedNotification = ref(false)
 const showRating = ref(false)
 const rating = ref(0)
 const unreadMessages = ref(0)
+let chatChannel = null
 
 // Combined badge count
 const totalBadgeCount = computed(() => {
@@ -319,66 +320,63 @@ onMounted(async () => {
       })
     }
   } else {
-    // Guest user - create anonymous conversation
-    const guestEmail = `guest_${Date.now()}@temp.com`
-    const { data: newConversation } = await supabase
-      .from('support_conversations')
-      .insert({
-        user_email: guestEmail,
-        status: 'active',
-        is_ai: true
-      })
-      .select()
-      .single()
-    
-    conversationId.value = newConversation.id
-    
-    // Add welcome message
-    messages.value.push({
-      id: Date.now(),
-      sender: 'ai',
-      content: 'Hello! How can I help you today?',
-      created_at: new Date().toISOString(),
-      is_staff: false
-    })
+    // Guest user: avoid DB writes that can be blocked by RLS.
+    conversationId.value = null
+    messages.value = [
+      {
+        id: Date.now(),
+        sender: 'ai',
+        content: 'Please login to start a support chat.',
+        created_at: new Date().toISOString(),
+        is_staff: false
+      }
+    ]
   }
   
-  // Subscribe to chat messages
-  const channel = supabase
-    .channel(`chat_${conversationId.value}`)
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'support_messages',
-      filter: `conversation_id=eq.${conversationId.value}`
-    }, (payload) => {
-      const message = payload.new
-      if (message.sender !== 'user') {
-        messages.value.push(message)
-        scrollToBottom()
-        
-        // Show unread badge if widget is closed or on different tab
-        if (!isOpen.value || currentTab.value !== 'chat') {
-          unreadMessages.value++
+  // Subscribe to chat messages (only when we have a persisted conversation)
+  if (conversationId.value) {
+    chatChannel = supabase
+      .channel(`chat_${conversationId.value}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'support_messages',
+          filter: `conversation_id=eq.${conversationId.value}`
+        },
+        (payload) => {
+          const message = payload.new
+          if (message.sender !== 'user') {
+            messages.value.push(message)
+            scrollToBottom()
+
+            // Show unread badge if widget is closed or on different tab
+            if (!isOpen.value || currentTab.value !== 'chat') {
+              unreadMessages.value++
+            }
+
+            // Handle staff join
+            if (message.is_staff && !isStaffLive.value) {
+              isStaffLive.value = true
+              staffName.value = message.staff_name
+              showStaffJoinedNotification.value = true
+              setTimeout(() => {
+                showStaffJoinedNotification.value = false
+              }, 5000)
+            }
+          }
         }
-        
-        // Handle staff join
-        if (message.is_staff && !isStaffLive.value) {
-          isStaffLive.value = true
-          staffName.value = message.staff_name
-          showStaffJoinedNotification.value = true
-          setTimeout(() => {
-            showStaffJoinedNotification.value = false
-          }, 5000)
-        }
-      }
-    })
-    .subscribe()
-  
-  // Cleanup on unmount
-  onUnmounted(() => {
-    supabase.removeChannel(channel)
-  })
+      )
+      .subscribe()
+  }
+})
+
+onUnmounted(() => {
+  if (chatChannel) {
+    supabase.removeChannel(chatChannel)
+    chatChannel = null
+  }
 })
 
 // Clear unread count when switching to chat tab

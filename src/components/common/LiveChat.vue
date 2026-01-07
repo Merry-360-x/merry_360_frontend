@@ -162,6 +162,7 @@ const showStaffJoinedNotification = ref(false)
 const showRating = ref(false)
 const rating = ref(0)
 const unreadCount = ref(0)
+const chatUnavailable = ref(false)
 let messageSubscription = null
 let conversationSubscription = null
 
@@ -169,6 +170,9 @@ const toggleChat = async () => {
   isOpen.value = !isOpen.value
   if (isOpen.value) {
     unreadCount.value = 0
+    if (chatUnavailable.value) {
+      return
+    }
     if (!conversationId.value) {
       await createConversation()
     }
@@ -179,6 +183,21 @@ const toggleChat = async () => {
 
 const createConversation = async () => {
   try {
+    // Avoid RLS/permission errors for anonymous users.
+    if (!userStore.user?.id) {
+      chatUnavailable.value = true
+      messages.value = [
+        {
+          id: Date.now(),
+          sender: 'ai',
+          content: 'Please login to start a support chat.',
+          created_at: new Date().toISOString(),
+          is_staff: false
+        }
+      ]
+      return
+    }
+
     const { data, error } = await supabase
       .from('support_conversations')
       .insert({
@@ -197,6 +216,18 @@ const createConversation = async () => {
     await sendSystemMessage('Hello! I\'m your AI assistant. How can I help you today? You can request to speak with a human at any time.')
   } catch (error) {
     console.error('Error creating conversation:', error)
+    if (error?.status === 401 || error?.status === 403) {
+      chatUnavailable.value = true
+      messages.value = [
+        {
+          id: Date.now(),
+          sender: 'ai',
+          content: 'Support chat is unavailable right now. Please try again later.',
+          created_at: new Date().toISOString(),
+          is_staff: false
+        }
+      ]
+    }
   }
 }
 
