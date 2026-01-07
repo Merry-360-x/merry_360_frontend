@@ -10,7 +10,7 @@ async function loginViaUI(page, { email, password }) {
 
   await page.getByRole('button', { name: /sign in/i }).click();
 
-  await page.waitForURL(/\/profile|\/admin|\/vendor|\/staff/);
+  await page.waitForURL(/\/profile|\/admin|\/vendor|\/staff|\/host/);
 }
 
 module.exports = {

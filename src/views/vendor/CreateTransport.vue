@@ -380,8 +380,19 @@ const handleImageUpload = async (event) => {
       }
     } catch (error) {
       console.error('Upload error:', error)
-      updateById({ status: 'error' })
-      showToast(`Failed to upload ${file.name}`, 'error')
+      try {
+        const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
+        const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
+        if (finalSizeError) throw new Error(finalSizeError)
+
+        const dataUrl = await fileToDataUrl(optimized)
+        updateById({ url: dataUrl, status: 'ready' })
+        showToast('Cloud upload failed — using local image preview instead.', 'warning', 1200)
+      } catch (fallbackError) {
+        console.error('Upload fallback error:', fallbackError)
+        updateById({ status: 'error' })
+        showToast(`Failed to upload ${file.name}`, 'error')
+      }
     } finally {
       if (previewUrl) URL.revokeObjectURL(previewUrl)
     }

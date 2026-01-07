@@ -41,12 +41,34 @@ export async function uploadToCloudinary(file, options = {}) {
     formData.append('folder', options.folder)
   }
 
+  // Avoid indefinite hangs (network/TLS/CORS). Default shorter timeout for images.
+  const timeoutMs =
+    typeof options.timeoutMs === 'number'
+      ? options.timeoutMs
+      : isVideo
+        ? 90_000
+        : 30_000
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
   // Use appropriate resource type
   const resourceType = isVideo ? 'video' : 'image'
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
-    method: 'POST',
-    body: formData
-  })
+  let response
+  try {
+    response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal
+    })
+  } catch (err) {
+    if (err?.name === 'AbortError') {
+      throw new Error('Cloudinary upload timed out. Please try again.')
+    }
+    throw err
+  } finally {
+    clearTimeout(timeoutId)
+  }
 
   if (!response.ok) {
     const data = await response.json()
