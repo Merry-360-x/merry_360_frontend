@@ -907,6 +907,7 @@ const handleFileUpload = (event) => {
 
 const handleIdUpload = (event) => {
   const file = event?.target?.files?.[0]
+  console.log('ID Upload - File selected:', file)
   idDocumentFile.value = file || null
   
   // Generate preview URL
@@ -915,6 +916,8 @@ const handleIdUpload = (event) => {
       URL.revokeObjectURL(idDocumentPreview.value)
     }
     idDocumentPreview.value = URL.createObjectURL(file)
+    console.log('ID Upload - Preview URL created:', idDocumentPreview.value)
+    console.log('ID Upload - File type:', file.type)
   } else {
     idDocumentPreview.value = null
   }
@@ -922,6 +925,7 @@ const handleIdUpload = (event) => {
 
 const handleBusinessCertUpload = (event) => {
   const file = event?.target?.files?.[0]
+  console.log('Business Cert Upload - File selected:', file)
   businessRegCertFile.value = file || null
   
   // Generate preview URL
@@ -930,6 +934,8 @@ const handleBusinessCertUpload = (event) => {
       URL.revokeObjectURL(businessCertPreview.value)
     }
     businessCertPreview.value = URL.createObjectURL(file)
+    console.log('Business Cert Upload - Preview URL created:', businessCertPreview.value)
+    console.log('Business Cert Upload - File type:', file.type)
   } else {
     businessCertPreview.value = null
   }
