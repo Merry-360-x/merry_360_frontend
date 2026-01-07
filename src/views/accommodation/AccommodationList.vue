@@ -288,7 +288,9 @@
           <div v-if="viewMode === 'map'" class="mb-6">
             <MapView 
               :properties="filteredAccommodations"
-              @selectProperty="handlePropertySelect"
+              :selectedPropertyId="selectedMapPropertyId"
+              @selectProperty="handleMapSelect"
+              @openDetails="handleMapOpenDetails"
               @locationSearch="handleLocationSearch"
             />
           </div>
@@ -358,6 +360,7 @@ const searchQuery = ref('')
 const loading = ref(true)
 const guestCount = ref(null)
 const checkIn = ref('')
+const selectedMapPropertyId = ref(null)
 const checkOut = ref('')
 
 const isSearchFocused = ref(false)
@@ -746,7 +749,12 @@ const toggleFavorite = (id) => {
   }
 }
 
-const handlePropertySelect = (property) => {
+const handleMapSelect = (property) => {
+  selectedMapPropertyId.value = property?.id ?? null
+}
+
+const handleMapOpenDetails = (property) => {
+  if (!property?.id) return
   goToDetails(property.id)
 }
 
@@ -754,6 +762,20 @@ const handleLocationSearch = (location) => {
   console.log('Searching for location:', location)
   // Implement location-based search filtering here
 }
+
+watch(viewMode, (mode) => {
+  if (mode !== 'map') selectedMapPropertyId.value = null
+})
+
+watch(
+  () => filteredAccommodations.value,
+  (list) => {
+    if (!selectedMapPropertyId.value) return
+    const stillExists = list.some((p) => String(p?.id) === String(selectedMapPropertyId.value))
+    if (!stillExists) selectedMapPropertyId.value = null
+  },
+  { deep: true }
+)
 
 const addToCart = (accommodation) => {
   const cartItem = {

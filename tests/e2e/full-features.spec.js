@@ -4,10 +4,8 @@ const { writeTempPng } = require('./helpers/testFiles');
 
 const adminEmail = process.env.E2E_ADMIN_EMAIL;
 const adminPassword = process.env.E2E_ADMIN_PASSWORD;
-
-function randomEmail() {
-  return `e2e.host.${Date.now()}.${Math.floor(Math.random() * 1e6)}@example.com`;
-}
+const hostEmail = process.env.E2E_HOST_EMAIL;
+const hostPassword = process.env.E2E_HOST_PASSWORD;
 
 async function acceptDialogs(page) {
   page.on('dialog', async (dialog) => {
@@ -43,12 +41,7 @@ test.describe.serial('Full feature flows (mutating)', () => {
 
   test.setTimeout(240_000);
 
-  const created = {
-    email: null,
-    password: 'E2E_Test_12345!',
-  };
-
-  test('Create a new host user (admin) and switch role (host)', async ({ page }) => {
+  test('Admin can change a user role and save', async ({ page }) => {
     await acceptDialogs(page);
 
     await loginViaUI(page, { email: adminEmail, password: adminPassword });
@@ -57,30 +50,28 @@ test.describe.serial('Full feature flows (mutating)', () => {
     await page.goto('/admin/users');
     await expect(page.getByRole('heading', { level: 1, name: /user management/i })).toBeVisible();
 
-    created.email = randomEmail();
+    // Avoid mutating real users: pick a synthetic test user if present.
+    // The admin table includes rows with emails like test_...@merry360.test.
+    const targetRow = page.locator('tbody tr').filter({ hasText: '@merry360.test' }).first();
+    await expect(targetRow).toBeVisible({ timeout: 30_000 });
 
-    // Create staff account (then promote to host). Form inputs are: first, last, email, password.
-    const staffCreateForm = page.locator('form').first();
-    const inputs = staffCreateForm.locator('input');
-    await inputs.nth(0).fill('E2E');
-    await inputs.nth(1).fill('Host');
-    await inputs.nth(2).fill(created.email);
-    await inputs.nth(3).fill(created.password);
+    const roleSelect = targetRow.locator('select').first();
+    const originalRole = await roleSelect.inputValue();
+    const nextRole = originalRole === 'host' ? 'user' : 'host';
 
-    await staffCreateForm.getByRole('button', { name: /create staff/i }).click();
+    await roleSelect.selectOption(nextRole);
 
-    const newRow = page.locator('tbody tr').filter({ hasText: created.email }).first();
-    await expect(newRow).toBeVisible({ timeout: 30_000 });
-
-    // Change role to host and save (tests "change role" feature).
-    await newRow.locator('select').selectOption('host');
-
-    const saveButton = newRow.getByRole('button', { name: /^save$/i });
-    await expect(saveButton).toBeVisible();
+    const saveButton = targetRow.getByRole('button', { name: /^save$/i });
+    await expect(saveButton).toBeVisible({ timeout: 30_000 });
     await saveButton.click();
-
-    // Save button should disappear when changes are persisted.
     await expect(saveButton).toHaveCount(0, { timeout: 30_000 });
+
+    // Revert role back to minimize persistent changes.
+    await roleSelect.selectOption(originalRole);
+    const revertSave = targetRow.getByRole('button', { name: /^save$/i });
+    await expect(revertSave).toBeVisible({ timeout: 30_000 });
+    await revertSave.click();
+    await expect(revertSave).toHaveCount(0, { timeout: 30_000 });
 
     await logoutIfPossible(page);
   });
@@ -88,9 +79,9 @@ test.describe.serial('Full feature flows (mutating)', () => {
   test('Host can add a property (real submit)', async ({ page }) => {
     await acceptDialogs(page);
 
-    test.skip(!created.email, 'No test user created');
+    test.skip(!hostEmail || !hostPassword, 'Set E2E_HOST_EMAIL/E2E_HOST_PASSWORD');
 
-    await loginViaUI(page, { email: created.email, password: created.password });
+    await loginViaUI(page, { email: hostEmail, password: hostPassword });
 
     await page.goto('/host/add-property');
     await expect(page).toHaveURL(/\/host\/add-property/);
@@ -132,9 +123,9 @@ test.describe.serial('Full feature flows (mutating)', () => {
   test('Host can create a tour (real submit)', async ({ page }) => {
     await acceptDialogs(page);
 
-    test.skip(!created.email, 'No test user created');
+    test.skip(!hostEmail || !hostPassword, 'Set E2E_HOST_EMAIL/E2E_HOST_PASSWORD');
 
-    await loginViaUI(page, { email: created.email, password: created.password });
+    await loginViaUI(page, { email: hostEmail, password: hostPassword });
 
     await page.goto('/host/create-tour');
     await expect(page).toHaveURL(/\/host\/create-tour/);
@@ -162,9 +153,9 @@ test.describe.serial('Full feature flows (mutating)', () => {
   test('Host can create a transport service (real submit)', async ({ page }) => {
     await acceptDialogs(page);
 
-    test.skip(!created.email, 'No test user created');
+    test.skip(!hostEmail || !hostPassword, 'Set E2E_HOST_EMAIL/E2E_HOST_PASSWORD');
 
-    await loginViaUI(page, { email: created.email, password: created.password });
+    await loginViaUI(page, { email: hostEmail, password: hostPassword });
 
     await page.goto('/host/create-transport');
     await expect(page).toHaveURL(/\/host\/create-transport/);

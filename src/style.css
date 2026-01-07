@@ -218,6 +218,26 @@ html, body, #app {
     }
   }
 
+  /* Leaflet price markers (Accommodations MapView) */
+  .merry-map-price-icon {
+    background: transparent;
+    border: 0;
+  }
+
+  .merry-map-price-bubble {
+    @apply bg-white dark:bg-gray-800 text-text-primary border border-gray-200 dark:border-gray-700;
+    @apply rounded-full px-3 py-1 text-xs font-semibold shadow-card;
+    @apply cursor-pointer;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+  }
+
+  .merry-map-price-bubble--selected {
+    @apply bg-gray-900 text-white border-gray-900;
+    @apply dark:bg-white dark:text-gray-900 dark:border-white;
+  }
+
   @keyframes slideInRight {
     from {
       opacity: 0;
