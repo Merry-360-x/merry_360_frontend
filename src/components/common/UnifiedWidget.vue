@@ -389,6 +389,19 @@ watch([isOpen, currentTab], ([newIsOpen, newTab]) => {
 // Send message
 const sendMessage = async () => {
   if (!newMessage.value.trim()) return
+
+  if (!conversationId.value) {
+    messages.value.push({
+      id: Date.now(),
+      sender: 'ai',
+      content: 'Please login to start a support chat.',
+      created_at: new Date().toISOString(),
+      is_staff: false
+    })
+    scrollToBottom()
+    newMessage.value = ''
+    return
+  }
   
   const messageText = newMessage.value.trim()
   newMessage.value = ''
@@ -439,6 +452,8 @@ const sendMessage = async () => {
 
 // Submit rating
 const submitRating = async () => {
+  if (!conversationId.value) return
+
   await supabase
     .from('support_conversations')
     .update({ rating: rating.value })

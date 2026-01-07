@@ -281,6 +281,16 @@ const minimize = () => {
 
 const requestHumanSupport = async () => {
   // Update conversation to request human support
+  if (!conversationId.value) {
+    messages.value.push({
+      type: 'system',
+      text: 'Please log in to request a live support agent.',
+      isAdmin: false
+    })
+    scrollToBottom()
+    return
+  }
+
   if (conversationId.value) {
     await supabase
       .from('support_conversations')
@@ -510,22 +520,19 @@ onMounted(async () => {
       conversationId.value = newConversation.id
     }
   } else {
-    // Guest user - create anonymous conversation
-    const guestEmail = `guest_${Date.now()}@temp.com`
-    const { data: newConversation } = await supabase
-      .from('support_conversations')
-      .insert({
-        user_email: guestEmail,
-        status: 'active',
-        is_ai: true
-      })
-      .select()
-      .single()
-    
-    conversationId.value = newConversation.id
+    // Guest users can't create DB-backed conversations due to RLS.
+    // Allow AI chat to run without persistence; require login for human support.
+    conversationId.value = null
+    messages.value.push({
+      type: 'system',
+      text: 'You can chat with the AI as a guest. To talk to a human support agent, please log in.',
+      isAdmin: false
+    })
   }
   
   // Subscribe to new messages from staff
+  if (!conversationId.value) return
+
   const channel = supabase
     .channel(`support_${conversationId.value}`)
     .on('postgres_changes', {
