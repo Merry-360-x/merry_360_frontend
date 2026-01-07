@@ -277,46 +277,12 @@
                         </div>
 
                         <div>
-                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.businessRegistrationCertificate') }} *</label>
-                          <input
-                            type="file"
-                            @change="handleBusinessCertUpload"
+                          <DocumentUpload
+                            v-model="businessRegCertDoc"
+                            :label="t('hostApplication.labels.businessRegistrationCertificate')"
+                            :hint="t('hostApplication.uploadHintBusinessCert')"
                             accept="image/*,.pdf"
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                           />
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintBusinessCert') }}</p>
-                          
-                          <!-- Preview -->
-                          <div v-if="businessCertPreview" class="mt-4">
-                            <div class="relative rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 max-w-sm">
-                              <img 
-                                v-if="businessRegCertFile?.type?.startsWith('image/')"
-                                :src="businessCertPreview" 
-                                :alt="businessRegCertFile?.name"
-                                class="w-full h-auto"
-                              />
-                              <div v-else class="bg-gray-100 dark:bg-gray-800 p-6 flex items-center gap-3">
-                                <svg class="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"/>
-                                  <path d="M7 8h6v1H7V8zm0 2h6v1H7v-1zm0 2h4v1H7v-1z"/>
-                                </svg>
-                                <div>
-                                  <p class="font-medium text-text-primary">{{ businessRegCertFile?.name }}</p>
-                                  <p class="text-xs text-text-secondary">PDF Document</p>
-                                </div>
-                              </div>
-                              <button
-                                @click="businessRegCertFile = null; businessCertPreview = null"
-                                class="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all"
-                                type="button"
-                              >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
                         </div>
                       </div>
 
@@ -333,46 +299,12 @@
                         </div>
 
                         <div>
-                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadIdDocument') }} *</label>
-                          <input
-                            type="file"
-                            @change="handleIdUpload"
+                          <DocumentUpload
+                            v-model="idDocumentDoc"
+                            :label="t('hostApplication.labels.uploadIdDocument')"
+                            :hint="t('hostApplication.uploadHintId')"
                             accept="image/*,.pdf"
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                           />
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintId') }}</p>
-                          
-                          <!-- Preview -->
-                          <div v-if="idDocumentPreview" class="mt-4">
-                            <div class="relative rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 max-w-sm">
-                              <img 
-                                v-if="idDocumentFile?.type?.startsWith('image/')"
-                                :src="idDocumentPreview" 
-                                :alt="idDocumentFile?.name"
-                                class="w-full h-auto"
-                              />
-                              <div v-else class="bg-gray-100 dark:bg-gray-800 p-6 flex items-center gap-3">
-                                <svg class="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"/>
-                                  <path d="M7 8h6v1H7V8zm0 2h6v1H7v-1zm0 2h4v1H7v-1z"/>
-                                </svg>
-                                <div>
-                                  <p class="font-medium text-text-primary">{{ idDocumentFile?.name }}</p>
-                                  <p class="text-xs text-text-secondary">PDF Document</p>
-                                </div>
-                              </div>
-                              <button
-                                @click="idDocumentFile = null; idDocumentPreview = null"
-                                class="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all"
-                                type="button"
-                              >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -578,12 +510,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onUnmounted } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import AmenitiesSelector from '../../components/host/AmenitiesSelector.vue'
 import PropertyDetails from '../../components/host/PropertyDetails.vue'
 import PhotoUploader from '../../components/host/PhotoUploader.vue'
+import DocumentUpload from '../../components/host/DocumentUpload.vue'
 import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
 import isoCountries from 'i18n-iso-countries'
@@ -848,10 +781,8 @@ const formData = reactive({
 })
 
 const uploadedFiles = ref([])
-const idDocumentFile = ref(null)
-const businessRegCertFile = ref(null)
-const idDocumentPreview = ref(null)
-const businessCertPreview = ref(null)
+const idDocumentDoc = ref(null)
+const businessRegCertDoc = ref(null)
 
 const scrollToForm = () => {
   formSection.value?.scrollIntoView({ behavior: 'smooth' })
@@ -876,7 +807,7 @@ const validateCurrentStep = () => {
       return false
     }
   } else if (currentStep.value === 2) {
-    if (!formData.idNumber || !idDocumentFile.value) {
+    if (!formData.idNumber || !idDocumentDoc.value) {
       alert(t('hostApplication.validation.step2Required'))
       return false
     }
@@ -903,42 +834,6 @@ const validateCurrentStep = () => {
 
 const handleFileUpload = (event) => {
   uploadedFiles.value = Array.from(event.target.files)
-}
-
-const handleIdUpload = (event) => {
-  const file = event?.target?.files?.[0]
-  console.log('ID Upload - File selected:', file)
-  idDocumentFile.value = file || null
-  
-  // Generate preview URL
-  if (file) {
-    if (idDocumentPreview.value) {
-      URL.revokeObjectURL(idDocumentPreview.value)
-    }
-    idDocumentPreview.value = URL.createObjectURL(file)
-    console.log('ID Upload - Preview URL created:', idDocumentPreview.value)
-    console.log('ID Upload - File type:', file.type)
-  } else {
-    idDocumentPreview.value = null
-  }
-}
-
-const handleBusinessCertUpload = (event) => {
-  const file = event?.target?.files?.[0]
-  console.log('Business Cert Upload - File selected:', file)
-  businessRegCertFile.value = file || null
-  
-  // Generate preview URL
-  if (file) {
-    if (businessCertPreview.value) {
-      URL.revokeObjectURL(businessCertPreview.value)
-    }
-    businessCertPreview.value = URL.createObjectURL(file)
-    console.log('Business Cert Upload - Preview URL created:', businessCertPreview.value)
-    console.log('Business Cert Upload - File type:', file.type)
-  } else {
-    businessCertPreview.value = null
-  }
 }
 
 const uploadHostDocument = async (userId, kind, file) => {
@@ -976,12 +871,12 @@ const handleSubmit = async () => {
     let businessRegCertPath = null
 
     try {
-      if (idDocumentFile.value) {
-        idDocumentPath = await uploadHostDocument(user.id, 'id-document', idDocumentFile.value)
+      if (idDocumentDoc.value?.file) {
+        idDocumentPath = await uploadHostDocument(user.id, 'id-document', idDocumentDoc.value.file)
       }
 
-      if (formData.applicantType === 'business' && businessRegCertFile.value) {
-        businessRegCertPath = await uploadHostDocument(user.id, 'business-registration-certificate', businessRegCertFile.value)
+      if (formData.applicantType === 'business' && businessRegCertDoc.value?.file) {
+        businessRegCertPath = await uploadHostDocument(user.id, 'business-registration-certificate', businessRegCertDoc.value.file)
       }
     } catch (uploadErr) {
       console.error('Host document upload error:', uploadErr)
@@ -1055,16 +950,6 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
-
-// Cleanup preview URLs on unmount
-onUnmounted(() => {
-  if (idDocumentPreview.value) {
-    URL.revokeObjectURL(idDocumentPreview.value)
-  }
-  if (businessCertPreview.value) {
-    URL.revokeObjectURL(businessCertPreview.value)
-  }
-})
 </script>
 
 <style scoped>

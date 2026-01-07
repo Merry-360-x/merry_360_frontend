@@ -27,7 +27,7 @@
         type="file"
         multiple
         accept="image/*"
-        @change="handleFileSelect"
+        @change="openUploadModal"
         class="hidden"
       />
     </div>
@@ -54,7 +54,7 @@
           type="file"
           multiple
           accept="image/*"
-          @change="handleFileSelect"
+          @change="openUploadModal"
           class="hidden"
         />
       </div>
@@ -160,7 +160,77 @@
       </div>
     </div>
 
-    <!-- Photo Modal -->
+    <!-- Upload Modal -->
+    <Teleport to="body">
+      <div
+        v-if="showUploadModal"
+        @click="cancelUpload"
+        class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+      >
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-3xl max-w-md w-full shadow-2xl">
+          <!-- Header -->
+          <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <button @click="cancelUpload" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div class="text-center">
+              <h3 class="font-semibold text-lg text-text-primary">Upload photos</h3>
+              <p class="text-sm text-text-secondary">{{ pendingPhotos.length }} {{ pendingPhotos.length === 1 ? 'item' : 'items' }} selected</p>
+            </div>
+            <button @click="triggerFileInput" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Preview Area -->
+          <div class="p-6 max-h-96 overflow-y-auto">
+            <div class="grid grid-cols-2 gap-3">
+              <div
+                v-for="(photo, index) in pendingPhotos"
+                :key="photo.id"
+                class="relative aspect-square rounded-xl overflow-hidden group"
+              >
+                <img
+                  :src="photo.preview"
+                  :alt="`Photo ${index + 1}`"
+                  class="w-full h-full object-cover"
+                />
+                <button
+                  @click="removePendingPhoto(index)"
+                  class="absolute top-2 right-2 w-8 h-8 bg-gray-900/80 hover:bg-gray-900 rounded-full flex items-center justify-center text-white transition-all"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="flex gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
+            <button
+              @click="cancelUpload"
+              class="flex-1 px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-text-primary font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              @click="confirmUpload"
+              class="flex-1 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-all"
+            >
+              Upload
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- Photo Preview Modal -->
     <Teleport to="body">
       <div
         v-if="selectedPhotoIndex !== null"
@@ -216,6 +286,8 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const photos = ref([])
+const pendingPhotos = ref([])
+const showUploadModal = ref(false)
 const fileInput = ref(null)
 const isDragging = ref(false)
 const draggedIndex = ref(null)
@@ -228,6 +300,51 @@ let photoIdCounter = 0
 
 const triggerFileInput = () => {
   fileInput.value?.click()
+}
+
+const openUploadModal = async (event) => {
+  const files = Array.from(event.target.files || [])
+  if (files.length > 0) {
+    // Create pending photos
+    pendingPhotos.value = files.map(file => ({
+      id: photoIdCounter++,
+      file: file,
+      preview: URL.createObjectURL(file),
+      uploaded: false
+    }))
+    showUploadModal.value = true
+  }
+  // Reset input
+  event.target.value = ''
+}
+
+const removePendingPhoto = (index) => {
+  const photo = pendingPhotos.value[index]
+  URL.revokeObjectURL(photo.preview)
+  pendingPhotos.value.splice(index, 1)
+  
+  if (pendingPhotos.value.length === 0) {
+    showUploadModal.value = false
+  }
+}
+
+const confirmUpload = () => {
+  // Add pending photos to main photos array
+  photos.value.push(...pendingPhotos.value)
+  emit('update:modelValue', photos.value)
+  
+  // Close modal
+  showUploadModal.value = false
+  pendingPhotos.value = []
+}
+
+const cancelUpload = () => {
+  // Clean up pending photos
+  pendingPhotos.value.forEach(photo => {
+    URL.revokeObjectURL(photo.preview)
+  })
+  pendingPhotos.value = []
+  showUploadModal.value = false
 }
 
 const handleFileSelect = async (event) => {
