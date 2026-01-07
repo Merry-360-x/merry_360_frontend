@@ -63,3 +63,8 @@ database-performance-optimization.sql
 # Cache
 .cache/
 .parcel-cache/
+
+# Local backups
+src/views/home/Home.vue.backup
+src/views/home/Home_old.vue
+.env*.local
