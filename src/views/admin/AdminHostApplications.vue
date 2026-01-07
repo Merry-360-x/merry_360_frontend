@@ -166,8 +166,16 @@
               <p class="font-medium">{{ selectedApplication.phone || selectedApplication.phone_number || 'Not provided' }}</p>
             </div>
             <div>
+              <p class="text-sm text-gray-500">Applicant Type</p>
+              <p class="font-medium capitalize">{{ selectedApplication.host_applicant_type || 'Not provided' }}</p>
+            </div>
+            <div>
               <p class="text-sm text-gray-500">City</p>
               <p class="font-medium">{{ selectedApplication.city || 'Not provided' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Nationality</p>
+              <p class="font-medium">{{ selectedApplication.host_nationality || 'Not provided' }}</p>
             </div>
             <div>
               <p class="text-sm text-gray-500">Applied On</p>
@@ -176,6 +184,32 @@
             <div>
               <p class="text-sm text-gray-500">Status</p>
               <p class="font-medium capitalize">{{ selectedApplication.host_application_status }}</p>
+            </div>
+          </div>
+
+          <div v-if="selectedApplication.host_id_number || selectedApplication.host_business_name || selectedApplication.host_business_tax_number" class="border-t pt-4">
+            <p class="text-sm text-gray-500 mb-2">Verification Details</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-sm text-gray-500">ID Number</p>
+                <p class="font-medium">{{ selectedApplication.host_id_number || 'Not provided' }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">ID Document Path</p>
+                <p class="font-medium break-all">{{ selectedApplication.host_id_document_path || 'Not provided' }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Business Name</p>
+                <p class="font-medium">{{ selectedApplication.host_business_name || 'Not provided' }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Business Tax Number</p>
+                <p class="font-medium">{{ selectedApplication.host_business_tax_number || 'Not provided' }}</p>
+              </div>
+              <div class="md:col-span-2">
+                <p class="text-sm text-gray-500">Registration Certificate Path</p>
+                <p class="font-medium break-all">{{ selectedApplication.host_business_registration_certificate_path || 'Not provided' }}</p>
+              </div>
             </div>
           </div>
           

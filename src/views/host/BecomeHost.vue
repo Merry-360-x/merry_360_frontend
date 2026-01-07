@@ -62,7 +62,7 @@
                   </svg>
                   <span v-else>2</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.businessInfo') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.verification') }}</span>
               </div>
 
               <!-- Connector Line 2 -->
@@ -148,83 +148,98 @@
                     />
                   </div>
 
-                  <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
-                    <input 
-                      v-model="formData.nationality"
-                      type="text" 
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.nationality')"
-                    />
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
+                      <select
+                        v-model="formData.nationality"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      >
+                        <option value="">{{ t('hostApplication.options.selectNationality') }}</option>
+                        <option v-for="n in nationalities" :key="n" :value="n">{{ n }}</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.applicantType') }} *</label>
+                      <select
+                        v-model="formData.applicantType"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      >
+                        <option value="">{{ t('hostApplication.options.selectApplicantType') }}</option>
+                        <option value="individual">{{ t('hostApplication.options.applicantTypeIndividual') }}</option>
+                        <option value="business">{{ t('hostApplication.options.applicantTypeBusiness') }}</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- Step 2: Business Information -->
               <div v-show="currentStep === 2" class="animate-fade-in">
-                <h3 class="text-2xl font-bold text-text-primary mb-6">{{ t('hostApplication.stepTitles.businessInformation') }}</h3>
+                <h3 class="text-2xl font-bold text-text-primary mb-6">{{ t('hostApplication.stepTitles.verification') }}</h3>
                 <div class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
-                    <input 
-                      v-model="formData.businessName"
-                      type="text" 
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.businessName')"
-                    />
+                  <div v-if="formData.applicantType === 'business'" class="space-y-4">
+                    <div>
+                      <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
+                      <input 
+                        v-model="formData.businessName"
+                        type="text" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        :placeholder="t('hostApplication.placeholder.businessName')"
+                      />
+                    </div>
+
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.taxId') }} *</label>
+                      <input 
+                        v-model="formData.taxId"
+                        type="text" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        :placeholder="t('hostApplication.placeholder.taxId')"
+                      />
+                    </div>
+
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.businessRegistrationCertificate') }} *</label>
+                      <input
+                        type="file"
+                        @change="handleBusinessCertUpload"
+                        accept="image/*,.pdf"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      />
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintBusinessCert') }}</p>
+                    </div>
                   </div>
 
-                  <div>
-                    <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessType') }} *</label>
-                    <select 
-                      v-model="formData.businessType"
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    >
-                      <option value="">{{ t('hostApplication.options.selectBusinessType') }}</option>
-                      <option value="individual">{{ t('hostApplication.options.businessTypeIndividual') }}</option>
-                      <option value="company">{{ t('hostApplication.options.businessTypeCompany') }}</option>
-                      <option value="partnership">{{ t('hostApplication.options.businessTypePartnership') }}</option>
-                      <option value="ngo">{{ t('hostApplication.options.businessTypeNgo') }}</option>
-                    </select>
-                  </div>
+                  <div class="space-y-4">
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.idNumber') }} *</label>
+                      <input
+                        v-model="formData.idNumber"
+                        type="text"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        :placeholder="t('hostApplication.placeholder.idNumber')"
+                      />
+                    </div>
 
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.taxId') }}</label>
-                    <input 
-                      v-model="formData.taxId"
-                      type="text" 
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.taxId')"
-                    />
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.yearsInBusiness') }} *</label>
-                    <select 
-                      v-model="formData.yearsInBusiness"
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    >
-                      <option value="">{{ t('hostApplication.options.selectYearsInBusiness') }}</option>
-                      <option value="new">{{ t('hostApplication.options.yearsNew') }}</option>
-                      <option value="1-2">{{ t('hostApplication.options.years1to2') }}</option>
-                      <option value="3-5">{{ t('hostApplication.options.years3to5') }}</option>
-                      <option value="5+">{{ t('hostApplication.options.years5plus') }}</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.bankAccount') }} *</label>
-                    <input 
-                      v-model="formData.bankAccount"
-                      type="text" 
-                      required
-                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      :placeholder="t('hostApplication.placeholder.bankAccount')"
-                    />
+                    <div>
+                      <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.uploadIdDocument') }} *</label>
+                      <input
+                        type="file"
+                        @change="handleIdUpload"
+                        accept="image/*,.pdf"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      />
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ t('hostApplication.uploadHintId') }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -404,7 +419,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
-import { supabase } from '../../services/supabase'
+import { supabase, uploadFile } from '../../services/supabase'
 import { useTranslation } from '@/composables/useTranslation'
 
 const router = useRouter()
@@ -412,6 +427,33 @@ const { t } = useTranslation()
 const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(1)
+
+const nationalities = [
+  'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
+  'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
+  'Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo (Congo-Brazzaville)','Costa Rica','Côte d’Ivoire','Croatia','Cuba','Cyprus','Czechia',
+  'Democratic Republic of the Congo','Denmark','Djibouti','Dominica','Dominican Republic',
+  'Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia',
+  'Fiji','Finland','France',
+  'Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
+  'Haiti','Honduras','Hungary',
+  'Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy',
+  'Jamaica','Japan','Jordan',
+  'Kazakhstan','Kenya','Kiribati','Kuwait','Kyrgyzstan',
+  'Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
+  'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
+  'Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway',
+  'Oman',
+  'Pakistan','Palau','Palestine State','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal',
+  'Qatar',
+  'Romania','Russia','Rwanda',
+  'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
+  'Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
+  'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan',
+  'Vanuatu','Vatican City','Venezuela','Vietnam',
+  'Yemen',
+  'Zambia','Zimbabwe'
+]
 
 const formData = reactive({
   // Step 1: Personal Info
@@ -421,13 +463,12 @@ const formData = reactive({
   phone: '',
   address: '',
   nationality: '',
+  applicantType: '',
+  idNumber: '',
   
   // Step 2: Business Info
   businessName: '',
-  businessType: '',
   taxId: '',
-  yearsInBusiness: '',
-  bankAccount: '',
   
   // Step 3: Property Details
   hostingType: '',
@@ -438,6 +479,8 @@ const formData = reactive({
 })
 
 const uploadedFiles = ref([])
+const idDocumentFile = ref(null)
+const businessRegCertFile = ref(null)
 
 const scrollToForm = () => {
   formSection.value?.scrollIntoView({ behavior: 'smooth' })
@@ -457,14 +500,21 @@ const previousStep = () => {
 
 const validateCurrentStep = () => {
   if (currentStep.value === 1) {
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality || !formData.applicantType) {
       alert(t('hostApplication.validation.step1Required'))
       return false
     }
   } else if (currentStep.value === 2) {
-    if (!formData.businessName || !formData.businessType || !formData.yearsInBusiness || !formData.bankAccount) {
+    if (!formData.idNumber || !idDocumentFile.value) {
       alert(t('hostApplication.validation.step2Required'))
       return false
+    }
+
+    if (formData.applicantType === 'business') {
+      if (!formData.businessName || !formData.taxId || !businessRegCertFile.value) {
+        alert(t('hostApplication.validation.step2Required'))
+        return false
+      }
     }
   }
   return true
@@ -472,6 +522,26 @@ const validateCurrentStep = () => {
 
 const handleFileUpload = (event) => {
   uploadedFiles.value = Array.from(event.target.files)
+}
+
+const handleIdUpload = (event) => {
+  const file = event?.target?.files?.[0]
+  idDocumentFile.value = file || null
+}
+
+const handleBusinessCertUpload = (event) => {
+  const file = event?.target?.files?.[0]
+  businessRegCertFile.value = file || null
+}
+
+const uploadHostDocument = async (userId, kind, file) => {
+  const bucket = 'host-documents'
+  const originalName = file?.name || ''
+  const ext = originalName.includes('.') ? originalName.split('.').pop() : ''
+  const safeExt = ext ? `.${ext.toLowerCase()}` : ''
+  const path = `host-applications/${userId}/${kind}-${Date.now()}${safeExt}`
+  await uploadFile(bucket, path, file)
+  return path
 }
 
 const handleSubmit = async () => {
@@ -494,6 +564,24 @@ const handleSubmit = async () => {
     
     console.log('Submitting host application for user:', user.email)
 
+    // Upload required documents (store storage paths, not public URLs)
+    let idDocumentPath = null
+    let businessRegCertPath = null
+
+    try {
+      if (idDocumentFile.value) {
+        idDocumentPath = await uploadHostDocument(user.id, 'id-document', idDocumentFile.value)
+      }
+
+      if (formData.applicantType === 'business' && businessRegCertFile.value) {
+        businessRegCertPath = await uploadHostDocument(user.id, 'business-registration-certificate', businessRegCertFile.value)
+      }
+    } catch (uploadErr) {
+      console.error('Host document upload error:', uploadErr)
+      alert(t('hostApplication.validation.uploadFailed'))
+      return
+    }
+
     // Save to database
     const profilePayload = {
       id: user.id,
@@ -502,7 +590,26 @@ const handleSubmit = async () => {
       last_name: formData.lastName,
       phone: formData.phone,
       host_application_status: 'pending',
-      host_application_date: new Date().toISOString()
+      host_application_date: new Date().toISOString(),
+
+      // Extended host-application fields
+      host_applicant_type: formData.applicantType,
+      host_nationality: formData.nationality,
+      host_id_number: formData.idNumber,
+      host_id_document_path: idDocumentPath,
+      host_business_name: formData.applicantType === 'business' ? formData.businessName : null,
+      host_business_tax_number: formData.applicantType === 'business' ? formData.taxId : null,
+      host_business_registration_certificate_path: formData.applicantType === 'business' ? businessRegCertPath : null,
+      host_application_details: {
+        address: formData.address,
+        email: formData.email,
+        phone: formData.phone,
+        hostingType: formData.hostingType,
+        propertyLocation: formData.propertyLocation,
+        capacity: formData.capacity,
+        description: formData.description,
+        additionalFilesCount: uploadedFiles.value?.length || 0
+      }
     }
 
     const { error } = await supabase
@@ -526,6 +633,10 @@ const handleSubmit = async () => {
         formData[key] = ''
       }
     })
+
+    idDocumentFile.value = null
+    businessRegCertFile.value = null
+    uploadedFiles.value = []
     
     // Redirect to home
     router.push('/')
