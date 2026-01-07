@@ -628,142 +628,77 @@ const accommodation = ref({
 })
 
 import api from '../../services/api'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
-// Google Map instance
 let map = null
 let marker = null
 
-// Load Google Maps API
-const loadGoogleMapsScript = () => {
-  return new Promise((resolve, reject) => {
-    // Check if already loaded
-    if (window.google && window.google.maps) {
-      resolve()
-      return
-    }
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || import.meta.env.VITE_MAPBOX_TOKEN || ''
 
-    // Check if script is already being loaded
-    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
-      // Wait for it to load
-      const checkInterval = setInterval(() => {
-        if (window.google && window.google.maps) {
-          clearInterval(checkInterval)
-          resolve()
-        }
-      }, 100)
-      return
-    }
-
-    // Create and load script
-    const script = document.createElement('script')
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-    
-    // Use free tier - no API key required for basic usage, or use provided key
-    if (apiKey && apiKey !== 'your_google_maps_api_key_here') {
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`
-    } else {
-      // For free usage without API key (limited features but works)
-      script.src = 'https://maps.googleapis.com/maps/api/js'
-    }
-    
-    script.async = true
-    script.defer = true
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('Failed to load Google Maps'))
-    document.head.appendChild(script)
-  })
-}
-
-// Initialize map when accommodation has coordinates
 const initializeMap = async () => {
   if (!accommodation.value.latitude || !accommodation.value.longitude) return
-  
-  try {
-    // Wait for DOM and load Google Maps
-    await new Promise(resolve => setTimeout(resolve, 100))
-    const mapElement = document.getElementById('property-map')
-    if (!mapElement) return
-    
-    // Load Google Maps script
-    await loadGoogleMapsScript()
-    
-    // Create map if not already created
-    if (!map) {
-      createMap()
-    }
-  } catch (error) {
-    console.error('Error initializing Google Map:', error)
+  if (!MAPBOX_TOKEN) {
+    console.warn('Missing Mapbox token. Set VITE_MAPBOX_ACCESS_TOKEN to enable the map.')
+    return
   }
+
+  await new Promise((resolve) => setTimeout(resolve, 100))
+  const mapElement = document.getElementById('property-map')
+  if (!mapElement) return
+
+  if (!map) createMap()
 }
 
 const createMap = () => {
-  if (map || !window.google || !window.google.maps) return
-  
-  const lat = accommodation.value.latitude
-  const lng = accommodation.value.longitude
-  const position = { lat, lng }
-  
-  // Create map centered on property
-  map = new google.maps.Map(document.getElementById('property-map'), {
-    center: position,
-    zoom: 15,
-    mapTypeControl: true,
-    streetViewControl: true,
-    fullscreenControl: true,
-    zoomControl: true,
-    styles: [
-      {
-        featureType: 'poi',
-        elementType: 'labels',
-        stylers: [{ visibility: 'on' }]
-      }
-    ]
+  if (map) return
+
+  mapboxgl.accessToken = MAPBOX_TOKEN
+
+  const lat = Number(accommodation.value.latitude)
+  const lng = Number(accommodation.value.longitude)
+
+  map = new mapboxgl.Map({
+    container: 'property-map',
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: [lng, lat],
+    zoom: 15
   })
-  
-  // Create custom marker icon
-  const markerIcon = {
-    path: google.maps.SymbolPath.CIRCLE,
-    scale: 12,
-    fillColor: '#EF4444',
-    fillOpacity: 1,
-    strokeColor: '#ffffff',
-    strokeWeight: 3
-  }
-  
-  // Add marker
-  marker = new google.maps.Marker({
-    position: position,
-    map: map,
-    icon: markerIcon,
-    title: accommodation.value.name,
-    animation: google.maps.Animation.DROP
-  })
-  
-  // Create info window
-  const infoWindow = new google.maps.InfoWindow({
-    content: `
-      <div style="padding: 12px; max-width: 250px;">
-        <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #1f2937;">
-          ${accommodation.value.name}
-        </h3>
-        <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">
-          📍 ${accommodation.value.location}
-        </p>
-        <p style="margin: 0; font-size: 18px; font-weight: bold; color: #EF4444;">
-          $${accommodation.value.price}
-          <span style="font-size: 12px; font-weight: normal; color: #6b7280;">/night</span>
-        </p>
-      </div>
-    `
-  })
-  
-  // Show info window on marker click
-  marker.addListener('click', () => {
-    infoWindow.open(map, marker)
-  })
-  
-  // Open info window by default
-  infoWindow.open(map, marker)
+
+  map.addControl(new mapboxgl.NavigationControl(), 'top-right')
+
+  const popupHtml = `
+    <div style="padding: 12px; max-width: 250px;">
+      <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #1f2937;">
+        ${accommodation.value.name}
+      </h3>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">
+        📍 ${accommodation.value.location}
+      </p>
+      <p style="margin: 0; font-size: 18px; font-weight: bold; color: #EF4444;">
+        $${accommodation.value.price}
+        <span style="font-size: 12px; font-weight: normal; color: #6b7280;">/night</span>
+      </p>
+    </div>
+  `
+
+  const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHtml)
+
+  const el = document.createElement('div')
+  el.style.width = '18px'
+  el.style.height = '18px'
+  el.style.borderRadius = '9999px'
+  el.style.background = '#EF4444'
+  el.style.border = '3px solid #ffffff'
+  el.style.boxShadow = '0 8px 20px rgba(0,0,0,0.25)'
+
+  marker = new mapboxgl.Marker({ element: el })
+    .setLngLat([lng, lat])
+    .setPopup(popup)
+    .addTo(map)
+
+  // Open popup by default
+  marker.togglePopup()
 }
 
 onMounted(async () => {

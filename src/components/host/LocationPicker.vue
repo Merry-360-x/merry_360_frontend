@@ -30,6 +30,16 @@
         ref="mapContainer" 
         class="w-full h-96 bg-gray-100 dark:bg-gray-800"
       ></div>
+
+      <div
+        v-if="!hasMapboxToken"
+        class="absolute inset-0 flex items-center justify-center p-6 bg-white/90 dark:bg-gray-900/90"
+      >
+        <div class="text-center max-w-sm">
+          <p class="font-semibold text-text-primary mb-1">Map unavailable</p>
+          <p class="text-sm text-text-secondary">Missing Mapbox token configuration.</p>
+        </div>
+      </div>
       
       <!-- Instructions Overlay -->
       <div class="absolute top-4 left-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 pointer-events-none">
@@ -82,9 +92,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import { ref, onMounted, watch } from 'vue'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 const props = defineProps({
   modelValue: {
@@ -118,7 +128,9 @@ const localAddress = ref(props.address || '')
 
 let map = null
 let marker = null
-let observer = null
+
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || import.meta.env.VITE_MAPBOX_TOKEN || ''
+const hasMapboxToken = !!MAPBOX_TOKEN
 
 const clampLat = (lat) => {
   if (!Number.isFinite(lat)) return null
@@ -132,96 +144,78 @@ const normalizeLng = (lng) => {
   return ((((lng + 180) % 360) + 360) % 360) - 180
 }
 
-const getTileConfig = () => {
-  const key = String(import.meta.env.VITE_GEOAPIFY_API_KEY || '').trim()
-  const hasKey = key && key !== 'your_geoapify_api_key_here'
-
-  if (hasKey) {
-    return {
-      url: `https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?apiKey=${encodeURIComponent(key)}`,
-      attribution: '© OpenStreetMap contributors © Geoapify'
-    }
-  }
-
-  return {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '© OpenStreetMap contributors'
-  }
-}
-
-// Custom price marker icon
-const createPriceMarkerIcon = (price) => {
-  const priceText = price > 0 ? `$${price}` : '$0'
-  return L.divIcon({
-    className: 'custom-price-marker',
-    html: `
-      <div class="relative">
-        <div class="absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full">
-          <div class="bg-gray-900 text-white px-3 py-1.5 rounded-lg shadow-lg font-semibold text-sm whitespace-nowrap">
-            ${priceText}
-            <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-              <div class="border-8 border-transparent border-t-gray-900"></div>
-            </div>
+const createMarkerElement = (price) => {
+  const priceText = Number(price) > 0 ? `$${Number(price)}` : '$0'
+  const el = document.createElement('div')
+  el.className = 'merry-mapbox-marker'
+  el.innerHTML = `
+    <div class="relative">
+      <div class="absolute -top-2 left-1/2 -translate-x-1/2 -translate-y-full">
+        <div class="bg-gray-900 text-white px-3 py-1.5 rounded-lg shadow-lg font-semibold text-sm whitespace-nowrap">
+          <span class="merry-mapbox-marker-price">${priceText}</span>
+          <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+            <div class="border-8 border-transparent border-t-gray-900"></div>
           </div>
         </div>
-        <div class="w-10 h-10 bg-brand-500 border-4 border-white rounded-full shadow-lg"></div>
       </div>
-    `,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40]
-  })
+      <div class="w-10 h-10 bg-brand-500 border-4 border-white rounded-full shadow-lg"></div>
+    </div>
+  `
+  return el
 }
 
 const initMap = () => {
   if (!mapContainer.value) return
-  // If the component is mounted inside a hidden step (v-show), Leaflet will compute a 0-size map.
-  // Only initialize once the container has real dimensions.
-  if (mapContainer.value.offsetWidth === 0 || mapContainer.value.offsetHeight === 0) return
 
-  // Default center (you can change this to any location)
-  const defaultCenter = props.modelValue.lat && props.modelValue.lng 
-    ? [props.modelValue.lat, props.modelValue.lng]
-    : [40.7128, -74.0060] // New York City default
-
-  // Initialize map
-  map = L.map(mapContainer.value).setView(defaultCenter, 13)
-
-  const tiles = getTileConfig()
-
-  L.tileLayer(tiles.url, {
-    attribution: tiles.attribution,
-    maxZoom: 19
-  }).addTo(map)
-
-  // Add marker if location exists
-  if (props.modelValue.lat && props.modelValue.lng) {
-    addMarker(props.modelValue.lat, props.modelValue.lng)
+  if (!MAPBOX_TOKEN) {
+    console.warn('Missing Mapbox token. Set VITE_MAPBOX_ACCESS_TOKEN to enable the map.')
+    return
   }
 
-  // Click event to place marker
+  mapboxgl.accessToken = MAPBOX_TOKEN
+
+  const hasInitial = props.modelValue.lat != null && props.modelValue.lng != null
+  const defaultCenter = hasInitial
+    ? [Number(props.modelValue.lng), Number(props.modelValue.lat)]
+    : [-74.0060, 40.7128] // NYC default [lng, lat]
+
+  map = new mapboxgl.Map({
+    container: mapContainer.value,
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center: defaultCenter,
+    zoom: 13
+  })
+
+  map.addControl(new mapboxgl.NavigationControl(), 'top-left')
+
+  map.on('load', () => {
+    if (hasInitial) {
+      addMarker(Number(props.modelValue.lat), Number(props.modelValue.lng))
+    }
+  })
+
   map.on('click', (e) => {
-    const { lat, lng } = e.latlng
+    const lat = e.lngLat.lat
+    const lng = e.lngLat.lng
     addMarker(lat, lng)
     updateLocation(lat, lng)
   })
 }
 
 const addMarker = (lat, lng) => {
+  if (!map) return
+
   // Remove existing marker
-  if (marker) {
-    map.removeLayer(marker)
-  }
+  if (marker) marker.remove()
 
-  // Create new marker with price
-  marker = L.marker([lat, lng], {
-    icon: createPriceMarkerIcon(localPrice.value),
-    draggable: true
-  }).addTo(map)
+  const el = createMarkerElement(localPrice.value)
+  marker = new mapboxgl.Marker({ element: el, draggable: true })
+    .setLngLat([Number(lng), Number(lat)])
+    .addTo(map)
 
-  // Update location when marker is dragged
-  marker.on('dragend', (e) => {
-    const position = e.target.getLatLng()
-    updateLocation(position.lat, position.lng)
+  marker.on('dragend', () => {
+    const pos = marker.getLngLat()
+    updateLocation(pos.lat, pos.lng)
   })
 }
 
@@ -234,9 +228,10 @@ const updateLocation = (lat, lng) => {
 
 const updatePrice = () => {
   emit('update:price', parseFloat(localPrice.value) || 0)
-  // Update marker icon with new price
   if (marker) {
-    marker.setIcon(createPriceMarkerIcon(localPrice.value))
+    const el = marker.getElement()
+    const node = el?.querySelector?.('.merry-mapbox-marker-price')
+    if (node) node.textContent = (Number(localPrice.value) > 0 ? `$${Number(localPrice.value)}` : '$0')
   }
 }
 
@@ -246,7 +241,7 @@ const updateAddress = () => {
 
 const clearLocation = () => {
   if (marker) {
-    map.removeLayer(marker)
+    marker.remove()
     marker = null
   }
   localLocation.value = { lat: null, lng: null }
@@ -257,69 +252,38 @@ const clearLocation = () => {
 watch(() => props.price, (newPrice) => {
   localPrice.value = newPrice
   if (marker) {
-    marker.setIcon(createPriceMarkerIcon(newPrice))
+    const el = marker.getElement()
+    const node = el?.querySelector?.('.merry-mapbox-marker-price')
+    if (node) node.textContent = (Number(newPrice) > 0 ? `$${Number(newPrice)}` : '$0')
   }
 })
 
 // Watch for external location changes
 watch(() => props.modelValue, (newLocation) => {
-  if (newLocation.lat && newLocation.lng) {
+  if (newLocation?.lat != null && newLocation?.lng != null) {
     localLocation.value = { ...newLocation }
     if (map) {
-      map.setView([newLocation.lat, newLocation.lng], 13)
-      addMarker(newLocation.lat, newLocation.lng)
+      map.flyTo({ center: [Number(newLocation.lng), Number(newLocation.lat)], zoom: 13 })
+      addMarker(Number(newLocation.lat), Number(newLocation.lng))
     }
   }
 }, { deep: true })
 
 onMounted(() => {
-  const tryInit = () => {
-    if (map) return
+  // Small delay to ensure DOM is ready
+  setTimeout(() => {
     initMap()
-    if (map) {
-      setTimeout(() => map?.invalidateSize(), 50)
-      return
-    }
-    requestAnimationFrame(tryInit)
-  }
-
-  tryInit()
-
-  // When Step 3 becomes visible again, fix layout and re-render tiles.
-  if (mapContainer.value && 'IntersectionObserver' in window) {
-    observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0]
-        if (!entry?.isIntersecting) return
-        setTimeout(() => map?.invalidateSize(), 50)
-      },
-      { threshold: 0.1 }
-    )
-    observer.observe(mapContainer.value)
-  }
-})
-
-onUnmounted(() => {
-  if (observer) observer.disconnect()
-  observer = null
-  if (map) {
-    map.remove()
-    map = null
-  }
+  }, 100)
 })
 </script>
 
 <style>
-.custom-price-marker {
+.merry-mapbox-marker {
   background: transparent;
   border: none;
 }
 
-.leaflet-container {
-  font-family: inherit;
-}
-
-.leaflet-popup-content-wrapper {
-  border-radius: 0.5rem;
+.mapboxgl-canvas {
+  outline: none;
 }
 </style>

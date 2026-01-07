@@ -48,6 +48,8 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useCurrencyStore } from '@/stores/currency'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 const props = defineProps({
   properties: {
@@ -66,9 +68,10 @@ const currencyStore = useCurrencyStore()
 const mapEl = ref(null)
 
 let map = null
-let markersLayer = null
-let leafletLoadingPromise = null
+let markers = []
 const selectedPropertyId = ref(null)
+
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || import.meta.env.VITE_MAPBOX_TOKEN || ''
 
 const selectedProperty = computed(() => {
   if (selectedPropertyId.value == null) return null
@@ -88,106 +91,81 @@ const getCoords = (property) => {
   return { lat, lng }
 }
 
-const loadLeaflet = () => {
-  if (window.L) return Promise.resolve(window.L)
-  if (leafletLoadingPromise) return leafletLoadingPromise
-
-  leafletLoadingPromise = new Promise((resolve, reject) => {
-    const script = document.createElement('script')
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-    script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo='
-    script.crossOrigin = ''
-    script.onload = () => resolve(window.L)
-    script.onerror = () => reject(new Error('Failed to load Leaflet'))
-    document.head.appendChild(script)
-  })
-
-  return leafletLoadingPromise
-}
-
-const getTileConfig = () => {
-  const key = String(import.meta.env.VITE_GEOAPIFY_API_KEY || '').trim()
-  const hasKey = key && key !== 'your_geoapify_api_key_here'
-
-  if (hasKey) {
-    return {
-      url: `https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?apiKey=${encodeURIComponent(key)}`,
-      attribution: '© OpenStreetMap contributors © Geoapify'
-    }
-  }
-
-  return {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '© OpenStreetMap contributors'
-  }
-}
-
 const ensureMap = async () => {
   if (!mapEl.value || map) return
   if (!hasAnyCoords.value) return
 
-  const L = await loadLeaflet()
-  map = L.map(mapEl.value, { zoomControl: false })
+  if (!MAPBOX_TOKEN) {
+    console.warn('Missing Mapbox token. Set VITE_MAPBOX_ACCESS_TOKEN to enable the map.')
+    return
+  }
 
-  L.control.zoom({ position: 'topright' }).addTo(map)
+  mapboxgl.accessToken = MAPBOX_TOKEN
 
-  const tiles = getTileConfig()
+  // Pick the first valid coordinate as the initial center
+  const first = props.properties.map(getCoords).find(Boolean)
+  const center = first ? [first.lng, first.lat] : [0, 0]
 
-  L.tileLayer(tiles.url, {
-    attribution: tiles.attribution,
-    maxZoom: 19
-  }).addTo(map)
+  map = new mapboxgl.Map({
+    container: mapEl.value,
+    style: 'mapbox://styles/mapbox/streets-v12',
+    center,
+    zoom: first ? 8 : 2
+  })
 
-  markersLayer = L.layerGroup().addTo(map)
+  map.addControl(new mapboxgl.NavigationControl(), 'top-right')
 
   // Ensure correct sizing when the component mounts inside conditional layouts
   setTimeout(() => {
-    if (map) map.invalidateSize()
+    if (map) map.resize()
   }, 0)
 }
 
-const makePriceIcon = (property, isSelected) => {
-  const L = window.L
+const makeMarkerElement = (property, isSelected) => {
+  const el = document.createElement('div')
   const priceText = formatPrice(property?.price)
-  const bubbleClass = isSelected ? 'merry-map-price-bubble merry-map-price-bubble--selected' : 'merry-map-price-bubble'
-
-  return L.divIcon({
-    className: 'merry-map-price-icon',
-    html: `<div class="${bubbleClass}">${priceText}</div>`,
-    iconSize: [0, 0]
-  })
+  const bubbleClass = isSelected
+    ? 'merry-map-price-bubble merry-map-price-bubble--selected'
+    : 'merry-map-price-bubble'
+  el.innerHTML = `<div class="${bubbleClass}">${priceText}</div>`
+  el.style.cursor = 'pointer'
+  return el
 }
 
 const renderMarkers = async () => {
   await ensureMap()
-  if (!map || !markersLayer) return
+  if (!map) return
 
-  markersLayer.clearLayers()
+  // Clear old markers
+  for (const m of markers) m.remove()
+  markers = []
 
-  const L = window.L
-  const bounds = []
+  let bounds = null
 
   for (const property of props.properties) {
     const coords = getCoords(property)
     if (!coords) continue
 
-    bounds.push([coords.lat, coords.lng])
+    if (!bounds) bounds = new mapboxgl.LngLatBounds()
+    bounds.extend([coords.lng, coords.lat])
 
     const isSelected = selectedPropertyId.value != null && String(property?.id) === String(selectedPropertyId.value)
-    const marker = L.marker([coords.lat, coords.lng], {
-      icon: makePriceIcon(property, isSelected)
-    })
 
-    marker.on('click', () => {
+    const el = makeMarkerElement(property, isSelected)
+    el.addEventListener('click', () => {
       selectedPropertyId.value = property?.id ?? null
       emit('selectProperty', property)
     })
 
-    marker.addTo(markersLayer)
+    const marker = new mapboxgl.Marker({ element: el })
+      .setLngLat([coords.lng, coords.lat])
+      .addTo(map)
+
+    markers.push(marker)
   }
 
-  if (bounds.length) {
-    map.fitBounds(bounds, { padding: [32, 32] })
+  if (bounds) {
+    map.fitBounds(bounds, { padding: 32, maxZoom: 15, duration: 0 })
   }
 }
 
@@ -246,10 +224,9 @@ const clearSelection = () => {
 }
 
 onBeforeUnmount(() => {
-  if (map) {
-    map.remove()
-    map = null
-    markersLayer = null
-  }
+  for (const m of markers) m.remove()
+  markers = []
+  if (map) map.remove()
+  map = null
 })
 </script>
