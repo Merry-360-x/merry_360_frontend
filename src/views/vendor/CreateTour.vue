@@ -130,22 +130,6 @@
                 :max-photos="10"
               />
             </div>
-                  </div>
-                  <button 
-                    @click="removeImage(index)"
-                    type="button"
-                    class="absolute top-2 right-2 p-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </button>
-                  <div v-if="index === 0" class="absolute bottom-2 left-2 px-2 py-1 bg-brand-600 text-white text-xs rounded">
-                    Main
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <!-- Inclusions -->
             <div class="mb-8">
