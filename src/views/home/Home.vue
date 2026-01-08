@@ -292,8 +292,25 @@
           <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             <PropertyCardSkeleton v-for="n in 10" :key="n" />
           </div>
+          <div v-else-if="loadError" class="text-center py-12">
+            <p class="text-red-600 dark:text-red-400 mb-4">{{ loadError }}</p>
+            <button @click="loadHomeProperties" class="px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700">
+              Retry
+            </button>
+          </div>
+          <div v-else-if="latestProperties.length === 0" class="text-center py-12">
+            <p class="text-gray-600 dark:text-gray-400 mb-4">No properties available at the moment.</p>
+            <router-link to="/become-host" class="px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700 inline-block">
+              Become a Host
+            </router-link>
+          </div>
           <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            <PropertyCard v-for="(property, index) in latestProperties" :key="property.id" :property="property" :priority="index < 4" />
+            <PropertyCard 
+              v-for="(property, index) in latestProperties" 
+              :key="property.id" 
+              :property="property" 
+              :loading="index === 0 ? 'eager' : 'lazy'"
+            />
           </div>
         </div>
       </div>
@@ -374,8 +391,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, watch, onMounted, onBeforeUnmount, onActivated, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
 import PropertyCardSkeleton from '@/components/common/PropertyCardSkeleton.vue'
@@ -385,6 +402,7 @@ import { waitForPreload } from '@/services/preloadData'
 import fastFetch from '@/services/fastFetch'
 
 const router = useRouter()
+const route = useRoute()
 const { t } = useTranslation()
 
 const activePanel = ref(null)
@@ -764,6 +782,7 @@ onMounted(() => {
     }
   }, 500)
   
+  // Load properties on mount
   loadHomeProperties()
   
   // Handle page visibility changes to restore button functionality
@@ -784,6 +803,22 @@ onMounted(() => {
     window.removeEventListener('pagevisible', handlePageVisible)
     window.removeEventListener('windowfocused', handlePageVisible)
   })
+})
+
+// Reload data when route is activated (e.g., navigating back to home)
+onActivated(() => {
+  console.log('🔄 [Home] Route activated, reloading properties...')
+  if (latestProperties.value.length === 0 || loadError.value) {
+    loadHomeProperties()
+  }
+})
+
+// Watch for route changes to reload data
+watch(() => route.path, (newPath) => {
+  if (newPath === '/' && latestProperties.value.length === 0) {
+    console.log('🔄 [Home] Route changed to home, reloading properties...')
+    loadHomeProperties()
+  }
 })
 
 onBeforeUnmount(() => {
@@ -865,15 +900,58 @@ const onMobilePrimary = () => {
 
 const latestProperties = ref([])
 const isLoading = ref(true)
+const loadError = ref(null)
 
 const loadHomeProperties = async () => {
   try {
-    await waitForPreload()
-    const result = await fastFetch.fetchAccommodations({ limit: 10, minimal: true })
-    latestProperties.value = result.data || []
+    isLoading.value = true
+    loadError.value = null
+    console.log('🏠 [Home] Loading properties...')
+    
+    // Try fastFetch first (with timeout)
+    try {
+      const preloadTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Preload timeout')), 5000)
+      )
+      
+      await Promise.race([waitForPreload(), preloadTimeout])
+      
+      const fetchTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Fetch timeout')), 10000)
+      )
+      
+      const result = await Promise.race([
+        fastFetch.fetchAccommodations({ limit: 10, minimal: true }),
+        fetchTimeout
+      ])
+      
+      if (result?.data && Array.isArray(result.data) && result.data.length > 0) {
+        latestProperties.value = result.data
+        console.log('✅ [Home] Loaded', result.data.length, 'properties from fastFetch')
+        isLoading.value = false
+        return
+      }
+    } catch (fastError) {
+      console.warn('⚠️ [Home] fastFetch failed, trying direct API:', fastError.message)
+    }
+    
+    // Fallback to direct API call
+    console.log('🔄 [Home] Falling back to direct API call...')
+    const apiResult = await api.accommodations.getAll({ limit: 10 })
+    
+    if (apiResult?.data && Array.isArray(apiResult.data) && apiResult.data.length > 0) {
+      latestProperties.value = apiResult.data
+      console.log('✅ [Home] Loaded', apiResult.data.length, 'properties from API')
+    } else {
+      console.warn('⚠️ [Home] No properties found in API response')
+      latestProperties.value = []
+    }
+    
     isLoading.value = false
   } catch (error) {
-    console.error('Failed to load properties:', error)
+    console.error('❌ [Home] Failed to load properties:', error)
+    loadError.value = error.message || 'Failed to load properties'
+    latestProperties.value = []
     isLoading.value = false
   }
 }

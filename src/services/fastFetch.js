@@ -137,9 +137,17 @@ const executeAccommodationQuery = async (params, minimal = true) => {
   let query = supabase
     .from('properties')
     .select(selectFields)
-    .or('available.is.null,available.eq.true')
     .order('created_at', { ascending: false })
     .limit(limit)
+  
+  // Apply available filter only if column exists (some schemas might not have it)
+  // Use try-catch or check if available column exists
+  try {
+    query = query.or('available.is.null,available.eq.true')
+  } catch (e) {
+    // If available column doesn't exist, continue without filter
+    console.warn('Available column filter skipped:', e.message)
+  }
   
   // Apply filters
   if (term) {
