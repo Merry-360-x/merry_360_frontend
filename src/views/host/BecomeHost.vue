@@ -1,43 +1,178 @@
 <template>
   <MainLayout>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-20 overflow-hidden">
+    <section class="relative bg-gradient-to-br from-brand-50 via-pink-50 to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-16 md:py-24 overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 left-0 w-96 h-96 bg-brand-500 rounded-full filter blur-3xl animate-pulse"></div>
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
       </div>
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="max-w-4xl mx-auto text-center">
-          <div class="inline-block mb-6 px-6 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg animate-bounce">
-            <span class="text-brand-600 dark:text-brand-400 font-bold text-sm">🏠 Become a Host Today</span>
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 mb-6 px-5 py-2.5 bg-white dark:bg-gray-800 rounded-full shadow-lg">
+              <span class="text-2xl">🏠</span>
+              <span class="text-brand-600 dark:text-brand-400 font-bold text-sm">Become a Host</span>
           </div>
-          <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-            Share Your Space, <br/>Earn <span class="text-brand-600">Extra Income</span>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
+              Turn your space into<br class="hidden md:block"/>an <span class="text-brand-600">income stream</span>
           </h1>
-          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-10">
-            Join thousands of hosts in Rwanda earning money by sharing their properties, tours, and transport services
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Join Rwanda's premier travel platform. List your accommodations, tours, or transport services and start earning today.
           </p>
+          </div>
+          
+          <!-- CTA Button -->
+          <div class="text-center" v-if="!showForm">
           <button 
-            @click="scrollToForm"
-            class="group px-10 py-5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
-          >
-            <span class="flex items-center gap-3">
-              Start Application
-              <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              @click="showForm = true"
+              class="group inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
+            >
+              Get Started
+              <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
               </svg>
-            </span>
           </button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Application Form -->
-    <section ref="formSection" class="py-16 bg-white dark:bg-gray-900">
+    <section ref="formSection" v-if="showForm" class="py-16 bg-white dark:bg-gray-900">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-5xl mx-auto">
-          <!-- Progress Bar -->
-          <div class="mb-12">
+          
+          <!-- Step 0: Choose Account Type (Individual vs Business) -->
+          <div v-if="currentStep === 0" class="animate-fade-in">
+            <div class="text-center mb-12">
+              <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Let's get started
+              </h2>
+              <p class="text-lg text-gray-600 dark:text-gray-300">
+                First, tell us about yourself
+              </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <!-- Individual Card -->
+              <button
+                type="button"
+                @click="selectAccountType('individual')"
+                class="group relative p-8 bg-white dark:bg-gray-800 rounded-3xl border-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                :class="formData.applicantType === 'individual' ? 'border-brand-500 shadow-2xl' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
+              >
+                <div class="absolute top-4 right-4">
+                  <div 
+                    class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all"
+                    :class="formData.applicantType === 'individual' ? 'border-brand-500 bg-brand-500' : 'border-gray-300 dark:border-gray-600'"
+                  >
+                    <svg v-if="formData.applicantType === 'individual'" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+                
+                <div class="flex flex-col items-center text-center">
+                  <div class="w-20 h-20 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-brand-900 dark:to-brand-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-10 h-10 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Individual</h3>
+                  <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    I'm hosting as an individual owner
+                  </p>
+                  <ul class="text-left space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <li class="flex items-start gap-2">
+                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Simple application process</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Personal ID verification</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Perfect for homeowners</span>
+                    </li>
+                  </ul>
+                </div>
+              </button>
+
+              <!-- Business Card -->
+              <button
+                type="button"
+                @click="selectAccountType('business')"
+                class="group relative p-8 bg-white dark:bg-gray-800 rounded-3xl border-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                :class="formData.applicantType === 'business' ? 'border-brand-500 shadow-2xl' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
+              >
+                <div class="absolute top-4 right-4">
+                  <div 
+                    class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all"
+                    :class="formData.applicantType === 'business' ? 'border-brand-500 bg-brand-500' : 'border-gray-300 dark:border-gray-600'"
+                  >
+                    <svg v-if="formData.applicantType === 'business'" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+                
+                <div class="flex flex-col items-center text-center">
+                  <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-10 h-10 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Business</h3>
+                  <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    I'm hosting as a registered business
+                  </p>
+                  <ul class="text-left space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <li class="flex items-start gap-2">
+                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Multiple listings allowed</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>Business verification</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span>For hotels & agencies</span>
+                    </li>
+                  </ul>
+                </div>
+              </button>
+            </div>
+
+            <div class="text-center mt-12" v-if="formData.applicantType">
+              <button
+                type="button"
+                @click="currentStep = 1"
+                class="inline-flex items-center gap-2 px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl"
+              >
+                Continue
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Bar (only show after step 0) -->
+          <div v-if="currentStep > 0" class="mb-12">
             <div class="flex items-center justify-center gap-2 mb-4">
               <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Application Progress</span>
             </div>
@@ -52,20 +187,20 @@
             </div>
           </div>
 
-          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
-            <div class="flex items-center justify-between max-w-2xl mx-auto">
+          <div v-if="currentStep > 0" class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 overflow-hidden">
+            <div class="flex items-center justify-between max-w-3xl mx-auto">
               <!-- Step 1 -->
               <div class="flex flex-col items-center flex-1">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                  :class="currentStep >= 1 ? 'bg-brand-500 text-white shadow-lg' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 1" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>1</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.personalInfo') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Personal Info</span>
               </div>
 
               <!-- Connector Line 1 -->
@@ -75,14 +210,14 @@
               <div class="flex flex-col items-center flex-1">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                  :class="currentStep >= 2 ? 'bg-brand-500 text-white shadow-lg' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 2" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>2</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.verification') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Verification</span>
               </div>
 
               <!-- Connector Line 2 -->
@@ -92,14 +227,14 @@
               <div class="flex flex-col items-center flex-1">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                  :class="currentStep >= 3 ? 'bg-brand-500 text-white shadow-lg' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 3" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>3</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ listingStepLabels.step3 }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Listing Type</span>
               </div>
 
               <!-- Connector Line 3 -->
@@ -109,14 +244,14 @@
               <div class="flex flex-col items-center flex-1">
                 <div
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 4 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                  :class="currentStep >= 4 ? 'bg-brand-500 text-white shadow-lg' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 4" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>4</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ listingStepLabels.step4 }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Details</span>
               </div>
 
               <!-- Connector Line 4 -->
@@ -126,58 +261,64 @@
               <div class="flex flex-col items-center flex-1">
                 <div
                   class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
-                  :class="currentStep >= 5 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                  :class="currentStep >= 5 ? 'bg-brand-500 text-white shadow-lg' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
                   <svg v-if="currentStep > 5" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   <span v-else>5</span>
                 </div>
-                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.submit') }}</span>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">Submit</span>
               </div>
             </div>
           </div>
 
           <!-- Form Card -->
-          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors duration-200">
+          <div v-if="currentStep > 0" class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden transition-colors duration-200">
             <form @submit.prevent="handleSubmit" novalidate>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 <!-- Left: Guidance Panel -->
-                <div class="md:pr-8 md:border-r border-gray-200 dark:border-gray-700">
-                  <p class="text-sm font-semibold text-text-secondary">
-                    {{ t('hostApplication.layout.stepCount', { current: currentStep, total: TOTAL_STEPS }) }}
-                  </p>
-                  <h3 class="text-2xl font-bold text-text-primary mt-2">
+                <div class="lg:col-span-1 bg-gradient-to-br from-brand-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 p-8 lg:p-10">
+                  <div class="sticky top-8">
+                    <div class="inline-block px-4 py-1.5 bg-white dark:bg-gray-800 rounded-full mb-4">
+                      <span class="text-sm font-bold text-brand-600 dark:text-brand-400">
+                        Step {{ currentStep }} of {{ TOTAL_STEPS }}
+                      </span>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                     {{ stepMeta.title }}
                   </h3>
-                  <p class="text-base text-text-secondary mt-3">
+                    <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                     {{ stepMeta.description }}
                   </p>
 
                   <div v-if="stepMeta.checklist?.length" class="mt-8">
-                    <p class="text-sm font-semibold text-text-primary">{{ t('hostApplication.layout.checklistTitle') }}</p>
-                    <ul class="mt-3 space-y-2">
-                      <li v-for="item in stepMeta.checklist" :key="item" class="flex items-start gap-3 text-sm text-text-secondary">
-                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-brand-500"></span>
+                      <p class="text-sm font-bold text-gray-900 dark:text-white mb-4">What you'll need:</p>
+                      <ul class="space-y-3">
+                        <li v-for="item in stepMeta.checklist" :key="item" class="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                          <svg class="w-5 h-5 text-brand-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                          </svg>
                         <span>{{ item }}</span>
                       </li>
                     </ul>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Right: Inputs -->
-                <div>
+                <div class="lg:col-span-2 p-8 lg:p-12">
                   <!-- Step 1: Personal Information -->
                   <div v-show="currentStep === 1" class="animate-fade-in">
-                    <div class="space-y-4">
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-5">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.firstName') }} *</label>
                           <input 
                             v-model="formData.firstName"
                             type="text" 
                             required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                             :placeholder="t('hostApplication.placeholder.firstName')"
                           />
                         </div>
@@ -187,20 +328,20 @@
                             v-model="formData.lastName"
                             type="text" 
                             required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                             :placeholder="t('hostApplication.placeholder.lastName')"
                           />
                         </div>
                       </div>
 
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.emailAddress') }} *</label>
                           <input 
                             v-model="formData.email"
                             type="email" 
                             required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                             :placeholder="t('hostApplication.placeholder.email')"
                           />
                         </div>
@@ -210,7 +351,7 @@
                             v-model="formData.phone"
                             type="tel" 
                             required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                             :placeholder="t('hostApplication.placeholder.phone')"
                           />
                         </div>
@@ -222,18 +363,17 @@
                           v-model="formData.address"
                           type="text" 
                           required
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                           :placeholder="t('hostApplication.placeholder.address')"
                         />
                       </div>
 
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
                           <select
                             v-model="formData.nationality"
                             required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                           >
                             <option value="">{{ t('hostApplication.options.selectNationality') }}</option>
                             <option v-for="n in nationalityOptions" :key="n.value" :value="n.value">{{ n.label }}</option>
@@ -241,31 +381,42 @@
                         </div>
 
                         <div>
-                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.applicantType') }} *</label>
-                          <select
-                            v-model="formData.applicantType"
-                            required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                          >
-                            <option value="">{{ t('hostApplication.options.selectApplicantType') }}</option>
-                            <option value="individual">{{ t('hostApplication.options.applicantTypeIndividual') }}</option>
-                            <option value="business">{{ t('hostApplication.options.applicantTypeBusiness') }}</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div>
                         <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
-                        <select 
-                          v-model="formData.hostingType"
-                          required
-                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-                        >
-                          <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
-                          <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
-                          <option value="tour">{{ t('hostApplication.options.hostingTour') }}</option>
-                          <option value="transport">{{ t('hostApplication.options.hostingTransport') }}</option>
-                          <option value="service">{{ t('hostApplication.options.hostingOther') }}</option>
-                        </select>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <button
+                            type="button"
+                            @click="formData.hostingType = 'accommodation'"
+                            class="p-4 border-2 rounded-xl transition-all"
+                            :class="formData.hostingType === 'accommodation' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
+                          >
+                            <div class="text-center">
+                              <div class="text-2xl mb-2">🏨</div>
+                              <div class="font-semibold text-text-primary">{{ t('hostApplication.options.hostingAccommodation') }}</div>
+                        </div>
+                          </button>
+                          <button
+                            type="button"
+                            @click="formData.hostingType = 'tour'"
+                            class="p-4 border-2 rounded-xl transition-all"
+                            :class="formData.hostingType === 'tour' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
+                          >
+                            <div class="text-center">
+                              <div class="text-2xl mb-2">🗺️</div>
+                              <div class="font-semibold text-text-primary">{{ t('hostApplication.options.hostingTour') }}</div>
+                      </div>
+                          </button>
+                          <button
+                            type="button"
+                            @click="formData.hostingType = 'transport'"
+                            class="p-4 border-2 rounded-xl transition-all"
+                            :class="formData.hostingType === 'transport' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
+                          >
+                            <div class="text-center">
+                              <div class="text-2xl mb-2">🚗</div>
+                              <div class="font-semibold text-text-primary">{{ t('hostApplication.options.hostingTransport') }}</div>
+                            </div>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -548,15 +699,31 @@
                   </div>
                 </div>
 
+                </div>
+
                 <!-- Navigation Buttons -->
-                <div class="md:col-span-2 flex items-center justify-between mt-4 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="lg:col-span-3 flex items-center justify-between px-8 lg:px-12 py-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
                   <button 
                     v-if="currentStep > 1"
                     type="button"
                     @click="previousStep"
-                    class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-all"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl transition-all border border-gray-300 dark:border-gray-600"
                   >
-                    {{ t('hostApplication.previous') }}
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back
+                  </button>
+                  <button 
+                    v-else-if="currentStep === 1"
+                    type="button"
+                    @click="currentStep = 0"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl transition-all border border-gray-300 dark:border-gray-600"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Back
                   </button>
                   <div v-else></div>
 
@@ -565,36 +732,31 @@
                     type="button"
                     @click="nextStep"
                     :disabled="currentStep === 4 && photosUploading"
-                    class="px-8 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    class="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl"
                   >
-                    <span class="flex items-center gap-2">
-                      {{ t('hostApplication.nextStep') }}
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                      </svg>
-                    </span>
+                    Next
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
                   </button>
                   <button 
                     v-else
                     type="submit"
                     :disabled="isSubmitting || photosUploading || !formData.agreeToTerms"
-                    class="group relative px-10 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 disabled:transform-none disabled:hover:shadow-xl"
+                    class="group inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl"
                   >
                     <span v-if="isSubmitting" class="flex items-center gap-3">
                       <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      {{ t('hostApplication.submitting') }}
+                      Submitting...
                     </span>
                     <span v-else class="flex items-center gap-3">
                       <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      {{ t('hostApplication.submitApplication') }}
-                      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                      </svg>
+                      Submit Application
                     </span>
                   </button>
                 </div>
@@ -680,7 +842,8 @@ const router = useRouter()
 const { t } = useTranslation()
 const formSection = ref(null)
 const isSubmitting = ref(false)
-const currentStep = ref(1)
+const currentStep = ref(0)
+const showForm = ref(false)
 
 // Ensure isSubmitting is reset on mount (in case of stuck state)
 onMounted(() => {
@@ -688,7 +851,11 @@ onMounted(() => {
   photosUploading.value = false
 })
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 5 // Steps 1-5 after account type selection
+
+const selectAccountType = (type) => {
+  formData.applicantType = type
+}
 
 isoCountries.registerLocale(enIsoCountries)
 
@@ -948,8 +1115,18 @@ const businessRegCertDoc = ref(null)
 const photosUploading = ref(false)
 
 const scrollToForm = () => {
-  formSection.value?.scrollIntoView({ behavior: 'smooth' })
+  if (formSection.value) {
+    formSection.value.scrollIntoView({ behavior: 'smooth' })
+  } else {
+    // If form section doesn't exist yet, just scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
+
+const progress = computed(() => {
+  if (currentStep.value === 0) return 0
+  return Math.round((currentStep.value / TOTAL_STEPS) * 100)
+})
 
 const nextStep = () => {
   if (currentStep.value === 4 && photosUploading.value) {
@@ -969,7 +1146,7 @@ const previousStep = () => {
 
 const validateCurrentStep = () => {
   if (currentStep.value === 1) {
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality || !formData.applicantType || !formData.hostingType) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality || !formData.hostingType) {
       alert(t('hostApplication.validation.step1Required'))
       return false
     }
@@ -1190,11 +1367,16 @@ const handleSubmit = async () => {
     alert(t('hostApplication.submittedSuccess'))
     
     // Reset form
-    currentStep.value = 1
+    currentStep.value = 0
+    showForm.value = false
     Object.keys(formData).forEach(key => {
       if (key === 'agreeToTerms') {
         formData[key] = false
       } else if (key === 'photos') {
+        formData[key] = []
+      } else if (key === 'propertyDetails') {
+        formData[key] = { guests: 4, bedrooms: 1, beds: 1, bathrooms: 1 }
+      } else if (key === 'amenities') {
         formData[key] = []
       } else {
         formData[key] = ''
@@ -1205,8 +1387,8 @@ const handleSubmit = async () => {
     businessRegCertDoc.value = null
     uploadedFiles.value = []
     
-    // Redirect to home
-    router.push('/')
+    // Redirect to host dashboard instead of home
+    router.push('/host')
     
   } catch (error) {
     console.error('Host application error:', error)

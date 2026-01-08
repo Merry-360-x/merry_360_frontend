@@ -2,13 +2,25 @@
   <MainLayout>
     <!-- Hero with Search -->
     <section class="relative h-[70vh]">
-      <!-- Video Background -->
+      <!-- Video Background with Lazy Loading -->
       <div class="absolute inset-0 overflow-hidden">
+        <!-- Placeholder image while video loads -->
+        <div 
+          v-if="!videoLoaded"
+          class="absolute inset-0 bg-cover bg-center"
+          style="background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80')"
+        ></div>
+        
+        <!-- Lazy-loaded video -->
         <video 
+          v-show="videoLoaded"
+          ref="heroVideo"
           autoplay 
           muted 
           loop 
-          playsinline 
+          playsinline
+          preload="none"
+          @canplay="videoLoaded = true"
           class="w-full h-full object-cover"
         >
           <source src="/videos/Merry.mp4" type="video/mp4" />
@@ -291,7 +303,7 @@
     <section class="bg-gray-50 dark:bg-gray-900 py-16">
       <div class="container mx-auto px-4">
         <div class="relative overflow-hidden rounded-3xl max-w-6xl mx-auto h-96">
-          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80" alt="Try Hosting" class="absolute inset-0 w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=80" alt="Try Hosting" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />
           <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
           <div class="relative h-full flex flex-col justify-center p-16 max-w-2xl">
             <h2 class="text-5xl font-bold text-white mb-4">{{ t('home.tryHosting') }}</h2>
@@ -378,6 +390,8 @@ const { t } = useTranslation()
 const activePanel = ref(null)
 const searchBarContainer = ref(null)
 const whereInput = ref(null)
+const heroVideo = ref(null)
+const videoLoaded = ref(false)
 const isMobileSearchOpen = ref(false)
 const mobileStep = ref('where')
 const highlightedWhereIndex = ref(-1)
@@ -742,6 +756,14 @@ onMounted(() => {
 
   document.addEventListener('click', handleClickOutside)
   document.addEventListener('keydown', handleKeydown)
+  
+  // Lazy load video after initial page load to improve performance
+  setTimeout(() => {
+    if (heroVideo.value) {
+      heroVideo.value.load()
+    }
+  }, 500)
+  
   loadHomeProperties()
 
   onBeforeUnmount(() => {
@@ -824,6 +846,7 @@ const loadHomeProperties = async () => {
     isLoading.value = false
   }
 }
+
 </script>
 
 <style scoped>
