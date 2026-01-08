@@ -748,11 +748,11 @@
                     v-else
                     type="submit"
                     :disabled="isSubmitting || photosUploading"
-                    @click="!formData.agreeToTerms && handleTermsClick()"
+                    @click="!formData.agreeToTerms ? handleTermsClick($event) : null"
                     :class="[
                       'group inline-flex items-center gap-3 px-10 py-4 font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl',
                       !formData.agreeToTerms 
-                        ? 'bg-gray-400 hover:bg-gray-500 cursor-not-allowed text-white' 
+                        ? 'bg-gray-400 hover:bg-gray-500 text-white' 
                         : 'bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white',
                       (isSubmitting || photosUploading) && 'disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed'
                     ]"
@@ -1269,18 +1269,30 @@ const uploadHostDocument = async (userId, kind, file) => {
   }
 }
 
-const handleTermsClick = () => {
-  // Scroll to checkbox and highlight it
-  const checkboxElement = document.querySelector('input[type="checkbox"][v-model*="agreeToTerms"]')
-  if (checkboxElement) {
-    checkboxElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    checkboxElement.focus()
-    // Add a brief highlight animation
-    checkboxElement.parentElement?.parentElement?.classList.add('animate-pulse')
-    setTimeout(() => {
-      checkboxElement.parentElement?.parentElement?.classList.remove('animate-pulse')
-    }, 2000)
+const handleTermsClick = (event) => {
+  // Prevent form submission
+  if (event) {
+    event.preventDefault()
+    event.stopPropagation()
   }
+  
+  // Scroll to checkbox and highlight it
+  const checkboxContainer = document.querySelector('.bg-white.dark\\:bg-gray-900.rounded-lg.p-4.border-2')
+  if (checkboxContainer) {
+    checkboxContainer.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    // Add a brief highlight animation
+    checkboxContainer.classList.add('animate-pulse', 'ring-4', 'ring-red-300')
+    setTimeout(() => {
+      checkboxContainer.classList.remove('animate-pulse', 'ring-4', 'ring-red-300')
+    }, 2000)
+    
+    // Focus the checkbox
+    const checkbox = checkboxContainer.querySelector('input[type="checkbox"]')
+    if (checkbox) {
+      checkbox.focus()
+    }
+  }
+  
   showToastError('Please check the box above to agree to the Terms and Conditions before submitting.')
 }
 
