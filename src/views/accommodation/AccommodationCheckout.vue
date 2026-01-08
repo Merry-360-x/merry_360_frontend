@@ -339,16 +339,18 @@ onMounted(async () => {
   await loadProperty()
 
   // Hydrate stay details from URL (or apply defaults)
-  const qCheckIn = route.query.checkIn != null ? String(route.query.checkIn).trim() : ''
-  const qCheckOut = route.query.checkOut != null ? String(route.query.checkOut).trim() : ''
+  // Handle both checkIn/checkOut and checkin/checkout query params
+  const qCheckIn = route.query.checkIn || route.query.checkin || ''
+  const qCheckOut = route.query.checkOut || route.query.checkout || ''
   const qGuests = route.query.guests != null && String(route.query.guests).trim()
     ? Number(route.query.guests)
     : null
 
-  if (qCheckIn) stay.value.checkIn = qCheckIn
-  if (qCheckOut) stay.value.checkOut = qCheckOut
+  if (qCheckIn) stay.value.checkIn = String(qCheckIn).trim()
+  if (qCheckOut) stay.value.checkOut = String(qCheckOut).trim()
   if (Number.isFinite(qGuests) && qGuests > 0) stay.value.guests = qGuests
 
+  // Only set defaults if dates are not provided
   if (!stay.value.checkIn || !stay.value.checkOut) {
     const checkIn = new Date()
     checkIn.setDate(checkIn.getDate() + 7)
@@ -358,6 +360,13 @@ onMounted(async () => {
     stay.value.checkIn = stay.value.checkIn || toDateInputValue(checkIn)
     stay.value.checkOut = stay.value.checkOut || toDateInputValue(checkOut)
   }
+  
+  console.log('✅ Stay details loaded:', {
+    checkIn: stay.value.checkIn,
+    checkOut: stay.value.checkOut,
+    guests: stay.value.guests,
+    propertyPrice: property.value.price
+  })
 })
 
 const paymentMethod = ref('free')
