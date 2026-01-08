@@ -100,30 +100,49 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Luggage Capacity</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Luggage - Number of Bags</label>
                   <Input 
-                    v-model="form.luggage" 
-                    placeholder="E.g., 3 large bags"
+                    v-model.number="form.luggageBags" 
+                    type="number"
+                    placeholder="0"
+                    min="0"
                   />
+                  <p class="mt-1 text-xs text-gray-500">How many bags can fit?</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Price (USD) *</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Price per Day (RWF) *</label>
                   <Input 
                     v-model.number="form.price" 
                     type="number"
                     placeholder="0"
+                    min="0"
                     :class="errors.price ? 'border-red-500' : ''"
                   />
                   <p v-if="errors.price" class="mt-1 text-sm text-red-600">{{ errors.price }}</p>
+                  <p class="mt-1 text-xs text-gray-500">Enter price in Rwandan Francs</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Days</label>
                   <Input 
-                    v-model="form.duration" 
-                    placeholder="E.g., 30 minutes"
+                    v-model.number="form.durationDays" 
+                    type="number"
+                    placeholder="0"
+                    min="0"
                   />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Hours</label>
+                  <Input 
+                    v-model.number="form.durationHours" 
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    max="23"
+                  />
+                  <p class="mt-1 text-xs text-gray-500">Leave as 0 if no hours</p>
                 </div>
               </div>
             </div>
@@ -243,9 +262,10 @@ const form = ref({
   route: '',
   description: '',
   capacity: null,
-  luggage: '',
+  luggageBags: 0,
   price: null,
-  duration: '',
+  durationDays: 0,
+  durationHours: 0,
   image: '',
   additionalImages: [],
   features: [],
@@ -303,6 +323,13 @@ const handleSubmit = async () => {
       throw new Error('Please upload at least one image')
     }
 
+    // Calculate duration string
+    const durationString = form.value.durationDays > 0 
+      ? `${form.value.durationDays} ${form.value.durationDays === 1 ? 'day' : 'days'}${form.value.durationHours > 0 ? ` ${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}` : ''}`
+      : form.value.durationHours > 0 
+        ? `${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}`
+        : ''
+
     const transportData = {
       name: form.value.name,
       vehicle_type: form.value.vehicleType,
@@ -310,9 +337,9 @@ const handleSubmit = async () => {
       route: form.value.route,
       description: form.value.description,
       capacity: Number(form.value.capacity),
-      luggage: form.value.luggage || '',
+      luggage: form.value.luggageBags > 0 ? `${form.value.luggageBags} ${form.value.luggageBags === 1 ? 'bag' : 'bags'}` : '',
       price: Number(form.value.price),
-      duration: form.value.duration || '',
+      duration: durationString,
       main_image: imageUrls[0],
       image: imageUrls[0],
       images: imageUrls,

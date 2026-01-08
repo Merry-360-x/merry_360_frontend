@@ -71,13 +71,27 @@
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration *</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Days *</label>
                   <Input 
-                    v-model="form.duration" 
-                    placeholder="E.g., 3 Days 2 Nights"
-                    :class="errors.duration ? 'border-red-500' : ''"
+                    v-model.number="form.durationDays" 
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    :class="errors.durationDays ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.duration" class="mt-1 text-sm text-red-600">{{ errors.duration }}</p>
+                  <p v-if="errors.durationDays" class="mt-1 text-sm text-red-600">{{ errors.durationDays }}</p>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Hours</label>
+                  <Input 
+                    v-model.number="form.durationHours" 
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    max="23"
+                  />
+                  <p class="mt-1 text-xs text-gray-500">Leave as 0 if no hours</p>
                 </div>
 
                 <div>
@@ -97,14 +111,16 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Price per Person (USD) *</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Price per Person (RWF) *</label>
                   <Input 
                     v-model.number="form.price" 
                     type="number"
                     placeholder="0"
+                    min="0"
                     :class="errors.price ? 'border-red-500' : ''"
                   />
                   <p v-if="errors.price" class="mt-1 text-sm text-red-600">{{ errors.price }}</p>
+                  <p class="mt-1 text-xs text-gray-500">Enter price in Rwandan Francs</p>
                 </div>
 
                 <div>
@@ -210,7 +226,8 @@ const form = ref({
   title: '',
   location: '',
   description: '',
-  duration: '',
+  durationDays: 0,
+  durationHours: 0,
   difficulty: '',
   price: null,
   groupSize: 8,
@@ -238,7 +255,9 @@ const validateForm = () => {
   if (!form.value.title) errors.value.title = 'Title is required'
   if (!form.value.location) errors.value.location = 'Location is required'
   if (!form.value.description) errors.value.description = 'Description is required'
-  if (!form.value.duration) errors.value.duration = 'Duration is required'
+  if (form.value.durationDays === null || form.value.durationDays < 0) errors.value.durationDays = 'Days is required (enter 0 if less than a day)'
+  if (form.value.durationHours === null || form.value.durationHours < 0 || form.value.durationHours > 23) errors.value.durationHours = 'Hours must be between 0 and 23'
+  if (form.value.durationDays === 0 && form.value.durationHours === 0) errors.value.durationDays = 'Duration must be at least 1 hour'
   if (!form.value.difficulty) errors.value.difficulty = 'Difficulty level is required'
   if (!form.value.price || form.value.price <= 0) errors.value.price = 'Valid price is required'
   if (!form.value.groupSize || form.value.groupSize <= 0) errors.value.groupSize = 'Group size is required'
@@ -270,14 +289,20 @@ const handleSubmit = async () => {
       throw new Error('Please upload at least one image')
     }
 
+    // Calculate duration in days (convert hours to fractional days)
+    const totalDays = form.value.durationDays + (form.value.durationHours / 24)
+    const durationString = form.value.durationDays > 0 
+      ? `${form.value.durationDays} ${form.value.durationDays === 1 ? 'day' : 'days'}${form.value.durationHours > 0 ? ` ${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}` : ''}`
+      : `${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}`
+
     const tourData = {
       name: form.value.title,
       title: form.value.title,
       destination: form.value.location,
       location: form.value.location,
       description: form.value.description,
-      duration_days: form.value.duration,
-      duration: form.value.duration,
+      duration_days: totalDays,
+      duration: durationString,
       difficulty: form.value.difficulty,
       price: Number(form.value.price),
       group_size: form.value.groupSize,
