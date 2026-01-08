@@ -56,9 +56,4 @@ async function handlePay() {
     alert(err?.message || t('payment.failed'))
   }
 }
-
-async function payMock() {
-  // Payment not available yet
-  alert(t('payment.comingSoonAlert'))
-}
 </script>
