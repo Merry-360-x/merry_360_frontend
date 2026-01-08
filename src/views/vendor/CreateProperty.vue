@@ -1,81 +1,55 @@
 <template>
   <MainLayout>
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-brand-500 via-brand-600 to-orange-600 py-12">
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-20 right-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-      </div>
-      
-      <div class="container mx-auto px-4 lg:px-8 max-w-4xl relative z-10">
-        <router-link to="/vendor" class="inline-flex items-center gap-2 mb-6 text-white hover:text-white/90 transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-          </svg>
-          {{ t('vendor.backToDashboard') }}
-        </router-link>
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-3 animate-fade-in-down">🏨 {{ t('vendor.createListing') }}</h1>
-        <p class="text-xl text-white/90 animate-fade-in-up">{{ t('vendor.createListingDesc') }}</p>
-      </div>
-    </section>
-
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+        <div class="mb-8">
+          <router-link to="/vendor" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            {{ t('vendor.backToDashboard') }}
+          </router-link>
+          <h1 class="text-3xl font-bold text-text-primary mb-2">{{ t('vendor.createListing') }}</h1>
+          <p class="text-text-secondary">{{ t('vendor.createListingDesc') }}</p>
+        </div>
+
         <!-- Success Message -->
-        <div v-if="showSuccess" class="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg animate-slide-up">
-          <div class="flex items-center gap-3 text-green-800">
-            <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <div v-if="showSuccess" class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+          <div class="flex items-center gap-2 text-green-800">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <div>
-              <span class="font-bold text-lg">{{ t('vendor.listingCreated') }}</span>
-              <p class="text-sm text-green-700 mt-1">Redirecting you to dashboard...</p>
-            </div>
+            <span class="font-medium">{{ t('vendor.listingCreated') }}</span>
           </div>
         </div>
 
-        <!-- Form Card -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden animate-fade-in">
+        <!-- Form -->
+        <Card padding="lg">
           <form @submit.prevent="handleSubmit">
-            <div class="p-8">
-              <!-- Basic Information -->
-              <div class="mb-10">
-                <div class="flex items-center gap-3 mb-6">
-                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <h2 class="text-2xl font-bold text-text-primary">{{ t('vendor.basicInfo') }}</h2>
-                </div>
+            <!-- Basic Information -->
+            <div class="mb-8">
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.basicInfo') }}</h2>
               
-              <div class="space-y-6">
+              <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-semibold text-text-primary mb-2">
-                    {{ t('vendor.propertyName') }} *
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
+                    {{ t('vendor.propertyName') }}
                   </label>
                   <Input 
                     v-model="form.name" 
                     :placeholder="t('vendor.propertyNamePlaceholder')"
-                    class="rounded-xl border-2"
                     :class="errors.name ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.name" class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                    {{ errors.name }}
-                  </p>
+                  <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-semibold text-text-primary mb-2">
-                    {{ t('vendor.propertyType') }} *
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
+                    {{ t('vendor.propertyType') }}
                   </label>
                   <select 
                     v-model="form.type"
-                    class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-800 text-text-primary transition-all"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary"
                     :class="errors.type ? 'border-red-500' : ''"
                   >
                     <option value="">{{ t('vendor.selectType') }}</option>
@@ -87,63 +61,42 @@
                     <option value="Guesthouse">{{ t('accommodation.guesthouse') }}</option>
                     <option value="Villa">{{ t('accommodation.villa') }}</option>
                   </select>
-                  <p v-if="errors.type" class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                    {{ errors.type }}
-                  </p>
+                  <p v-if="errors.type" class="mt-1 text-sm text-red-600">{{ errors.type }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-semibold text-text-primary mb-2">
-                    {{ t('accommodation.location') }} *
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
+                    {{ t('accommodation.location') }}
                   </label>
                   <Input 
                     v-model="form.location" 
                     :placeholder="t('vendor.locationPlaceholder')"
-                    class="rounded-xl border-2"
                     :class="errors.location ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.location" class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                    {{ errors.location }}
-                  </p>
+                  <p v-if="errors.location" class="mt-1 text-sm text-red-600">{{ errors.location }}</p>
                 </div>
 
+
+
                 <div>
-                  <label class="block text-sm font-semibold text-text-primary mb-2">
-                    {{ t('vendor.description') }} *
+                  <label class="block text-sm font-medium text-text-secondary mb-2">
+                    {{ t('vendor.description') }}
                   </label>
                   <textarea 
                     v-model="form.description"
                     rows="4"
-                    class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white dark:bg-gray-800 text-text-primary placeholder:text-text-muted transition-all"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-text-primary placeholder:text-text-muted"
                     :placeholder="t('vendor.descriptionPlaceholder')"
                     :class="errors.description ? 'border-red-500' : ''"
                   ></textarea>
-                  <p v-if="errors.description" class="mt-1.5 text-sm text-red-600 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                    {{ errors.description }}
-                  </p>
+                  <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Property Details -->
-            <div class="mb-10">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
-                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                  </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-text-primary">{{ t('vendor.propertyDetails') }}</h2>
-              </div>
+            <div class="mb-8">
+              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyDetails') }}</h2>
               
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -372,39 +325,20 @@
             </div>
 
             <!-- Submit Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 mt-10 pt-8 border-t-2 border-gray-100 dark:border-gray-700">
-              <button
-                type="submit"
-                :disabled="isSubmitting"
-                class="group flex-1 px-8 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 disabled:transform-none disabled:hover:shadow-xl"
-              >
-                <span v-if="isSubmitting" class="flex items-center justify-center gap-3">
-                  <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  {{ t('common.loading') }}
-                </span>
-                <span v-else class="flex items-center justify-center gap-3">
-                  <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                  {{ t('vendor.createListing') }}
-                  <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </span>
-              </button>
-              <button
-                type="button"
-                @click="$router.push('/vendor')"
-                class="px-8 py-4 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-              >
+            <div class="flex gap-4">
+              <Button type="submit" variant="primary" :disabled="isSubmitting">
+                <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {{ isSubmitting ? t('common.loading') : t('vendor.createListing') }}
+              </Button>
+              <Button type="button" variant="secondary" @click="$router.push('/vendor')">
                 {{ t('common.cancel') }}
-              </button>
+              </Button>
             </div>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   </MainLayout>
@@ -525,93 +459,3 @@ const handleSubmit = async () => {
   }
 }
 </script>
-
-<style scoped>
-/* Merry360 Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes blob {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(20px, -50px) scale(1.1);
-  }
-  50% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  75% {
-    transform: translate(50px, 50px) scale(1.05);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.animate-fade-in-down {
-  animation: fade-in-down 0.6s ease-out;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.5s ease-out;
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-</style>

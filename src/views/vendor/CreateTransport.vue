@@ -1,54 +1,34 @@
 <template>
   <MainLayout>
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-brand-500 via-brand-600 to-orange-600 py-12">
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-20 right-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-      </div>
-      
-      <div class="container mx-auto px-4 lg:px-8 max-w-4xl relative z-10">
-        <router-link :to="dashboardPath" class="inline-flex items-center gap-2 mb-6 text-white hover:text-white/90 transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-          </svg>
-          Back to Dashboard
-        </router-link>
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-3 animate-fade-in-down">🚗 Create Transport Service</h1>
-        <p class="text-xl text-white/90 animate-fade-in-up">Offer transportation services to travelers</p>
-      </div>
-    </section>
-
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="min-h-screen bg-gray-50 py-8">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
+        <div class="mb-8">
+          <router-link :to="dashboardPath" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          </router-link>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Transport Service</h1>
+          <p class="text-gray-600">Offer transportation services to travelers</p>
+        </div>
+
         <!-- Success Message -->
-        <div v-if="showSuccess" class="mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg animate-slide-up">
-          <div class="flex items-center gap-3 text-green-800">
-            <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <div v-if="showSuccess" class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+          <div class="flex items-center gap-2 text-green-800">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <div>
-              <span class="font-bold text-lg">Transport service created successfully!</span>
-              <p class="text-sm text-green-700 mt-1">Redirecting you to dashboard...</p>
-            </div>
+            <span class="font-medium">Transport service created successfully!</span>
           </div>
         </div>
 
-        <!-- Form Card -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden animate-fade-in">
+        <!-- Form -->
+        <Card padding="lg">
           <form @submit.prevent="handleSubmit">
-            <div class="p-8">
-              <!-- Basic Information -->
-              <div class="mb-10">
-                <div class="flex items-center gap-3 mb-6">
-                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Basic Information</h2>
-                </div>
+            <!-- Basic Information -->
+            <div class="mb-8">
+              <h2 class="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
               
               <div class="space-y-4">
                 <div>
@@ -213,39 +193,20 @@
             </div>
 
             <!-- Submit Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 mt-10 pt-8 border-t-2 border-gray-100 dark:border-gray-700">
-              <button
-                type="submit"
-                :disabled="isSubmitting || imagesUploading"
-                class="group flex-1 px-8 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 disabled:transform-none disabled:hover:shadow-xl"
-              >
-                <span v-if="isSubmitting || imagesUploading" class="flex items-center justify-center gap-3">
-                  <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  {{ isSubmitting ? 'Creating...' : 'Uploading...' }}
-                </span>
-                <span v-else class="flex items-center justify-center gap-3">
-                  <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                  </svg>
-                  Create Service
-                  <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
-                </span>
-              </button>
-              <button
-                type="button"
-                @click="$router.push(dashboardPath)"
-                class="px-8 py-4 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-              >
+            <div class="flex gap-4">
+              <Button type="submit" variant="primary" :disabled="isSubmitting || imagesUploading">
+                <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {{ isSubmitting ? 'Creating...' : (imagesUploading ? 'Uploading...' : 'Create Service') }}
+              </Button>
+              <Button type="button" variant="secondary" @click="$router.push(dashboardPath)">
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   </MainLayout>
@@ -368,93 +329,3 @@ const handleSubmit = async () => {
   }
 }
 </script>
-
-<style scoped>
-/* Merry360 Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes blob {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(20px, -50px) scale(1.1);
-  }
-  50% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  75% {
-    transform: translate(50px, 50px) scale(1.05);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.animate-fade-in-down {
-  animation: fade-in-down 0.6s ease-out;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.5s ease-out;
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-</style>
