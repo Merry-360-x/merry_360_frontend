@@ -669,35 +669,38 @@ onMounted(async () => {
 
   try {
     const response = await api.accommodations.getById(route.params.id)
-    const allImages = response.data.images || (response.data.image ? [response.data.image] : [])
+    
+    // Collect all images from various possible sources
+    const imagesArray = Array.isArray(response.data.images) ? response.data.images : []
+    const mainImageFromData = response.data.main_image || response.data.image || null
+    
+    // Combine main_image with images array, removing duplicates
+    const allImagesSet = new Set()
+    if (mainImageFromData) allImagesSet.add(mainImageFromData)
+    imagesArray.forEach(img => {
+      if (img && typeof img === 'string' && img.trim()) {
+        allImagesSet.add(img.trim())
+      }
+    })
+    
+    // Convert Set to Array
+    const allImages = Array.from(allImagesSet).filter(Boolean)
     
     accommodation.value = {
       ...response.data,
       price: Number(response.data.price) || 0, // Ensure price is a number
-      mainImage: allImages[0] || response.data.main_image || null,
+      mainImage: allImages[0] || null,
       gallery: allImages.length > 1 ? allImages.slice(1) : [], // Show all remaining images
       eco: response.data.ecoFriendly,
       host_id: response.data.host_id || null // Ensure host_id is preserved
     }
-    
-    console.log('✅ Accommodation images loaded:', {
-      mainImage: accommodation.value.mainImage,
-      galleryCount: accommodation.value.gallery.length,
-      totalImages: allImages.length
-    })
-
-    console.log('✅ Accommodation loaded:', {
-      id: accommodation.value.id,
-      name: accommodation.value.name,
-      price: accommodation.value.price
-    })
 
     resetImageLoadingState()
     
     // Load transport options from database
     await loadTransportOptions()
   } catch (error) {
-    console.error('Failed to load accommodation:', error)
+    // Silently handle loading errors
   }
 })
 

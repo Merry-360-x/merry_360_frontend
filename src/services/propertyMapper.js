@@ -39,8 +39,28 @@ export function mapPropertyRowToAccommodation(row) {
   const location = row.city || row.location || row.address || ''
   const price = row.price_per_night ?? row.price ?? row.pricePerNight ?? 0
   const mainImage = row.main_image || row.image || row.mainImage || null
-  const images = Array.isArray(row.images) ? row.images : (Array.isArray(row.additional_images) ? row.additional_images : [])
-  const fallbackImage = mainImage || images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600'
+  
+  // Handle images array - could be JSONB array or string array
+  let images = []
+  if (Array.isArray(row.images)) {
+    images = row.images.filter(img => img && typeof img === 'string' && img.trim())
+  } else if (Array.isArray(row.additional_images)) {
+    images = row.additional_images.filter(img => img && typeof img === 'string' && img.trim())
+  }
+  
+  // Combine main_image with images array, removing duplicates
+  const allImagesSet = new Set()
+  if (mainImage && typeof mainImage === 'string' && mainImage.trim()) {
+    allImagesSet.add(mainImage.trim())
+  }
+  images.forEach(img => {
+    if (img && typeof img === 'string' && img.trim()) {
+      allImagesSet.add(img.trim())
+    }
+  })
+  
+  const allImages = Array.from(allImagesSet).filter(Boolean)
+  const fallbackImage = allImages[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600'
 
   const beds = row.bedrooms ?? row.beds ?? row.bed_count ?? 1
   const baths = row.bathrooms ?? row.baths ?? row.bath_count ?? 1
@@ -59,7 +79,8 @@ export function mapPropertyRowToAccommodation(row) {
     description: row.description || '',
     amenities: row.amenities || [],
     image: fallbackImage,
-    images: images?.length ? images : (mainImage ? [mainImage] : [fallbackImage]),
+    images: allImages.length > 0 ? allImages : [fallbackImage], // Always return array with at least fallback
+    main_image: allImages[0] || fallbackImage, // Ensure main_image is set
     beds,
     baths,
     area,
