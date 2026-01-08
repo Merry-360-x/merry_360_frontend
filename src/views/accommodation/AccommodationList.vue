@@ -517,20 +517,22 @@ const loadAccommodations = async (params = {}) => {
     
     const list = result.data || []
     
-    if (list.length) {
-      applyLoadedAccommodations(list, term)
-      
-      // Prefetch next batch in background
-      if (list.length >= 20) {
-        setTimeout(() => fastFetch.prefetchNextPage(params), 500)
-      }
+    // Always apply results (even if empty) and stop loading immediately
+    applyLoadedAccommodations(list, term)
+    
+    // Prefetch next batch in background only if we have results
+    if (list.length >= 20) {
+      setTimeout(() => fastFetch.prefetchNextPage(params), 500)
     }
     
+    // Stop loading immediately - even if no results
     loading.value = false
   } catch (error) {
     console.error('Failed to load accommodations:', error)
     toastError(error)
+    // Ensure loading is stopped even on error
     loading.value = false
+    accommodations.value = []
   }
 }
 
