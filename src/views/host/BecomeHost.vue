@@ -1,34 +1,30 @@
 <template>
   <MainLayout>
-    <!-- Merry360 Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-brand-500 via-brand-600 to-orange-600 dark:from-brand-700 dark:via-brand-800 dark:to-orange-800 py-20 md:py-28">
-      <!-- Animated Background Pattern -->
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-20 overflow-hidden">
       <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-20 right-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        <div class="absolute top-0 left-0 w-96 h-96 bg-brand-500 rounded-full filter blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
       </div>
-      
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
-          <div class="inline-block mb-6 px-6 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold animate-fade-in-down">
-            🌟 Join Merry360 Host Community
+          <div class="inline-block mb-6 px-6 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg animate-bounce">
+            <span class="text-brand-600 dark:text-brand-400 font-bold text-sm">🏠 Become a Host Today</span>
           </div>
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-white animate-fade-in-up">
-            Start Earning with<br/>
-            <span class="text-yellow-300">Merry360</span>
+          <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
+            Share Your Space, <br/>Earn <span class="text-brand-600">Extra Income</span>
           </h1>
-          <p class="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
-            List your property, tour, or transport service and reach thousands of travelers across Rwanda
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-10">
+            Join thousands of hosts in Rwanda earning money by sharing their properties, tours, and transport services
           </p>
           <button 
             @click="scrollToForm"
-            class="group px-10 py-4 bg-white hover:bg-yellow-50 text-brand-600 font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105 animate-fade-in-up animation-delay-400"
+            class="group px-10 py-5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
           >
             <span class="flex items-center gap-3">
-              Begin Your Journey
-              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+              Start Application
+              <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
               </svg>
             </span>
           </button>
@@ -36,78 +32,127 @@
       </div>
     </section>
 
-    <!-- Application Form Section -->
-    <section ref="formSection" class="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <!-- Application Form -->
+    <section ref="formSection" class="py-16 bg-white dark:bg-gray-900">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-          
-          <!-- Progress Steps -->
+        <div class="max-w-5xl mx-auto">
+          <!-- Progress Bar -->
           <div class="mb-12">
-            <div class="flex items-center justify-between relative">
-              <!-- Progress Bar Background -->
-              <div class="absolute top-6 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
-              <!-- Active Progress Bar -->
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Application Progress</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
               <div 
-                class="absolute top-6 left-0 h-1 bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-500 ease-out"
-                :style="{ width: ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100 + '%' }"
+                class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-500 ease-out"
+                :style="{ width: `${progress}%` }"
               ></div>
-              
-              <!-- Steps -->
-              <div 
-                v-for="step in TOTAL_STEPS" 
-                :key="step"
-                class="relative flex flex-col items-center z-10"
-                :class="step === TOTAL_STEPS ? 'ml-auto' : ''"
-              >
+            </div>
+            <div class="text-center mt-2">
+              <span class="text-sm font-semibold text-brand-600 dark:text-brand-400">{{ progress }}% Complete</span>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between max-w-2xl mx-auto">
+              <!-- Step 1 -->
+              <div class="flex flex-col items-center flex-1">
                 <div 
-                  class="w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-lg transition-all duration-300 transform"
-                  :class="[
-                    currentStep >= step 
-                      ? 'bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-lg scale-110' 
-                      : 'bg-white dark:bg-gray-800 text-gray-400 shadow',
-                    currentStep === step ? 'ring-4 ring-brand-200 dark:ring-brand-900 animate-pulse-slow' : ''
-                  ]"
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 1 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
-                  <svg v-if="currentStep > step" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                  <svg v-if="currentStep > 1" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span v-else class="text-xl">{{ step }}</span>
+                  <span v-else>1</span>
                 </div>
-                <span 
-                  class="mt-3 text-xs md:text-sm font-medium text-center max-w-[80px] transition-colors duration-300"
-                  :class="currentStep >= step ? 'text-brand-600 dark:text-brand-400 font-semibold' : 'text-gray-500'"
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.personalInfo') }}</span>
+              </div>
+
+              <!-- Connector Line 1 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 2 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 2 -->
+              <div class="flex flex-col items-center flex-1">
+                <div 
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 2 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
                 >
-                  {{ getStepLabel(step) }}
-                </span>
+                  <svg v-if="currentStep > 2" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>2</span>
+                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.verification') }}</span>
+              </div>
+
+              <!-- Connector Line 2 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 3 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 3 -->
+              <div class="flex flex-col items-center flex-1">
+                <div 
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 3 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                >
+                  <svg v-if="currentStep > 3" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>3</span>
+                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ listingStepLabels.step3 }}</span>
+              </div>
+
+              <!-- Connector Line 3 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 4 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 4 -->
+              <div class="flex flex-col items-center flex-1">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 4 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                >
+                  <svg v-if="currentStep > 4" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>4</span>
+                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ listingStepLabels.step4 }}</span>
+              </div>
+
+              <!-- Connector Line 4 -->
+              <div class="flex-1 h-1 mx-2" :class="currentStep >= 5 ? 'bg-brand-500' : 'bg-gray-200 dark:bg-gray-700'"></div>
+
+              <!-- Step 5 -->
+              <div class="flex flex-col items-center flex-1">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all duration-300"
+                  :class="currentStep >= 5 ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-primary'"
+                >
+                  <svg v-if="currentStep > 5" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span v-else>5</span>
+                </div>
+                <span class="mt-2 text-xs md:text-sm font-medium text-text-secondary">{{ t('hostApplication.steps.submit') }}</span>
               </div>
             </div>
           </div>
 
-          <!-- Form Card with Merry360 Design -->
-          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden animate-slide-up">
-            <!-- Step Header -->
-            <div class="bg-gradient-to-r from-brand-500 to-brand-600 px-8 py-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-white/80 text-sm font-medium mb-1">
-                    Step {{ currentStep }} of {{ TOTAL_STEPS }}
+          <!-- Form Card -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors duration-200">
+            <form @submit.prevent="handleSubmit" novalidate>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left: Guidance Panel -->
+                <div class="md:pr-8 md:border-r border-gray-200 dark:border-gray-700">
+                  <p class="text-sm font-semibold text-text-secondary">
+                    {{ t('hostApplication.layout.stepCount', { current: currentStep, total: TOTAL_STEPS }) }}
                   </p>
-                  <h3 class="text-2xl md:text-3xl font-bold text-white">
+                  <h3 class="text-2xl font-bold text-text-primary mt-2">
                     {{ stepMeta.title }}
                   </h3>
-                </div>
-                <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <span class="text-3xl">{{ getStepIcon(currentStep) }}</span>
-                </div>
-              </div>
-            </div>
-
-            <form @submit.prevent="handleSubmit">
-              <div class="p-8">
-                <!-- Step Description -->
-                <p class="text-text-secondary mb-8">
-                  {{ stepMeta.description }}
-                </p>
+                  <p class="text-base text-text-secondary mt-3">
+                    {{ stepMeta.description }}
+                  </p>
 
                   <div v-if="stepMeta.checklist?.length" class="mt-8">
                     <p class="text-sm font-semibold text-text-primary">{{ t('hostApplication.layout.checklistTitle') }}</p>
@@ -127,22 +172,22 @@
                     <div class="space-y-4">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.firstName') }} *</label>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.firstName') }} *</label>
                           <input 
                             v-model="formData.firstName"
                             type="text" 
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="t('hostApplication.placeholder.firstName')"
                           />
                         </div>
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.lastName') }} *</label>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.lastName') }} *</label>
                           <input 
                             v-model="formData.lastName"
                             type="text" 
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="t('hostApplication.placeholder.lastName')"
                           />
                         </div>
@@ -172,23 +217,23 @@
                       </div>
 
                       <div>
-                        <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.address') }} *</label>
+                        <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.address') }} *</label>
                         <input 
                           v-model="formData.address"
                           type="text" 
                           required
-                          class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                           :placeholder="t('hostApplication.placeholder.address')"
                         />
                       </div>
 
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.nationality') }} *</label>
                           <select
                             v-model="formData.nationality"
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                           >
                             <option value="">{{ t('hostApplication.options.selectNationality') }}</option>
                             <option v-for="n in nationalityOptions" :key="n.value" :value="n.value">{{ n.label }}</option>
@@ -196,11 +241,11 @@
                         </div>
 
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.applicantType') }} *</label>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.applicantType') }} *</label>
                           <select
                             v-model="formData.applicantType"
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                           >
                             <option value="">{{ t('hostApplication.options.selectApplicantType') }}</option>
                             <option value="individual">{{ t('hostApplication.options.applicantTypeIndividual') }}</option>
@@ -209,11 +254,11 @@
                         </div>
                       </div>
                       <div>
-                        <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
+                        <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.hostingType') }} *</label>
                         <select 
                           v-model="formData.hostingType"
                           required
-                          class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         >
                           <option value="">{{ t('hostApplication.options.selectHostingType') }}</option>
                           <option value="accommodation">{{ t('hostApplication.options.hostingAccommodation') }}</option>
@@ -230,23 +275,23 @@
                     <div class="space-y-4">
                       <div v-if="formData.applicantType === 'business'" class="space-y-4">
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.businessName') }} *</label>
                           <input 
                             v-model="formData.businessName"
                             type="text" 
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="t('hostApplication.placeholder.businessName')"
                           />
                         </div>
 
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.taxId') }} *</label>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.taxId') }} *</label>
                           <input 
                             v-model="formData.taxId"
                             type="text" 
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="t('hostApplication.placeholder.taxId')"
                           />
                         </div>
@@ -263,12 +308,12 @@
 
                       <div class="space-y-4">
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ t('hostApplication.labels.idNumber') }} *</label>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ t('hostApplication.labels.idNumber') }} *</label>
                           <input
                             v-model="formData.idNumber"
                             type="text"
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="t('hostApplication.placeholder.idNumber')"
                           />
                         </div>
@@ -313,34 +358,34 @@
 
                           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="md:col-span-2">
-                              <label class="block text-sm font-semibold text-text-primary mb-2">Location *</label>
+                              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Location *</label>
                               <input
                                 v-model="formData.propertyLocation"
                                 type="text"
                                 required
-                                class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 placeholder="e.g., Kigali, Kicukiro"
                               />
                             </div>
 
                             <div>
-                              <label class="block text-sm font-semibold text-text-primary mb-2">Nightly Price *</label>
+                              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nightly Price *</label>
                               <input
                                 v-model.number="formData.price"
                                 type="number"
                                 min="1"
                                 required
-                                class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 placeholder="e.g., 50"
                               />
                             </div>
 
                             <div>
-                              <label class="block text-sm font-semibold text-text-primary mb-2">Street Address (optional)</label>
+                              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Street Address (optional)</label>
                               <input
                                 v-model="formData.propertyAddress"
                                 type="text"
-                                class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                                 placeholder="e.g., KK 309 Street"
                               />
                             </div>
@@ -356,19 +401,19 @@
                             v-model="formData.propertyLocation"
                             type="text" 
                             required
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="listingLabels.locationPlaceholder"
                           />
                         </div>
 
                         <div>
-                          <label class="block text-sm font-semibold text-text-primary mb-2">{{ listingLabels.capacityLabel }} *</label>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.capacityLabel }} *</label>
                           <input 
                             v-model="formData.capacity"
                             type="number" 
                             required
                             min="1"
-                            class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                             :placeholder="listingLabels.capacityPlaceholder"
                           />
                         </div>
@@ -393,25 +438,25 @@
 
                       <!-- Description -->
                       <div>
-                        <label class="block text-sm font-semibold text-text-primary mb-2">{{ listingLabels.descriptionLabel }} *</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.descriptionLabel }} *</label>
                         <textarea 
                           v-model="formData.description"
                           required
                           rows="5"
-                          class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                           :placeholder="listingLabels.descriptionPlaceholder"
                         ></textarea>
                       </div>
 
                       <!-- Fallback file upload for non-accommodation -->
                       <div v-if="formData.hostingType !== 'accommodation'">
-                        <label class="block text-sm font-semibold text-text-primary mb-2">{{ listingLabels.uploadLabel }}</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{{ listingLabels.uploadLabel }}</label>
                         <input 
                           type="file"
                           @change="handleFileUpload"
                           multiple
                           accept="image/*,.pdf"
-                          class="w-full px-4 py-3.5 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
+                          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                         />
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ listingLabels.uploadHint }}</p>
                       </div>
@@ -509,14 +554,9 @@
                     v-if="currentStep > 1"
                     type="button"
                     @click="previousStep"
-                    class="px-6 py-3.5 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                    class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition-all"
                   >
-                    <span class="flex items-center gap-2">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                      </svg>
-                      {{ t('hostApplication.previous') }}
-                    </span>
+                    {{ t('hostApplication.previous') }}
                   </button>
                   <div v-else></div>
 
@@ -525,11 +565,11 @@
                     type="button"
                     @click="nextStep"
                     :disabled="currentStep === 4 && photosUploading"
-                    class="group px-8 py-3.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none"
+                    class="px-8 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
                     <span class="flex items-center gap-2">
                       {{ t('hostApplication.nextStep') }}
-                      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                       </svg>
                     </span>
@@ -1175,34 +1215,13 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
-
-// Helper function for step labels
-const getStepLabel = (step) => {
-  const labels = {
-    1: t('hostApplication.steps.personalInfo'),
-    2: t('hostApplication.steps.verification'),
-    3: listingStepLabels.value.step3,
-    4: listingStepLabels.value.step4,
-    5: t('hostApplication.steps.submit')
-  }
-  return labels[step] || `Step ${step}`
-}
-
-// Helper function for step icons
-const getStepIcon = (step) => {
-  const icons = {
-    1: '👤',
-    2: '✓',
-    3: '🏠',
-    4: '📸',
-    5: '🚀'
-  }
-  return icons[step] || '📝'
-}
 </script>
 
 <style scoped>
-/* Merry360 Animations */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1213,99 +1232,4 @@ const getStepIcon = (step) => {
     transform: translateY(0);
   }
 }
-
-@keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-}
-
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out;
-}
-
-.animate-fade-in-down {
-  animation: fade-in-down 0.6s ease-out;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.5s ease-out;
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animation-delay-200 {
-  animation-delay: 0.2s;
-}
-
-.animation-delay-400 {
-  animation-delay: 0.4s;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
+</style>
