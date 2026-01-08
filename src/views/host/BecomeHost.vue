@@ -445,17 +445,82 @@
 
                   <!-- Step 5: Review & Submit -->
                   <div v-show="currentStep === 5" class="animate-fade-in">
-                    <div class="space-y-4">
-                      <div>
+                    <div class="space-y-6">
+                      <!-- Terms and Conditions Text -->
+                      <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-xl font-bold text-text-primary mb-4">Terms and Conditions</h3>
+                        <div class="space-y-4 text-sm text-text-secondary">
+                          <div>
+                            <h4 class="font-semibold text-text-primary mb-2">1. Host Responsibilities</h4>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                              <li>Provide accurate and truthful information about your property or service</li>
+                              <li>Maintain the quality and standards described in your listing</li>
+                              <li>Respond to guest inquiries within 24 hours</li>
+                              <li>Honor confirmed bookings and availability calendars</li>
+                              <li>Comply with local laws, regulations, and tax requirements</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 class="font-semibold text-text-primary mb-2">2. Listing Standards</h4>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                              <li>Photos must accurately represent your property/service</li>
+                              <li>Amenities listed must be available and functional</li>
+                              <li>Pricing must be transparent with no hidden fees</li>
+                              <li>Property must meet safety and cleanliness standards</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 class="font-semibold text-text-primary mb-2">3. Cancellation Policy</h4>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                              <li>You must honor your chosen cancellation policy</li>
+                              <li>Last-minute cancellations may result in penalties</li>
+                              <li>Refunds are processed according to the cancellation policy</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 class="font-semibold text-text-primary mb-2">4. Payments and Fees</h4>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                              <li>Merry360 charges a service fee on each booking</li>
+                              <li>Payments are processed securely through our platform</li>
+                              <li>You are responsible for applicable taxes</li>
+                              <li>Payouts are made according to the payment schedule</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 class="font-semibold text-text-primary mb-2">5. Privacy and Data</h4>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                              <li>Your personal information is protected under our Privacy Policy</li>
+                              <li>Guest information must be kept confidential</li>
+                              <li>We may use your listing for marketing purposes</li>
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 class="font-semibold text-text-primary mb-2">6. Account Termination</h4>
+                            <ul class="list-disc list-inside space-y-1 ml-2">
+                              <li>We reserve the right to suspend or terminate accounts for violations</li>
+                              <li>Fraudulent activity will result in immediate termination</li>
+                              <li>You may close your account at any time</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Agreement Checkbox -->
+                      <div class="bg-white dark:bg-gray-900 rounded-lg p-4 border-2 border-brand-500">
                         <label class="flex items-start gap-3 cursor-pointer">
                           <input 
                             v-model="formData.agreeToTerms"
                             type="checkbox" 
                             required
-                            class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500"
+                            class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500 focus:ring-2"
                           />
-                          <span class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ t('hostApplication.termsAgreement') }} *
+                          <span class="text-sm font-medium text-text-primary">
+                            I have read and agree to Merry360's Terms and Conditions, Privacy Policy, and Host Guidelines. I understand that my application will be reviewed before approval. *
                           </span>
                         </label>
                       </div>
@@ -480,17 +545,37 @@
                     type="button"
                     @click="nextStep"
                     :disabled="currentStep === 4 && photosUploading"
-                    class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
+                    class="px-8 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
-                    {{ t('hostApplication.nextStep') }}
+                    <span class="flex items-center gap-2">
+                      {{ t('hostApplication.nextStep') }}
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                      </svg>
+                    </span>
                   </button>
                   <button 
                     v-else
                     type="submit"
-                    :disabled="isSubmitting || photosUploading"
-                    class="px-6 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-all shadow-lg"
+                    :disabled="isSubmitting || photosUploading || !formData.agreeToTerms"
+                    class="group relative px-10 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 disabled:transform-none disabled:hover:shadow-xl"
                   >
-                    {{ isSubmitting ? t('hostApplication.submitting') : t('hostApplication.submitApplication') }}
+                    <span v-if="isSubmitting" class="flex items-center gap-3">
+                      <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ t('hostApplication.submitting') }}
+                    </span>
+                    <span v-else class="flex items-center gap-3">
+                      <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      {{ t('hostApplication.submitApplication') }}
+                      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </span>
                   </button>
                 </div>
               </div>
