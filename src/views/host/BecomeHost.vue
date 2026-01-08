@@ -252,7 +252,7 @@
 
           <!-- Form Card -->
           <div v-if="currentStep > 0" class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden transition-colors duration-200">
-            <form @submit.prevent="handleSubmit" novalidate>
+            <form @submit.prevent="handleSubmit" @click.stop novalidate>
               <div class="grid grid-cols-1 lg:grid-cols-3 gap-0">
                 <!-- Left: Guidance Panel -->
                 <div class="lg:col-span-1 bg-gradient-to-br from-brand-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 p-8 lg:p-10">

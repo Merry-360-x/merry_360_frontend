@@ -11,7 +11,7 @@
           type="button"
           v-for="amenity in guestFavorites"
           :key="amenity.id"
-          @click="toggleAmenity(amenity.id)"
+          @click.stop.prevent="toggleAmenity(amenity.id, $event)"
           :class="[
             'flex flex-col items-start p-4 border-2 rounded-xl transition-all hover:border-gray-400',
             selected.includes(amenity.id)
@@ -33,7 +33,7 @@
           type="button"
           v-for="amenity in standoutAmenities"
           :key="amenity.id"
-          @click="toggleAmenity(amenity.id)"
+          @click.stop.prevent="toggleAmenity(amenity.id, $event)"
           :class="[
             'flex flex-col items-start p-4 border-2 rounded-xl transition-all hover:border-gray-400',
             selected.includes(amenity.id)
@@ -157,7 +157,13 @@ const standoutAmenities = [
   { id: 'fire_pit', label: 'Fire pit', icon: FirePitIcon }
 ]
 
-const toggleAmenity = (id) => {
+const toggleAmenity = (id, event) => {
+  // Prevent any form submission or navigation
+  if (event) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+  
   const index = selected.value.indexOf(id)
   if (index > -1) {
     selected.value.splice(index, 1)
