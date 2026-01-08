@@ -699,8 +699,6 @@
                   </div>
                 </div>
 
-                </div>
-
                 <!-- Navigation Buttons -->
                 <div class="lg:col-span-3 flex items-center justify-between px-8 lg:px-12 py-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
                   <button 
