@@ -943,7 +943,7 @@ onMounted(async () => {
       }
     }
   } catch (error) {
-    console.log('User not authenticated, allowing application as new user')
+    // User not authenticated, allowing application as new user
     isAuthenticated.value = false
   }
 })
@@ -1317,22 +1317,12 @@ const uploadHostDocument = async (userId, kind, file) => {
     await uploadFile(bucket, path, file)
     return `${bucket}:${path}`
   } catch (err) {
-    console.error('Supabase storage upload failed for host document:', {
-      bucket,
-      path,
-      message: err?.message,
-      status: err?.status,
-      name: err?.name
-    })
-
+    // Supabase storage upload failed, trying Cloudinary fallback
     try {
       const result = await uploadDocumentToCloudinary(file, { folder: 'merry360x/host-documents' })
       return result?.secure_url || result?.url || null
     } catch (cloudErr) {
-      console.error('Cloudinary fallback upload failed for host document:', {
-        message: cloudErr?.message,
-        name: cloudErr?.name
-      })
+      // Cloudinary fallback upload also failed
       throw err
     }
   }

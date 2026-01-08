@@ -403,7 +403,6 @@ const onSearchEnter = () => {
 
 const applySearch = () => {
   // Trigger reactive update by accessing computed property
-  console.log('Search applied:', filteredTours.value.length, 'tours found')
 }
 
 const isInWatchlist = (tour) => {
