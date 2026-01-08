@@ -1595,12 +1595,10 @@ const handleSubmit = async (event) => {
         .single()
       
       if (verifyError || !verifyData) {
-        console.error('❌ Could not verify profile was saved:', verifyError)
         throw new Error('Failed to save application. Please try again.')
       }
       
       if (verifyData.host_application_status !== 'pending') {
-        console.warn('⚠️ Profile exists but status is not pending:', verifyData.host_application_status)
         // Try to update it again
         const { error: updateError } = await supabase
           .from('profiles')
@@ -1611,13 +1609,10 @@ const handleSubmit = async (event) => {
           .eq('id', userId)
         
         if (updateError) {
-          console.error('❌ Failed to update profile status:', updateError)
           throw new Error('Failed to update application status. Please contact support.')
         }
       }
     }
-    
-    console.log('✅ Host application saved successfully!', data)
     
     // Complete progress bar to 100%
     clearInterval(progressInterval)
@@ -1625,12 +1620,9 @@ const handleSubmit = async (event) => {
     
     // Update user store if new account was created
     if (!currentUser) {
-      console.log('🔄 Initializing user store for new user...')
       try {
         await userStore.initAuth()
-        console.log('✅ User store initialized')
       } catch (storeError) {
-        console.warn('⚠️ User store init warning:', storeError)
         // Continue anyway - user is created
       }
     }
@@ -1639,7 +1631,6 @@ const handleSubmit = async (event) => {
     hasPendingApplication.value = true
     applicationStatus.value = 'pending'
     
-    console.log('🎉 Application submitted successfully!')
     showToastSuccess('Application submitted successfully! Your application is now under review.')
     
     // Small delay to show success message and progress completion
