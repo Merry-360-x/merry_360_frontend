@@ -11,11 +11,14 @@ import ToastNotification from './components/common/ToastNotification.vue'
 import ConfirmDialog from './components/common/ConfirmDialog.vue'
 import fastFetch from './services/fastFetch'
 import { usePageVisibility } from './composables/usePageVisibility'
+import { useButtonClickability } from './composables/useButtonClickability'
 
 const userStore = useUserStore()
 
 // Handle page visibility changes to fix button clickability issues
 usePageVisibility()
+// Ensure buttons are always clickable
+useButtonClickability()
 
 // Listen for page visibility events to restore UI state
 let handlePageVisible = null

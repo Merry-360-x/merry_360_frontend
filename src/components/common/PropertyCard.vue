@@ -20,7 +20,8 @@
           class="min-w-full h-full flex-shrink-0"
         >
           <img 
-            loading="lazy" 
+            :loading="(index === 0 && priority) ? 'eager' : 'lazy'"
+            :fetchpriority="(index === 0 && priority) ? 'high' : 'auto'"
             :src="optimizeImage(image)" 
             :alt="`${property.title} - Image ${index + 1}`"
             @error="handleImageError"
@@ -173,6 +174,10 @@ const props = defineProps({
   property: {
     type: Object,
     required: true
+  },
+  priority: {
+    type: Boolean,
+    default: false
   }
 })
 

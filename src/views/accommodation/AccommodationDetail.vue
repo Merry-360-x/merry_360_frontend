@@ -28,7 +28,8 @@
                 </div>
               </div>
               <img 
-                loading="lazy" 
+                loading="eager"
+                fetchpriority="high"
                 decoding="async"
                 :src="accommodation.mainImage" 
                 :alt="accommodation.name" 

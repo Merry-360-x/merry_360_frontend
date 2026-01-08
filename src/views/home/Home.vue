@@ -293,7 +293,7 @@
             <PropertyCardSkeleton v-for="n in 10" :key="n" />
           </div>
           <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            <PropertyCard v-for="property in latestProperties" :key="property.id" :property="property" />
+            <PropertyCard v-for="(property, index) in latestProperties" :key="property.id" :property="property" :priority="index < 4" />
           </div>
         </div>
       </div>

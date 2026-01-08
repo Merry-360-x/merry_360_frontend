@@ -172,9 +172,10 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
           <PropertyCard
-            v-for="property in latestProperties"
+            v-for="(property, index) in latestProperties"
             :key="property.id"
             :property="property"
+            :priority="index < 4"
           />
         </div>
       </div>

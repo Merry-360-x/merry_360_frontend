@@ -534,6 +534,11 @@ export const supabaseApiAdapter = {
       console.log('✅ [Transport Create] User authenticated:', user.email)
 
       // Map form data to database columns (only include valid columns for vehicles table)
+      const imageArray = Array.isArray(transportData.images) 
+        ? transportData.images.filter(Boolean)
+        : (transportData.image ? [transportData.image] : [])
+      const mainImg = transportData.main_image || transportData.image || (imageArray.length > 0 ? imageArray[0] : null)
+      
       const insertData = {
         name: transportData.name || '',
         type: transportData.vehicle_type || transportData.type || null,
@@ -542,14 +547,19 @@ export const supabaseApiAdapter = {
         price_per_day: Number.isFinite(transportData.price) ? Number(transportData.price) : null,
         license_plate: transportData.license_plate || null,
         driver_included: transportData.professional_driver || transportData.driver_included || false,
-        main_image: transportData.main_image || transportData.image || null,
-        images: Array.isArray(transportData.images) ? transportData.images : (transportData.image ? [transportData.image] : []),
+        main_image: mainImg,
+        images: imageArray.length > 0 ? imageArray : null,
         available: transportData.available !== undefined ? transportData.available : true
       }
       
-      // Remove null/undefined/empty values to avoid schema errors
+      // Remove null/undefined/empty values to avoid schema errors, but keep images as JSONB array
       Object.keys(insertData).forEach(key => {
-        if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
+        if (key === 'images') {
+          // Keep images field - set to empty array if null (JSONB accepts empty array)
+          if (insertData[key] === null || (Array.isArray(insertData[key]) && insertData[key].length === 0)) {
+            insertData[key] = []
+          }
+        } else if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
           delete insertData[key]
         }
       })

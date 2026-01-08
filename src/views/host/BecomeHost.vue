@@ -8,17 +8,16 @@
       </div>
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-5xl mx-auto">
-          <div class="text-center mb-12">
-            <div class="inline-flex items-center gap-2 mb-6 px-5 py-2.5 bg-white dark:bg-gray-800 rounded-full shadow-lg">
-              <span class="text-2xl">🏠</span>
-              <span class="text-brand-600 dark:text-brand-400 font-bold text-sm">Become a Host</span>
-          </div>
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">
-              Turn your space into<br class="hidden md:block"/>an <span class="text-brand-600">income stream</span>
-          </h1>
-            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg">
+              <span class="text-brand-600 dark:text-brand-400 font-semibold text-sm">Become a Host</span>
+            </div>
+            <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white leading-tight">
+              Turn your space into an <span class="text-brand-600">income stream</span>
+            </h1>
+            <p class="text-sm text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Join Rwanda's premier travel platform. List your accommodations, tours, or transport services and start earning today.
-          </p>
+            </p>
           </div>
           
           <!-- CTA Button -->
@@ -44,11 +43,11 @@
           
           <!-- Step 0: Choose Account Type (Individual vs Business) -->
           <div v-if="currentStep === 0" class="animate-fade-in">
-            <div class="text-center mb-12">
-              <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <div class="text-center mb-8">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 Let's get started
               </h2>
-              <p class="text-lg text-gray-600 dark:text-gray-300">
+              <p class="text-sm text-gray-600 dark:text-gray-300">
                 First, tell us about yourself
               </p>
             </div>
@@ -73,32 +72,21 @@
                 </div>
                 
                 <div class="flex flex-col items-center text-center">
-                  <div class="w-20 h-20 bg-gradient-to-br from-brand-100 to-brand-200 dark:from-brand-900 dark:to-brand-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <svg class="w-10 h-10 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                  </div>
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Individual</h3>
-                  <p class="text-gray-600 dark:text-gray-300 mb-6">
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Individual</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     I'm hosting as an individual owner
                   </p>
-                  <ul class="text-left space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                    <li class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                  <ul class="text-left space-y-1.5 text-xs text-gray-600 dark:text-gray-400">
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-green-500 mt-0.5">•</span>
                       <span>Simple application process</span>
                     </li>
-                    <li class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-green-500 mt-0.5">•</span>
                       <span>Personal ID verification</span>
                     </li>
-                    <li class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-green-500 mt-0.5">•</span>
                       <span>Perfect for homeowners</span>
                     </li>
                   </ul>
@@ -124,32 +112,21 @@
                 </div>
                 
                 <div class="flex flex-col items-center text-center">
-                  <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <svg class="w-10 h-10 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                  </div>
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Business</h3>
-                  <p class="text-gray-600 dark:text-gray-300 mb-6">
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Business</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
                     I'm hosting as a registered business
                   </p>
-                  <ul class="text-left space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                    <li class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                  <ul class="text-left space-y-1.5 text-xs text-gray-600 dark:text-gray-400">
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-green-500 mt-0.5">•</span>
                       <span>Multiple listings allowed</span>
                     </li>
-                    <li class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-green-500 mt-0.5">•</span>
                       <span>Business verification</span>
                     </li>
-                    <li class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-green-500 mt-0.5">•</span>
                       <span>For hotels & agencies</span>
                     </li>
                   </ul>
@@ -285,10 +262,10 @@
                         Step {{ currentStep }} of {{ TOTAL_STEPS }}
                       </span>
                     </div>
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                     {{ stepMeta.title }}
                   </h3>
-                    <p class="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                     {{ stepMeta.description }}
                   </p>
 
@@ -390,8 +367,7 @@
                             :class="formData.hostingType === 'accommodation' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
                           >
                             <div class="text-center">
-                              <div class="text-2xl mb-2">🏨</div>
-                              <div class="font-semibold text-text-primary">{{ t('hostApplication.options.hostingAccommodation') }}</div>
+                              <div class="font-semibold text-sm text-text-primary">{{ t('hostApplication.options.hostingAccommodation') }}</div>
                         </div>
                           </button>
                           <button
@@ -401,8 +377,7 @@
                             :class="formData.hostingType === 'tour' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
                           >
                             <div class="text-center">
-                              <div class="text-2xl mb-2">🗺️</div>
-                              <div class="font-semibold text-text-primary">{{ t('hostApplication.options.hostingTour') }}</div>
+                              <div class="font-semibold text-sm text-text-primary">{{ t('hostApplication.options.hostingTour') }}</div>
                       </div>
                           </button>
                           <button
@@ -412,8 +387,7 @@
                             :class="formData.hostingType === 'transport' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
                           >
                             <div class="text-center">
-                              <div class="text-2xl mb-2">🚗</div>
-                              <div class="font-semibold text-text-primary">{{ t('hostApplication.options.hostingTransport') }}</div>
+                              <div class="font-semibold text-sm text-text-primary">{{ t('hostApplication.options.hostingTransport') }}</div>
                             </div>
                           </button>
                         </div>
@@ -504,7 +478,7 @@
                       <!-- Location and Price (typed) -->
                       <div v-if="formData.hostingType === 'accommodation'" class="mt-8">
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                          <h3 class="text-xl font-bold text-text-primary mb-2">Where is your property located?</h3>
+                          <h3 class="text-lg font-bold text-text-primary mb-2">Where is your property located?</h3>
                           <p class="text-sm text-text-muted mb-6">Type the location now. You’ll pin it on the map later when adding the property from your dashboard.</p>
 
                           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -619,7 +593,7 @@
                     <div class="space-y-6">
                       <!-- Terms and Conditions Text -->
                       <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700">
-                        <h3 class="text-xl font-bold text-text-primary mb-4">Terms and Conditions</h3>
+                        <h3 class="text-lg font-bold text-text-primary mb-3">Terms and Conditions</h3>
                         <div class="space-y-4 text-sm text-text-secondary">
                           <div>
                             <h4 class="font-semibold text-text-primary mb-2">1. Host Responsibilities</h4>
@@ -769,8 +743,8 @@
     <section class="py-16 md:py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ t('hostApplication.benefits.title') }}</h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.title') }}</h2>
+          <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {{ t('hostApplication.benefits.subtitle') }}
           </p>
         </div>
@@ -778,12 +752,12 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Benefit 1 -->
           <div class="bg-gradient-to-br from-brand-50 dark:from-gray-800 to-white dark:to-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all">
-            <div class="w-16 h-16 bg-brand-500 rounded-full flex items-center justify-center mb-6">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.earnTitle') }}</h3>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{{ t('hostApplication.benefits.earnTitle') }}</h3>
             <p class="text-gray-600 dark:text-gray-400">
               {{ t('hostApplication.benefits.earnDesc') }}
             </p>
@@ -791,12 +765,12 @@
 
           <!-- Benefit 2 -->
           <div class="bg-gradient-to-br from-orange-50 dark:from-gray-800 to-white dark:to-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all">
-            <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mb-6">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.secureTitle') }}</h3>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{{ t('hostApplication.benefits.secureTitle') }}</h3>
             <p class="text-gray-600 dark:text-gray-400">
               {{ t('hostApplication.benefits.secureDesc') }}
             </p>
@@ -804,12 +778,12 @@
 
           <!-- Benefit 3 -->
           <div class="bg-gradient-to-br from-red-50 dark:from-gray-800 to-white dark:to-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all">
-            <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mb-6">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ t('hostApplication.benefits.reachTitle') }}</h3>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{{ t('hostApplication.benefits.reachTitle') }}</h3>
             <p class="text-gray-600 dark:text-gray-400">
               {{ t('hostApplication.benefits.reachDesc') }}
             </p>

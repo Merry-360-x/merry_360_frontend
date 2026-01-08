@@ -4,6 +4,7 @@
     :disabled="disabled || loading"
     @click="handleClick"
     class="relative overflow-hidden"
+    style="pointer-events: auto; z-index: 1;"
   >
     <!-- Ripple Effect -->
     <span 
