@@ -11,13 +11,13 @@
           <div class="text-center mb-8">
             <div class="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg">
               <span class="text-brand-600 dark:text-brand-400 font-semibold text-sm">Become a Host</span>
-            </div>
+          </div>
             <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white leading-tight">
               Turn your space into an <span class="text-brand-600">income stream</span>
-            </h1>
+          </h1>
             <p class="text-sm text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Join Rwanda's premier travel platform. List your accommodations, tours, or transport services and start earning today.
-            </p>
+          </p>
           </div>
           
           <!-- CTA Button -->
@@ -732,9 +732,9 @@
                     class="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl"
                   >
                     Next
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
+                      </svg>
                   </button>
                   <button 
                     v-else
@@ -831,6 +831,7 @@ import DocumentUpload from '../../components/host/DocumentUpload.vue'
 import { supabase, uploadFile } from '../../services/supabase'
 import { uploadDocumentToCloudinary } from '../../services/cloudinary'
 import { useTranslation } from '@/composables/useTranslation'
+import { useToast } from '@/composables/useToast'
 import { useUserStore } from '@/stores/userStore'
 import isoCountries from 'i18n-iso-countries'
 import enIsoCountries from 'i18n-iso-countries/langs/en.json'
@@ -838,6 +839,7 @@ import worldCountries from 'world-countries'
 
 const router = useRouter()
 const { t } = useTranslation()
+const { error: showToastError } = useToast()
 const userStore = useUserStore()
 const formSection = ref(null)
 const isSubmitting = ref(false)
@@ -1254,12 +1256,22 @@ const uploadHostDocument = async (userId, kind, file) => {
 
 const handleSubmit = async () => {
   console.log('🔍 Host application submission started')
+  console.log('Current step:', currentStep.value)
   console.log('Terms agreed:', formData.agreeToTerms)
   console.log('Photos:', formData.photos?.length || 0)
   
+  // Only check terms on the final step (step 5)
+  if (currentStep.value !== TOTAL_STEPS) {
+    console.warn('⚠️ Submit called but not on final step, redirecting to final step')
+    currentStep.value = TOTAL_STEPS
+    scrollToForm()
+    return
+  }
+  
   // Validate terms BEFORE setting isSubmitting to avoid button getting stuck
+  // Only check this on the final step (step 5) where terms are shown
   if (!formData.agreeToTerms) {
-    alert(t('hostApplication.validation.termsRequired'))
+    showToastError('Please read and agree to the Terms and Conditions on this final step before submitting.')
     return
   }
   
@@ -1293,7 +1305,7 @@ const handleSubmit = async () => {
       
       if (!formData.password || formData.password.length < 6) {
         alert('Please create a password (minimum 6 characters) to create your account.')
-        isSubmitting.value = false
+      isSubmitting.value = false
         return
       }
       
@@ -1314,14 +1326,14 @@ const handleSubmit = async () => {
         console.error('❌ Sign up error:', signUpError)
         if (signUpError.message.includes('already registered')) {
           alert('An account with this email already exists. Please log in first, then apply to become a host.')
-          router.push('/login')
+      router.push('/login')
         } else {
           alert('Failed to create account: ' + signUpError.message)
         }
         isSubmitting.value = false
-        return
-      }
-      
+      return
+    }
+    
       if (!authData.user) {
         alert('Account creation failed. Please try again.')
         isSubmitting.value = false
@@ -1356,7 +1368,7 @@ const handleSubmit = async () => {
       // Existing user
       user = currentUser
       userId = currentUser.id
-      console.log('✅ User authenticated:', user.email)
+    console.log('✅ User authenticated:', user.email)
     }
 
     // Upload required documents (store storage paths, not public URLs)
