@@ -20,8 +20,39 @@
           </p>
           </div>
           
+          <!-- Application Status Message -->
+          <div v-if="hasPendingApplication" class="text-center max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12">
+            <div class="mb-6">
+              <div class="w-20 h-20 mx-auto mb-4 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center">
+                <svg class="w-10 h-10 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                Application Under Review
+              </h2>
+              <p class="text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                Your host application has been successfully submitted and is currently under review.
+              </p>
+              <p class="text-base text-gray-600 dark:text-gray-300 mt-4 font-medium">
+                You will receive a notification within <span class="text-brand-600 dark:text-brand-400 font-bold">24-48 hours</span> regarding the status of your application.
+              </p>
+            </div>
+            <div class="mt-8">
+              <router-link 
+                to="/profile"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-all"
+              >
+                Go to Profile
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+              </router-link>
+            </div>
+          </div>
+          
           <!-- CTA Button -->
-          <div class="text-center" v-if="!showForm">
+          <div class="text-center" v-else-if="!showForm">
           <button 
               @click="showForm = true"
               class="group inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
@@ -858,14 +889,18 @@ const { error: showToastError, success: showToastSuccess } = useToast()
 const userStore = useUserStore()
 const formSection = ref(null)
 const isSubmitting = ref(false)
+const submissionProgress = ref(0)
 const currentStep = ref(0)
 const showForm = ref(false)
 const isAuthenticated = ref(false)
+const hasPendingApplication = ref(false)
+const applicationStatus = ref(null)
 
-// Check authentication status on mount
+// Check authentication status and application status on mount
 onMounted(async () => {
   isSubmitting.value = false
   photosUploading.value = false
+  submissionProgress.value = 0
   
   // Check if user is authenticated
   try {
@@ -874,6 +909,28 @@ onMounted(async () => {
     if (user && formData.email === '') {
       // Pre-fill email if user is logged in
       formData.email = user.email || ''
+    }
+    
+    // Check if user has already submitted an application
+    if (user) {
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('host_application_status, host_application_date')
+        .eq('id', user.id)
+        .single()
+      
+      if (!error && profile) {
+        applicationStatus.value = profile.host_application_status
+        if (profile.host_application_status === 'pending') {
+          hasPendingApplication.value = true
+        } else if (profile.host_application_status === 'approved') {
+          // User is already approved, they can access host dashboard
+          hasPendingApplication.value = false
+        } else if (profile.host_application_status === 'rejected') {
+          // User was rejected, allow them to apply again
+          hasPendingApplication.value = false
+        }
+      }
     }
   } catch (error) {
     console.log('User not authenticated, allowing application as new user')
@@ -1338,7 +1395,15 @@ const handleSubmit = async (event) => {
   }
 
   isSubmitting.value = true
+  submissionProgress.value = 0
   console.log('📤 Starting submission process...')
+  
+  // Animate progress bar
+  const progressInterval = setInterval(() => {
+    if (submissionProgress.value < 90) {
+      submissionProgress.value += 10
+    }
+  }, 200)
   
   try {
     // Get current user or create account for new users
@@ -1589,6 +1654,10 @@ const handleSubmit = async (event) => {
     
     console.log('✅ Host application saved successfully!', data)
     
+    // Complete progress bar to 100%
+    clearInterval(progressInterval)
+    submissionProgress.value = 100
+    
     // Update user store if new account was created
     if (!currentUser) {
       console.log('🔄 Initializing user store for new user...')
@@ -1601,11 +1670,15 @@ const handleSubmit = async (event) => {
       }
     }
     
-    console.log('🎉 Application submitted successfully!')
-    showToastSuccess('Application submitted successfully! You will be redirected shortly...')
+    // Update application status
+    hasPendingApplication.value = true
+    applicationStatus.value = 'pending'
     
-    // Small delay to show success message
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    console.log('🎉 Application submitted successfully!')
+    showToastSuccess('Application submitted successfully! Your application is now under review.')
+    
+    // Small delay to show success message and progress completion
+    await new Promise(resolve => setTimeout(resolve, 2000))
     
     // Reset form
     currentStep.value = 0
@@ -1630,18 +1703,21 @@ const handleSubmit = async (event) => {
     businessRegCertDoc.value = null
     uploadedFiles.value = []
     
-    // Redirect based on authentication status
-    if (!currentUser) {
-      // New user - redirect to profile to complete setup
-      console.log('🔄 Redirecting new user to profile...')
-      router.push('/profile')
-    } else {
-      // Existing user - redirect to host dashboard
-      console.log('🔄 Redirecting existing user to host dashboard...')
-      router.push('/host')
-    }
+    // Reset form and hide it to show the review message
+    currentStep.value = 0
+    showForm.value = false
+    
+    // Scroll to top to show the review message
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    
+    // Don't redirect - show the review message on the same page
+    // This avoids the host privileges error
     
   } catch (error) {
+    // Clear progress interval on error
+    if (progressInterval) clearInterval(progressInterval)
+    submissionProgress.value = 0
+    
     console.error('❌ Host application error:', error)
     console.error('Error stack:', error?.stack)
     console.error('Error name:', error?.name)
