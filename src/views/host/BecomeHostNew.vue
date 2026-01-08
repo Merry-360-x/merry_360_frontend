@@ -243,6 +243,125 @@
                       <p v-if="uploadingIdPhoto" class="mt-2 text-sm text-brand-600 dark:text-brand-400 font-medium">Uploading...</p>
                     </div>
                   </div>
+
+                  <!-- Business-specific fields -->
+                  <template v-if="formData.accountType === 'business'">
+                    <div class="md:col-span-2 mt-6 p-6 bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl border-2 border-green-200 dark:border-green-800">
+                      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Business Information
+                      </h3>
+                      
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Business TIN (18 digits) *</label>
+                          <input
+                            v-model="formData.businessTin"
+                            type="text"
+                            maxlength="18"
+                            pattern="[0-9]{18}"
+                            :required="formData.accountType === 'business'"
+                            @input="updateProgress"
+                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-brand-500 transition-colors"
+                            placeholder="Enter 18-digit TIN number"
+                          />
+                        </div>
+
+                        <div>
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Owner's ID Number *</label>
+                          <input
+                            v-model="formData.ownerIdNumber"
+                            type="text"
+                            :required="formData.accountType === 'business'"
+                            @input="updateProgress"
+                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:border-brand-500 transition-colors"
+                            placeholder="Enter owner's ID number"
+                          />
+                        </div>
+
+                        <div class="md:col-span-2">
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Business Registration Certificate *</label>
+                          <div class="relative">
+                            <input
+                              type="file"
+                              ref="businessCertInput"
+                              accept="image/*,application/pdf"
+                              @change="handleBusinessCertUpload"
+                              class="hidden"
+                            />
+                            <button
+                              type="button"
+                              @click="$refs.businessCertInput.click()"
+                              class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:border-brand-500 transition-all flex items-center justify-center gap-3"
+                            >
+                              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                              </svg>
+                              <span v-if="!businessCertPreview">Click to upload business certificate</span>
+                              <span v-else class="text-brand-600 dark:text-brand-400 font-medium">✓ Certificate Uploaded</span>
+                            </button>
+                            <div v-if="businessCertPreview" class="mt-4 p-4 bg-white dark:bg-gray-700 rounded-lg border-2 border-brand-200 dark:border-brand-800 flex items-center justify-between">
+                              <div class="flex items-center gap-3">
+                                <svg class="w-8 h-8 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span class="text-sm font-medium text-gray-900 dark:text-white">Business Certificate</span>
+                              </div>
+                              <button
+                                type="button"
+                                @click="removeBusinessCert"
+                                class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+                              >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                              </button>
+                            </div>
+                            <p v-if="uploadingBusinessCert" class="mt-2 text-sm text-brand-600 dark:text-brand-400 font-medium">Uploading certificate...</p>
+                          </div>
+                        </div>
+
+                        <div class="md:col-span-2">
+                          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Owner's ID Photo *</label>
+                          <div class="relative">
+                            <input
+                              type="file"
+                              ref="ownerIdInput"
+                              accept="image/*"
+                              @change="handleOwnerIdUpload"
+                              class="hidden"
+                            />
+                            <button
+                              type="button"
+                              @click="$refs.ownerIdInput.click()"
+                              class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:border-brand-500 transition-all flex items-center justify-center gap-3"
+                            >
+                              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                              </svg>
+                              <span v-if="!ownerIdPreview">Click to upload owner's ID</span>
+                              <span v-else class="text-brand-600 dark:text-brand-400 font-medium">✓ Owner's ID Uploaded</span>
+                            </button>
+                            <div v-if="ownerIdPreview" class="mt-4 relative inline-block">
+                              <img :src="ownerIdPreview" alt="Owner ID Preview" class="h-32 w-auto rounded-lg shadow-lg" />
+                              <button
+                                type="button"
+                                @click="removeOwnerIdPhoto"
+                                class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+                              >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                              </button>
+                            </div>
+                            <p v-if="uploadingOwnerIdPhoto" class="mt-2 text-sm text-brand-600 dark:text-brand-400 font-medium">Uploading...</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
                 </div>
               </div>
 
@@ -507,6 +626,10 @@ const formData = reactive({
   nationality: '',
   idNumber: '',
   idPhotoUrl: '',
+  businessTin: '',
+  businessCertUrl: '',
+  ownerIdNumber: '',
+  ownerIdPhotoUrl: '',
   hostingType: '',
   propertyLocation: '',
   description: '',
@@ -517,6 +640,14 @@ const formData = reactive({
 const idPhotoInput = ref(null)
 const idPhotoPreview = ref('')
 const uploadingIdPhoto = ref(false)
+
+const businessCertInput = ref(null)
+const businessCertPreview = ref('')
+const uploadingBusinessCert = ref(false)
+
+const ownerIdInput = ref(null)
+const ownerIdPreview = ref('')
+const uploadingOwnerIdPhoto = ref(false)
 
 const scrollToForm = () => {
   formSection.value?.scrollIntoView({ behavior: 'smooth' })
@@ -544,7 +675,7 @@ const progress = computed(() => {
 })
 
 const isFormValid = computed(() => {
-  return formData.accountType &&
+  const baseValid = formData.accountType &&
          formData.firstName &&
          formData.lastName &&
          formData.email &&
@@ -557,6 +688,18 @@ const isFormValid = computed(() => {
          formData.propertyLocation &&
          formData.description &&
          formData.agreeToTerms
+  
+  // Additional validation for business accounts
+  if (formData.accountType === 'business') {
+    return baseValid &&
+           formData.businessTin &&
+           formData.businessTin.length === 18 &&
+           formData.businessCertUrl &&
+           formData.ownerIdNumber &&
+           formData.ownerIdPhotoUrl
+  }
+  
+  return baseValid
 })
 
 const updateProgress = () => {
@@ -628,6 +771,124 @@ const removeIdPhoto = () => {
   updateProgress()
 }
 
+const handleBusinessCertUpload = async (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  // Validate file type
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
+  if (!validTypes.includes(file.type)) {
+    alert('Please upload an image or PDF file')
+    return
+  }
+
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File size must be less than 10MB')
+    return
+  }
+
+  uploadingBusinessCert.value = true
+
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      alert('Please log in to upload documents')
+      uploadingBusinessCert.value = false
+      return
+    }
+
+    console.log('📤 Uploading business certificate to Cloudinary...')
+    const result = await uploadToCloudinary(file, {
+      folder: 'merry360x/host-applications/business-certificates',
+      public_id: `${user.id}_cert_${Date.now()}`,
+      resource_type: file.type === 'application/pdf' ? 'raw' : 'image'
+    })
+
+    formData.businessCertUrl = result.secure_url
+    businessCertPreview.value = result.secure_url
+    console.log('✅ Business certificate uploaded:', result.secure_url)
+    updateProgress()
+
+  } catch (error) {
+    console.error('Business cert upload error:', error)
+    alert(`Failed to upload certificate: ${error.message || 'Please try again.'}`)
+    businessCertPreview.value = ''
+    formData.businessCertUrl = ''
+  } finally {
+    uploadingBusinessCert.value = false
+  }
+}
+
+const removeBusinessCert = () => {
+  formData.businessCertUrl = ''
+  businessCertPreview.value = ''
+  if (businessCertInput.value) {
+    businessCertInput.value.value = ''
+  }
+  updateProgress()
+}
+
+const handleOwnerIdUpload = async (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  if (!file.type.startsWith('image/')) {
+    alert('Please upload an image file')
+    return
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image size must be less than 5MB')
+    return
+  }
+
+  uploadingOwnerIdPhoto.value = true
+
+  try {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      ownerIdPreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      alert('Please log in to upload photos')
+      uploadingOwnerIdPhoto.value = false
+      return
+    }
+
+    console.log('📤 Uploading owner ID to Cloudinary...')
+    const result = await uploadToCloudinary(file, {
+      folder: 'merry360x/host-applications/owner-ids',
+      public_id: `${user.id}_owner_id_${Date.now()}`,
+      resource_type: 'image'
+    })
+
+    formData.ownerIdPhotoUrl = result.secure_url
+    console.log('✅ Owner ID uploaded:', result.secure_url)
+    updateProgress()
+
+  } catch (error) {
+    console.error('Owner ID upload error:', error)
+    alert(`Failed to upload owner ID: ${error.message || 'Please try again.'}`)
+    ownerIdPreview.value = ''
+    formData.ownerIdPhotoUrl = ''
+  } finally {
+    uploadingOwnerIdPhoto.value = false
+  }
+}
+
+const removeOwnerIdPhoto = () => {
+  formData.ownerIdPhotoUrl = ''
+  ownerIdPreview.value = ''
+  if (ownerIdInput.value) {
+    ownerIdInput.value.value = ''
+  }
+  updateProgress()
+}
+
 const handleSubmit = async () => {
   console.log('🔍 Host application submission started')
   console.log('Form valid:', isFormValid.value)
@@ -682,7 +943,12 @@ const handleSubmit = async () => {
         propertyLocation: formData.propertyLocation,
         price: formData.hostingType === 'accommodation' ? formData.price : null,
         description: formData.description,
-        idPhotoUrl: formData.idPhotoUrl
+        idPhotoUrl: formData.idPhotoUrl,
+        // Business fields (if applicable)
+        businessTin: formData.accountType === 'business' ? formData.businessTin : null,
+        businessCertUrl: formData.accountType === 'business' ? formData.businessCertUrl : null,
+        ownerIdNumber: formData.accountType === 'business' ? formData.ownerIdNumber : null,
+        ownerIdPhotoUrl: formData.accountType === 'business' ? formData.ownerIdPhotoUrl : null
       }
     }
 
