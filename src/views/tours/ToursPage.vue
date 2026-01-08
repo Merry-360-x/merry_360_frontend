@@ -163,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
@@ -171,15 +171,17 @@ import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast.js'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '@/services/supabase'
+import { subscribeToTable } from '@/services/supabase'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
-const { success } = useToast()
+const { success, error: toastError } = useToast()
 
 const categories = computed(() => [t('tours.all'), t('tours.nature'), t('tours.adventure'), t('tours.cultural'), t('tours.wildlife'), t('tours.historical')])
 const selectedCategory = ref(computed(() => t('tours.all')).value)
+const allCategoryLabel = computed(() => t('tours.all'))
 const searchQuery = ref('')
 const durationFilter = ref('')
 
@@ -229,30 +231,52 @@ const loadTours = async () => {
       title: t.name,
       destination: t.destination,
       days: t.duration_days,
+      duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '',
       price: t.price,
       rating: t.rating || 4.5,
       reviews: t.reviews_count || 0,
       category: t.category || 'Tour',
       image: t.main_image,
-      description: t.description,
+      description: String(t.description || ''),
       difficulty: t.difficulty
     }))
   } catch (err) {
     console.error('Error loading tours:', err)
+    toastError(err)
   } finally {
     loading.value = false
   }
 }
 
+let toursRealtime = null
+let toursRealtimeTimer = null
+
 onMounted(() => {
   loadTours()
+
+  toursRealtime = subscribeToTable({
+    table: 'tours',
+    callback: () => {
+      if (toursRealtimeTimer) window.clearTimeout(toursRealtimeTimer)
+      toursRealtimeTimer = window.setTimeout(() => {
+        loadTours()
+      }, 300)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  if (toursRealtimeTimer) window.clearTimeout(toursRealtimeTimer)
+  if (toursRealtime && typeof toursRealtime.unsubscribe === 'function') {
+    toursRealtime.unsubscribe()
+  }
 })
 
 const filteredTours = computed(() => {
   let filtered = tours.value
 
   // Filter by category
-  if (selectedCategory.value !== 'All') {
+  if (selectedCategory.value !== allCategoryLabel.value) {
     filtered = filtered.filter(tour => 
       tour.category.toLowerCase() === selectedCategory.value.toLowerCase()
     )
@@ -263,7 +287,7 @@ const filteredTours = computed(() => {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(tour => 
       tour.title.toLowerCase().includes(query) ||
-      tour.description.toLowerCase().includes(query) ||
+      String(tour.description || '').toLowerCase().includes(query) ||
       tour.category.toLowerCase().includes(query)
     )
   }
@@ -271,10 +295,11 @@ const filteredTours = computed(() => {
   // Filter by duration
   if (durationFilter.value) {
     filtered = filtered.filter(tour => {
-      const duration = tour.duration.toLowerCase()
-      if (durationFilter.value === 'half') return duration.includes('hour') && !duration.includes('day')
-      if (durationFilter.value === 'full') return duration === '1 day'
-      if (durationFilter.value === 'multi') return duration.includes('days') || parseInt(duration) > 1
+      const days = Number(tour.days)
+      if (!Number.isFinite(days)) return false
+      if (durationFilter.value === 'half') return days > 0 && days < 1
+      if (durationFilter.value === 'full') return days === 1
+      if (durationFilter.value === 'multi') return days > 1
       return true
     })
   }

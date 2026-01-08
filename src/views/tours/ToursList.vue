@@ -95,15 +95,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import api from '@/services/api'
+import { useToast } from '@/composables/useToast'
+import { subscribeToTable } from '@/services/supabase'
 
 const router = useRouter()
 const currencyStore = useCurrencyStore()
+const { error: toastError } = useToast()
 
 const searchQuery = ref('')
 
@@ -196,13 +199,34 @@ const loadTours = async () => {
     }))
   } catch (err) {
     console.error('Error loading tours:', err)
+    toastError(err)
     tours.value = []
   } finally {
     loading.value = false
   }
 }
 
+let toursRealtime = null
+let toursRealtimeTimer = null
+
 onMounted(() => {
   loadTours()
+
+  toursRealtime = subscribeToTable({
+    table: 'tours',
+    callback: () => {
+      if (toursRealtimeTimer) window.clearTimeout(toursRealtimeTimer)
+      toursRealtimeTimer = window.setTimeout(() => {
+        loadTours()
+      }, 300)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  if (toursRealtimeTimer) window.clearTimeout(toursRealtimeTimer)
+  if (toursRealtime && typeof toursRealtime.unsubscribe === 'function') {
+    toursRealtime.unsubscribe()
+  }
 })
 </script>

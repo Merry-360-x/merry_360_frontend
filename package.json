@@ -9,10 +9,10 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "test:supabase:connection": "node test-supabase-connection.mjs",
-    "test:supabase:real": "node test-real-operations.mjs",
-    "test:supabase:db": "node test-database-operations.mjs",
-    "test:supabase:all": "node test-all-features.mjs",
+    "test:supabase:connection": "node verify-sync.mjs",
+    "test:supabase:real": "node verify-sync.mjs",
+    "test:supabase:db": "node verify-sync.mjs",
+    "test:supabase:all": "node verify-sync.mjs",
     "test:admin-staff:live": "node test-admin-staff-live.mjs"
   },
   "dependencies": {

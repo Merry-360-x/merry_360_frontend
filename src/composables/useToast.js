@@ -3,7 +3,72 @@ import { ref } from 'vue'
 const toasts = ref([])
 let toastId = 0
 
+function toUserFacingErrorMessage(raw) {
+  // Accept Error objects, Supabase/PostgREST errors, strings, etc.
+  const err = raw && typeof raw === 'object' ? raw : null
+  const message = err
+    ? String(err.message ?? '').trim()
+    : String(raw ?? '').trim()
+
+  const code = err && err.code != null ? String(err.code) : ''
+  const details = err && err.details != null ? String(err.details) : ''
+  const hint = err && err.hint != null ? String(err.hint) : ''
+
+  const hay = `${message} ${details} ${hint}`.toLowerCase()
+
+  if (!message && !details && !hint) {
+    return 'An error occurred. Please try again.'
+  }
+
+  // Local stub (missing env) and other config issues
+  if (hay.includes('supabase is not configured') || hay.includes('missing vite_supabase_url') || hay.includes('missing vite_supabase_anon_key')) {
+    return "This app can't reach the database right now (Supabase config is missing)."
+  }
+
+  // Auth
+  if (hay.includes('not authenticated') || hay.includes('jwt') && hay.includes('expired') || hay.includes('invalid login')) {
+    return 'Please log in and try again.'
+  }
+
+  // RLS / permissions
+  if (
+    hay.includes('row-level security') ||
+    hay.includes('permission denied') ||
+    hay.includes('not allowed') ||
+    code === '42501'
+  ) {
+    return "You don't have permission to do that. If you're logged in, your account may not have access."
+  }
+
+  // Missing table / column (schema mismatch)
+  if (code === '42P01' || hay.includes('relation') && hay.includes('does not exist')) {
+    return "This feature isn't available yet (missing database table)."
+  }
+  if (code === '42703' || hay.includes('column') && hay.includes('does not exist')) {
+    return "The app and database are out of sync (a required field is missing)."
+  }
+
+  // Network
+  if (hay.includes('failed to fetch') || hay.includes('networkerror') || hay.includes('network error')) {
+    return 'Network error. Check your connection and try again.'
+  }
+  if (hay.includes('timeout') || hay.includes('timed out')) {
+    return 'Request timed out. Please try again.'
+  }
+
+  // Default: keep the message but strip overly technical prefixes
+  let text = message || details || hint
+  text = text.replace(/^error\s*:?\s*/i, '').trim()
+  text = text.replace(/^failed\s*to\s*/i, 'Failed to ').trim()
+  return text || 'An error occurred. Please try again.'
+}
+
 function normalizeToastMessage(rawMessage, type) {
+  // If we were given an Error/Supabase error object, normalize it cleanly.
+  if (type === 'error' && rawMessage && typeof rawMessage === 'object') {
+    return toUserFacingErrorMessage(rawMessage)
+  }
+
   let text = String(rawMessage ?? '').replace(/\s+/g, ' ').trim()
 
   // Remove leading status emojis/icons that read as "developer-ish"
@@ -18,17 +83,11 @@ function normalizeToastMessage(rawMessage, type) {
     .replace(/\bin database\b\.?/gi, '')
     .trim()
 
-  // For error toasts, avoid showing technical error details
+  // For error toasts, explain technical details instead of hiding them.
   if (type === 'error') {
     const looksTechnical = /(unknown api|\bapi\b|endpoint|supabase|database|\bsql\b|stack|trace)/i.test(text)
     if (looksTechnical || /unknown error/i.test(text)) {
-      return 'An error occurred. Please try again.'
-    }
-
-    // Strip appended details like "Failed to load X: <internal message>"
-    if (text.includes(':')) {
-      const head = text.split(':')[0].trim()
-      if (/^(failed|error)/i.test(head)) text = head
+      return toUserFacingErrorMessage(text)
     }
   }
 

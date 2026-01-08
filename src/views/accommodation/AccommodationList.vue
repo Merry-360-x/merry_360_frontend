@@ -332,7 +332,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useCurrencyStore } from '../../stores/currency'
 import { useUserStore } from '../../stores/userStore'
@@ -346,10 +346,11 @@ import PropertyCardSkeleton from '@/components/common/PropertyCardSkeleton.vue'
 import api from '../../services/api'
 import { getCachedAccommodations, setCachedAccommodations } from '@/services/accommodationCache'
 import fastFetch from '@/services/fastFetch'
+import { subscribeToTable } from '@/services/supabase'
 
 const router = useRouter()
 const route = useRoute()
-const { success } = useToast()
+const { success, error: toastError } = useToast()
 const currencyStore = useCurrencyStore()
 const userStore = useUserStore()
 const { t } = useTranslation()
@@ -528,7 +529,25 @@ const loadAccommodations = async (params = {}) => {
     loading.value = false
   } catch (error) {
     console.error('Failed to load accommodations:', error)
+    toastError(error)
     loading.value = false
+  }
+}
+
+let propertiesRealtime = null
+let propertiesRealtimeTimer = null
+
+const getCurrentLoadParams = () => {
+  const q = String(searchQuery.value || '').trim()
+  const guests = guestCount.value
+  const inDate = String(checkIn.value || '').trim()
+  const outDate = String(checkOut.value || '').trim()
+
+  return {
+    q: q || undefined,
+    guests: Number.isFinite(guests) && guests > 0 ? guests : undefined,
+    checkIn: inDate || undefined,
+    checkOut: outDate || undefined
   }
 }
 
@@ -627,6 +646,31 @@ onMounted(async () => {
     checkIn: inDate || undefined,
     checkOut: outDate || undefined
   })
+
+  // Realtime: keep listing fresh when hosts add/update properties.
+  propertiesRealtime = subscribeToTable({
+    table: 'properties',
+    callback: () => {
+      // Debounce bursts of changes.
+      if (propertiesRealtimeTimer) window.clearTimeout(propertiesRealtimeTimer)
+      propertiesRealtimeTimer = window.setTimeout(async () => {
+        try {
+          // Clear fast cache so next fetch reflects DB instantly.
+          fastFetch.clearCache('properties')
+          await loadAccommodations(getCurrentLoadParams())
+        } catch (err) {
+          console.warn('Realtime refresh failed:', err)
+        }
+      }, 300)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  if (propertiesRealtimeTimer) window.clearTimeout(propertiesRealtimeTimer)
+  if (propertiesRealtime && typeof propertiesRealtime.unsubscribe === 'function') {
+    propertiesRealtime.unsubscribe()
+  }
 })
 
 const filteredAccommodations = computed(() => {

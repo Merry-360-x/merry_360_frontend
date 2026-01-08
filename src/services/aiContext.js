@@ -51,7 +51,7 @@ export async function getToursContext() {
   try {
     const { data, error } = await supabase
       .from('tours')
-      .select('id, title, description, price, duration, location, available')
+      .select('id, name, destination, duration_days, price, available')
       .eq('available', true)
       .limit(15)
 
@@ -66,9 +66,13 @@ export async function getToursContext() {
     }
 
     // Format for AI context
-    const summary = data.map(tour => 
-      `${tour.title} - ${tour.price}, ${tour.duration}, ${tour.location}`
-    ).join('\n')
+    const summary = data.map(tour => {
+      const name = tour.name || 'Tour'
+      const destination = tour.destination || 'Rwanda'
+      const days = tour.duration_days ? `${tour.duration_days} day${tour.duration_days === 1 ? '' : 's'}` : ''
+      const price = tour.price != null ? `$${tour.price}` : ''
+      return `${name} (${destination}) ${days} ${price}`.replace(/\s+/g, ' ').trim()
+    }).join('\n')
 
     return `Available Tours (${data.length} tours):\n${summary}`
   } catch (error) {

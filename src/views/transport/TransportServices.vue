@@ -166,6 +166,53 @@
           </div>
         </div>
 
+        <!-- Vehicles (from Supabase) -->
+        <div class="mt-12">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-text-brand-600 mb-6 text-center">{{ t('transport.allVehicles') }}</h2>
+
+          <div v-if="vehiclesLoading" class="text-center py-10 text-text-secondary">
+            Loading vehicles...
+          </div>
+
+          <div v-else-if="filteredVehicles.length === 0" class="text-center py-12">
+            <svg class="w-16 h-16 mx-auto text-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-text-secondary">No vehicles available right now.</p>
+          </div>
+
+          <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div
+              v-for="vehicle in filteredVehicles"
+              :key="vehicle.id"
+              class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6"
+            >
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex-1">
+                  <p class="font-semibold text-text-brand-600">{{ vehicle.name }}</p>
+                  <p class="text-sm text-text-secondary">{{ vehicle.type || 'Vehicle' }}</p>
+                </div>
+                <div class="text-right">
+                  <div class="text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(vehicle.price_per_day || 0) }}</div>
+                  <div class="text-xs text-text-muted">/ day</div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-sm text-text-secondary mb-4">
+                <span>{{ Number(vehicle.capacity || 0) > 0 ? `${vehicle.capacity} seats` : '—' }}</span>
+                <span v-if="vehicle.driver_included" class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-900">Driver included</span>
+              </div>
+
+              <button
+                @click="bookVehicle(vehicle)"
+                class="w-full px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition-colors"
+              >
+                {{ t('accommodation.addToCart') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Features -->
         <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
           <div class="text-center">
@@ -211,19 +258,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/userStore'
 import { useCurrencyStore } from '../../stores/currency'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast'
 import MainLayout from '../../components/layout/MainLayout.vue'
+import api from '@/services/api'
+import { subscribeToTable } from '@/services/supabase'
 
 const router = useRouter()
 const userStore = useUserStore()
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
-const { success } = useToast()
+const { success, error: toastError } = useToast()
 const searchQuery = ref('')
 const vehicleFilter = ref('')
 
@@ -264,6 +313,42 @@ const popularRoutes = ref([
   { id: 3, from: 'Kigali', to: 'Huye', price: 12000, duration: '2 hrs', vehicle: 'taxi' },
   { id: 6, from: 'Kigali', to: 'Rusizi', price: 22000, duration: '4 hrs', vehicle: 'taxi' }
 ])
+
+const vehicles = ref([])
+const vehiclesLoading = ref(true)
+
+const loadVehicles = async () => {
+  try {
+    vehiclesLoading.value = true
+    const response = await api.transport.getVehicles({})
+    vehicles.value = Array.isArray(response?.data) ? response.data : []
+  } catch (err) {
+    console.error('Error loading vehicles:', err)
+    vehicles.value = []
+    toastError(err)
+  } finally {
+    vehiclesLoading.value = false
+  }
+}
+
+const filteredVehicles = computed(() => {
+  const q = String(searchQuery.value || '').trim().toLowerCase()
+  const typeFilter = String(vehicleFilter.value || '').trim().toLowerCase()
+
+  return (vehicles.value || []).filter((v) => {
+    // Type filter (best-effort mapping)
+    if (typeFilter) {
+      const t = String(v?.type || '').toLowerCase()
+      if (!t.includes(typeFilter)) return false
+    }
+
+    if (!q) return true
+    const name = String(v?.name || '').toLowerCase()
+    const t = String(v?.type || '').toLowerCase()
+    const plate = String(v?.license_plate || '').toLowerCase()
+    return name.includes(q) || t.includes(q) || plate.includes(q)
+  })
+})
 
 const filteredRoutes = computed(() => {
   let filtered = popularRoutes.value
@@ -367,4 +452,42 @@ const bookRoute = (route) => {
   userStore.addToCart(routeItem)
   success(t('common.addedToCart', { item: `${route.from} → ${route.to}` }))
 }
+
+const bookVehicle = (vehicle) => {
+  const item = {
+    id: vehicle.id,
+    type: 'transport',
+    service: 'vehicle',
+    name: vehicle.name,
+    price: vehicle.price_per_day ?? 0,
+    duration: 'per day',
+    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80'
+  }
+  userStore.addToCart(item)
+  success(t('common.addedToCart', { item: item.name }))
+}
+
+let vehiclesRealtime = null
+let vehiclesRealtimeTimer = null
+
+onMounted(() => {
+  loadVehicles()
+
+  vehiclesRealtime = subscribeToTable({
+    table: 'vehicles',
+    callback: () => {
+      if (vehiclesRealtimeTimer) window.clearTimeout(vehiclesRealtimeTimer)
+      vehiclesRealtimeTimer = window.setTimeout(() => {
+        loadVehicles()
+      }, 300)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  if (vehiclesRealtimeTimer) window.clearTimeout(vehiclesRealtimeTimer)
+  if (vehiclesRealtime && typeof vehiclesRealtime.unsubscribe === 'function') {
+    vehiclesRealtime.unsubscribe()
+  }
+})
 </script>

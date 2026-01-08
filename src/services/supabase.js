@@ -300,16 +300,42 @@ export async function getBookings(userId) {
 }
 
 // ============ Realtime ============
-export function subscribeToListings(callback) {
-  const subscription = supabase
-    .channel('listings')
-    .on('postgres_changes', 
-      { event: '*', schema: 'public', table: 'listings' },
+export function subscribeToTable({ table, callback, schema = 'public', event = '*' } = {}) {
+  if (!table || typeof callback !== 'function') {
+    return {
+      unsubscribe() {}
+    }
+  }
+
+  const channel = supabase
+    .channel(`realtime:${schema}:${table}`)
+    .on(
+      'postgres_changes',
+      { event, schema, table },
       callback
     )
     .subscribe()
-  
-  return subscription
+
+  return {
+    async unsubscribe() {
+      try {
+        // Prefer the supabase client cleanup (works even for stub).
+        if (typeof supabase.removeChannel === 'function') {
+          supabase.removeChannel(channel)
+          return
+        }
+        if (channel && typeof channel.unsubscribe === 'function') {
+          await channel.unsubscribe()
+        }
+      } catch (_) {
+        // best-effort cleanup
+      }
+    }
+  }
+}
+
+export function subscribeToListings(callback) {
+  return subscribeToTable({ table: 'listings', callback })
 }
 
 // ============ Storage ============
