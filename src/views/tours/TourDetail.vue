@@ -21,9 +21,11 @@
               >
                 <div class="text-center animate-pulse">
                   <div class="w-16 h-16 mx-auto rounded-full bg-white/30 backdrop-blur-sm mb-3 flex items-center justify-center">
-                    <span class="text-white font-extrabold text-lg">RW</span>
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
                   </div>
-                  <p class="text-white font-semibold">Rwanda</p>
+                  <p class="text-white font-semibold text-sm">Loading image...</p>
                 </div>
               </div>
               <img 
@@ -44,7 +46,9 @@
                 class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-600 via-yellow-400 to-sky-600"
               >
                 <div class="text-center animate-pulse">
-                  <span class="text-white font-bold text-xs">Rwanda</span>
+                  <svg class="w-6 h-6 mx-auto text-white/80 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
                 </div>
               </div>
               <img 
