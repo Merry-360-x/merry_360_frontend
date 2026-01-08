@@ -156,6 +156,42 @@
                       placeholder="Enter your ID number"
                     />
                   </div>
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Upload ID Photo *</label>
+                    <div class="relative">
+                      <input
+                        type="file"
+                        ref="idPhotoInput"
+                        accept="image/*"
+                        @change="handleIdPhotoUpload"
+                        class="hidden"
+                      />
+                      <button
+                        type="button"
+                        @click="$refs.idPhotoInput.click()"
+                        class="w-full px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:border-brand-500 transition-all flex items-center justify-center gap-3"
+                      >
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <span v-if="!idPhotoPreview">Click to upload ID photo</span>
+                        <span v-else class="text-brand-600 dark:text-brand-400 font-medium">✓ ID Photo Uploaded</span>
+                      </button>
+                      <div v-if="idPhotoPreview" class="mt-4 relative inline-block">
+                        <img :src="idPhotoPreview" alt="ID Preview" class="h-32 w-auto rounded-lg shadow-lg" />
+                        <button
+                          type="button"
+                          @click="removeIdPhoto"
+                          class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+                        >
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                        </button>
+                      </div>
+                      <p v-if="uploadingIdPhoto" class="mt-2 text-sm text-brand-600 dark:text-brand-400 font-medium">Uploading...</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -182,10 +218,16 @@
                       class="peer sr-only"
                       @change="updateProgress"
                     />
-                    <div class="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300">
-                      <div class="text-4xl mb-3">🏠</div>
-                      <h3 class="font-bold text-gray-900 dark:text-white mb-1">Property</h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">Share your home or apartment</p>
+                    <div class="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300 hover:shadow-lg">
+                      <div class="mb-4 flex justify-center">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg">
+                          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <h3 class="font-bold text-gray-900 dark:text-white mb-1 text-center">Property</h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-400 text-center">Share your home or apartment</p>
                     </div>
                   </label>
                   <label class="relative cursor-pointer">
@@ -196,10 +238,16 @@
                       class="peer sr-only"
                       @change="updateProgress"
                     />
-                    <div class="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300">
-                      <div class="text-4xl mb-3">🗺️</div>
-                      <h3 class="font-bold text-gray-900 dark:text-white mb-1">Tour</h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">Offer guided experiences</p>
+                    <div class="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300 hover:shadow-lg">
+                      <div class="mb-4 flex justify-center">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg">
+                          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <h3 class="font-bold text-gray-900 dark:text-white mb-1 text-center">Tour</h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-400 text-center">Offer guided experiences</p>
                     </div>
                   </label>
                   <label class="relative cursor-pointer">
@@ -210,10 +258,16 @@
                       class="peer sr-only"
                       @change="updateProgress"
                     />
-                    <div class="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300">
-                      <div class="text-4xl mb-3">🚗</div>
-                      <h3 class="font-bold text-gray-900 dark:text-white mb-1">Transport</h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">Provide transportation</p>
+                    <div class="p-6 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300 hover:shadow-lg">
+                      <div class="mb-4 flex justify-center">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center shadow-lg">
+                          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <h3 class="font-bold text-gray-900 dark:text-white mb-1 text-center">Transport</h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-400 text-center">Provide transportation</p>
                     </div>
                   </label>
                 </div>
@@ -399,12 +453,17 @@ const formData = reactive({
   address: '',
   nationality: '',
   idNumber: '',
+  idPhotoUrl: '',
   hostingType: '',
   propertyLocation: '',
   description: '',
   price: 0,
   agreeToTerms: false
 })
+
+const idPhotoInput = ref(null)
+const idPhotoPreview = ref('')
+const uploadingIdPhoto = ref(false)
 
 const scrollToForm = () => {
   formSection.value?.scrollIntoView({ behavior: 'smooth' })
@@ -419,6 +478,7 @@ const progress = computed(() => {
     formData.address,
     formData.nationality,
     formData.idNumber,
+    formData.idPhotoUrl,
     formData.hostingType,
     formData.propertyLocation,
     formData.description,
@@ -437,6 +497,7 @@ const isFormValid = computed(() => {
          formData.address &&
          formData.nationality &&
          formData.idNumber &&
+         formData.idPhotoUrl &&
          formData.hostingType &&
          formData.propertyLocation &&
          formData.description &&
@@ -445,6 +506,80 @@ const isFormValid = computed(() => {
 
 const updateProgress = () => {
   // Just trigger reactivity
+}
+
+const handleIdPhotoUpload = async (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please upload an image file')
+    return
+  }
+
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image size must be less than 5MB')
+    return
+  }
+
+  uploadingIdPhoto.value = true
+
+  try {
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      idPhotoPreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      alert('Please log in to upload photos')
+      return
+    }
+
+    // Upload to Supabase Storage
+    const timestamp = Date.now()
+    const fileName = `${user.id}_id_${timestamp}.${file.name.split('.').pop()}`
+    const filePath = `host-applications/${fileName}`
+
+    const { data, error } = await supabase.storage
+      .from('merry360x')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      })
+
+    if (error) throw error
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('merry360x')
+      .getPublicUrl(filePath)
+
+    formData.idPhotoUrl = publicUrl
+    console.log('✅ ID photo uploaded:', publicUrl)
+    updateProgress()
+
+  } catch (error) {
+    console.error('ID photo upload error:', error)
+    alert('Failed to upload ID photo. Please try again.')
+    idPhotoPreview.value = ''
+  } finally {
+    uploadingIdPhoto.value = false
+  }
+}
+
+const removeIdPhoto = () => {
+  formData.idPhotoUrl = ''
+  idPhotoPreview.value = ''
+  if (idPhotoInput.value) {
+    idPhotoInput.value.value = ''
+  }
+  updateProgress()
 }
 
 const handleSubmit = async () => {
@@ -491,6 +626,7 @@ const handleSubmit = async () => {
       host_application_date: new Date().toISOString(),
       host_nationality: formData.nationality,
       host_id_number: formData.idNumber,
+      host_id_photo: formData.idPhotoUrl,
       host_application_details: {
         address: formData.address,
         email: formData.email,
@@ -498,7 +634,8 @@ const handleSubmit = async () => {
         hostingType: formData.hostingType,
         propertyLocation: formData.propertyLocation,
         price: formData.hostingType === 'accommodation' ? formData.price : null,
-        description: formData.description
+        description: formData.description,
+        idPhotoUrl: formData.idPhotoUrl
       }
     }
 
@@ -524,6 +661,10 @@ const handleSubmit = async () => {
         formData[key] = ''
       }
     })
+    idPhotoPreview.value = ''
+    if (idPhotoInput.value) {
+      idPhotoInput.value.value = ''
+    }
     
     // Redirect to home
     router.push('/')
