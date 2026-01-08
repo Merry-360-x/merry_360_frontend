@@ -1266,18 +1266,20 @@ const validateCurrentStep = () => {
       }
     }
   } else if (currentStep.value === 3) {
+    // Step 3 validation - only check required fields when clicking Next
+    // Don't block user from selecting amenities/property details
     if (formData.hostingType === 'accommodation') {
       const price = Number(formData.price)
       const locationText = String(formData.propertyLocation || '').trim()
       const hasPrice = Number.isFinite(price) && price > 0
 
       if (!locationText || !hasPrice) {
-        alert(t('hostApplication.validation.step3Required'))
+        showToastError('Please fill in the location and price fields before proceeding to the next step.')
         return false
       }
     } else {
       if (!formData.propertyLocation || !formData.capacity) {
-        alert(t('hostApplication.validation.step3Required'))
+        showToastError('Please fill in the location and capacity fields before proceeding to the next step.')
         return false
       }
     }

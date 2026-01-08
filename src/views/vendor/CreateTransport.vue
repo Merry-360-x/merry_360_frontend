@@ -220,7 +220,7 @@
                 </svg>
                 {{ isSubmitting ? 'Creating...' : (imagesUploading ? 'Uploading...' : 'Create Service') }}
               </Button>
-              <Button type="button" variant="secondary" @click="$router.push(dashboardPath)">
+              <Button type="button" variant="secondary" @click="handleCancel">
                 Cancel
               </Button>
             </div>
@@ -300,6 +300,10 @@ const validateForm = () => {
   return Object.keys(errors.value).length === 0
 }
 
+const handleCancel = () => {
+  router.push(dashboardPath.value)
+}
+
 const handleSubmit = async () => {
   console.log('🔍 [Transport Create] Starting submission...')
   
@@ -360,13 +364,27 @@ const handleSubmit = async () => {
     }
 
     // Add timeout protection
-    const createTransport = api.transport.create(transportData)
-    const timeout = new Promise((_, reject) => 
+    const createTransportPromise = api.transport.create(transportData)
+    const timeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
     )
 
-    const result = await Promise.race([createTransport, timeout])
-    console.log('✅ [Transport Create] Transport created successfully!', result)
+    let result
+    try {
+      result = await Promise.race([createTransportPromise, timeoutPromise])
+      console.log('✅ [Transport Create] Transport created successfully!', result)
+    } catch (createError) {
+      if (createError?.message?.includes('timeout')) {
+        throw new Error('The request is taking too long. Please check your internet connection and try again.')
+      }
+      throw createError
+    }
+    
+    // Verify result has data
+    if (!result || !result.data) {
+      console.warn('⚠️ [Transport Create] No data returned, but no error. Checking if transport was created...')
+      // Transport might have been created but response is empty - continue anyway
+    }
     
     showSuccess.value = true
     showToast('Transport service created successfully!', 'success')

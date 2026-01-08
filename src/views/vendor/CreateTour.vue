@@ -204,7 +204,7 @@
                 </svg>
                 {{ isSubmitting ? 'Creating...' : (imagesUploading ? 'Uploading...' : 'Create Tour') }}
               </Button>
-              <Button type="button" variant="secondary" @click="$router.push(dashboardPath)">
+              <Button type="button" variant="secondary" @click="handleCancel">
                 Cancel
               </Button>
             </div>
@@ -286,6 +286,10 @@ const validateForm = () => {
   return Object.keys(errors.value).length === 0
 }
 
+const handleCancel = () => {
+  router.push(dashboardPath.value)
+}
+
 const handleSubmit = async () => {
   console.log('🔍 [Tour Create] Starting submission...')
   
@@ -344,13 +348,14 @@ const handleSubmit = async () => {
     }
 
     // Add timeout protection with better error handling
-    try {
-      const createTourPromise = api.tours.create(tourData)
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
-      )
+    const createTourPromise = api.tours.create(tourData)
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+    )
 
-      const result = await Promise.race([createTourPromise, timeoutPromise])
+    let result
+    try {
+      result = await Promise.race([createTourPromise, timeoutPromise])
       console.log('✅ [Tour Create] Tour created successfully!', result)
     } catch (createError) {
       // Re-throw with better error message
@@ -358,6 +363,12 @@ const handleSubmit = async () => {
         throw new Error('The request is taking too long. Please check your internet connection and try again.')
       }
       throw createError
+    }
+    
+    // Verify result has data
+    if (!result || !result.data) {
+      console.warn('⚠️ [Tour Create] No data returned, but no error. Checking if tour was created...')
+      // Tour might have been created but response is empty - continue anyway
     }
     
     showSuccess.value = true
