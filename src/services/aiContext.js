@@ -79,19 +79,17 @@ export async function getToursContext() {
 
 /**
  * Fetch available transport options from database
- * NOTE: If transport table doesn't exist yet, returns helpful message
  */
 export async function getTransportContext() {
   try {
     const { data, error } = await supabase
-      .from('transport_services')
-      .select('id, service_type, route, price, vehicle_type, available')
+      .from('vehicles')
+      .select('id, name, type, capacity, price_per_day, available')
       .eq('available', true)
       .limit(15)
 
     if (error) {
-      // Transport table might not exist yet
-      console.warn('Transport table query error:', error)
+      console.warn('Vehicles table query error:', error)
       return 'Check our Transport section for airport transfers, car rentals, and private drivers.'
     }
 
@@ -100,11 +98,11 @@ export async function getTransportContext() {
     }
 
     // Format for AI context
-    const summary = data.map(service => 
-      `${service.service_type}: ${service.route} - ${service.price}, Vehicle: ${service.vehicle_type}`
+    const summary = data.map(vehicle => 
+      `${vehicle.name}: ${vehicle.type} (Capacity: ${vehicle.capacity}, $${vehicle.price_per_day}/day)`
     ).join('\n')
 
-    return `Available Transport (${data.length} options):\n${summary}`
+    return `Available Transport (${data.length} vehicles):\n${summary}`
   } catch (error) {
     console.error('Error fetching transport:', error)
     return 'Visit our Transport section for airport transfers, car rentals, and more.'
