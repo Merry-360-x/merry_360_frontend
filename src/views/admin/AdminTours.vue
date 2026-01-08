@@ -96,7 +96,6 @@ const { showToast } = useToast()
 const router = useRouter()
 const { t } = useTranslation()
 const currencyStore = useCurrencyStore()
-const { t } = useTranslation()
 const tours = ref([])
 const loading = ref(true)
 
