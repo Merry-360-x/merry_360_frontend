@@ -41,35 +41,45 @@
               />
             </div>
             <!-- Show all gallery images (up to 4 thumbnails) -->
-            <div v-for="(img, index) in accommodation.gallery.slice(0, 4)" :key="index" class="h-32 bg-gray-200 dark:bg-gray-700 relative overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
-              <div
-                v-if="!galleryLoaded[index] || galleryError[index]"
-                class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700"
-              >
-                <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <template v-if="accommodation.gallery && accommodation.gallery.length > 0">
+              <div v-for="(img, index) in accommodation.gallery.slice(0, 4)" :key="`gallery-${index}`" class="h-32 bg-gray-200 dark:bg-gray-700 relative overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
+                <div
+                  v-if="!galleryLoaded[index] || galleryError[index]"
+                  class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700"
+                >
+                  <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <img 
+                  v-if="img"
+                  loading="lazy" 
+                  decoding="async"
+                  :src="optimizeImage(img)" 
+                  :alt="`${accommodation.name} - Image ${index + 2}`" 
+                  @load="() => handleGalleryLoad(index)"
+                  @error="() => handleGalleryError(index)"
+                  @click="accommodation.mainImage = img; resetImageLoadingState()"
+                  class="w-full h-full object-cover"
+                  v-show="galleryLoaded[index] && !galleryError[index]"
+                />
+              </div>
+              <!-- Show count if more than 4 images -->
+              <div v-if="accommodation.gallery.length > 4" class="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                <div class="text-center">
+                  <p class="text-lg font-bold text-gray-700 dark:text-gray-300">+{{ accommodation.gallery.length - 4 }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">more photos</p>
+                </div>
+              </div>
+            </template>
+            <!-- Show placeholder if no gallery images -->
+            <template v-else>
+              <div v-for="i in 4" :key="`placeholder-${i}`" class="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                <svg class="w-8 h-8 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
               </div>
-              <img 
-                v-if="img"
-                loading="lazy" 
-                decoding="async"
-                :src="optimizeImage(img)" 
-                :alt="`${accommodation.name} - Image ${index + 2}`" 
-                @load="() => handleGalleryLoad(index)"
-                @error="() => handleGalleryError(index)"
-                @click="accommodation.mainImage = img; resetImageLoadingState()"
-                class="w-full h-full object-cover"
-                v-show="galleryLoaded[index] && !galleryError[index]"
-              />
-            </div>
-            <!-- Show count if more than 4 images -->
-            <div v-if="accommodation.gallery.length > 4" class="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-              <div class="text-center">
-                <p class="text-lg font-bold text-gray-700 dark:text-gray-300">+{{ accommodation.gallery.length - 4 }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">more photos</p>
-              </div>
-            </div>
+            </template>
           </div>
 
           <!-- Header Info -->
