@@ -556,7 +556,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import AmenitiesSelector from '../../components/host/AmenitiesSelector.vue'
@@ -576,6 +576,12 @@ const { t } = useTranslation()
 const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(1)
+
+// Ensure isSubmitting is reset on mount (in case of stuck state)
+onMounted(() => {
+  isSubmitting.value = false
+  photosUploading.value = false
+})
 
 const TOTAL_STEPS = 5
 
