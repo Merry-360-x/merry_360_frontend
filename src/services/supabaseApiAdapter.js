@@ -411,19 +411,55 @@ export const supabaseApiAdapter = {
       }
       console.log('✅ [Tours Create] User authenticated:', user.email)
 
-      // Prepare tour data with user_id
-      const insertData = {
-        ...tourData,
-        user_id: user.id,
-        created_at: new Date().toISOString()
+      // Parse duration from string like "3 Days 2 Nights" to extract number of days
+      const parseDurationDays = (duration) => {
+        if (!duration) return null
+        if (typeof duration === 'number') return duration
+        if (typeof duration === 'string') {
+          // Try to extract number from strings like "3 Days 2 Nights" or "3 Days"
+          const match = duration.match(/(\d+)\s*(?:day|days)/i)
+          if (match) return parseInt(match[1])
+          // Try to parse as number
+          const num = parseInt(duration)
+          if (!isNaN(num)) return num
+        }
+        return null
       }
+
+      // Map form data to database columns (only include valid columns)
+      const insertData = {
+        name: tourData.name || tourData.title || '',
+        destination: tourData.destination || tourData.location || '',
+        description: tourData.description || null,
+        duration_days: tourData.duration_days || parseDurationDays(tourData.duration) || null,
+        price: Number.isFinite(tourData.price) ? Number(tourData.price) : null,
+        category: tourData.category || tourData.difficulty || null,
+        main_image: tourData.main_image || tourData.image || null,
+        images: Array.isArray(tourData.images) ? tourData.images : (tourData.image ? [tourData.image] : []),
+        available: tourData.available !== undefined ? tourData.available : true
+      }
+      
+      // Remove null/undefined values to avoid schema errors
+      Object.keys(insertData).forEach(key => {
+        if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
+          delete insertData[key]
+        }
+      })
+      
       console.log('📤 [Tours Create] Inserting into database:', JSON.stringify(insertData, null, 2))
 
-      const { data, error } = await supabase
+      // Add timeout protection
+      const insertPromise = supabase
         .from('tours')
         .insert([insertData])
         .select('*')
         .single()
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 30000)
+      )
+
+      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
 
       if (error) {
         console.error('❌ [Tours Create] Database error:', {
@@ -497,19 +533,41 @@ export const supabaseApiAdapter = {
       }
       console.log('✅ [Transport Create] User authenticated:', user.email)
 
-      // Prepare transport data with user_id
+      // Map form data to database columns (only include valid columns for vehicles table)
       const insertData = {
-        ...transportData,
-        user_id: user.id,
-        created_at: new Date().toISOString()
+        name: transportData.name || '',
+        type: transportData.vehicle_type || transportData.type || null,
+        description: transportData.description || null,
+        capacity: Number.isFinite(transportData.capacity) ? Number(transportData.capacity) : null,
+        price_per_day: Number.isFinite(transportData.price) ? Number(transportData.price) : null,
+        license_plate: transportData.license_plate || null,
+        driver_included: transportData.professional_driver || transportData.driver_included || false,
+        main_image: transportData.main_image || transportData.image || null,
+        images: Array.isArray(transportData.images) ? transportData.images : (transportData.image ? [transportData.image] : []),
+        available: transportData.available !== undefined ? transportData.available : true
       }
+      
+      // Remove null/undefined/empty values to avoid schema errors
+      Object.keys(insertData).forEach(key => {
+        if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
+          delete insertData[key]
+        }
+      })
+      
       console.log('📤 [Transport Create] Inserting into database:', JSON.stringify(insertData, null, 2))
 
-      const { data, error } = await supabase
+      // Add timeout protection
+      const insertPromise = supabase
         .from('vehicles')
         .insert([insertData])
         .select('*')
         .single()
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 30000)
+      )
+
+      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
 
       if (error) {
         console.error('❌ [Transport Create] Database error:', {
