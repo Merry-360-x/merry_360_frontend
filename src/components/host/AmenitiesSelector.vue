@@ -8,6 +8,7 @@
       <h4 class="text-lg font-semibold text-text-primary mb-4">What about these guest favorites?</h4>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         <button
+          type="button"
           v-for="amenity in guestFavorites"
           :key="amenity.id"
           @click="toggleAmenity(amenity.id)"
@@ -29,6 +30,7 @@
       <h4 class="text-lg font-semibold text-text-primary mb-4">Do you have any standout amenities?</h4>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         <button
+          type="button"
           v-for="amenity in standoutAmenities"
           :key="amenity.id"
           @click="toggleAmenity(amenity.id)"
