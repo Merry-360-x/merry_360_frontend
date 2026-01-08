@@ -513,7 +513,12 @@ const userStore = useUserStore()
 const { success: showToastSuccess, error: showToastError } = useToast()
 
 const isHostPortal = computed(() => String(route.path || '').startsWith('/host'))
-const basePath = computed(() => (isHostPortal.value ? '/host' : '/staff'))
+const isAdminPortal = computed(() => String(route.path || '').startsWith('/admin'))
+const basePath = computed(() => {
+  if (isHostPortal.value) return '/host'
+  if (isAdminPortal.value) return '/admin'
+  return '/staff'
+})
 const dashboardPath = computed(() => basePath.value)
 const propertiesPath = computed(() => `${basePath.value}/properties`)
 

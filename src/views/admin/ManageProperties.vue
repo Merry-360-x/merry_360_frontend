@@ -7,12 +7,14 @@
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ t('admin.manageProperties.pageTitle') }}</h1>
             <p class="text-gray-600 dark:text-gray-400">{{ t('admin.manageProperties.pageSubtitle') }}</p>
           </div>
-          <Button @click="showAddModal = true" variant="primary">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            {{ t('admin.manageProperties.addNewProperty') }}
-          </Button>
+          <router-link to="/admin/add-property">
+            <Button variant="primary">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              {{ t('admin.manageProperties.addNewProperty') }}
+            </Button>
+          </router-link>
         </div>
 
         <!-- Loading State -->

@@ -416,6 +416,19 @@ const routes = [
     name: 'admin-create-transport',
     component: CreateTransport,
     meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  // Admin property creation routes
+  {
+    path: '/admin/add-property',
+    name: 'admin-add-property',
+    component: StaffAddProperty,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/edit-property/:id',
+    name: 'admin-edit-property',
+    component: StaffAddProperty,
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ]
 
