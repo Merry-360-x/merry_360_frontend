@@ -309,8 +309,7 @@ const handleSubmit = async () => {
       throw new Error('Please upload at least one image')
     }
 
-    // Calculate duration in days (convert hours to fractional days)
-    const totalDays = form.value.durationDays + (form.value.durationHours / 24)
+    // Send duration_days and duration_hours separately (not calculated total)
     const durationString = form.value.durationDays > 0 
       ? `${form.value.durationDays} ${form.value.durationDays === 1 ? 'day' : 'days'}${form.value.durationHours > 0 ? ` ${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}` : ''}`
       : `${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}`
@@ -322,8 +321,9 @@ const handleSubmit = async () => {
       location: form.value.location,
       description: form.value.description,
       category: form.value.category,
-      duration_days: totalDays,
-      duration: durationString,
+      duration_days: Number(form.value.durationDays) || 0,
+      duration_hours: Number(form.value.durationHours) || 0,
+      duration: durationString, // Keep for backward compatibility
       difficulty: form.value.difficulty,
       price: Number(form.value.price),
       group_size: form.value.groupSize,

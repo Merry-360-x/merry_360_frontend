@@ -337,9 +337,11 @@ const handleSubmit = async () => {
       route: form.value.route,
       description: form.value.description,
       capacity: Number(form.value.capacity),
-      luggage: form.value.luggageBags > 0 ? `${form.value.luggageBags} ${form.value.luggageBags === 1 ? 'bag' : 'bags'}` : '',
+      luggage_bags: Number(form.value.luggageBags) || 0,
       price: Number(form.value.price),
-      duration: durationString,
+      duration_days: Number(form.value.durationDays) || 0,
+      duration_hours: Number(form.value.durationHours) || 0,
+      duration: durationString, // Keep for backward compatibility
       main_image: imageUrls[0],
       image: imageUrls[0],
       images: imageUrls,

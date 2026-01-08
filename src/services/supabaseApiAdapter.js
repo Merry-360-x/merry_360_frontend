@@ -432,11 +432,20 @@ export const supabaseApiAdapter = {
         : (tourData.image ? [tourData.image] : (tourData.main_image ? [tourData.main_image] : []))
       const mainImg = tourData.main_image || tourData.image || (imageArray.length > 0 ? imageArray[0] : null)
       
+      // Calculate duration_days from separate days and hours inputs
+      const durationDays = tourData.duration_days !== undefined && tourData.duration_days !== null 
+        ? Number(tourData.duration_days) 
+        : (parseDurationDays(tourData.duration) || 0)
+      const durationHours = tourData.duration_hours !== undefined && tourData.duration_hours !== null
+        ? Number(tourData.duration_hours)
+        : 0
+      
       const insertData = {
         name: tourData.name || tourData.title || '',
         destination: tourData.destination || tourData.location || '',
         description: tourData.description || null,
-        duration_days: tourData.duration_days || parseDurationDays(tourData.duration) || null,
+        duration_days: durationDays,
+        duration_hours: durationHours,
         price: Number.isFinite(tourData.price) ? Number(tourData.price) : null,
         category: tourData.category || null,
         main_image: mainImg,
@@ -587,6 +596,17 @@ export const supabaseApiAdapter = {
         : (transportData.image ? [transportData.image] : [])
       const mainImg = transportData.main_image || transportData.image || (imageArray.length > 0 ? imageArray[0] : null)
       
+      // Map duration and luggage fields from form
+      const durationDays = transportData.duration_days !== undefined && transportData.duration_days !== null
+        ? Number(transportData.duration_days)
+        : 0
+      const durationHours = transportData.duration_hours !== undefined && transportData.duration_hours !== null
+        ? Number(transportData.duration_hours)
+        : 0
+      const luggageBags = transportData.luggage_bags !== undefined && transportData.luggage_bags !== null
+        ? Number(transportData.luggage_bags)
+        : null
+      
       const insertData = {
         name: transportData.name || '',
         type: transportData.vehicle_type || transportData.type || null,
@@ -595,6 +615,9 @@ export const supabaseApiAdapter = {
         price_per_day: Number.isFinite(transportData.price) ? Number(transportData.price) : null,
         license_plate: transportData.license_plate || null,
         driver_included: transportData.professional_driver || transportData.driver_included || false,
+        duration_days: durationDays,
+        duration_hours: durationHours,
+        luggage_bags: luggageBags,
         main_image: mainImg,
         images: imageArray.length > 0 ? imageArray : null,
         available: transportData.available !== undefined ? transportData.available : true
