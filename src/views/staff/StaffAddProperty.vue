@@ -3,34 +3,31 @@
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-8">
       <div class="container mx-auto px-4 lg:px-8">
         <!-- Header -->
-        <div class="max-w-3xl mx-auto mb-8">
-          <router-link :to="dashboardPath" class="inline-flex items-center gap-2 text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="max-w-3xl mx-auto mb-6">
+          <router-link :to="dashboardPath" class="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
             Back
           </router-link>
-          <h1 class="text-4xl font-bold text-text-primary mb-2">⚡ Quick Add Property</h1>
-          <p class="text-text-secondary">Just fill the essentials - we'll handle the rest!</p>
+          <h1 class="text-lg font-semibold text-text-primary mb-0.5">Add Property</h1>
+          <p class="text-xs text-text-secondary">Fill in the required information</p>
         </div>
 
         <!-- Progress -->
-        <div class="max-w-3xl mx-auto mb-6">
+        <div class="max-w-3xl mx-auto mb-4">
           <div class="flex items-center justify-between">
             <div v-for="(step, index) in steps" :key="index" class="flex items-center" :class="index < steps.length - 1 ? 'flex-1' : ''">
               <div class="flex flex-col items-center">
                 <div 
-                  class="w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all"
+                  class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium transition-all"
                   :class="currentStep > index ? 'bg-green-500 text-white' : currentStep === index ? 'bg-brand-600 text-white' : 'bg-gray-300 text-gray-600'"
                 >
-                  <svg v-if="currentStep > index" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  <span v-else>{{ index + 1 }}</span>
+                  <span>{{ index + 1 }}</span>
                 </div>
-                <span class="text-xs font-medium mt-1" :class="currentStep >= index ? 'text-text-primary' : 'text-text-muted'">{{ step.title }}</span>
+                <span class="text-xs mt-0.5" :class="currentStep >= index ? 'text-text-primary' : 'text-text-muted'">{{ step.title }}</span>
               </div>
-              <div v-if="index < steps.length - 1" class="flex-1 h-1 mx-2" :class="currentStep > index ? 'bg-green-500' : 'bg-gray-300'"></div>
+              <div v-if="index < steps.length - 1" class="flex-1 h-0.5 mx-1.5" :class="currentStep > index ? 'bg-green-500' : 'bg-gray-300'"></div>
             </div>
           </div>
         </div>
@@ -40,87 +37,86 @@
           <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
             <form @submit.prevent="handleNext">
               <!-- Content -->
-              <div class="p-8">
+              <div class="p-6">
                 <!-- Step 1: Basic Info -->
                 <div v-if="currentStep === 0" class="space-y-6">
-                  <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-text-primary">📝 Tell us about your property</h2>
-                    <p class="text-text-secondary mt-2">Quick and easy - just the essentials!</p>
+                  <div class="mb-4">
+                    <h2 class="text-base font-semibold text-text-primary">Basic Information</h2>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Property Name -->
                     <div class="md:col-span-2">
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Property Name *</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Property Name *</label>
                       <input 
                         v-model="form.title"
                         type="text" 
                         required
                         placeholder="e.g., Luxury Kigali Apartment"
-                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       />
                     </div>
 
                     <!-- Property Type -->
                     <div>
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Type *</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Type *</label>
                       <select 
                         v-model="form.category"
                         required
-                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       >
                         <option value="">Select type...</option>
-                        <option value="hotel">🏨 Hotel</option>
-                        <option value="villa">🏡 Villa</option>
-                        <option value="apartment">🏢 Apartment</option>
-                        <option value="resort">🏖️ Resort</option>
-                        <option value="lodge">🏕️ Lodge</option>
-                        <option value="guesthouse">🏠 Guesthouse</option>
+                        <option value="hotel">Hotel</option>
+                        <option value="villa">Villa</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="resort">Resort</option>
+                        <option value="lodge">Lodge</option>
+                        <option value="guesthouse">Guesthouse</option>
                       </select>
                     </div>
 
                     <!-- Location -->
                     <div>
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Location *</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Location *</label>
                       <input 
                         v-model="form.location"
                         type="text" 
                         required
                         placeholder="e.g., Kigali, Rwanda"
-                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       />
                     </div>
 
                     <!-- Price -->
                     <div>
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Price per Night (RWF) *</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Price per Night (RWF) *</label>
                       <input 
                         v-model.number="form.price"
                         type="number" 
                         min="1"
                         required
                         placeholder="100000"
-                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       />
                     </div>
 
                     <!-- Max Guests -->
                     <div>
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Max Guests *</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Max Guests *</label>
                       <input 
                         v-model.number="form.maxGuests"
                         type="number" 
                         min="1"
                         required
                         placeholder="4"
-                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       />
                     </div>
 
                     <!-- Bedrooms & Bathrooms (Optional) -->
                     <div class="md:col-span-2">
-                      <details class="bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
-                        <summary class="cursor-pointer font-semibold text-text-primary">➕ Optional: Beds & Baths</summary>
+                      <details class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3">
+                        <summary class="cursor-pointer text-xs font-medium text-text-secondary">Optional: Beds & Baths</summary>
                         <div class="grid grid-cols-2 gap-4 mt-4">
                           <div>
                             <label class="block text-sm font-medium text-text-secondary mb-2">Bedrooms</label>
@@ -148,30 +144,29 @@
 
                     <!-- Description -->
                     <div class="md:col-span-2">
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Description *</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Description *</label>
                       <textarea 
                         v-model="form.description"
                         required
                         rows="3"
                         placeholder="Describe your property..."
-                        class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary resize-none"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary resize-none"
                       ></textarea>
                     </div>
 
                     <!-- Quick Amenities -->
                     <div class="md:col-span-2">
-                      <label class="block text-sm font-semibold text-text-primary mb-2">Quick Amenities (select all that apply)</label>
+                      <label class="block text-xs font-medium text-text-secondary mb-1.5">Amenities (select all that apply)</label>
                       <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
                         <button
                           v-for="amenity in quickAmenities"
                           :key="amenity.value"
                           type="button"
                           @click="toggleAmenity(amenity.value)"
-                          class="p-3 border-2 rounded-lg transition-all text-center"
-                          :class="form.amenities.includes(amenity.value) ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
+                          class="p-2 text-xs border rounded transition-all text-center"
+                          :class="form.amenities.includes(amenity.value) ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300 text-text-secondary'"
                         >
-                          <div class="text-2xl mb-1">{{ amenity.icon }}</div>
-                          <div class="text-xs font-medium">{{ amenity.label }}</div>
+                          {{ amenity.label }}
                         </button>
                       </div>
                     </div>
@@ -179,10 +174,10 @@
                 </div>
 
                 <!-- Step 2: Photos -->
-                <div v-if="currentStep === 1" class="space-y-6">
-                  <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-text-primary">📸 Add Photos</h2>
-                    <p class="text-text-secondary mt-2">Upload at least 3 photos (you can add more later!)</p>
+                <div v-if="currentStep === 1" class="space-y-4">
+                  <div class="mb-4">
+                    <h2 class="text-base font-semibold text-text-primary">Photos</h2>
+                    <p class="text-xs text-text-secondary mt-1">Upload at least 3 photos</p>
                   </div>
 
                   <PhotoUploader
@@ -197,38 +192,37 @@
                 </div>
 
                 <!-- Step 3: Done -->
-                <div v-if="currentStep === 2" class="space-y-6">
-                  <div class="text-center mb-6">
-                    <div class="text-6xl mb-4">🎉</div>
-                    <h2 class="text-2xl font-bold text-text-primary">Almost Done!</h2>
-                    <p class="text-text-secondary mt-2">Review and publish your property</p>
+                <div v-if="currentStep === 2" class="space-y-4">
+                  <div class="mb-4">
+                    <h2 class="text-base font-semibold text-text-primary">Review</h2>
+                    <p class="text-xs text-text-secondary mt-1">Review your information before publishing</p>
                   </div>
 
-                  <div class="bg-gradient-to-br from-brand-50 to-blue-50 dark:from-brand-900/20 dark:to-blue-900/20 rounded-2xl p-6">
-                    <div class="grid grid-cols-2 gap-4">
+                  <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                    <div class="grid grid-cols-2 gap-3">
                       <div>
-                        <p class="text-sm text-text-muted">Property</p>
-                        <p class="text-lg font-bold text-text-primary">{{ form.title }}</p>
+                        <p class="text-xs text-text-muted">Property</p>
+                        <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.title }}</p>
                       </div>
                       <div>
-                        <p class="text-sm text-text-muted">Type</p>
-                        <p class="text-lg font-bold text-text-primary">{{ form.category }}</p>
+                        <p class="text-xs text-text-muted">Type</p>
+                        <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.category }}</p>
                       </div>
                       <div>
-                        <p class="text-sm text-text-muted">Location</p>
-                        <p class="text-lg font-bold text-text-primary">{{ form.location }}</p>
+                        <p class="text-xs text-text-muted">Location</p>
+                        <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.location }}</p>
                       </div>
                       <div>
-                        <p class="text-sm text-text-muted">Price</p>
-                        <p class="text-lg font-bold text-brand-600">RWF {{ form.price?.toLocaleString() }}</p>
+                        <p class="text-xs text-text-muted">Price</p>
+                        <p class="text-sm font-medium text-brand-600 mt-0.5">RWF {{ form.price?.toLocaleString() }}</p>
                       </div>
                       <div>
-                        <p class="text-sm text-text-muted">Guests</p>
-                        <p class="text-lg font-bold text-text-primary">{{ form.maxGuests }}</p>
+                        <p class="text-xs text-text-muted">Guests</p>
+                        <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.maxGuests }}</p>
                       </div>
                       <div>
-                        <p class="text-sm text-text-muted">Photos</p>
-                        <p class="text-lg font-bold text-text-primary">{{ propertyImages.length }}</p>
+                        <p class="text-xs text-text-muted">Photos</p>
+                        <p class="text-sm font-medium text-text-primary mt-0.5">{{ propertyImages.length }}</p>
                       </div>
                     </div>
                   </div>
@@ -236,14 +230,14 @@
               </div>
 
               <!-- Actions -->
-              <div class="border-t-2 border-gray-100 dark:border-gray-700 p-6 bg-gray-50 dark:bg-gray-900/50 flex gap-4">
+              <div class="border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-900/50 flex gap-3">
                 <button
                   v-if="currentStep > 0"
                   type="button"
                   @click="previousStep"
-                  class="px-6 py-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-text-primary font-semibold rounded-xl hover:bg-gray-50"
+                  class="px-4 py-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-text-primary font-medium rounded-lg hover:bg-gray-50"
                 >
-                  ← Back
+                  Back
                 </button>
                 
                 <div class="flex-1"></div>
@@ -253,9 +247,9 @@
                   type="button"
                   @click="handleNext"
                   :disabled="!canProceed"
-                  class="px-8 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-5 py-2 text-sm bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Next →
+                  Next
                 </button>
 
                 <button
@@ -263,14 +257,14 @@
                   type="button"
                   @click="handleSubmit"
                   :disabled="isSubmitting || imagesUploading"
-                  class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  class="px-5 py-2 text-sm bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
-                  <svg v-if="isSubmitting" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <svg v-if="isSubmitting" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                   <span v-if="isSubmitting">Publishing...</span>
-                  <span v-else>🚀 Publish Now!</span>
+                  <span v-else>Publish</span>
                 </button>
               </div>
             </form>
@@ -282,16 +276,15 @@
     <!-- Success Modal -->
     <Teleport to="body">
       <div v-if="showSuccessModal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/50">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-bounce-in">
-          <div class="bg-gradient-to-br from-green-500 to-green-600 p-8 text-center">
-            <div class="text-6xl mb-4">🎉</div>
-            <h2 class="text-3xl font-bold text-white mb-2">Published!</h2>
-            <p class="text-green-50">Your property is now live</p>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full overflow-hidden">
+          <div class="p-6 text-center border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-base font-semibold text-text-primary mb-1">Published</h2>
+            <p class="text-xs text-text-secondary">Your property is now live</p>
           </div>
-          <div class="p-6 text-center">
+          <div class="p-4">
             <button
               @click="router.push(propertiesPath)"
-              class="w-full px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl"
+              class="w-full px-4 py-2 text-sm bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg"
             >
               View Properties
             </button>
@@ -338,12 +331,12 @@ const steps = [
 ]
 
 const quickAmenities = [
-  { value: 'WiFi', label: 'WiFi', icon: '📶' },
-  { value: 'Pool', label: 'Pool', icon: '🏊' },
-  { value: 'Parking', label: 'Parking', icon: '🚗' },
-  { value: 'Air Conditioning', label: 'AC', icon: '❄️' },
-  { value: 'Kitchen', label: 'Kitchen', icon: '🍳' },
-  { value: 'TV', label: 'TV', icon: '📺' }
+  { value: 'WiFi', label: 'WiFi' },
+  { value: 'Pool', label: 'Pool' },
+  { value: 'Parking', label: 'Parking' },
+  { value: 'Air Conditioning', label: 'AC' },
+  { value: 'Kitchen', label: 'Kitchen' },
+  { value: 'TV', label: 'TV' }
 ]
 
 const form = ref({
