@@ -42,7 +42,7 @@ const ToursPage = () => import('../views/tours/ToursPage.vue')
 const ServicesPage = () => import('../views/services/ServicesPage.vue')
 
 // Host
-const BecomeHost = () => import('../views/host/BecomeHost.vue')
+const BecomeHost = () => import('../views/host/BecomeHostNew.vue')
 
 // Dashboard
 const UserDashboard = () => import('../views/dashboard/UserDashboard.vue')

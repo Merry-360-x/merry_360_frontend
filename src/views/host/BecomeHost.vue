@@ -1,38 +1,58 @@
 <template>
   <MainLayout>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-white via-orange-50 to-white dark:from-gray-800 dark:via-gray-700 dark:to-gray-900 py-16 md:py-24 transition-colors duration-200">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="relative bg-gradient-to-br from-brand-50 via-orange-50 to-brand-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-20 overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-brand-500 rounded-full filter blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
+      </div>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
-          <h1 class="text-3xl md:text-4xl font-bold mb-6 text-text-primary">
-            {{ t('hostApplication.heroTitle') }}
+          <div class="inline-block mb-6 px-6 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg animate-bounce">
+            <span class="text-brand-600 dark:text-brand-400 font-bold text-sm">🏠 Become a Host Today</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
+            Share Your Space, <br/>Earn <span class="text-brand-600">Extra Income</span>
           </h1>
-          <p class="text-base md:text-lg text-text-secondary mb-8">
-            {{ t('hostApplication.heroSubtitle') }}
+          <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-10">
+            Join thousands of hosts in Rwanda earning money by sharing their properties, tours, and transport services
           </p>
           <button 
             @click="scrollToForm"
-            class="px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-full text-base transition-all shadow-lg hover:shadow-xl"
+            class="group px-10 py-5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
           >
-            {{ t('hostApplication.getStartedToday') }}
+            <span class="flex items-center gap-3">
+              Start Application
+              <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+              </svg>
+            </span>
           </button>
         </div>
       </div>
     </section>
 
-    <!-- Multi-Step Registration Form -->
-    <section ref="formSection" class="py-16 md:py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <!-- Application Form -->
+    <section ref="formSection" class="py-16 bg-white dark:bg-gray-900">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto">
-          <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">{{ t('hostApplication.startJourneyTitle') }}</h2>
-            <p class="text-lg text-text-secondary">
-              {{ t('hostApplication.startJourneySubtitle') }}
-            </p>
+        <div class="max-w-5xl mx-auto">
+          <!-- Progress Bar -->
+          <div class="mb-12">
+            <div class="flex items-center justify-center gap-2 mb-4">
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Application Progress</span>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div 
+                class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-500 ease-out"
+                :style="{ width: `${progress}%` }"
+              ></div>
+            </div>
+            <div class="text-center mt-2">
+              <span class="text-sm font-semibold text-brand-600 dark:text-brand-400">{{ progress }}% Complete</span>
+            </div>
           </div>
 
-          <!-- Step Indicator -->
-          <div class="mb-12">
+          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden">
             <div class="flex items-center justify-between max-w-2xl mx-auto">
               <!-- Step 1 -->
               <div class="flex flex-col items-center flex-1">
