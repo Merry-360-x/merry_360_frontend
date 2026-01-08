@@ -248,6 +248,8 @@ const validateForm = () => {
 }
 
 const handleSubmit = async () => {
+  console.log('🔍 [Tour Create] Starting submission...')
+  
   // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (imagesUploading.value) {
     showToast('Please wait for image uploads to finish.', 'error')
@@ -262,22 +264,47 @@ const handleSubmit = async () => {
 
   try {
     const imageUrls = tourImages.value.map((img) => img.url || img.preview).filter(Boolean)
+    console.log('📷 [Tour Create] Image URLs:', imageUrls.length)
+
+    if (imageUrls.length === 0) {
+      throw new Error('Please upload at least one image')
+    }
 
     const tourData = {
+      name: form.value.title,
       title: form.value.title,
+      destination: form.value.location,
       location: form.value.location,
       description: form.value.description,
+      duration_days: form.value.duration,
       duration: form.value.duration,
       difficulty: form.value.difficulty,
-      price: form.value.price,
+      price: Number(form.value.price),
       group_size: form.value.groupSize,
-      image: imageUrls[0], // First image is main image
+      max_participants: form.value.groupSize,
+      main_image: imageUrls[0],
+      image: imageUrls[0],
       images: imageUrls,
-      inclusions: form.value.inclusions,
-      itinerary: form.value.itinerary
+      inclusions: form.value.inclusions || [],
+      itinerary: form.value.itinerary || '',
+      available: true
     }
     
-    await api.tours.create(tourData)
+    console.log('📤 [Tour Create] Submitting tour data:', tourData)
+    
+    // Verify API method exists
+    if (!api.tours || typeof api.tours.create !== 'function') {
+      throw new Error('Tour creation API is not available. Please contact support.')
+    }
+
+    // Add timeout protection
+    const createTour = api.tours.create(tourData)
+    const timeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+    )
+
+    const result = await Promise.race([createTour, timeout])
+    console.log('✅ [Tour Create] Tour created successfully!', result)
     
     showSuccess.value = true
     showToast('Tour created successfully!', 'success')
@@ -286,8 +313,25 @@ const handleSubmit = async () => {
       router.push(dashboardPath.value)
     }, 2000)
   } catch (error) {
-    console.error('Tour creation error:', error)
-    showToast(error.message || 'Failed to create tour', 'error')
+    console.error('❌ [Tour Create] Error:', error)
+    
+    let errorMessage = 'Failed to create tour. Please try again.'
+    
+    if (error?.message) {
+      errorMessage = error.message
+    } else if (error?.error?.message) {
+      errorMessage = error.error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    }
+
+    if (errorMessage.includes('timeout')) {
+      errorMessage = 'The request is taking too long. Please check your internet and try again.'
+    } else if (errorMessage.includes('permission') || errorMessage.includes('denied')) {
+      errorMessage = 'You don\'t have permission to create tours. Please contact admin.'
+    }
+
+    showToast(errorMessage, 'error')
   } finally {
     isSubmitting.value = false
   }

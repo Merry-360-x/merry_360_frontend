@@ -1346,9 +1346,19 @@ const handleSubmit = async () => {
       }
     }
 
-    const { error } = await supabase
+    // Add timeout protection
+    const upsertPromise = supabase
       .from('profiles')
       .upsert(profilePayload, { onConflict: 'id' })
+    
+    const timeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+    )
+
+    const { error } = await Promise.race([
+      upsertPromise.then(result => result),
+      timeout.then(() => ({ error: { message: 'Request timeout' } }))
+    ])
 
     if (error) {
       console.error('❌ Supabase error:', error)
@@ -1358,6 +1368,15 @@ const handleSubmit = async () => {
         hint: error.hint,
         code: error.code
       })
+      
+      let errorMessage = t('hostApplication.submittedFailed')
+      if (error.message) {
+        errorMessage = error.message
+      } else if (error.hint) {
+        errorMessage = error.hint
+      }
+      
+      alert(errorMessage)
       throw error
     }
     
@@ -1389,8 +1408,20 @@ const handleSubmit = async () => {
     router.push('/host')
     
   } catch (error) {
-    console.error('Host application error:', error)
-    alert(t('hostApplication.submittedFailed'))
+    console.error('❌ Host application error:', error)
+    
+    let errorMessage = t('hostApplication.submittedFailed')
+    if (error?.message) {
+      errorMessage = error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    }
+    
+    if (errorMessage.includes('timeout')) {
+      errorMessage = 'The request is taking too long. Please check your internet and try again.'
+    }
+    
+    alert(errorMessage)
   } finally {
     isSubmitting.value = false
   }

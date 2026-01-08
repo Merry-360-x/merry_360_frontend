@@ -281,6 +281,8 @@ const validateForm = () => {
 }
 
 const handleSubmit = async () => {
+  console.log('🔍 [Transport Create] Starting submission...')
+  
   // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (imagesUploading.value) {
     showToast('Please wait for image uploads to finish.', 'error')
@@ -295,25 +297,47 @@ const handleSubmit = async () => {
 
   try {
     const imageUrls = transportImages.value.map((img) => img.url || img.preview).filter(Boolean)
+    console.log('📷 [Transport Create] Image URLs:', imageUrls.length)
+
+    if (imageUrls.length === 0) {
+      throw new Error('Please upload at least one image')
+    }
 
     const transportData = {
       name: form.value.name,
       vehicle_type: form.value.vehicleType,
+      type: form.value.vehicleType,
       route: form.value.route,
       description: form.value.description,
-      capacity: form.value.capacity,
-      luggage: form.value.luggage,
-      price: form.value.price,
-      duration: form.value.duration,
+      capacity: Number(form.value.capacity),
+      luggage: form.value.luggage || '',
+      price: Number(form.value.price),
+      duration: form.value.duration || '',
+      main_image: imageUrls[0],
       image: imageUrls[0],
       images: imageUrls,
-      features: form.value.features,
-      driver_name: form.value.driverName,
-      driver_experience: form.value.driverExperience,
-      professional_driver: form.value.professionalDriver
+      features: form.value.features || [],
+      driver_name: form.value.driverName || '',
+      driver_experience: form.value.driverExperience || '',
+      professional_driver: form.value.professionalDriver || false,
+      available: true
     }
     
-    await api.transport.create(transportData)
+    console.log('📤 [Transport Create] Submitting transport data:', transportData)
+    
+    // Verify API method exists
+    if (!api.transport || typeof api.transport.create !== 'function') {
+      throw new Error('Transport creation API is not available. Please contact support.')
+    }
+
+    // Add timeout protection
+    const createTransport = api.transport.create(transportData)
+    const timeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+    )
+
+    const result = await Promise.race([createTransport, timeout])
+    console.log('✅ [Transport Create] Transport created successfully!', result)
     
     showSuccess.value = true
     showToast('Transport service created successfully!', 'success')
@@ -322,8 +346,25 @@ const handleSubmit = async () => {
       router.push(dashboardPath.value)
     }, 2000)
   } catch (error) {
-    console.error('Transport creation error:', error)
-    showToast(error.message || 'Failed to create transport service', 'error')
+    console.error('❌ [Transport Create] Error:', error)
+    
+    let errorMessage = 'Failed to create transport service. Please try again.'
+    
+    if (error?.message) {
+      errorMessage = error.message
+    } else if (error?.error?.message) {
+      errorMessage = error.error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    }
+
+    if (errorMessage.includes('timeout')) {
+      errorMessage = 'The request is taking too long. Please check your internet and try again.'
+    } else if (errorMessage.includes('permission') || errorMessage.includes('denied')) {
+      errorMessage = 'You don\'t have permission to create transport services. Please contact admin.'
+    }
+
+    showToast(errorMessage, 'error')
   } finally {
     isSubmitting.value = false
   }
