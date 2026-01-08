@@ -424,7 +424,8 @@ onMounted(async () => {
         ...foundVehicle,
         name: foundVehicle.name || 'Vehicle',
         type: foundVehicle.type || foundVehicle.vehicle_type || 'Vehicle',
-        price_per_day: Number(foundVehicle.price_per_day || foundVehicle.price || 0),
+        price_per_day: Number(foundVehicle.price_per_day || foundVehicle.price || 0), // Ensure price is a number
+        price: Number(foundVehicle.price_per_day || foundVehicle.price || 0), // Also set price for consistency
         capacity: Number(foundVehicle.capacity || 0),
         luggage_bags: Number(foundVehicle.luggage_bags || 0),
         mainImage: foundVehicle.main_image || (Array.isArray(foundVehicle.images) ? foundVehicle.images[0] : null) || 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200',
@@ -436,6 +437,13 @@ onMounted(async () => {
         driver_experience: foundVehicle.driver_experience || '',
         route: foundVehicle.route || ''
       }
+      
+      console.log('✅ Vehicle loaded:', {
+        id: vehicle.value.id,
+        name: vehicle.value.name,
+        price_per_day: vehicle.value.price_per_day,
+        price: vehicle.value.price
+      })
     }
 
     resetImageLoadingState()

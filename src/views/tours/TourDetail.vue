@@ -529,7 +529,7 @@ onMounted(async () => {
       ...tourData,
       name: tourData.name || tourData.title || 'Tour',
       destination: tourData.destination || tourData.location || '',
-      price: Number(tourData.price) || 0,
+      price: Number(tourData.price) || 0, // Ensure price is a number
       rating: Number(tourData.rating) || 4.5,
       reviews: Number(tourData.reviews_count) || 0,
       duration: durationStr,
@@ -540,6 +540,12 @@ onMounted(async () => {
       inclusions: Array.isArray(tourData.inclusions) ? tourData.inclusions : [],
       category: tourData.category || 'Tour'
     }
+    
+    console.log('✅ Tour loaded:', {
+      id: tour.value.id,
+      name: tour.value.name,
+      price: tour.value.price
+    })
 
     resetImageLoadingState()
     

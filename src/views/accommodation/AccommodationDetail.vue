@@ -631,10 +631,17 @@ onMounted(async () => {
     const response = await api.accommodations.getById(route.params.id)
     accommodation.value = {
       ...response.data,
+      price: Number(response.data.price) || 0, // Ensure price is a number
       mainImage: response.data.images[0] || response.data.image,
       gallery: response.data.images.slice(1) || [],
       eco: response.data.ecoFriendly
     }
+
+    console.log('✅ Accommodation loaded:', {
+      id: accommodation.value.id,
+      name: accommodation.value.name,
+      price: accommodation.value.price
+    })
 
     resetImageLoadingState()
   } catch (error) {

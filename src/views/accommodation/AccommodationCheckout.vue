@@ -198,11 +198,11 @@
             <div class="space-y-2 py-4 border-t border-b border-gray-200 text-sm">
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-in</span>
-                <span class="font-medium">{{ formatDate(stay.checkIn) }}</span>
+                <span class="font-medium">{{ stay.checkIn ? formatDate(stay.checkIn) : 'Not set' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Check-out</span>
-                <span class="font-medium">{{ formatDate(stay.checkOut) }}</span>
+                <span class="font-medium">{{ stay.checkOut ? formatDate(stay.checkOut) : 'Not set' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-text-secondary">Guests</span>
