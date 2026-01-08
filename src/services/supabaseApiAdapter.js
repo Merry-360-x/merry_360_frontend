@@ -441,7 +441,8 @@ export const supabaseApiAdapter = {
         category: tourData.category || null,
         main_image: mainImg,
         images: imageArray.length > 0 ? imageArray : null,
-        available: tourData.available !== undefined ? tourData.available : true
+        available: tourData.available !== undefined ? tourData.available : true,
+        user_id: user.id // Add user_id for RLS policies
       }
       
       // Remove null/undefined/empty values to avoid schema errors, but keep images as JSONB array
