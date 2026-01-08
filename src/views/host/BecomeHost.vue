@@ -894,6 +894,14 @@ const validateCurrentStep = () => {
       alert(t('hostApplication.validation.step4Required'))
       return false
     }
+    
+    // For accommodation, require at least 5 photos
+    if (formData.hostingType === 'accommodation') {
+      if (!formData.photos || formData.photos.length < 5) {
+        alert('Please upload at least 5 photos of your accommodation.')
+        return false
+      }
+    }
   }
   return true
 }
