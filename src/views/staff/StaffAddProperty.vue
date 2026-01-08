@@ -358,6 +358,10 @@ function normalizePropertyType(rawType) {
 }
 
 async function handleSubmit() {
+  console.log('🔍 Property form submission started')
+  console.log('Images uploading:', imagesUploading.value)
+  console.log('Property images count:', propertyImages.value.length)
+  
   if (imagesUploading.value) {
     showToast(t('portal.waitForUploads'), 'error')
     return
@@ -372,7 +376,10 @@ async function handleSubmit() {
   const bathrooms = Number(form.value.baths)
   const maxGuests = Number(form.value.maxGuests)
 
+  console.log('📝 Form data:', { title, category, location, amenities: form.value.amenities.length })
+
   if (!title || !category || !location || !description || !Number.isFinite(price) || price <= 0) {
+    console.log('❌ Required fields validation failed')
     showToast(t('portal.fillRequiredFields'), 'error')
     return
   }
@@ -407,12 +414,14 @@ async function handleSubmit() {
 
   try {
     const imageUrls = propertyImages.value.map((img) => img.url || img.preview).filter(Boolean)
+    console.log('📷 Image URLs extracted:', imageUrls.length, imageUrls[0])
+    
     if (!imageUrls.length) {
       showToast(t('portal.uploadAtLeastOneImage'), 'error')
       return
     }
 
-    await api.accommodations.create({
+    const propertyData = {
       name: title,
       description,
       type: normalizePropertyType(category),
@@ -429,8 +438,12 @@ async function handleSubmit() {
       vr_tour_type: form.value.vrTourType || null,
       latitude: form.value.latitude || null,
       longitude: form.value.longitude || null
-    })
+    }
 
+    console.log('📤 Submitting property data:', JSON.stringify(propertyData, null, 2))
+    await api.accommodations.create(propertyData)
+
+    console.log('✅ Property created successfully!')
     showSuccess.value = true
     showToast(t('portal.propertyAddedSuccess'), 'success')
 
@@ -457,7 +470,13 @@ async function handleSubmit() {
     }, 1500)
 
   } catch (error) {
-    console.error('Error adding property:', error)
+    console.error('❌ Error adding property:', error)
+    console.error('Error details:', {
+      message: error?.message,
+      errorObj: error?.error,
+      status: error?.status,
+      data: error?.data
+    })
     const errorMessage = error?.message || error?.error?.message || t('portal.addPropertyFailed')
     showToast(errorMessage, 'error')
   } finally {

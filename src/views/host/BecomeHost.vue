@@ -413,6 +413,7 @@
                         subtitle="Drag to reorder"
                         :min-photos="5"
                         :max-photos="20"
+                        folder="merry360x/host-applications"
                       />
 
                       <!-- Description -->
@@ -945,44 +946,57 @@ const uploadHostDocument = async (userId, kind, file) => {
 }
 
 const handleSubmit = async () => {
+  console.log('🔍 Host application submission started')
+  console.log('Terms agreed:', formData.agreeToTerms)
+  
   if (!formData.agreeToTerms) {
     alert(t('hostApplication.validation.termsRequired'))
     return
   }
 
   isSubmitting.value = true
+  console.log('📤 Starting submission process...')
   
   try {
     // Get current user
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
+      console.log('❌ User not authenticated')
       alert(t('hostApplication.loginRequired'))
       router.push('/login')
       return
     }
     
-    console.log('Submitting host application for user:', user.email)
+    console.log('✅ User authenticated:', user.email)
 
     // Upload required documents (store storage paths, not public URLs)
     let idDocumentPath = null
     let businessRegCertPath = null
 
+    console.log('📄 Uploading documents...')
+    console.log('ID doc:', idDocumentDoc.value?.file?.name)
+    console.log('Business cert:', businessRegCertDoc.value?.file?.name)
+
     try {
       if (idDocumentDoc.value?.file) {
+        console.log('⬆️ Uploading ID document...')
         idDocumentPath = await uploadHostDocument(user.id, 'id-document', idDocumentDoc.value.file)
+        console.log('✅ ID document uploaded:', idDocumentPath)
       }
 
       if (formData.applicantType === 'business' && businessRegCertDoc.value?.file) {
+        console.log('⬆️ Uploading business certificate...')
         businessRegCertPath = await uploadHostDocument(user.id, 'business-registration-certificate', businessRegCertDoc.value.file)
+        console.log('✅ Business cert uploaded:', businessRegCertPath)
       }
     } catch (uploadErr) {
-      console.error('Host document upload error:', uploadErr)
+      console.error('❌ Host document upload error:', uploadErr)
       alert(t('hostApplication.validation.uploadFailed'))
       return
     }
 
-    // Save to database
+    console.log('💾 Saving to database...')
     const profilePayload = {
       id: user.id,
       email: user.email,
@@ -1025,7 +1039,13 @@ const handleSubmit = async () => {
       .upsert(profilePayload, { onConflict: 'id' })
 
     if (error) {
-      console.error('Supabase error:', error)
+      console.error('❌ Supabase error:', error)
+      console.error('Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
       throw error
     }
     
