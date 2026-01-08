@@ -469,19 +469,25 @@ export const supabaseApiAdapter = {
         setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
       )
 
+      // Use Promise.race with proper error handling
       let result
       try {
         result = await Promise.race([insertPromise, timeoutPromise])
       } catch (raceError) {
         // If it's a timeout, throw it directly
-        if (raceError.message.includes('timeout')) {
+        if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
+          console.error('⏱️ [Tours Create] Request timed out after 30 seconds')
+          throw new Error('Request timeout - please try again')
+        }
+        // If it's a Supabase error, it will have error property
+        if (raceError?.error) {
           throw raceError
         }
-        // Otherwise, it might be from the insert promise
+        // Otherwise, re-throw the error
         throw raceError
       }
 
-      const { data, error } = result
+      const { data, error } = result || {}
 
       if (error) {
         console.error('❌ [Tours Create] Database error:', {
@@ -490,7 +496,27 @@ export const supabaseApiAdapter = {
           hint: error.hint,
           code: error.code
         })
-        throw error
+        
+        // Provide user-friendly error messages
+        let errorMessage = error.message || 'Failed to create tour'
+        if (error.code === '23505') {
+          errorMessage = 'A tour with this name already exists'
+        } else if (error.code === '23503') {
+          errorMessage = 'Invalid reference - please check your data'
+        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('denied') || error.message?.includes('RLS') || error.message?.includes('row-level security')) {
+          errorMessage = 'You do not have permission to create tours. Please contact admin.'
+        } else if (error.message?.includes('column') && error.message?.includes('does not exist')) {
+          errorMessage = 'Database schema error - please contact support'
+        } else if (error.message?.includes('null value') && error.message?.includes('violates')) {
+          errorMessage = 'Please fill in all required fields'
+        }
+        
+        throw new Error(errorMessage)
+      }
+      
+      if (!data) {
+        console.error('❌ [Tours Create] No data returned from insert')
+        throw new Error('Tour creation failed - no data returned. Please try again.')
       }
       
       console.log('✅ [Tours Create] Tour created successfully!', data.id)
