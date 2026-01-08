@@ -95,6 +95,24 @@
                 </div>
 
                 <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Tour Category *</label>
+                  <select 
+                    v-model="form.category"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
+                    :class="errors.category ? 'border-red-500' : ''"
+                  >
+                    <option value="">Select category</option>
+                    <option value="Nature">Nature</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Cultural">Cultural</option>
+                    <option value="Wildlife">Wildlife</option>
+                    <option value="Historical">Historical</option>
+                  </select>
+                  <p v-if="errors.category" class="mt-1 text-sm text-red-600">{{ errors.category }}</p>
+                  <p class="mt-1 text-xs text-gray-500">Choose the main category for this tour</p>
+                </div>
+
+                <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Difficulty Level *</label>
                   <select 
                     v-model="form.difficulty"
@@ -226,6 +244,7 @@ const form = ref({
   title: '',
   location: '',
   description: '',
+  category: '',
   durationDays: 0,
   durationHours: 0,
   difficulty: '',
@@ -255,6 +274,7 @@ const validateForm = () => {
   if (!form.value.title) errors.value.title = 'Title is required'
   if (!form.value.location) errors.value.location = 'Location is required'
   if (!form.value.description) errors.value.description = 'Description is required'
+  if (!form.value.category) errors.value.category = 'Tour category is required'
   if (form.value.durationDays === null || form.value.durationDays < 0) errors.value.durationDays = 'Days is required (enter 0 if less than a day)'
   if (form.value.durationHours === null || form.value.durationHours < 0 || form.value.durationHours > 23) errors.value.durationHours = 'Hours must be between 0 and 23'
   if (form.value.durationDays === 0 && form.value.durationHours === 0) errors.value.durationDays = 'Duration must be at least 1 hour'
@@ -301,6 +321,7 @@ const handleSubmit = async () => {
       destination: form.value.location,
       location: form.value.location,
       description: form.value.description,
+      category: form.value.category,
       duration_days: totalDays,
       duration: durationString,
       difficulty: form.value.difficulty,
