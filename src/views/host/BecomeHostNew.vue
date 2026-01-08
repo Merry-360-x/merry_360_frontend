@@ -587,8 +587,23 @@ const removeIdPhoto = () => {
 
 const handleSubmit = async () => {
   console.log('🔍 Host application submission started')
+  console.log('Form data:', formData)
   console.log('Form valid:', isFormValid.value)
+  console.log('ID Photo URL:', formData.idPhotoUrl)
+  console.log('Consent to ID upload:', formData.consentToIdUpload)
   console.log('Terms agreed:', formData.agreeToTerms)
+  
+  // Validate ID photo BEFORE setting isSubmitting
+  if (!formData.idPhotoUrl) {
+    alert('Please upload your ID photo')
+    return
+  }
+  
+  // Validate ID consent BEFORE setting isSubmitting
+  if (!formData.consentToIdUpload) {
+    alert('Please consent to uploading your identification card')
+    return
+  }
   
   // Validate terms BEFORE setting isSubmitting
   if (!formData.agreeToTerms) {
@@ -597,7 +612,23 @@ const handleSubmit = async () => {
   }
   
   if (!isFormValid.value) {
-    alert('Please fill in all required fields')
+    // Find which fields are missing
+    const missing = []
+    if (!formData.firstName) missing.push('First Name')
+    if (!formData.lastName) missing.push('Last Name')
+    if (!formData.email) missing.push('Email')
+    if (!formData.phone) missing.push('Phone')
+    if (!formData.address) missing.push('Address')
+    if (!formData.nationality) missing.push('Nationality')
+    if (!formData.idNumber) missing.push('ID Number')
+    if (!formData.idPhotoUrl) missing.push('ID Photo')
+    if (!formData.hostingType) missing.push('Hosting Type')
+    if (!formData.propertyLocation) missing.push('Location')
+    if (!formData.description) missing.push('Description')
+    if (!formData.consentToIdUpload) missing.push('ID Upload Consent')
+    if (!formData.agreeToTerms) missing.push('Terms Agreement')
+    
+    alert('Please fill in all required fields. Missing: ' + missing.join(', '))
     return
   }
 
@@ -619,6 +650,18 @@ const handleSubmit = async () => {
     console.log('✅ User authenticated:', user.email)
 
     console.log('💾 Saving to database...')
+    console.log('Payload:', JSON.stringify({
+      id: user.id,
+      email: user.email,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      phone: formData.phone,
+      host_application_status: 'pending',
+      host_nationality: formData.nationality,
+      host_id_number: formData.idNumber,
+      host_id_photo: formData.idPhotoUrl
+    }, null, 2))
+    
     const profilePayload = {
       id: user.id,
       email: user.email,
@@ -648,6 +691,7 @@ const handleSubmit = async () => {
 
     if (error) {
       console.error('❌ Supabase error:', error)
+      alert(`Failed to submit application: ${error.message}. Please try again or contact support.`)
       throw error
     }
     
@@ -673,8 +717,14 @@ const handleSubmit = async () => {
     router.push('/')
     
   } catch (error) {
-    console.error('Host application error:', error)
-    alert('Failed to submit application. Please try again.')
+    console.error('❌ Host application error:', error)
+    const errorMessage = error.message || 'Unknown error occurred'
+    console.error('Error details:', {
+      message: errorMessage,
+      stack: error.stack,
+      formData: formData
+    })
+    alert(`Failed to submit application: ${errorMessage}. Please check the console for details or contact support.`)
   } finally {
     isSubmitting.value = false
   }
