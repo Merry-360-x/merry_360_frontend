@@ -949,6 +949,7 @@ const handleSubmit = async () => {
   console.log('🔍 Host application submission started')
   console.log('Terms agreed:', formData.agreeToTerms)
   
+  // Validate terms BEFORE setting isSubmitting to avoid button getting stuck
   if (!formData.agreeToTerms) {
     alert(t('hostApplication.validation.termsRequired'))
     return
@@ -963,6 +964,7 @@ const handleSubmit = async () => {
     
     if (!user) {
       console.log('❌ User not authenticated')
+      isSubmitting.value = false
       alert(t('hostApplication.loginRequired'))
       router.push('/login')
       return
@@ -992,6 +994,7 @@ const handleSubmit = async () => {
       }
     } catch (uploadErr) {
       console.error('❌ Host document upload error:', uploadErr)
+      isSubmitting.value = false
       alert(t('hostApplication.validation.uploadFailed'))
       return
     }

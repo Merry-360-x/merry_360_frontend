@@ -1,55 +1,98 @@
+🚀 Starting Real Production Test
+================================
 
-Running 4 tests using 4 workers
-
-
-📖 Testing Stories Feature...
-
-🚗 Testing Tours & Transport...
-
-❤️ Testing Wishlist...
-🚀 Starting real-time production test on https://merry360x.com
-
-1️⃣ Testing Homepage...
-✅ Found 0 tours
-✅ Found 0 stories
-✅ Found 0 vehicles
-  ✓  4 [chromium] › tests/e2e/real-time-production.spec.js:252:7 › Real-Time Production Tests › Test Stories Feature (9.9s)
-  ✓  2 [chromium] › tests/e2e/real-time-production.spec.js:289:7 › Real-Time Production Tests › Test Tours & Transport (10.1s)
-  ✓  1 [chromium] › tests/e2e/real-time-production.spec.js:309:7 › Real-Time Production Tests › Test Wishlist (10.0s)
+📍 Step 1: Navigating to homepage...
 ✅ Homepage loaded
 
-2️⃣ Testing Signup...
-  ✘  3 [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host (2.0m)
-[31mTesting stopped early after 1 maximum allowed failures.[39m
+📍 Step 2: Logging in...
+✅ Logged in
 
+📍 Step 3: Testing Host Application...
+   📝 Filling Step 1: Personal Information...
+   Found 11 input fields
+   Text: 5, Email: 1, Tel: 1, Select: 5
+   ✅ Filled firstName
+   ✅ Filled lastName
+   ✅ Filled email
+   ✅ Filled phone
+   ✅ Filled address
+   ✅ Selected nationality
+   ⚠️ Could not select applicant type: page.selectOption: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('select').nth(1)[22m
+[2m    - locator resolved to <select data-v-e1a4a4fb="" class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible and enabled[22m
+[2m       - did not find some options[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
 
-  1) [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host 
+   ⚠️ Could not select hosting type: page.selectOption: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('select').nth(2)[22m
+[2m    - locator resolved to <select required="" data-v-8cd562e0="" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500">…</select>[22m
+[2m  - attempting select option action[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and enabled[22m
+[2m      - did not find some options[22m
+[2m    - retrying select option action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible and enabled[22m
+[2m       - did not find some options[22m
+[2m     - retrying select option action[22m
+[2m       - waiting 500ms[22m
 
-    [31mTest timeout of 120000ms exceeded.[39m
+   ➡️  Clicking Next to Step 2...
+   📝 Filling Step 2: Verification...
+   ✅ Filled ID number
+   ⚠️ Skipping document uploads (require real files)...
+   ➡️  Clicking Next to Step 3...
+   📝 Filling Step 3: Listing Basics...
+   ✅ Filled location
 
-    Error: page.click: Target page, context or browser has been closed
+❌ Test Error: elementHandle.fill: Timeout 30000ms exceeded.
+Call log:
+[2m    - fill("100")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible, enabled and editable[22m
+[2m       - element is not visible[22m
+[2m     - retrying fill action[22m
+[2m       - waiting 500ms[22m
 
-      19 |     console.log('\n2️⃣ Testing Signup...')
-      20 |     await page.click('text=Sign Up, text=Signup, a[href*="signup"]').catch(() => 
-    > 21 |       page.click('button:has-text("Get Started"), button:has-text("Sign up")')
-         |            ^
-      22 |     )
-      23 |     await page.waitForURL(/.*signup.*/, { timeout: 10000 }).catch(() => {
-      24 |       console.log('⚠️ Signup page not found, trying direct navigation')
-        at /Users/davy/merry_360_frontend/tests/e2e/real-time-production.spec.js:21:12
-        at /Users/davy/merry_360_frontend/tests/e2e/real-time-production.spec.js:20:5
+elementHandle.fill: Timeout 30000ms exceeded.
+Call log:
+[2m    - fill("100")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible, enabled and editable[22m
+[2m       - element is not visible[22m
+[2m     - retrying fill action[22m
+[2m       - waiting 500ms[22m
 
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
-    test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/video.webm
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/error-context.md
-
-  1 failed
-    [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host 
-  3 passed (2.0m)
-  1 error was not a part of any test, see above for details
+    at runProductionTest (/Users/davy/merry_360_frontend/test-real-production.mjs:202:34)

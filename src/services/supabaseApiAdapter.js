@@ -233,9 +233,16 @@ export const supabaseApiAdapter = {
     },
 
     create: async (propertyData) => {
+      console.log('🔍 [Property Create] Starting property creation...')
+      console.log('📝 [Property Create] Property data:', JSON.stringify(propertyData, null, 2))
+      
       const { data: auth } = await supabase.auth.getUser()
       const user = auth?.user
-      if (!user) throw new Error('Not authenticated')
+      if (!user) {
+        console.error('❌ [Property Create] User not authenticated')
+        throw new Error('Not authenticated')
+      }
+      console.log('✅ [Property Create] User authenticated:', user.email)
 
       const insertRow = {
         host_id: user.id,
@@ -257,6 +264,8 @@ export const supabaseApiAdapter = {
         longitude: propertyData.longitude || null,
         available: true
       }
+      
+      console.log('📤 [Property Create] Inserting into database:', JSON.stringify(insertRow, null, 2))
 
       const { data, error } = await supabase
         .from('properties')
@@ -264,8 +273,17 @@ export const supabaseApiAdapter = {
         .select('*')
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ [Property Create] Database error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw error
+      }
 
+      console.log('✅ [Property Create] Property created successfully!', data.id)
       // New listings should appear immediately on public pages.
       clearAccommodationCache()
       return { data: mapPropertyRowToAccommodation(data) }
@@ -330,18 +348,42 @@ export const supabaseApiAdapter = {
     },
 
     create: async (tourData) => {
+      console.log('🔍 [Tours Create] Starting tour creation...')
+      console.log('📝 [Tours Create] Tour data:', JSON.stringify(tourData, null, 2))
+      
       const { data: auth } = await supabase.auth.getUser()
       const user = auth?.user
-      if (!user) throw new Error('Not authenticated')
+      if (!user) {
+        console.error('❌ [Tours Create] User not authenticated')
+        throw new Error('Not authenticated')
+      }
+      console.log('✅ [Tours Create] User authenticated:', user.email)
 
-      // Minimal pass-through; table columns vary between environments.
+      // Prepare tour data with user_id
+      const insertData = {
+        ...tourData,
+        user_id: user.id,
+        created_at: new Date().toISOString()
+      }
+      console.log('📤 [Tours Create] Inserting into database:', JSON.stringify(insertData, null, 2))
+
       const { data, error } = await supabase
         .from('tours')
-        .insert([tourData])
+        .insert([insertData])
         .select('*')
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ [Tours Create] Database error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw error
+      }
+      
+      console.log('✅ [Tours Create] Tour created successfully!', data.id)
       return { data }
     },
 
@@ -392,18 +434,42 @@ export const supabaseApiAdapter = {
     },
 
     create: async (transportData) => {
+      console.log('🔍 [Transport Create] Starting transport creation...')
+      console.log('📝 [Transport Create] Transport data:', JSON.stringify(transportData, null, 2))
+      
       const { data: auth } = await supabase.auth.getUser()
       const user = auth?.user
-      if (!user) throw new Error('Not authenticated')
+      if (!user) {
+        console.error('❌ [Transport Create] User not authenticated')
+        throw new Error('Not authenticated')
+      }
+      console.log('✅ [Transport Create] User authenticated:', user.email)
 
-      // Attempt insert into vehicles; if schema differs, this will surface the error.
+      // Prepare transport data with user_id
+      const insertData = {
+        ...transportData,
+        user_id: user.id,
+        created_at: new Date().toISOString()
+      }
+      console.log('📤 [Transport Create] Inserting into database:', JSON.stringify(insertData, null, 2))
+
       const { data, error } = await supabase
         .from('vehicles')
-        .insert([transportData])
+        .insert([insertData])
         .select('*')
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ [Transport Create] Database error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw error
+      }
+      
+      console.log('✅ [Transport Create] Transport created successfully!', data.id)
       return { data }
     },
 
