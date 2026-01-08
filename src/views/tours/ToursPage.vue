@@ -155,7 +155,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-lg font-bold text-brand-600">{{ currencyStore.formatPrice(parseFloat(tour.price.replace(/,/g, ''))) }}</span>
+                  <span class="text-lg font-bold text-brand-600">{{ currencyStore.formatPrice(typeof tour.price === 'string' ? parseFloat(tour.price.replace(/,/g, '')) : (tour.price || 0)) }}</span>
                   <span class="text-text-muted text-xs">/person</span>
                 </div>
                 <button 
@@ -229,6 +229,8 @@ const loading = ref(true)
 const loadTours = async () => {
   try {
     loading.value = true
+    console.log('🔍 Loading tours from Supabase...')
+    
     // Load all tours first, then filter by available
     const { data, error } = await supabase
       .from('tours')
@@ -236,53 +238,67 @@ const loadTours = async () => {
       .order('created_at', { ascending: false })
     
     if (error) {
-      console.error('Error loading tours:', error)
+      console.error('❌ Error loading tours:', error)
       // Try fallback to listings table
+      console.log('🔄 Trying fallback to listings table...')
       const fallback = await supabase
         .from('listings')
         .select('*')
         .ilike('category', 'tour%')
         .order('created_at', { ascending: false })
       
-      if (!fallback.error && fallback.data) {
+      if (!fallback.error && fallback.data && fallback.data.length > 0) {
+        console.log('✅ Found tours in listings table:', fallback.data.length)
         tours.value = (fallback.data || []).map(t => ({
           id: t.id,
           title: t.title || t.name || 'Tour',
           destination: t.destination || t.location || '',
           days: t.duration_days || 1,
           duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '1 day',
-          price: t.price || 0,
-          rating: t.rating || 4.5,
-          reviews: t.reviews_count || 0,
+          price: Number(t.price) || 0,
+          rating: Number(t.rating) || 4.5,
+          reviews: Number(t.reviews_count) || 0,
           category: t.category || 'Tour',
           image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop',
           description: String(t.description || ''),
           difficulty: t.difficulty || 'moderate'
         }))
         loading.value = false
+        console.log('✅ Mapped tours:', tours.value.length)
         return
       }
+      console.error('❌ Fallback also failed')
       throw error
+    }
+    
+    console.log('✅ Loaded tours from tours table:', data?.length || 0)
+    
+    if (!data || data.length === 0) {
+      console.log('⚠️ No tours found in tours table')
+      tours.value = []
+      loading.value = false
+      return
     }
     
     tours.value = (data || []).map(t => ({
       id: t.id,
       title: t.name || 'Tour',
       destination: t.destination || '',
-      days: t.duration_days || 1,
+      days: Number(t.duration_days) || 1,
       duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '1 day',
-      price: t.price || 0,
-      rating: t.rating || 4.5,
-      reviews: t.reviews_count || 0,
+      price: Number(t.price) || 0,
+      rating: Number(t.rating) || 4.5,
+      reviews: Number(t.reviews_count) || 0,
       category: t.category || 'Tour',
       image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop',
       description: String(t.description || ''),
       difficulty: t.difficulty || 'moderate'
     }))
     
-    console.log('Loaded tours:', tours.value.length)
+    console.log('✅ Mapped tours:', tours.value.length)
+    console.log('📊 Sample tour:', tours.value[0])
   } catch (err) {
-    console.error('Error loading tours:', err)
+    console.error('❌ Error loading tours:', err)
     toastError('Failed to load tours: ' + (err.message || 'Unknown error'))
     tours.value = []
   } finally {
