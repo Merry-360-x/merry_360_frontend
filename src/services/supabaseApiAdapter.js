@@ -118,9 +118,10 @@ export const supabaseApiAdapter = {
         }
 
         if (term) {
-          // Escape special characters in search term to prevent query parsing errors
-          const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
-          query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
+          // Use separate filter conditions to avoid comma parsing issues in search terms
+          // Replace commas with spaces for the OR query, or use a different approach
+          const safeTerm = term.replace(/,/g, ' ')
+          query = query.or(`name.ilike.%${safeTerm}%,location.ilike.%${safeTerm}%,city.ilike.%${safeTerm}%`)
         }
 
         if (Number.isFinite(guestsCount) && guestsCount > 0) {
@@ -162,9 +163,10 @@ export const supabaseApiAdapter = {
             }
 
             if (term) {
-              // Escape special characters in search term to prevent query parsing errors
-              const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
-              query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
+              // Use separate filter conditions to avoid comma parsing issues in search terms
+              // Replace commas with spaces for the OR query, or use a different approach
+              const safeTerm = term.replace(/,/g, ' ')
+              query = query.or(`name.ilike.%${safeTerm}%,location.ilike.%${safeTerm}%,city.ilike.%${safeTerm}%`)
             }
 
             if (Number.isFinite(guestsCount) && guestsCount > 0) {
@@ -440,9 +442,10 @@ export const supabaseApiAdapter = {
         .order('created_at', { ascending: false })
 
       if (term) {
-        // Escape special characters in search term to prevent query parsing errors
-        const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
-        q = q.or(`name.ilike.%${escapedTerm}%,destination.ilike.%${escapedTerm}%`)
+        // Use separate filter conditions to avoid comma parsing issues in search terms
+        // Replace commas with spaces for the OR query
+        const safeTerm = term.replace(/,/g, ' ')
+        q = q.or(`name.ilike.%${safeTerm}%,destination.ilike.%${safeTerm}%`)
       }
 
       const { data, error } = await q

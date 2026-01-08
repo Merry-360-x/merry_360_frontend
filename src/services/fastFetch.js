@@ -151,9 +151,10 @@ const executeAccommodationQuery = async (params, minimal = true) => {
   
   // Apply filters
   if (term) {
-    // Escape special characters in search term to prevent query parsing errors
-    const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
-    query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
+    // Use separate filter conditions to avoid comma parsing issues in search terms
+    // Replace commas with spaces for the OR query
+    const safeTerm = term.replace(/,/g, ' ')
+    query = query.or(`name.ilike.%${safeTerm}%,location.ilike.%${safeTerm}%,city.ilike.%${safeTerm}%`)
   }
   
   if (guestsCount && guestsCount > 0) {
@@ -172,9 +173,10 @@ const executeAccommodationQuery = async (params, minimal = true) => {
         .limit(limit)
       
       if (term) {
-        // Escape special characters in search term to prevent query parsing errors
-        const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
-        query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
+        // Use separate filter conditions to avoid comma parsing issues in search terms
+        // Replace commas with spaces for the OR query
+        const safeTerm = term.replace(/,/g, ' ')
+        query = query.or(`name.ilike.%${safeTerm}%,location.ilike.%${safeTerm}%,city.ilike.%${safeTerm}%`)
       }
       
       const retry = await query
