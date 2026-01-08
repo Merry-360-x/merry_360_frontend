@@ -118,7 +118,9 @@ export const supabaseApiAdapter = {
         }
 
         if (term) {
-          query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+          // Escape special characters in search term to prevent query parsing errors
+          const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
+          query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
         }
 
         if (Number.isFinite(guestsCount) && guestsCount > 0) {
@@ -160,7 +162,9 @@ export const supabaseApiAdapter = {
             }
 
             if (term) {
-              query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+              // Escape special characters in search term to prevent query parsing errors
+              const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
+              query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
             }
 
             if (Number.isFinite(guestsCount) && guestsCount > 0) {
@@ -436,7 +440,9 @@ export const supabaseApiAdapter = {
         .order('created_at', { ascending: false })
 
       if (term) {
-        q = q.or(`name.ilike.%${term}%,destination.ilike.%${term}%`)
+        // Escape special characters in search term to prevent query parsing errors
+        const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
+        q = q.or(`name.ilike.%${escapedTerm}%,destination.ilike.%${escapedTerm}%`)
       }
 
       const { data, error } = await q

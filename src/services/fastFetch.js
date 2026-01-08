@@ -151,7 +151,9 @@ const executeAccommodationQuery = async (params, minimal = true) => {
   
   // Apply filters
   if (term) {
-    query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+    // Escape special characters in search term to prevent query parsing errors
+    const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
+    query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
   }
   
   if (guestsCount && guestsCount > 0) {
@@ -170,7 +172,9 @@ const executeAccommodationQuery = async (params, minimal = true) => {
         .limit(limit)
       
       if (term) {
-        query = query.or(`name.ilike.%${term}%,location.ilike.%${term}%,city.ilike.%${term}%`)
+        // Escape special characters in search term to prevent query parsing errors
+        const escapedTerm = term.replace(/,/g, '\\,').replace(/%/g, '\\%').replace(/_/g, '\\_')
+        query = query.or(`name.ilike.%${escapedTerm}%,location.ilike.%${escapedTerm}%,city.ilike.%${escapedTerm}%`)
       }
       
       const retry = await query
