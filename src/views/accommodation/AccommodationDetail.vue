@@ -175,6 +175,11 @@
             </div>
           </Card>
 
+          <!-- Host Info -->
+          <Card v-if="accommodation.host_id" padding="lg">
+            <HostInfo :host-id="accommodation.host_id" />
+          </Card>
+
           <!-- Description -->
           <Card padding="lg">
             <h2 class="text-xl font-bold mb-4">About this place</h2>
@@ -417,6 +422,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import CrossCategorySuggestions from '../../components/common/CrossCategorySuggestions.vue'
+import HostInfo from '../../components/common/HostInfo.vue'
 
 const router = useRouter()
 const { success } = useToast()

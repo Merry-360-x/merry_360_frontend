@@ -214,7 +214,14 @@ export const supabaseApiAdapter = {
         .single()
 
       if (error) throw error
-      return { data: mapPropertyRowToAccommodation(data) }
+      
+      // Map to accommodation format and include host_id
+      const mapped = mapPropertyRowToAccommodation(data)
+      if (mapped && data.host_id) {
+        mapped.host_id = data.host_id
+      }
+      
+      return { data: mapped }
     },
 
     search: async (query) => {

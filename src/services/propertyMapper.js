@@ -69,7 +69,8 @@ export function mapPropertyRowToAccommodation(row) {
     vrTourType: row.vr_tour_type || null,
     latitude: row.latitude || null,
     longitude: row.longitude || null,
-    createdAt: row.created_at || null
+    createdAt: row.created_at || null,
+    host_id: row.host_id || null
   }
 }
 
