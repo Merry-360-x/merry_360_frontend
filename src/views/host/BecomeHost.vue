@@ -839,7 +839,7 @@ import worldCountries from 'world-countries'
 
 const router = useRouter()
 const { t } = useTranslation()
-const { error: showToastError } = useToast()
+const { error: showToastError, success: showToastSuccess } = useToast()
 const userStore = useUserStore()
 const formSection = ref(null)
 const isSubmitting = ref(false)
@@ -1445,9 +1445,7 @@ const handleSubmit = async () => {
     }
 
     // Add timeout protection with proper error handling
-    const upsertPromise = supabase
-      .from('profiles')
-      .upsert(profilePayload, { onConflict: 'id' })
+    console.log('📤 Upserting profile with payload:', JSON.stringify(profilePayload, null, 2))
     
     const timeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
@@ -1455,8 +1453,15 @@ const handleSubmit = async () => {
 
     let result
     try {
+      const upsertPromise = supabase
+        .from('profiles')
+        .upsert(profilePayload, { onConflict: 'id' })
+        .select()
+      
       result = await Promise.race([upsertPromise, timeoutPromise])
+      console.log('📥 Upsert result:', result)
     } catch (raceError) {
+      console.error('❌ Promise race error:', raceError)
       if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
         console.error('⏱️ Request timed out after 30 seconds')
         throw new Error('Request timeout - please try again')
@@ -1464,7 +1469,13 @@ const handleSubmit = async () => {
       throw raceError
     }
 
-    const { error } = result || {}
+    // Check for errors in the result
+    if (!result) {
+      console.error('❌ No result returned from upsert')
+      throw new Error('No response from server. Please try again.')
+    }
+
+    const { data, error } = result
 
     if (error) {
       console.error('❌ Supabase error:', error)
@@ -1478,29 +1489,75 @@ const handleSubmit = async () => {
       let errorMessage = t('hostApplication.submittedFailed')
       if (error?.message?.includes('timeout')) {
         errorMessage = 'Request timeout - please try again'
-      } else if (error?.message?.includes('permission') || error?.message?.includes('denied') || error?.message?.includes('RLS')) {
+      } else if (error?.message?.includes('permission') || error?.message?.includes('denied') || error?.message?.includes('RLS') || error?.code === '42501') {
         errorMessage = 'You do not have permission to submit host applications. Please contact support.'
       } else if (error?.code === '23505') {
         errorMessage = 'Application already exists. Please contact support.'
+      } else if (error?.code === '42703') {
+        errorMessage = 'Database schema error. Please contact support.'
       } else if (error.message) {
         errorMessage = error.message
       } else if (error.hint) {
         errorMessage = error.hint
       }
       
-      alert(errorMessage)
+      showToastError(errorMessage)
       isSubmitting.value = false
       return
     }
+
+    // Verify data was saved
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      console.warn('⚠️ Upsert returned no data, but no error. Checking if profile exists...')
+      // Try to fetch the profile to verify it was saved
+      const { data: verifyData, error: verifyError } = await supabase
+        .from('profiles')
+        .select('id, host_application_status')
+        .eq('id', userId)
+        .single()
+      
+      if (verifyError || !verifyData) {
+        console.error('❌ Could not verify profile was saved:', verifyError)
+        throw new Error('Failed to save application. Please try again.')
+      }
+      
+      if (verifyData.host_application_status !== 'pending') {
+        console.warn('⚠️ Profile exists but status is not pending:', verifyData.host_application_status)
+        // Try to update it again
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({ 
+            host_application_status: 'pending',
+            host_application_date: new Date().toISOString()
+          })
+          .eq('id', userId)
+        
+        if (updateError) {
+          console.error('❌ Failed to update profile status:', updateError)
+          throw new Error('Failed to update application status. Please contact support.')
+        }
+      }
+    }
     
-    console.log('✅ Host application saved successfully!')
+    console.log('✅ Host application saved successfully!', data)
     
     // Update user store if new account was created
     if (!currentUser) {
-      await userStore.initAuth()
+      console.log('🔄 Initializing user store for new user...')
+      try {
+        await userStore.initAuth()
+        console.log('✅ User store initialized')
+      } catch (storeError) {
+        console.warn('⚠️ User store init warning:', storeError)
+        // Continue anyway - user is created
+      }
     }
     
-    alert(t('hostApplication.submittedSuccess'))
+    console.log('🎉 Application submitted successfully!')
+    showToastSuccess('Application submitted successfully! You will be redirected shortly...')
+    
+    // Small delay to show success message
+    await new Promise(resolve => setTimeout(resolve, 1500))
     
     // Reset form
     currentStep.value = 0
@@ -1528,14 +1585,19 @@ const handleSubmit = async () => {
     // Redirect based on authentication status
     if (!currentUser) {
       // New user - redirect to profile to complete setup
+      console.log('🔄 Redirecting new user to profile...')
       router.push('/profile')
     } else {
       // Existing user - redirect to host dashboard
+      console.log('🔄 Redirecting existing user to host dashboard...')
       router.push('/host')
     }
     
   } catch (error) {
     console.error('❌ Host application error:', error)
+    console.error('Error stack:', error?.stack)
+    console.error('Error name:', error?.name)
+    console.error('Error cause:', error?.cause)
     
     let errorMessage = t('hostApplication.submittedFailed')
     if (error?.message) {
@@ -1545,12 +1607,18 @@ const handleSubmit = async () => {
     }
     
     if (errorMessage.includes('timeout')) {
-      errorMessage = 'The request is taking too long. Please check your internet and try again.'
+      errorMessage = 'The request is taking too long. Please check your internet connection and try again.'
+    } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+      errorMessage = 'Network error. Please check your internet connection and try again.'
+    } else if (!errorMessage || errorMessage === t('hostApplication.submittedFailed')) {
+      errorMessage = 'Failed to submit application. Please try again or contact support if the problem persists.'
     }
     
-    alert(errorMessage)
+    showToastError(errorMessage)
+    console.error('❌ Final error message shown to user:', errorMessage)
   } finally {
     isSubmitting.value = false
+    console.log('🏁 Submission process finished. isSubmitting set to false.')
   }
 }
 </script>
