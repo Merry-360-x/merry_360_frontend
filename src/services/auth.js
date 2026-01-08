@@ -1,6 +1,5 @@
 import api from './api'
 import * as supabaseService from './supabase'
-import mockApiService from './mockApi'
 
 const USE_FIREBASE = false
 const USE_SUPABASE = String(import.meta.env.VITE_USE_SUPABASE || '').trim() === 'true'
@@ -154,7 +153,7 @@ export function onAuthChanged(cb) {
     return supabaseService.onAuthChange(cb)
   }
 
-  // For mock API, we don't have a real auth state listener
+  // Fallback: check localStorage for user session
   const user = localStorage.getItem('user')
   setTimeout(() => cb(user ? JSON.parse(user) : null), 0)
   return () => {}

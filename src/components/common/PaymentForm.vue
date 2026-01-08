@@ -5,7 +5,7 @@
         <p class="text-sm font-medium text-amber-900">{{ t('payment.integrationComingSoonTitle') }}</p>
         <p class="text-xs text-amber-700 mt-1">{{ t('payment.integrationComingSoonDesc') }}</p>
       </div>
-      <button @click="payMock" class="w-full px-4 py-3 bg-gray-400 text-white rounded-lg font-semibold cursor-not-allowed" disabled>{{ t('payment.gatewayNotAvailable') }}</button>
+      <button class="w-full px-4 py-3 bg-gray-400 text-white rounded-lg font-semibold cursor-not-allowed" disabled>{{ t('payment.gatewayNotAvailable') }}</button>
     </div>
 
     <div v-else>

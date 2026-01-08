@@ -6,9 +6,6 @@
 // Import Supabase API adapter (real database operations, matches api.* shape)
 import supabaseApiAdapter from './supabaseApiAdapter'
 
-// Import mock API for fallback
-import { mockApiService } from './mockApi'
-
 // Base API URL - should be from environment variable
 const envString = (value) => {
   if (value == null) return ''
@@ -32,9 +29,9 @@ const HAS_SUPABASE_CONFIG = Boolean(
   envString(import.meta.env.VITE_SUPABASE_URL) &&
   envString(import.meta.env.VITE_SUPABASE_ANON_KEY)
 )
-// Use Supabase if explicitly enabled, or default to Supabase when configured.
+// Always use Supabase - no mock data
 const USE_SUPABASE = envFlag('VITE_USE_SUPABASE') ?? HAS_SUPABASE_CONFIG
-const USE_MOCK_API = envFlag('VITE_USE_MOCK_API') === true // Only use mock if explicitly enabled
+const USE_MOCK_API = false // Mock API disabled - always use real database
 
 /**
  * Custom API Error class
@@ -277,6 +274,9 @@ export const api = {
   }
 }
 
-// Export both for flexibility
-// Priority: Supabase > Mock > HTTP API
-export default USE_SUPABASE ? supabaseApiAdapter : (USE_MOCK_API ? mockApiService : api)
+// Always use Supabase API adapter - real database only
+// If Supabase is not configured, throw an error instead of falling back to mock
+export default USE_SUPABASE ? supabaseApiAdapter : (() => {
+  console.error('❌ Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY')
+  throw new Error('Supabase configuration required. Mock data is disabled.')
+})()
