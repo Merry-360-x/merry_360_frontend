@@ -774,6 +774,22 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
   document.removeEventListener('keydown', handleKeydown)
+  
+  // Ensure body scroll is restored
+  document.body.style.overflow = ''
+  
+  // Close any open panels
+  activePanel.value = null
+  isMobileSearchOpen.value = false
+})
+
+// Watch for mobile search open/close to manage body scroll
+watch(isMobileSearchOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
 })
 
 const handleSearch = () => {

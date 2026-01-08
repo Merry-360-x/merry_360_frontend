@@ -1,16 +1,18 @@
 <template>
-  <div
-    v-if="confirmState.open"
-    class="fixed inset-0 z-[200] flex items-center justify-center"
-    aria-modal="true"
-    role="dialog"
-  >
-    <button
-      class="absolute inset-0 bg-black/50"
-      type="button"
-      aria-label="Close"
-      @click="onCancel"
-    />
+  <Teleport to="body">
+    <div
+      v-if="confirmState.open"
+      class="fixed inset-0 z-[200] flex items-center justify-center"
+      aria-modal="true"
+      role="dialog"
+      @mousedown.self="onCancel"
+    >
+      <button
+        class="absolute inset-0 bg-black/50"
+        type="button"
+        aria-label="Close"
+        @click="onCancel"
+      />
 
     <div class="relative w-full max-w-md mx-4">
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -44,14 +46,29 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, watch } from 'vue'
 import { useConfirm } from '../../composables/useConfirm'
 
 const { state, onConfirm, onCancel } = useConfirm()
 
 const confirmState = computed(() => state)
+
+// Prevent body scroll when dialog is open
+watch(() => confirmState.value.open, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
+
+// Cleanup on unmount
+onBeforeUnmount(() => {
+  document.body.style.overflow = ''
+})
 </script>

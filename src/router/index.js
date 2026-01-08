@@ -3,6 +3,7 @@ import { supabase } from '@/services/supabase'
 import { useUserStore } from '@/stores/userStore'
 import { useTranslation } from '@/composables/useTranslation'
 import { isGlobalUploading } from '@/utils/globalUploadState'
+import { useToast } from '@/composables/useToast'
 
 // Critical routes - load immediately
 import Home from '../views/home/Home.vue'
@@ -433,12 +434,14 @@ const router = createRouter({
 // Navigation guard for admin routes
 router.beforeEach(async (to, from, next) => {
   if (isGlobalUploading.value) {
-    alert('Please wait for the upload to finish.')
+    const { error } = useToast()
+    error('Please wait for the upload to finish.')
     next(false)
     return
   }
 
   const { t } = useTranslation()
+  const { error: showError } = useToast()
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
   const requiresStaff = to.matched.some(record => record.meta.requiresStaff)
   const requiresHost = to.matched.some(record => record.meta.requiresHost)
@@ -462,21 +465,21 @@ router.beforeEach(async (to, from, next) => {
 
     // Check admin access
     if (requiresAdmin && store.user?.role !== 'admin') {
-      alert(t('auth.accessDeniedAdmin'))
+      showError(t('auth.accessDeniedAdmin'))
       next({ name: 'home' })
       return
     }
 
     // Check staff access (staff or admin can access)
     if (requiresStaff && store.user?.role !== 'staff' && store.user?.role !== 'admin') {
-      alert(t('auth.accessDeniedStaff'))
+      showError(t('auth.accessDeniedStaff'))
       next({ name: 'home' })
       return
     }
 
     // Check host access (host or admin can access)
     if (requiresHost && store.user?.role !== 'host' && store.user?.role !== 'admin') {
-      alert(t('auth.accessDeniedHost'))
+      showError(t('auth.accessDeniedHost'))
       next({ name: 'home' })
       return
     }
@@ -488,7 +491,7 @@ router.beforeEach(async (to, from, next) => {
       store.user?.role !== 'host' &&
       store.user?.role !== 'admin'
     ) {
-      alert(t('auth.accessDeniedVendor'))
+      showError(t('auth.accessDeniedVendor'))
       next({ name: 'home' })
       return
     }

@@ -512,6 +512,15 @@ watch(() => props.modelValue, (newVal) => {
   }
 }, { deep: true })
 
+// Watch for modal state to manage body scroll
+watch(showUploadModal, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
+
 // Cleanup on unmount
 onUnmounted(() => {
   if (isTrackedGlobally.value) {
@@ -523,5 +532,11 @@ onUnmounted(() => {
     // Only revoke blob: URLs; Cloudinary/Data URLs should not be revoked.
     if (String(photo.preview || '').startsWith('blob:')) URL.revokeObjectURL(photo.preview)
   })
+  
+  // Ensure body scroll is restored
+  document.body.style.overflow = ''
+  
+  // Close modal if open
+  showUploadModal.value = false
 })
 </script>
