@@ -948,10 +948,25 @@ const uploadHostDocument = async (userId, kind, file) => {
 const handleSubmit = async () => {
   console.log('🔍 Host application submission started')
   console.log('Terms agreed:', formData.agreeToTerms)
+  console.log('Photos:', formData.photos?.length || 0)
   
   // Validate terms BEFORE setting isSubmitting to avoid button getting stuck
   if (!formData.agreeToTerms) {
     alert(t('hostApplication.validation.termsRequired'))
+    return
+  }
+  
+  // Validate photos for accommodation type
+  if (formData.hostingType === 'accommodation') {
+    if (!formData.photos || formData.photos.length < 5) {
+      alert('Please upload at least 5 photos of your accommodation before submitting.')
+      return
+    }
+  }
+  
+  // Check if photos are still uploading
+  if (photosUploading.value) {
+    alert('Please wait for photo uploads to finish before submitting.')
     return
   }
 
@@ -1000,6 +1015,13 @@ const handleSubmit = async () => {
     }
 
     console.log('💾 Saving to database...')
+    
+    // Extract photo URLs from formData.photos
+    const photoUrls = Array.isArray(formData.photos) 
+      ? formData.photos.map(img => img.url || img.preview || img).filter(Boolean)
+      : []
+    console.log('📷 Photos to save:', photoUrls.length, photoUrls)
+    
     const profilePayload = {
       id: user.id,
       email: user.email,
@@ -1033,6 +1055,7 @@ const handleSubmit = async () => {
         price: formData.hostingType === 'accommodation' ? (formData.price || 0) : null,
         propertyAddress: formData.hostingType === 'accommodation' ? (formData.propertyAddress || '') : null,
         description: formData.description,
+        photos: photoUrls, // Include photos array
         additionalFilesCount: uploadedFiles.value?.length || 0
       }
     }
@@ -1060,6 +1083,8 @@ const handleSubmit = async () => {
     Object.keys(formData).forEach(key => {
       if (key === 'agreeToTerms') {
         formData[key] = false
+      } else if (key === 'photos') {
+        formData[key] = []
       } else {
         formData[key] = ''
       }
