@@ -343,7 +343,6 @@ const loadPopularRoutes = async () => {
       popularRoutes.value = []
     }
   } catch (error) {
-    console.error('Failed to load popular routes:', error)
     popularRoutes.value = []
   }
 }
@@ -357,9 +356,8 @@ const loadVehicles = async () => {
     const response = await api.transport.getVehicles({})
     vehicles.value = Array.isArray(response?.data) ? response.data : []
   } catch (err) {
-    console.error('Error loading vehicles:', err)
     vehicles.value = []
-    toastError(err)
+    toastError(err?.message || 'Failed to load vehicles')
   } finally {
     vehiclesLoading.value = false
   }

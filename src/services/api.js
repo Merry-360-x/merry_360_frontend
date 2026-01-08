@@ -277,6 +277,5 @@ export const api = {
 // Always use Supabase API adapter - real database only
 // If Supabase is not configured, throw an error instead of falling back to mock
 export default USE_SUPABASE ? supabaseApiAdapter : (() => {
-  console.error('❌ Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY')
   throw new Error('Supabase configuration required. Mock data is disabled.')
 })()

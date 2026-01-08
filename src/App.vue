@@ -44,22 +44,16 @@ onMounted(async () => {
   // Show loading spinner immediately
   isLoading.value = true
   
-  console.log('📱 App mounted - User Store State:')
-  console.log('   isAuthenticated:', userStore.isAuthenticated)
-  console.log('   user:', userStore.user)
-  console.log('   localStorage user:', localStorage.getItem('user'))
-  console.log('   localStorage isAuthenticated:', localStorage.getItem('isAuthenticated'))
-  
   // Initialize auth and warmup cache in parallel
   try {
     await Promise.all([
       userStore.initAuth(),
-      fastFetch.warmupCache().catch(err => {
-        console.warn('Cache warmup failed:', err)
+      fastFetch.warmupCache().catch(() => {
+        // Silently ignore cache warmup failures
       })
     ])
   } catch (err) {
-    console.warn('Initialization error:', err)
+    // Silently ignore initialization errors
   } finally {
     // Hide loading spinner after a minimum time to prevent flash
     setTimeout(() => {

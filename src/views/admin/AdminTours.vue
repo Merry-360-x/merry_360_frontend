@@ -102,7 +102,6 @@ const loading = ref(true)
 const loadTours = async () => {
   try {
     loading.value = true
-    console.log('Loading tours from Supabase...')
 
     // Load all tours (admin can see all, not just available ones)
     const primary = await supabase
@@ -111,8 +110,7 @@ const loadTours = async () => {
       .order('created_at', { ascending: false })
 
     if (primary.error) {
-      console.error('Error loading tours:', primary.error)
-      // Don't throw, just log and continue with empty array
+      // Don't throw, just continue with empty array
       tours.value = []
       loading.value = false
       return
@@ -123,7 +121,6 @@ const loadTours = async () => {
     let data = primary.data || []
 
     if (data.length === 0) {
-      console.log('Tours table empty, checking listings...')
       const fallback = await supabase
         .from('listings')
         .select('*')
@@ -132,11 +129,8 @@ const loadTours = async () => {
       if (!fallback.error && (fallback.data || []).length > 0) {
         source = 'listings'
         data = fallback.data || []
-        console.log('Found tours in listings table:', data.length)
       }
     }
-
-    console.log('Loaded tours:', data?.length || 0)
     const isListingsSource = source === 'listings'
     const mapped = (data || []).map(t => {
       const isListings = isListingsSource
@@ -175,12 +169,8 @@ const loadTours = async () => {
 
     tours.value = mapped
     
-    if (tours.value.length === 0) {
-      showToast('No tours found. Please add tours in the database.', 'warning')
-    }
   } catch (err) {
-    console.error('Error loading tours:', err)
-    showToast('Failed to load tours: ' + err.message, 'error')
+    showToast('Failed to load tours: ' + (err.message || 'Unknown error'), 'error')
   } finally {
     loading.value = false
   }
@@ -208,8 +198,7 @@ const toggleStatus = async (tour) => {
     showToast(`Tour ${newStatus ? 'activated' : 'deactivated'} successfully`, 'success')
     await loadTours()
   } catch (err) {
-    console.error('Error updating tour:', err)
-    showToast('Failed to update tour: ' + err.message, 'error')
+    showToast('Failed to update tour: ' + (err.message || 'Unknown error'), 'error')
   }
 }
 
@@ -240,8 +229,7 @@ const deleteTour = async (id) => {
     showToast('Tour deleted successfully', 'success')
     await loadTours()
   } catch (err) {
-    console.error('Error deleting tour:', err)
-    showToast('Failed to delete tour: ' + err.message, 'error')
+    showToast('Failed to delete tour: ' + (err.message || 'Unknown error'), 'error')
   }
 }
 

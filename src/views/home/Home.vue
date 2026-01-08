@@ -906,7 +906,6 @@ const loadHomeProperties = async () => {
   try {
     isLoading.value = true
     loadError.value = null
-    console.log('🏠 [Home] Loading properties...')
     
     // Try fastFetch first (with timeout)
     try {
@@ -927,29 +926,24 @@ const loadHomeProperties = async () => {
       
       if (result?.data && Array.isArray(result.data) && result.data.length > 0) {
         latestProperties.value = result.data
-        console.log('✅ [Home] Loaded', result.data.length, 'properties from fastFetch')
         isLoading.value = false
         return
       }
     } catch (fastError) {
-      console.warn('⚠️ [Home] fastFetch failed, trying direct API:', fastError.message)
+      // Silently fall back to direct API
     }
     
     // Fallback to direct API call
-    console.log('🔄 [Home] Falling back to direct API call...')
     const apiResult = await api.accommodations.getAll({ limit: 10 })
     
     if (apiResult?.data && Array.isArray(apiResult.data) && apiResult.data.length > 0) {
       latestProperties.value = apiResult.data
-      console.log('✅ [Home] Loaded', apiResult.data.length, 'properties from API')
     } else {
-      console.warn('⚠️ [Home] No properties found in API response')
       latestProperties.value = []
     }
     
     isLoading.value = false
   } catch (error) {
-    console.error('❌ [Home] Failed to load properties:', error)
     loadError.value = error.message || 'Failed to load properties'
     latestProperties.value = []
     isLoading.value = false

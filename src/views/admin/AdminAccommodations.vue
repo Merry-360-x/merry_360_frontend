@@ -157,7 +157,6 @@ const loadProperties = async () => {
       .order('created_at', { ascending: false })
     
     if (error) {
-      console.error('Supabase error:', error)
       throw error
     }
     
@@ -172,12 +171,8 @@ const loadProperties = async () => {
       image: p.main_image || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=100&h=100&fit=crop'
     }))
     
-    if (properties.value.length === 0) {
-      showToast('No properties found in database', 'warning')
-    }
   } catch (err) {
-    console.error('Error loading properties:', err)
-    showToast('Failed to load properties: ' + err.message, 'error')
+    showToast('Failed to load properties: ' + (err.message || 'Unknown error'), 'error')
   } finally {
     loading.value = false
   }
@@ -197,8 +192,7 @@ const toggleStatus = async (property) => {
     showToast(`Property ${newStatus ? 'activated' : 'deactivated'} successfully`, 'success')
     await loadProperties()
   } catch (err) {
-    console.error('Error updating property:', err)
-    showToast('Failed to update property: ' + err.message, 'error')
+    showToast('Failed to update property: ' + (err.message || 'Unknown error'), 'error')
   }
 }
 
@@ -229,8 +223,7 @@ const deleteProperty = async (id) => {
     showToast('Property deleted successfully', 'success')
     await loadProperties()
   } catch (err) {
-    console.error('Error deleting property:', err)
-    showToast('Failed to delete property: ' + err.message, 'error')
+    showToast('Failed to delete property: ' + (err.message || 'Unknown error'), 'error')
   }
 }
 

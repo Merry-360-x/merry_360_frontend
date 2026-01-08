@@ -1372,14 +1372,8 @@ const handleSubmit = async (event) => {
     event.stopPropagation()
   }
   
-  console.log('🔍 Host application submission started')
-  console.log('Current step:', currentStep.value)
-  console.log('Terms agreed:', formData.agreeToTerms)
-  console.log('Photos:', formData.photos?.length || 0)
-  
   // Only allow submission on the final step (step 5)
   if (currentStep.value !== TOTAL_STEPS) {
-    console.warn('⚠️ Submit called but not on final step. Current step:', currentStep.value, 'Expected:', TOTAL_STEPS)
     // Don't auto-advance - user must click Next button to proceed through steps
     showToastError('Please complete all steps and click "Next" to proceed. You are currently on step ' + currentStep.value + ' of ' + TOTAL_STEPS + '.')
     return
@@ -1408,7 +1402,6 @@ const handleSubmit = async (event) => {
 
   isSubmitting.value = true
   submissionProgress.value = 0
-  console.log('📤 Starting submission process...')
   
   // Animate progress bar
   const progressInterval = setInterval(() => {

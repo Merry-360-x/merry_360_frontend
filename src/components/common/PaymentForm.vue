@@ -20,9 +20,11 @@ import { computed } from 'vue'
 import { useCurrencyStore } from '../../stores/currency'
 import { startFlutterwavePayment } from '@/services/flutterwave'
 import { useTranslation } from '@/composables/useTranslation'
+import { useToast } from '@/composables/useToast'
 
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
+const { showToast } = useToast()
 
 const props = defineProps({
   amount: { type: Number, default: 1000 },
@@ -36,6 +38,10 @@ const useFlutterwave = computed(() => {
   return !!(k && k.length > 10)
 })
 
+import { useToast } from '@/composables/useToast'
+
+const { showToast } = useToast()
+
 async function handlePay() {
   try {
     const { response } = await startFlutterwavePayment({
@@ -47,13 +53,12 @@ async function handlePay() {
     })
 
     if (response?.status === 'successful') {
-      alert(t('payment.successful'))
+      showToast(t('payment.successful'), 'success')
     } else {
-      alert(t('payment.pending'))
+      showToast(t('payment.pending'), 'warning')
     }
   } catch (err) {
-    console.error(err)
-    alert(err?.message || t('payment.failed'))
+    showToast(err?.message || t('payment.failed'), 'error')
   }
 }
 </script>

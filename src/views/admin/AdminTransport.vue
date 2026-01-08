@@ -98,7 +98,6 @@ const loading = ref(true)
 const loadVehicles = async () => {
   try {
     loading.value = true
-    console.log('Loading vehicles from Supabase...')
 
     const primary = await supabase
       .from('vehicles')
@@ -123,7 +122,6 @@ const loadVehicles = async () => {
       }
     }
 
-    console.log('Loaded vehicles:', data?.length || 0)
     const isListingsSource = source === 'listings'
     const mapped = (data || []).map(v => {
       const isListings = isListingsSource
@@ -161,13 +159,8 @@ const loadVehicles = async () => {
     }
 
     vehicles.value = mapped
-    
-    if (vehicles.value.length === 0) {
-      showToast('No vehicles found in database', 'warning')
-    }
   } catch (err) {
-    console.error('Error loading vehicles:', err)
-    showToast('Failed to load vehicles: ' + err.message, 'error')
+    showToast('Failed to load vehicles: ' + (err.message || 'Unknown error'), 'error')
   } finally {
     loading.value = false
   }
@@ -207,8 +200,7 @@ const deleteVehicle = async (id) => {
     showToast('Vehicle deleted successfully', 'success')
     await loadVehicles()
   } catch (err) {
-    console.error('Error deleting vehicle:', err)
-    showToast('Failed to delete vehicle: ' + err.message, 'error')
+    showToast('Failed to delete vehicle: ' + (err.message || 'Unknown error'), 'error')
   }
 }
 

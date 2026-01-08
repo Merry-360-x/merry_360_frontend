@@ -513,7 +513,6 @@ const buildBookingQuery = () => {
 
 const goToCheckout = () => {
   if (!accommodation.value?.id) {
-    console.error('Accommodation ID is missing')
     return
   }
   
@@ -530,16 +529,12 @@ const goToCheckout = () => {
   }
   
   const query = buildBookingQuery()
-  console.log('Navigating to checkout:', {
-    path: `/accommodation/${accommodation.value.id}/checkout`,
-    query
-  })
   
   router.push({
     path: `/accommodation/${accommodation.value.id}/checkout`,
     query
-  }).catch(err => {
-    console.error('Navigation error:', err)
+  }).catch(() => {
+    // Silently handle navigation errors
   })
 }
 
@@ -600,7 +595,6 @@ const loadTransportOptions = async () => {
       justAdded: false
     }))
   } catch (error) {
-    console.error('Failed to load transport options:', error)
     transportOptions.value = []
   }
 }
