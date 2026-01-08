@@ -605,7 +605,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '../../services/supabase'
-import { uploadToCloudinary } from '../../services/cloudinary'
+import { uploadToCloudinary, uploadDocumentToCloudinary } from '../../services/cloudinary'
 
 const router = useRouter()
 const formSection = ref(null)
@@ -778,7 +778,7 @@ const handleBusinessCertUpload = async (event) => {
   // Validate file type
   const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf']
   if (!validTypes.includes(file.type)) {
-    alert('Please upload an image or PDF file')
+    alert('Please upload an image (JPG, PNG) or PDF file')
     return
   }
 
@@ -799,10 +799,10 @@ const handleBusinessCertUpload = async (event) => {
     }
 
     console.log('📤 Uploading business certificate to Cloudinary...')
-    const result = await uploadToCloudinary(file, {
+    const result = await uploadDocumentToCloudinary(file, {
       folder: 'merry360x/host-applications/business-certificates',
-      public_id: `${user.id}_cert_${Date.now()}`,
-      resource_type: file.type === 'application/pdf' ? 'raw' : 'image'
+      maxSizeBytes: 10 * 1024 * 1024,
+      timeoutMs: 60000
     })
 
     formData.businessCertUrl = result.secure_url
