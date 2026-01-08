@@ -1,11 +1,27 @@
 <template>
-  <router-view />
-  <ToastNotification />
-  <ConfirmDialog />
+  <!-- Loading Spinner - Shows immediately while app loads -->
+  <div v-if="isLoading" class="fixed inset-0 z-[9999] bg-white dark:bg-gray-900 flex items-center justify-center">
+    <div class="text-center">
+      <div class="mb-6 flex justify-center">
+        <img src="/merry-360-logo.png" alt="Merry360X" class="h-16 w-auto" />
+      </div>
+      <div class="flex justify-center items-center space-x-2">
+        <div class="w-3 h-3 bg-brand-500 rounded-full animate-bounce"></div>
+        <div class="w-3 h-3 bg-brand-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+        <div class="w-3 h-3 bg-brand-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div v-else>
+    <router-view />
+    <ToastNotification />
+    <ConfirmDialog />
+  </div>
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useUserStore } from './stores/userStore'
 import ToastNotification from './components/common/ToastNotification.vue'
 import ConfirmDialog from './components/common/ConfirmDialog.vue'
@@ -14,6 +30,7 @@ import { usePageVisibility } from './composables/usePageVisibility'
 import { useButtonClickability } from './composables/useButtonClickability'
 
 const userStore = useUserStore()
+const isLoading = ref(true)
 
 // Handle page visibility changes to fix button clickability issues
 usePageVisibility()
@@ -23,19 +40,32 @@ useButtonClickability()
 // Listen for page visibility events to restore UI state
 let handlePageVisible = null
 
-onMounted(() => {
+onMounted(async () => {
+  // Show loading spinner immediately
+  isLoading.value = true
+  
   console.log('📱 App mounted - User Store State:')
   console.log('   isAuthenticated:', userStore.isAuthenticated)
   console.log('   user:', userStore.user)
   console.log('   localStorage user:', localStorage.getItem('user'))
   console.log('   localStorage isAuthenticated:', localStorage.getItem('isAuthenticated'))
   
-  // Warmup cache for ultra-fast page loads
-  fastFetch.warmupCache().then(() => {
-    console.log('⚡ Cache warmed up - data ready for instant access')
-  }).catch(err => {
-    console.warn('Cache warmup failed:', err)
-  })
+  // Initialize auth and warmup cache in parallel
+  try {
+    await Promise.all([
+      userStore.initAuth(),
+      fastFetch.warmupCache().catch(err => {
+        console.warn('Cache warmup failed:', err)
+      })
+    ])
+  } catch (err) {
+    console.warn('Initialization error:', err)
+  } finally {
+    // Hide loading spinner after a minimum time to prevent flash
+    setTimeout(() => {
+      isLoading.value = false
+    }, 500)
+  }
   
   // Handle page visibility changes to restore UI state
   handlePageVisible = () => {

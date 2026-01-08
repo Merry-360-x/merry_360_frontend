@@ -185,30 +185,44 @@
             <div
               v-for="vehicle in filteredVehicles"
               :key="vehicle.id"
-              class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6"
+              class="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
             >
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex-1">
-                  <p class="font-semibold text-text-brand-600">{{ vehicle.name }}</p>
-                  <p class="text-sm text-text-secondary">{{ vehicle.type || 'Vehicle' }}</p>
-                </div>
-                <div class="text-right">
-                  <div class="text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(vehicle.price_per_day || 0) }}</div>
-                  <div class="text-xs text-text-muted">/ day</div>
+              <!-- Vehicle Image -->
+              <div class="relative h-40 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                <img 
+                  :src="vehicle.main_image || (Array.isArray(vehicle.images) && vehicle.images.length > 0 ? vehicle.images[0] : null) || 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop'"
+                  :alt="vehicle.name || 'Vehicle'"
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div v-if="vehicle.driver_included" class="absolute top-2 right-2 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                  Driver Included
                 </div>
               </div>
+              
+              <div class="p-6">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="flex-1">
+                    <p class="font-semibold text-text-brand-600">{{ vehicle.name }}</p>
+                    <p class="text-sm text-text-secondary">{{ vehicle.type || 'Vehicle' }}</p>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(vehicle.price_per_day || vehicle.price || 0) }}</div>
+                    <div class="text-xs text-text-muted">/ day</div>
+                  </div>
+                </div>
 
-              <div class="flex items-center justify-between text-sm text-text-secondary mb-4">
-                <span>{{ Number(vehicle.capacity || 0) > 0 ? `${vehicle.capacity} seats` : '—' }}</span>
-                <span v-if="vehicle.driver_included" class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-900">Driver included</span>
+                <div class="flex items-center justify-between text-sm text-text-secondary mb-4">
+                  <span>{{ Number(vehicle.capacity || 0) > 0 ? `${vehicle.capacity} seats` : '—' }}</span>
+                </div>
+
+                <button
+                  @click="bookVehicle(vehicle)"
+                  class="w-full px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition-colors"
+                >
+                  {{ t('accommodation.addToCart') }}
+                </button>
               </div>
-
-              <button
-                @click="bookVehicle(vehicle)"
-                class="w-full px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition-colors"
-              >
-                {{ t('accommodation.addToCart') }}
-              </button>
             </div>
           </div>
         </div>

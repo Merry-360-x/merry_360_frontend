@@ -100,18 +100,26 @@ const loadTours = async () => {
     loading.value = true
     console.log('Loading tours from Supabase...')
 
+    // Load all tours (admin can see all, not just available ones)
     const primary = await supabase
       .from('tours')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (primary.error) throw primary.error
+    if (primary.error) {
+      console.error('Error loading tours:', primary.error)
+      // Don't throw, just log and continue with empty array
+      tours.value = []
+      loading.value = false
+      return
+    }
 
     // If tours table is empty (common after migrating from listings), fall back temporarily.
     let source = 'tours'
     let data = primary.data || []
 
     if (data.length === 0) {
+      console.log('Tours table empty, checking listings...')
       const fallback = await supabase
         .from('listings')
         .select('*')
@@ -120,6 +128,7 @@ const loadTours = async () => {
       if (!fallback.error && (fallback.data || []).length > 0) {
         source = 'listings'
         data = fallback.data || []
+        console.log('Found tours in listings table:', data.length)
       }
     }
 

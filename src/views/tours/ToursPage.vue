@@ -95,7 +95,18 @@
         </div>
 
         <!-- Tours Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div v-if="loading" class="text-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500 mx-auto mb-4"></div>
+          <p class="text-text-secondary">Loading tours...</p>
+        </div>
+        <div v-else-if="filteredTours.length === 0" class="text-center py-12">
+          <svg class="w-16 h-16 mx-auto text-text-muted mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="text-lg font-semibold text-text-primary mb-2">No tours found</h3>
+          <p class="text-text-secondary">Try adjusting your search or filters.</p>
+        </div>
+        <div v-else class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <div 
             v-for="tour in filteredTours" 
             :key="tour.id"
@@ -103,7 +114,7 @@
             @click="viewTour(tour)"
           >
             <div class="relative overflow-hidden h-56">
-              <img loading="lazy" :src="tour.image" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <img loading="lazy" :src="tour.image || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop'" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               <span class="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-full">
                 {{ tour.category }}
               </span>
@@ -218,31 +229,62 @@ const loading = ref(true)
 const loadTours = async () => {
   try {
     loading.value = true
+    // Load all tours first, then filter by available
     const { data, error } = await supabase
       .from('tours')
       .select('*')
-      .eq('available', true)
       .order('created_at', { ascending: false })
     
-    if (error) throw error
+    if (error) {
+      console.error('Error loading tours:', error)
+      // Try fallback to listings table
+      const fallback = await supabase
+        .from('listings')
+        .select('*')
+        .ilike('category', 'tour%')
+        .order('created_at', { ascending: false })
+      
+      if (!fallback.error && fallback.data) {
+        tours.value = (fallback.data || []).map(t => ({
+          id: t.id,
+          title: t.title || t.name || 'Tour',
+          destination: t.destination || t.location || '',
+          days: t.duration_days || 1,
+          duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '1 day',
+          price: t.price || 0,
+          rating: t.rating || 4.5,
+          reviews: t.reviews_count || 0,
+          category: t.category || 'Tour',
+          image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop',
+          description: String(t.description || ''),
+          difficulty: t.difficulty || 'moderate'
+        }))
+        loading.value = false
+        return
+      }
+      throw error
+    }
     
     tours.value = (data || []).map(t => ({
       id: t.id,
-      title: t.name,
-      destination: t.destination,
-      days: t.duration_days,
-      duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '',
-      price: t.price,
+      title: t.name || 'Tour',
+      destination: t.destination || '',
+      days: t.duration_days || 1,
+      duration: t.duration_days ? `${t.duration_days} ${t.duration_days === 1 ? 'day' : 'days'}` : '1 day',
+      price: t.price || 0,
       rating: t.rating || 4.5,
       reviews: t.reviews_count || 0,
       category: t.category || 'Tour',
-      image: t.main_image,
+      image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop',
       description: String(t.description || ''),
-      difficulty: t.difficulty
+      difficulty: t.difficulty || 'moderate'
     }))
+    
+    console.log('Loaded tours:', tours.value.length)
   } catch (err) {
     console.error('Error loading tours:', err)
-    toastError(err)
+    toastError('Failed to load tours: ' + (err.message || 'Unknown error'))
+    tours.value = []
   } finally {
     loading.value = false
   }
