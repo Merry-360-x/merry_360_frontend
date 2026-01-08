@@ -654,7 +654,7 @@ const scrollToForm = () => {
 }
 
 const progress = computed(() => {
-  const fields = [
+  let fields = [
     formData.accountType,
     formData.firstName,
     formData.lastName,
@@ -669,6 +669,22 @@ const progress = computed(() => {
     formData.description,
     formData.agreeToTerms
   ]
+  
+  // Add business fields to progress calculation if business account
+  if (formData.accountType === 'business') {
+    fields = [
+      ...fields,
+      formData.businessTin,
+      formData.businessCertUrl,
+      formData.ownerIdNumber,
+      formData.ownerIdPhotoUrl
+    ]
+  }
+  
+  // Add price field if accommodation
+  if (formData.hostingType === 'accommodation') {
+    fields.push(formData.price)
+  }
   
   const filled = fields.filter(f => f && f !== '' && f !== 0).length
   return Math.round((filled / fields.length) * 100)
@@ -688,6 +704,13 @@ const isFormValid = computed(() => {
          formData.propertyLocation &&
          formData.description &&
          formData.agreeToTerms
+  
+  // Price validation for accommodation
+  if (formData.hostingType === 'accommodation') {
+    if (!formData.price || formData.price <= 0) {
+      return false
+    }
+  }
   
   // Additional validation for business accounts
   if (formData.accountType === 'business') {
