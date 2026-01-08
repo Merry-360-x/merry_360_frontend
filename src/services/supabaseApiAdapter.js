@@ -637,7 +637,7 @@ export const supabaseApiAdapter = {
       
       console.log('📤 [Transport Create] Inserting into database:', JSON.stringify(insertData, null, 2))
 
-      // Add timeout protection
+      // Add timeout protection with proper error handling
       const insertPromise = supabase
         .from('vehicles')
         .insert([insertData])
@@ -645,10 +645,28 @@ export const supabaseApiAdapter = {
         .single()
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 30000)
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
       )
 
-      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
+      // Use Promise.race with proper error handling
+      let result
+      try {
+        result = await Promise.race([insertPromise, timeoutPromise])
+      } catch (raceError) {
+        // If it's a timeout, throw it directly
+        if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
+          console.error('⏱️ [Transport Create] Request timed out after 30 seconds')
+          throw new Error('Request timeout - please try again')
+        }
+        // If it's a Supabase error, it will have error property
+        if (raceError?.error) {
+          throw raceError
+        }
+        // Otherwise, re-throw the error
+        throw raceError
+      }
+
+      const { data, error } = result || {}
 
       if (error) {
         console.error('❌ [Transport Create] Database error:', {
@@ -657,7 +675,27 @@ export const supabaseApiAdapter = {
           hint: error.hint,
           code: error.code
         })
-        throw error
+        
+        // Provide user-friendly error messages
+        let errorMessage = error.message || 'Failed to create transport service'
+        if (error.code === '23505') {
+          errorMessage = 'A transport service with this name already exists'
+        } else if (error.code === '23503') {
+          errorMessage = 'Invalid reference - please check your data'
+        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('denied') || error.message?.includes('RLS') || error.message?.includes('row-level security')) {
+          errorMessage = 'You do not have permission to create transport services. Please contact admin.'
+        } else if (error.message?.includes('column') && error.message?.includes('does not exist')) {
+          errorMessage = 'Database schema error - please contact support'
+        } else if (error.message?.includes('null value') && error.message?.includes('violates')) {
+          errorMessage = 'Please fill in all required fields'
+        }
+        
+        throw new Error(errorMessage)
+      }
+      
+      if (!data) {
+        console.error('❌ [Transport Create] No data returned from insert')
+        throw new Error('Transport service creation failed - no data returned. Please try again.')
       }
       
       console.log('✅ [Transport Create] Transport created successfully!', data.id)
