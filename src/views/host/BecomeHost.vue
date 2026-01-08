@@ -336,6 +336,29 @@
                         </div>
                       </div>
 
+                      <!-- Password field for new users -->
+                      <div v-if="!isAuthenticated" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                          <label class="block text-sm font-semibold text-text-secondary mb-2">Create Password *</label>
+                          <input 
+                            v-model="formData.password"
+                            type="password" 
+                            required
+                            minlength="6"
+                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                            placeholder="Minimum 6 characters"
+                          />
+                          <p class="mt-1 text-xs text-gray-500">We'll create an account for you with this email and password</p>
+                        </div>
+                        <div class="flex items-center">
+                          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 w-full">
+                            <p class="text-sm text-blue-800 dark:text-blue-200">
+                              <strong>New to Merry360?</strong> We'll create your account automatically when you submit your application.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
                       <div>
                         <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.address') }} *</label>
                         <input 
