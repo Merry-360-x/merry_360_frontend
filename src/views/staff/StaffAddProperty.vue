@@ -718,15 +718,19 @@ async function handleSubmit() {
     const imageUrls = propertyImages.value.map((img) => img.url || img.preview).filter(Boolean)
     console.log('📷 Processing', imageUrls.length, 'images')
 
+    if (imageUrls.length === 0) {
+      throw new Error('Please upload at least one image')
+    }
+
     const propertyData = {
       name: form.value.title.trim(),
       description: form.value.description.trim(),
       type: normalizePropertyType(form.value.category),
       location: form.value.location.trim(),
-      price: form.value.price,
-      bedrooms: form.value.beds,
-      bathrooms: form.value.baths,
-      maxGuests: form.value.maxGuests,
+      price: Number(form.value.price),
+      bedrooms: Number(form.value.beds),
+      bathrooms: Number(form.value.baths),
+      maxGuests: Number(form.value.maxGuests),
       amenities: form.value.amenities,
       image: imageUrls[0],
       images: imageUrls,
@@ -737,8 +741,22 @@ async function handleSubmit() {
       longitude: form.value.longitude || null
     }
 
-    console.log('📤 Submitting property data...')
-    await api.accommodations.create(propertyData)
+    console.log('📤 Submitting property data...', propertyData)
+    console.log('API check:', typeof api.accommodations?.create)
+
+    // Verify API method exists
+    if (!api.accommodations || typeof api.accommodations.create !== 'function') {
+      throw new Error('Property creation API is not available. Please contact support.')
+    }
+
+    // Add timeout protection to prevent hanging
+    const createProperty = api.accommodations.create(propertyData)
+    const timeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+    )
+
+    const result = await Promise.race([createProperty, timeout])
+    console.log('📊 Create result:', result)
 
     console.log('✅ Property created successfully!')
     showSuccessModal.value = true
@@ -751,7 +769,28 @@ async function handleSubmit() {
 
   } catch (error) {
     console.error('❌ Error creating property:', error)
-    showToastError(error?.message || 'Failed to create property. Please try again.')
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to create property. Please try again.'
+    
+    if (error?.message) {
+      errorMessage = error.message
+    } else if (error?.error?.message) {
+      errorMessage = error.error.message
+    } else if (typeof error === 'string') {
+      errorMessage = error
+    }
+
+    // Check for specific error types
+    if (errorMessage.includes('host_application_status')) {
+      errorMessage = 'Your host application needs approval. Please contact support.'
+    } else if (errorMessage.includes('permission') || errorMessage.includes('denied')) {
+      errorMessage = 'You don\'t have permission to add properties. Please contact admin.'
+    } else if (errorMessage.includes('timeout')) {
+      errorMessage = 'The request is taking too long. Please check your internet and try again.'
+    }
+
+    showToastError(errorMessage)
   } finally {
     isSubmitting.value = false
   }
