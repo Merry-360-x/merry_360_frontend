@@ -445,7 +445,7 @@ const onSearchEnter = () => {
 }
 
 const applySearch = () => {
-  console.log('Search applied:', filteredRoutes.value.length, 'routes found')
+  // Search applied
 }
 
 const bookService = (type) => {

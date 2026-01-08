@@ -1285,14 +1285,14 @@ const validateCurrentStep = () => {
     }
   } else if (currentStep.value === 4) {
     if (!formData.description) {
-      alert(t('hostApplication.validation.step4Required'))
+      showToastError(t('hostApplication.validation.step4Required'))
       return false
     }
     
     // For accommodation, require at least 5 photos
     if (formData.hostingType === 'accommodation') {
       if (!formData.photos || formData.photos.length < 5) {
-        alert('Please upload at least 5 photos of your accommodation.')
+        showToastError('Please upload at least 5 photos of your accommodation.')
         return false
       }
     }
@@ -1389,14 +1389,14 @@ const handleSubmit = async (event) => {
   // Validate photos for accommodation type
   if (formData.hostingType === 'accommodation') {
     if (!formData.photos || formData.photos.length < 5) {
-      alert('Please upload at least 5 photos of your accommodation before submitting.')
+      showToastError('Please upload at least 5 photos of your accommodation before submitting.')
       return
     }
   }
   
   // Check if photos are still uploading
   if (photosUploading.value) {
-    alert('Please wait for photo uploads to finish before submitting.')
+    showToastError('Please wait for photo uploads to finish before submitting.')
     return
   }
 
@@ -1422,8 +1422,8 @@ const handleSubmit = async (event) => {
       console.log('📝 Creating account for new user...')
       
       if (!formData.password || formData.password.length < 6) {
-        alert('Please create a password (minimum 6 characters) to create your account.')
-      isSubmitting.value = false
+        showToastError('Please create a password (minimum 6 characters) to create your account.')
+        isSubmitting.value = false
         return
       }
       
@@ -1441,19 +1441,18 @@ const handleSubmit = async (event) => {
       })
       
       if (signUpError) {
-        console.error('❌ Sign up error:', signUpError)
         if (signUpError.message.includes('already registered')) {
-          alert('An account with this email already exists. Please log in first, then apply to become a host.')
-      router.push('/login')
+          showToastError('An account with this email already exists. Please log in first, then apply to become a host.')
+          router.push('/login')
         } else {
-          alert('Failed to create account: ' + signUpError.message)
+          showToastError('Failed to create account: ' + signUpError.message)
         }
         isSubmitting.value = false
-      return
-    }
+        return
+      }
     
       if (!authData.user) {
-        alert('Account creation failed. Please try again.')
+        showToastError('Account creation failed. Please try again.')
         isSubmitting.value = false
         return
       }
@@ -1477,52 +1476,36 @@ const handleSubmit = async (event) => {
         })
       
       if (profileError) {
-        console.warn('Profile creation warning:', profileError)
         // Continue anyway - profile might be created by trigger
       }
-      
-      console.log('✅ Account created successfully:', user.email)
     } else {
       // Existing user
       user = currentUser
       userId = currentUser.id
-    console.log('✅ User authenticated:', user.email)
     }
 
     // Upload required documents (store storage paths, not public URLs)
     let idDocumentPath = null
     let businessRegCertPath = null
 
-    console.log('📄 Uploading documents...')
-    console.log('ID doc:', idDocumentDoc.value?.file?.name)
-    console.log('Business cert:', businessRegCertDoc.value?.file?.name)
-
     try {
       if (idDocumentDoc.value?.file) {
-        console.log('⬆️ Uploading ID document...')
         idDocumentPath = await uploadHostDocument(userId, 'id-document', idDocumentDoc.value.file)
-        console.log('✅ ID document uploaded:', idDocumentPath)
       }
 
       if (formData.applicantType === 'business' && businessRegCertDoc.value?.file) {
-        console.log('⬆️ Uploading business certificate...')
         businessRegCertPath = await uploadHostDocument(userId, 'business-registration-certificate', businessRegCertDoc.value.file)
-        console.log('✅ Business cert uploaded:', businessRegCertPath)
       }
     } catch (uploadErr) {
-      console.error('❌ Host document upload error:', uploadErr)
       isSubmitting.value = false
-      alert(t('hostApplication.validation.uploadFailed'))
+      showToastError(t('hostApplication.validation.uploadFailed'))
       return
     }
-
-    console.log('💾 Saving to database...')
     
     // Extract photo URLs from formData.photos
     const photoUrls = Array.isArray(formData.photos) 
       ? formData.photos.map(img => img.url || img.preview || img).filter(Boolean)
       : []
-    console.log('📷 Photos to save:', photoUrls.length, photoUrls)
     
     const profilePayload = {
       id: userId,
@@ -1563,8 +1546,6 @@ const handleSubmit = async (event) => {
     }
 
     // Add timeout protection with proper error handling
-    console.log('📤 Upserting profile with payload:', JSON.stringify(profilePayload, null, 2))
-    
     const timeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
     )
@@ -1577,11 +1558,8 @@ const handleSubmit = async (event) => {
         .select()
       
       result = await Promise.race([upsertPromise, timeoutPromise])
-      console.log('📥 Upsert result:', result)
     } catch (raceError) {
-      console.error('❌ Promise race error:', raceError)
       if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
-        console.error('⏱️ Request timed out after 30 seconds')
         throw new Error('Request timeout - please try again')
       }
       throw raceError
@@ -1589,20 +1567,12 @@ const handleSubmit = async (event) => {
 
     // Check for errors in the result
     if (!result) {
-      console.error('❌ No result returned from upsert')
       throw new Error('No response from server. Please try again.')
     }
 
     const { data, error } = result
 
     if (error) {
-      console.error('❌ Supabase error:', error)
-      console.error('Error details:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code
-      })
       
       let errorMessage = t('hostApplication.submittedFailed')
       if (error?.message?.includes('timeout')) {

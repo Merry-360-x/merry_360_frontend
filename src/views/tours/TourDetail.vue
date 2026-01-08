@@ -554,12 +554,6 @@ onMounted(async () => {
       category: tourData.category || 'Tour'
     }
     
-    console.log('✅ Tour loaded:', {
-      id: tour.value.id,
-      name: tour.value.name,
-      price: tour.value.price
-    })
-
     resetImageLoadingState()
     
     // Load nearby accommodations and transport
@@ -568,7 +562,7 @@ onMounted(async () => {
       loadTransportOptions()
     ])
   } catch (error) {
-    console.error('Failed to load tour:', error)
+    // Silently handle loading errors
   }
 })
 

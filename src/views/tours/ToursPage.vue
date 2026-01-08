@@ -230,7 +230,6 @@ const loading = ref(true)
 const loadTours = async () => {
   try {
     loading.value = true
-    console.log('🔍 Loading tours from Supabase...')
     
     // Load all tours first, then filter by available
     const { data, error } = await supabase
@@ -239,9 +238,7 @@ const loadTours = async () => {
       .order('created_at', { ascending: false })
     
     if (error) {
-      console.error('❌ Error loading tours:', error)
       // Try fallback to listings table
-      console.log('🔄 Trying fallback to listings table...')
       const fallback = await supabase
         .from('listings')
         .select('*')
@@ -249,7 +246,6 @@ const loadTours = async () => {
         .order('created_at', { ascending: false })
       
       if (!fallback.error && fallback.data && fallback.data.length > 0) {
-        console.log('✅ Found tours in listings table:', fallback.data.length)
         tours.value = (fallback.data || []).map(t => ({
           id: t.id,
           title: t.title || t.name || 'Tour',
@@ -266,14 +262,10 @@ const loadTours = async () => {
         }))
         // Stop loading immediately - even if we have results
         loading.value = false
-        console.log('✅ Mapped tours:', tours.value.length)
         return
       }
-      console.error('❌ Fallback also failed')
       throw error
     }
-    
-    console.log('✅ Loaded tours from tours table:', data?.length || 0)
     
     // Always set tours (even if empty) and stop loading immediately
     tours.value = (data || []).map(t => ({
@@ -293,12 +285,7 @@ const loadTours = async () => {
     
     // Stop loading immediately - even if no results
     loading.value = false
-    console.log('✅ Mapped tours:', tours.value.length)
-    if (tours.value.length > 0) {
-      console.log('📊 Sample tour:', tours.value[0])
-    }
   } catch (err) {
-    console.error('❌ Error loading tours:', err)
     toastError('Failed to load tours: ' + (err.message || 'Unknown error'))
     tours.value = []
     // Ensure loading is stopped even on error

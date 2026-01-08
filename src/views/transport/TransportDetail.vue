@@ -451,18 +451,12 @@ onMounted(async () => {
         route: foundVehicle.route || ''
       }
       
-      console.log('✅ Vehicle loaded:', {
-        id: vehicle.value.id,
-        name: vehicle.value.name,
-        price_per_day: vehicle.value.price_per_day,
-        price: vehicle.value.price
-      })
     }
 
     resetImageLoadingState()
     await loadNearbyAccommodations()
   } catch (error) {
-    console.error('Failed to load vehicle:', error)
+    // Silently handle loading errors
   }
 })
 
