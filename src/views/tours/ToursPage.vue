@@ -442,6 +442,6 @@ const addToCart = (tour) => {
 }
 
 const viewTour = (tour) => {
-  alert(t('tours.detailsComingSoon', { title: tour.title }))
+  router.push({ name: 'tour-detail', params: { id: tour.id } })
 }
 </script>

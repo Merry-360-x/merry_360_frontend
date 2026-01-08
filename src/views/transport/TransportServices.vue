@@ -468,17 +468,7 @@ const bookRoute = (route) => {
 }
 
 const bookVehicle = (vehicle) => {
-  const item = {
-    id: vehicle.id,
-    type: 'transport',
-    service: 'vehicle',
-    name: vehicle.name,
-    price: vehicle.price_per_day ?? 0,
-    duration: 'per day',
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80'
-  }
-  userStore.addToCart(item)
-  success(t('common.addedToCart', { item: item.name }))
+  router.push({ name: 'transport-detail', params: { id: vehicle.id } })
 }
 
 let vehiclesRealtime = null

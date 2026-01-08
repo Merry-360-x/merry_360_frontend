@@ -164,6 +164,11 @@ const routes = [
     component: TransportList
   },
   {
+    path: '/transport/:id',
+    name: 'transport-detail',
+    component: () => import('../views/transport/TransportDetail.vue')
+  },
+  {
     path: '/transport/booking',
     name: 'transport-booking',
     component: TransportBooking
