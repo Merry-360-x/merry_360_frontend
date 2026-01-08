@@ -318,9 +318,11 @@
                             v-model="formData.email"
                             type="email" 
                             required
-                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                            :disabled="isAuthenticated"
+                            class="w-full px-4 py-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-primary rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             :placeholder="t('hostApplication.placeholder.email')"
                           />
+                          <p v-if="isAuthenticated" class="mt-1 text-xs text-gray-500">Logged in as: {{ formData.email }}</p>
                         </div>
                         <div>
                           <label class="block text-sm font-semibold text-text-secondary mb-2">{{ t('hostApplication.labels.phoneNumber') }} *</label>
@@ -806,21 +808,37 @@ import DocumentUpload from '../../components/host/DocumentUpload.vue'
 import { supabase, uploadFile } from '../../services/supabase'
 import { uploadDocumentToCloudinary } from '../../services/cloudinary'
 import { useTranslation } from '@/composables/useTranslation'
+import { useUserStore } from '@/stores/userStore'
 import isoCountries from 'i18n-iso-countries'
 import enIsoCountries from 'i18n-iso-countries/langs/en.json'
 import worldCountries from 'world-countries'
 
 const router = useRouter()
 const { t } = useTranslation()
+const userStore = useUserStore()
 const formSection = ref(null)
 const isSubmitting = ref(false)
 const currentStep = ref(0)
 const showForm = ref(false)
+const isAuthenticated = ref(false)
 
-// Ensure isSubmitting is reset on mount (in case of stuck state)
-onMounted(() => {
+// Check authentication status on mount
+onMounted(async () => {
   isSubmitting.value = false
   photosUploading.value = false
+  
+  // Check if user is authenticated
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    isAuthenticated.value = !!user
+    if (user && formData.email === '') {
+      // Pre-fill email if user is logged in
+      formData.email = user.email || ''
+    }
+  } catch (error) {
+    console.log('User not authenticated, allowing application as new user')
+    isAuthenticated.value = false
+  }
 })
 
 const TOTAL_STEPS = 5 // Steps 1-5 after account type selection
@@ -1055,6 +1073,7 @@ const formData = reactive({
   firstName: '',
   lastName: '',
   email: '',
+  password: '', // For new users to create account
   phone: '',
   address: '',
   nationality: '',
@@ -1120,6 +1139,11 @@ const validateCurrentStep = () => {
   if (currentStep.value === 1) {
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.address || !formData.nationality || !formData.hostingType) {
       alert(t('hostApplication.validation.step1Required'))
+      return false
+    }
+    // Require password for new users
+    if (!isAuthenticated.value && (!formData.password || formData.password.length < 6)) {
+      alert('Please create a password (minimum 6 characters) to create your account.')
       return false
     }
   } else if (currentStep.value === 2) {
@@ -1234,18 +1258,83 @@ const handleSubmit = async () => {
   console.log('📤 Starting submission process...')
   
   try {
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser()
+    // Get current user or create account for new users
+    let user
+    let userId
     
-    if (!user) {
-      console.log('❌ User not authenticated')
-      isSubmitting.value = false
-      alert(t('hostApplication.loginRequired'))
-      router.push('/login')
-      return
+    const { data: { user: currentUser } } = await supabase.auth.getUser()
+    
+    if (!currentUser) {
+      // New user - create account first
+      console.log('📝 Creating account for new user...')
+      
+      if (!formData.password || formData.password.length < 6) {
+        alert('Please create a password (minimum 6 characters) to create your account.')
+        isSubmitting.value = false
+        return
+      }
+      
+      // Sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            phone: formData.phone
+          }
+        }
+      })
+      
+      if (signUpError) {
+        console.error('❌ Sign up error:', signUpError)
+        if (signUpError.message.includes('already registered')) {
+          alert('An account with this email already exists. Please log in first, then apply to become a host.')
+          router.push('/login')
+        } else {
+          alert('Failed to create account: ' + signUpError.message)
+        }
+        isSubmitting.value = false
+        return
+      }
+      
+      if (!authData.user) {
+        alert('Account creation failed. Please try again.')
+        isSubmitting.value = false
+        return
+      }
+      
+      user = authData.user
+      userId = authData.user.id
+      
+      // Create profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone,
+          role: 'user',
+          loyalty_points: 0,
+          loyalty_tier: 'bronze',
+          created_at: new Date().toISOString()
+        })
+      
+      if (profileError) {
+        console.warn('Profile creation warning:', profileError)
+        // Continue anyway - profile might be created by trigger
+      }
+      
+      console.log('✅ Account created successfully:', user.email)
+    } else {
+      // Existing user
+      user = currentUser
+      userId = currentUser.id
+      console.log('✅ User authenticated:', user.email)
     }
-    
-    console.log('✅ User authenticated:', user.email)
 
     // Upload required documents (store storage paths, not public URLs)
     let idDocumentPath = null
@@ -1258,13 +1347,13 @@ const handleSubmit = async () => {
     try {
       if (idDocumentDoc.value?.file) {
         console.log('⬆️ Uploading ID document...')
-        idDocumentPath = await uploadHostDocument(user.id, 'id-document', idDocumentDoc.value.file)
+        idDocumentPath = await uploadHostDocument(userId, 'id-document', idDocumentDoc.value.file)
         console.log('✅ ID document uploaded:', idDocumentPath)
       }
 
       if (formData.applicantType === 'business' && businessRegCertDoc.value?.file) {
         console.log('⬆️ Uploading business certificate...')
-        businessRegCertPath = await uploadHostDocument(user.id, 'business-registration-certificate', businessRegCertDoc.value.file)
+        businessRegCertPath = await uploadHostDocument(userId, 'business-registration-certificate', businessRegCertDoc.value.file)
         console.log('✅ Business cert uploaded:', businessRegCertPath)
       }
     } catch (uploadErr) {
@@ -1283,7 +1372,7 @@ const handleSubmit = async () => {
     console.log('📷 Photos to save:', photoUrls.length, photoUrls)
     
     const profilePayload = {
-      id: user.id,
+      id: userId,
       email: user.email,
       first_name: formData.firstName,
       last_name: formData.lastName,
@@ -1370,6 +1459,12 @@ const handleSubmit = async () => {
     }
     
     console.log('✅ Host application saved successfully!')
+    
+    // Update user store if new account was created
+    if (!currentUser) {
+      await userStore.initAuth()
+    }
+    
     alert(t('hostApplication.submittedSuccess'))
     
     // Reset form
@@ -1384,6 +1479,8 @@ const handleSubmit = async () => {
         formData[key] = { guests: 4, bedrooms: 1, beds: 1, bathrooms: 1 }
       } else if (key === 'amenities') {
         formData[key] = []
+      } else if (key === 'password') {
+        formData[key] = '' // Clear password
       } else {
         formData[key] = ''
       }
@@ -1393,8 +1490,14 @@ const handleSubmit = async () => {
     businessRegCertDoc.value = null
     uploadedFiles.value = []
     
-    // Redirect to host dashboard instead of home
-    router.push('/host')
+    // Redirect based on authentication status
+    if (!currentUser) {
+      // New user - redirect to profile to complete setup
+      router.push('/profile')
+    } else {
+      // Existing user - redirect to host dashboard
+      router.push('/host')
+    }
     
   } catch (error) {
     console.error('❌ Host application error:', error)
