@@ -70,6 +70,57 @@
                   </div>
                 </div>
                 
+                <!-- Account Type Selection -->
+                <div class="mb-8">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Account Type *</label>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="relative cursor-pointer">
+                      <input
+                        type="radio"
+                        v-model="formData.accountType"
+                        value="individual"
+                        class="peer sr-only"
+                        @change="updateProgress"
+                      />
+                      <div class="p-5 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300 hover:shadow-md">
+                        <div class="flex items-center gap-4">
+                          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 class="font-bold text-gray-900 dark:text-white mb-1">Individual</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Personal hosting</p>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                    <label class="relative cursor-pointer">
+                      <input
+                        type="radio"
+                        v-model="formData.accountType"
+                        value="business"
+                        class="peer sr-only"
+                        @change="updateProgress"
+                      />
+                      <div class="p-5 border-2 border-gray-200 dark:border-gray-600 rounded-2xl transition-all peer-checked:border-brand-500 peer-checked:bg-brand-50 dark:peer-checked:bg-brand-900/20 hover:border-gray-300 hover:shadow-md">
+                        <div class="flex items-center gap-4">
+                          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 class="font-bold text-gray-900 dark:text-white mb-1">Business</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Company or organization</p>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
@@ -446,6 +497,7 @@ onMounted(() => {
 })
 
 const formData = reactive({
+  accountType: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -471,6 +523,7 @@ const scrollToForm = () => {
 
 const progress = computed(() => {
   const fields = [
+    formData.accountType,
     formData.firstName,
     formData.lastName,
     formData.email,
@@ -490,7 +543,8 @@ const progress = computed(() => {
 })
 
 const isFormValid = computed(() => {
-  return formData.firstName &&
+  return formData.accountType &&
+         formData.firstName &&
          formData.lastName &&
          formData.email &&
          formData.phone &&
@@ -628,6 +682,7 @@ const handleSubmit = async () => {
       host_id_number: formData.idNumber,
       host_id_photo: formData.idPhotoUrl,
       host_application_details: {
+        accountType: formData.accountType,
         address: formData.address,
         email: formData.email,
         phone: formData.phone,
