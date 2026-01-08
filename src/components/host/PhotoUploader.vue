@@ -301,6 +301,10 @@ const props = defineProps({
   uploading: {
     type: Boolean,
     default: false
+  },
+  folder: {
+    type: String,
+    default: 'merry360x/uploads'
   }
 })
 
@@ -410,7 +414,7 @@ const confirmUpload = async () => {
       if (finalSizeError) throw new Error(finalSizeError)
 
       let url
-      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/uploads' })
+      const result = await uploadToCloudinary(optimized, { folder: props.folder })
       url = result.secure_url
 
       uploaded.push({

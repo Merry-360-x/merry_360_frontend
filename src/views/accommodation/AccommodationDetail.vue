@@ -175,35 +175,6 @@
             </div>
           </Card>
 
-          <!-- Location Map -->
-          <Card v-if="accommodation.latitude && accommodation.longitude" padding="lg">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-xl font-bold">Exact Location</h2>
-              <span class="px-3 py-1 bg-green-500 bg-opacity-10 text-green-600 text-sm font-medium rounded-full flex items-center gap-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-                Pinpoint Location
-              </span>
-            </div>
-            <div id="property-map" class="w-full h-[400px] rounded-lg overflow-hidden border border-gray-200"></div>
-            <div class="mt-3 flex items-center justify-between text-sm text-gray-600">
-              <span>📍 {{ accommodation.location }}</span>
-              <a 
-                :href="`https://www.google.com/maps?q=${accommodation.latitude},${accommodation.longitude}`"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-brand-500 hover:text-brand-600 font-medium flex items-center gap-1"
-              >
-                Open in Google Maps
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-              </a>
-            </div>
-          </Card>
-
           <!-- Description -->
           <Card padding="lg">
             <h2 class="text-xl font-bold mb-4">About this place</h2>
@@ -628,78 +599,6 @@ const accommodation = ref({
 })
 
 import api from '../../services/api'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
-
-let map = null
-let marker = null
-
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || import.meta.env.VITE_MAPBOX_TOKEN || ''
-
-const initializeMap = async () => {
-  if (!accommodation.value.latitude || !accommodation.value.longitude) return
-  if (!MAPBOX_TOKEN) {
-    console.warn('Missing Mapbox token. Set VITE_MAPBOX_ACCESS_TOKEN to enable the map.')
-    return
-  }
-
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  const mapElement = document.getElementById('property-map')
-  if (!mapElement) return
-
-  if (!map) createMap()
-}
-
-const createMap = () => {
-  if (map) return
-
-  mapboxgl.accessToken = MAPBOX_TOKEN
-
-  const lat = Number(accommodation.value.latitude)
-  const lng = Number(accommodation.value.longitude)
-
-  map = new mapboxgl.Map({
-    container: 'property-map',
-    style: 'mapbox://styles/mapbox/streets-v12',
-    center: [lng, lat],
-    zoom: 15
-  })
-
-  map.addControl(new mapboxgl.NavigationControl(), 'top-right')
-
-  const popupHtml = `
-    <div style="padding: 12px; max-width: 250px;">
-      <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: bold; color: #1f2937;">
-        ${accommodation.value.name}
-      </h3>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">
-        📍 ${accommodation.value.location}
-      </p>
-      <p style="margin: 0; font-size: 18px; font-weight: bold; color: #EF4444;">
-        $${accommodation.value.price}
-        <span style="font-size: 12px; font-weight: normal; color: #6b7280;">/night</span>
-      </p>
-    </div>
-  `
-
-  const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHtml)
-
-  const el = document.createElement('div')
-  el.style.width = '18px'
-  el.style.height = '18px'
-  el.style.borderRadius = '9999px'
-  el.style.background = '#EF4444'
-  el.style.border = '3px solid #ffffff'
-  el.style.boxShadow = '0 8px 20px rgba(0,0,0,0.25)'
-
-  marker = new mapboxgl.Marker({ element: el })
-    .setLngLat([lng, lat])
-    .setPopup(popup)
-    .addTo(map)
-
-  // Open popup by default
-  marker.togglePopup()
-}
 
 onMounted(async () => {
   // Hydrate booking sidebar from URL (or use sensible defaults)
@@ -731,11 +630,6 @@ onMounted(async () => {
     }
 
     resetImageLoadingState()
-    
-    // Initialize map if coordinates are available
-    if (accommodation.value.latitude && accommodation.value.longitude) {
-      initializeMap()
-    }
   } catch (error) {
     console.error('Failed to load accommodation:', error)
   }

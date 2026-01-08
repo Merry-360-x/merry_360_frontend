@@ -125,10 +125,11 @@
               <PhotoUploader
                 v-model="tourImages"
                 v-model:uploading="imagesUploading"
-                title="Upload Tour Images"
-                subtitle="Add photos to showcase your tour"
+                title="Tour Images"
+                subtitle="Add photos to showcase your tour experience"
                 :min-photos="1"
-                :max-photos="10"
+                :max-photos="15"
+                folder="merry360x/tours"
               />
             </div>
 
@@ -181,7 +182,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from '../../composables/useToast'
 import { useUserStore } from '../../stores/userStore'
@@ -189,6 +190,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
+import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import api from '../../services/api'
 
 const router = useRouter()

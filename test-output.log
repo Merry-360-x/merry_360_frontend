@@ -1,0 +1,55 @@
+
+Running 4 tests using 4 workers
+
+
+📖 Testing Stories Feature...
+
+🚗 Testing Tours & Transport...
+
+❤️ Testing Wishlist...
+🚀 Starting real-time production test on https://merry360x.com
+
+1️⃣ Testing Homepage...
+✅ Found 0 tours
+✅ Found 0 stories
+✅ Found 0 vehicles
+  ✓  4 [chromium] › tests/e2e/real-time-production.spec.js:252:7 › Real-Time Production Tests › Test Stories Feature (9.9s)
+  ✓  2 [chromium] › tests/e2e/real-time-production.spec.js:289:7 › Real-Time Production Tests › Test Tours & Transport (10.1s)
+  ✓  1 [chromium] › tests/e2e/real-time-production.spec.js:309:7 › Real-Time Production Tests › Test Wishlist (10.0s)
+✅ Homepage loaded
+
+2️⃣ Testing Signup...
+  ✘  3 [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host (2.0m)
+[31mTesting stopped early after 1 maximum allowed failures.[39m
+
+
+  1) [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host 
+
+    [31mTest timeout of 120000ms exceeded.[39m
+
+    Error: page.click: Target page, context or browser has been closed
+
+      19 |     console.log('\n2️⃣ Testing Signup...')
+      20 |     await page.click('text=Sign Up, text=Signup, a[href*="signup"]').catch(() => 
+    > 21 |       page.click('button:has-text("Get Started"), button:has-text("Sign up")')
+         |            ^
+      22 |     )
+      23 |     await page.waitForURL(/.*signup.*/, { timeout: 10000 }).catch(() => {
+      24 |       console.log('⚠️ Signup page not found, trying direct navigation')
+        at /Users/davy/merry_360_frontend/tests/e2e/real-time-production.spec.js:21:12
+        at /Users/davy/merry_360_frontend/tests/e2e/real-time-production.spec.js:20:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host 
+  3 passed (2.0m)
+  1 error was not a part of any test, see above for details

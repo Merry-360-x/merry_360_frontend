@@ -76,29 +76,7 @@
                   <p v-if="errors.location" class="mt-1 text-sm text-red-600">{{ errors.location }}</p>
                 </div>
 
-                <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-2">
-                    Exact Location (for map display)
-                  </label>
-                  <div class="bg-brand-50 border border-brand-200 rounded-lg p-3 mb-3">
-                    <p class="text-sm text-brand-800">
-                      💡 <strong>Tip:</strong> Click on the map to drop a pin (or drag it) to set the exact location guests will see.
-                    </p>
-                  </div>
 
-                  <MapboxCoordinatePicker v-model="coordsModel" title="" subtitle="" />
-
-                  <div class="grid grid-cols-2 gap-4 mt-3">
-                    <div>
-                      <label class="block text-xs text-text-muted mb-1">Latitude</label>
-                      <Input v-model.number="form.latitude" type="number" step="any" placeholder="e.g., -1.9536" />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-text-muted mb-1">Longitude</label>
-                      <Input v-model.number="form.longitude" type="number" step="any" placeholder="e.g., 30.0606" />
-                    </div>
-                  </div>
-                </div>
 
                 <div>
                   <label class="block text-sm font-medium text-text-secondary mb-2">
@@ -376,7 +354,6 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
 import Button from '../../components/common/Button.vue'
-import MapboxCoordinatePicker from '../../components/common/MapboxCoordinatePicker.vue'
 import api from '../../services/api'
 
 const { t } = useTranslation()
@@ -402,19 +379,6 @@ const form = ref({
   vrTourType: '',
   latitude: null,
   longitude: null
-})
-
-const coordsModel = computed({
-  get() {
-    return { lat: form.value.latitude ?? null, lng: form.value.longitude ?? null }
-  },
-  set(next) {
-    const nextLat = Number(next?.lat)
-    const nextLng = Number(next?.lng)
-
-    form.value.latitude = Number.isFinite(nextLat) ? nextLat : null
-    form.value.longitude = Number.isFinite(nextLng) ? nextLng : null
-  }
 })
 
 const errors = ref({})
@@ -464,8 +428,8 @@ const handleSubmit = async () => {
       location: form.value.location,
       description: form.value.description,
       price: form.value.price,
-      beds: form.value.beds,
-      baths: form.value.baths,
+      bedrooms: form.value.beds,
+      bathrooms: form.value.baths,
       area: form.value.area,
       image: form.value.image,
       images: [form.value.image, ...form.value.additionalImages.filter(img => img)],

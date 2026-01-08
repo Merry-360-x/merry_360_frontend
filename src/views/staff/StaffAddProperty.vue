@@ -72,49 +72,7 @@
                 </div>
 
                 <!-- Location Coordinates -->
-                <div class="col-span-2">
-                  <label class="block text-sm font-medium text-text-secondary mb-2">
-                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    Exact Location (for map display)
-                  </label>
-                  <div class="bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-lg p-3 mb-3">
-                    <p class="text-sm text-brand-800 dark:text-brand-300">
-                      💡 <strong>Tip:</strong> Click on the map to drop a pin (or drag it) to set the exact location guests will see.
-                    </p>
-                  </div>
 
-                  <MapboxCoordinatePicker
-                    v-model="coordsModel"
-                    title=""
-                    subtitle=""
-                  />
-
-                  <div class="grid grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-xs text-text-muted mb-1">Latitude</label>
-                      <input
-                        v-model.number="form.latitude"
-                        type="number"
-                        step="any"
-                        placeholder="e.g., -1.9536"
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
-                      />
-                    </div>
-                    <div>
-                      <label class="block text-xs text-text-muted mb-1">Longitude</label>
-                      <input
-                        v-model.number="form.longitude"
-                        type="number"
-                        step="any"
-                        placeholder="e.g., 30.0606"
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-text-primary"
-                      />
-                    </div>
-                  </div>
-                </div>
 
                 <div>
                   <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('vendor.description') }} *</label>
@@ -193,52 +151,15 @@
 
             <!-- Images -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-text-primary mb-4">{{ t('vendor.propertyImages') }}</h2>
-              
-              <!-- Image Size Guidelines -->
-              <ImageSizeValidator :showWarning="false" class="mb-4" />
-              
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-2">{{ t('portal.uploadImages') }}</label>
-                  <div 
-                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer"
-                    @click="$refs.fileInput.click()"
-                  >
-                    <input 
-                      ref="fileInput"
-                      type="file" 
-                      accept="image/jpeg,image/png,image/webp" 
-                      multiple 
-                      class="hidden" 
-                      @change="handleImageUpload"
-                    />
-                    <svg class="w-12 h-12 text-text-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <p class="text-text-secondary">{{ t('portal.clickToUploadImages') }}</p>
-                    <p class="text-sm text-text-muted mt-1">{{ t('portal.imageUploadHelp') }} (Max 2MB per image)</p>
-                  </div>
-                </div>
-
-                <!-- Uploaded Images Preview -->
-                <div v-if="uploadedImages.length > 0" class="grid grid-cols-3 md:grid-cols-4 gap-4">
-                  <div v-for="(img, index) in uploadedImages" :key="img.id" class="relative">
-                    <img :src="img.url" class="w-full h-24 object-cover rounded-lg" />
-                    <button 
-                      type="button"
-                      @click="removeImage(index)"
-                      class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600"
-                    >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                <p v-if="uploading" class="text-sm text-brand-600 dark:text-brand-400">{{ t('portal.uploadingImages') }}</p>
-              </div>
+              <PhotoUploader
+                v-model="propertyImages"
+                v-model:uploading="imagesUploading"
+                title="Property Images"
+                subtitle="Add photos to showcase your property"
+                :min-photos="1"
+                :max-photos="15"
+                folder="merry360x/properties"
+              />
             </div>
 
             <!-- Virtual Tour (VR/3D) -->
@@ -336,10 +257,14 @@
             <div class="flex gap-4">
               <button 
                 type="submit"
-                :disabled="isSubmitting || uploading"
-                class="flex-1 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="isSubmitting || imagesUploading"
+                class="flex-1 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {{ isSubmitting ? t('portal.addingProperty') : t('portal.addProperty') }}
+                <svg v-if="isSubmitting" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {{ isSubmitting ? t('portal.addingProperty') : (imagesUploading ? t('portal.uploadingImages') : t('portal.addProperty')) }}
               </button>
               <router-link 
                 :to="dashboardPath"
@@ -356,20 +281,15 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
-import ImageSizeValidator from '../../components/common/ImageSizeValidator.vue'
-import MapboxCoordinatePicker from '../../components/common/MapboxCoordinatePicker.vue'
+import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import api from '../../services/api'
-import { uploadToCloudinary } from '../../services/cloudinary'
 import { useUserStore } from '../../stores/userStore'
-import { optimizeImageFile } from '../../utils/imageOptimization'
-import { IMAGE_UPLOAD_RULES, getImageValidationError, getFinalImageSizeError } from '@/utils/imageUploadRules'
 import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast'
 import { useCurrencyStore } from '../../stores/currency'
-import { beginGlobalUpload, endGlobalUpload } from '@/utils/globalUploadState'
 
 const router = useRouter()
 const route = useRoute()
@@ -402,45 +322,10 @@ const form = ref({
   longitude: null
 })
 
-const coordsModel = computed({
-  get() {
-    return { lat: form.value.latitude ?? null, lng: form.value.longitude ?? null }
-  },
-  set(next) {
-    const nextLat = Number(next?.lat)
-    const nextLng = Number(next?.lng)
-
-    form.value.latitude = Number.isFinite(nextLat) ? nextLat : null
-    form.value.longitude = Number.isFinite(nextLng) ? nextLng : null
-  }
-})
-
-const uploadedImages = ref([])
+const propertyImages = ref([])
+const imagesUploading = ref(false)
 const isSubmitting = ref(false)
 const showSuccess = ref(false)
-const uploading = computed(() => uploadedImages.value.some((img) => img.status === 'uploading'))
-
-const isTrackedGlobally = ref(false)
-watch(
-  uploading,
-  (v) => {
-    if (v && !isTrackedGlobally.value) {
-      beginGlobalUpload()
-      isTrackedGlobally.value = true
-    } else if (!v && isTrackedGlobally.value) {
-      endGlobalUpload()
-      isTrackedGlobally.value = false
-    }
-  },
-  { immediate: true }
-)
-
-onUnmounted(() => {
-  if (isTrackedGlobally.value) {
-    endGlobalUpload()
-    isTrackedGlobally.value = false
-  }
-})
 
 const availableAmenities = [
   'WiFi', 'Pool', 'Restaurant', 'Spa', 'Gym', 'Room Service', 
@@ -472,88 +357,12 @@ function normalizePropertyType(rawType) {
   return map[normalized] || value.charAt(0).toUpperCase() + value.slice(1)
 }
 
-async function handleImageUpload(event) {
-  const files = Array.from(event.target.files || [])
-  if (!files.length) return
-
-  // Validate inputs early (type + extreme size).
-  const invalid = files
-    .map((f) => ({ file: f, err: getImageValidationError(f) }))
-    .filter((x) => x.err)
-  if (invalid.length > 0) {
-    showToast(invalid[0].err, 'error')
-    event.target.value = ''
-    return
-  }
-  
-  // Warn about large files (over 1MB)
-  const largeFiles = files.filter(file => file.size > 1 * 1024 * 1024)
-  if (largeFiles.length > 0) {
-    const totalSizeMB = (largeFiles.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)
-    showToast(`Large files detected (${totalSizeMB}MB total). Upload may take longer.`, 'warning', 1000)
-  }
-
-  // allow selecting the same files again
-  event.target.value = ''
-
-  const isCloudinaryConfigured = Boolean(
-    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME && import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
-  )
-  if (!isCloudinaryConfigured) {
-    showToast('Uploads require Cloudinary configuration. Please try again later.', 'error')
-    return
-  }
-
-  const runWithConcurrency = async (tasks, limit = 4) => {
-    const workers = Array.from({ length: Math.min(limit, tasks.length) }, async () => {
-      while (tasks.length) {
-        const task = tasks.shift()
-        if (task) await task()
-      }
-    })
-    await Promise.all(workers)
-  }
-
-  const tasks = files.map((file) => async () => {
-    const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`
-    const previewUrl = URL.createObjectURL(file)
-
-    uploadedImages.value.push({ id, url: previewUrl, status: 'uploading' })
-
-    const updateById = (patch) => {
-      const idx = uploadedImages.value.findIndex((img) => img.id === id)
-      if (idx === -1) {
-        if (previewUrl) URL.revokeObjectURL(previewUrl)
-        return
-      }
-      uploadedImages.value[idx] = { ...uploadedImages.value[idx], ...patch }
-    }
-
-    try {
-      const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
-
-      const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
-      if (finalSizeError) throw new Error(finalSizeError)
-
-      const result = await uploadToCloudinary(optimized, { folder: 'merry360x/properties' })
-      updateById({ url: result.secure_url, status: 'ready' })
-    } catch (error) {
-      console.error('Upload error:', error)
-      updateById({ status: 'error' })
-      showToast(error?.message || 'Upload failed. Please try again.', 'error')
-    } finally {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  })
-
-  await runWithConcurrency(tasks, 3)
-}
-
-function removeImage(index) {
-  uploadedImages.value.splice(index, 1)
-}
-
 async function handleSubmit() {
+  if (imagesUploading.value) {
+    showToast(t('portal.waitForUploads'), 'error')
+    return
+  }
+
   const title = String(form.value.title || '').trim()
   const category = String(form.value.category || '').trim()
   const location = String(form.value.location || '').trim()
@@ -583,17 +392,7 @@ async function handleSubmit() {
     return
   }
 
-  if (uploading.value) {
-    showToast(t('portal.waitForUploads'), 'error')
-    return
-  }
-
-  if (uploadedImages.value.some((img) => img.status === 'error')) {
-    showToast(t('portal.imageUploadFailed'), 'error')
-    return
-  }
-
-  if (uploadedImages.value.length === 0) {
+  if (propertyImages.value.length === 0) {
     showToast(t('portal.uploadAtLeastOneImage'), 'error')
     return
   }
@@ -607,7 +406,7 @@ async function handleSubmit() {
   isSubmitting.value = true
 
   try {
-    const imageUrls = uploadedImages.value.map((img) => img.url).filter(Boolean)
+    const imageUrls = propertyImages.value.map((img) => img.url || img.preview).filter(Boolean)
     if (!imageUrls.length) {
       showToast(t('portal.uploadAtLeastOneImage'), 'error')
       return
@@ -619,11 +418,11 @@ async function handleSubmit() {
       type: normalizePropertyType(category),
       location,
       price,
-      beds: Number.isFinite(bedrooms) ? bedrooms : 1,
-      baths: Number.isFinite(bathrooms) ? bathrooms : 1,
+      bedrooms: Number.isFinite(bedrooms) ? bedrooms : 1,
+      bathrooms: Number.isFinite(bathrooms) ? bathrooms : 1,
       maxGuests,
       amenities: form.value.amenities,
-      image: imageUrls[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600',
+      image: imageUrls[0],
       images: imageUrls,
       vr_tour_enabled: form.value.vrTourEnabled || false,
       vr_tour_url: form.value.vrTourUrl || null,
@@ -633,6 +432,7 @@ async function handleSubmit() {
     })
 
     showSuccess.value = true
+    showToast(t('portal.propertyAddedSuccess'), 'success')
 
     // Reset form
     form.value = {
@@ -644,16 +444,22 @@ async function handleSubmit() {
       baths: 1,
       maxGuests: 2,
       price: null,
-      amenities: []
+      amenities: [],
+      vrTourEnabled: false,
+      vrTourUrl: '',
+      vrTourType: ''
     }
-    uploadedImages.value = []
+    propertyImages.value = []
 
-    // Redirect immediately for a snappier UX
-    router.push(propertiesPath.value)
+    // Redirect after a short delay
+    setTimeout(() => {
+      router.push(propertiesPath.value)
+    }, 1500)
 
   } catch (error) {
     console.error('Error adding property:', error)
-    showToast(t('portal.addPropertyFailed'), 'error')
+    const errorMessage = error?.message || error?.error?.message || t('portal.addPropertyFailed')
+    showToast(errorMessage, 'error')
   } finally {
     isSubmitting.value = false
   }
