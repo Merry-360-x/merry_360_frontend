@@ -174,7 +174,16 @@
               </td>
               <td class="py-4 px-4 text-gray-700 dark:text-gray-300">{{ formatDate(user.created_at) }}</td>
               <td class="py-4 px-4">
-                <Button variant="outline" size="sm" @click="viewProfile(user)">View Profile</Button>
+                <div class="flex items-center gap-2">
+                  <Button variant="outline" size="sm" @click="viewProfile(user)">View Profile</Button>
+                  <button 
+                    @click="confirmDeleteUser(user)"
+                    :disabled="user.role === 'admin'"
+                    class="px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-50"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -343,6 +352,43 @@ const saveUserRole = async (user) => {
 
 const viewProfile = (user) => {
   selectedUser.value = user
+}
+
+const confirmDeleteUser = async (user) => {
+  // Prevent deleting admins
+  if (user.role === 'admin') {
+    showToast('Cannot delete admin users', 'error')
+    return
+  }
+
+  if (!confirm(`Are you sure you want to delete ${user.first_name} ${user.last_name}? This action cannot be undone.`)) {
+    return
+  }
+
+  try {
+    console.log('🗑️ Deleting user:', user.id, user.email)
+    
+    // Delete from auth.users first (if we have admin access)
+    // Then delete from profiles
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', user.id)
+    
+    if (profileError) {
+      console.error('❌ Error deleting profile:', profileError)
+      throw profileError
+    }
+    
+    console.log('✅ User deleted successfully')
+    showToast(`User ${user.first_name} ${user.last_name} has been deleted`, 'success')
+    
+    // Reload users list
+    await loadUsers()
+  } catch (err) {
+    console.error('❌ Error deleting user:', err)
+    showToast('Failed to delete user: ' + (err.message || 'Unknown error'), 'error')
+  }
 }
 
 onMounted(() => {

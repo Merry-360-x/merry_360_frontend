@@ -181,7 +181,14 @@
             </button>
             <div class="text-center">
               <h3 class="font-semibold text-lg text-text-primary">Upload photos</h3>
-              <p class="text-sm text-text-secondary">{{ pendingPhotos.length }} {{ pendingPhotos.length === 1 ? 'item' : 'items' }} selected</p>
+              <p class="text-sm text-text-secondary">
+                <span v-if="uploading">
+                  {{ uploadProgress }} of {{ totalUploads }} {{ totalUploads === 1 ? 'item' : 'items' }} uploaded
+                </span>
+                <span v-else>
+                  {{ pendingPhotos.length }} {{ pendingPhotos.length === 1 ? 'item' : 'items' }} selected
+                </span>
+              </p>
             </div>
             <button
               @click="triggerFileInput"
@@ -196,26 +203,64 @@
 
           <!-- Preview Area -->
           <div class="p-6 max-h-96 overflow-y-auto">
-            <div class="grid grid-cols-2 gap-3">
+            <div class="space-y-3">
               <div
                 v-for="(photo, index) in pendingPhotos"
                 :key="photo.id"
-                class="relative aspect-square rounded-xl overflow-hidden group"
+                class="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700"
               >
-                <img
-                  :src="photo.preview"
-                  :alt="`Photo ${index + 1}`"
-                  class="w-full h-full object-cover"
-                />
-                <button
-                  @click="removePendingPhoto(index)"
-                  :disabled="uploading"
-                  class="absolute top-2 right-2 w-8 h-8 bg-gray-900/80 hover:bg-gray-900 rounded-full flex items-center justify-center text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
+                <div class="relative aspect-video bg-gray-100 dark:bg-gray-800">
+                  <img
+                    :src="photo.preview"
+                    :alt="`Photo ${index + 1}`"
+                    class="w-full h-full object-cover"
+                  />
+                  <!-- Upload Progress Overlay -->
+                  <div 
+                    v-if="uploading && individualProgress.has(photo.id)"
+                    class="absolute inset-0 bg-black/50 flex items-center justify-center"
+                  >
+                    <div class="text-center">
+                      <div class="relative w-16 h-16 mx-auto mb-2">
+                        <svg class="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                          <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none" />
+                          <circle 
+                            cx="32" 
+                            cy="32" 
+                            r="28" 
+                            stroke="white" 
+                            stroke-width="4" 
+                            fill="none"
+                            :stroke-dasharray="175.9"
+                            :stroke-dashoffset="175.9 - (175.9 * (individualProgress.get(photo.id) || 0) / 100)"
+                            stroke-linecap="round"
+                            class="transition-all duration-300"
+                          />
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">
+                          {{ Math.round(individualProgress.get(photo.id) || 0) }}%
+                        </div>
+                      </div>
+                      <p class="text-white text-xs">{{ individualProgress.get(photo.id) === 100 ? 'Uploaded' : 'Uploading...' }}</p>
+                    </div>
+                  </div>
+                  <!-- Loading Spinner -->
+                  <div 
+                    v-else-if="uploading && !individualProgress.has(photo.id)"
+                    class="absolute inset-0 bg-black/50 flex items-center justify-center"
+                  >
+                    <div class="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                  <button
+                    v-if="!uploading"
+                    @click="removePendingPhoto(index)"
+                    class="absolute top-2 right-2 w-8 h-8 bg-gray-900/80 hover:bg-gray-900 rounded-full flex items-center justify-center text-white transition-all"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -320,6 +365,7 @@ const selectedPhotoIndex = ref(null)
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const totalUploads = ref(0)
+const individualProgress = ref(new Map()) // Track progress for each image
 
 let photoIdCounter = 0
 
@@ -402,20 +448,29 @@ const confirmUpload = async () => {
 
   try {
     const uploaded = []
+    individualProgress.value.clear()
 
-    for (const item of pendingPhotos.value) {
+    for (let i = 0; i < pendingPhotos.value.length; i++) {
+      const item = pendingPhotos.value[i]
       const file = item.file
       const inputErr = getImageValidationError(file, IMAGE_UPLOAD_RULES)
       if (inputErr) throw new Error(inputErr)
 
+      // Set initial progress
+      individualProgress.value.set(item.id, 0)
+
       // Optimize to keep under 2MB before upload.
+      individualProgress.value.set(item.id, 20) // 20% for optimization
       const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
       const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)
       if (finalSizeError) throw new Error(finalSizeError)
 
-      let url
+      // Upload with progress simulation (Cloudinary doesn't provide real progress)
+      individualProgress.value.set(item.id, 40) // 40% for upload start
       const result = await uploadToCloudinary(optimized, { folder: props.folder })
-      url = result.secure_url
+      individualProgress.value.set(item.id, 90) // 90% for upload complete
+      
+      const url = result.secure_url
 
       uploaded.push({
         id: ++photoIdCounter,
@@ -423,6 +478,7 @@ const confirmUpload = async () => {
         url
       })
 
+      individualProgress.value.set(item.id, 100) // 100% complete
       uploadProgress.value++
 
       // Clean up local preview URL after upload

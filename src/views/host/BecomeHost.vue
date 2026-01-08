@@ -1320,19 +1320,27 @@ const handleSubmit = async () => {
       }
     }
 
-    // Add timeout protection
+    // Add timeout protection with proper error handling
     const upsertPromise = supabase
       .from('profiles')
       .upsert(profilePayload, { onConflict: 'id' })
     
-    const timeout = new Promise((_, reject) => 
+    const timeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
     )
 
-    const { error } = await Promise.race([
-      upsertPromise.then(result => result),
-      timeout.then(() => ({ error: { message: 'Request timeout' } }))
-    ])
+    let result
+    try {
+      result = await Promise.race([upsertPromise, timeoutPromise])
+    } catch (raceError) {
+      if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
+        console.error('⏱️ Request timed out after 30 seconds')
+        throw new Error('Request timeout - please try again')
+      }
+      throw raceError
+    }
+
+    const { error } = result || {}
 
     if (error) {
       console.error('❌ Supabase error:', error)
@@ -1344,14 +1352,21 @@ const handleSubmit = async () => {
       })
       
       let errorMessage = t('hostApplication.submittedFailed')
-      if (error.message) {
+      if (error?.message?.includes('timeout')) {
+        errorMessage = 'Request timeout - please try again'
+      } else if (error?.message?.includes('permission') || error?.message?.includes('denied') || error?.message?.includes('RLS')) {
+        errorMessage = 'You do not have permission to submit host applications. Please contact support.'
+      } else if (error?.code === '23505') {
+        errorMessage = 'Application already exists. Please contact support.'
+      } else if (error.message) {
         errorMessage = error.message
       } else if (error.hint) {
         errorMessage = error.hint
       }
       
       alert(errorMessage)
-      throw error
+      isSubmitting.value = false
+      return
     }
     
     console.log('✅ Host application saved successfully!')
