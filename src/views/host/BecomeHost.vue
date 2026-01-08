@@ -1296,17 +1296,23 @@ const handleTermsClick = (event) => {
   showToastError('Please check the box above to agree to the Terms and Conditions before submitting.')
 }
 
-const handleSubmit = async () => {
+const handleSubmit = async (event) => {
+  // Prevent default form submission
+  if (event) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+  
   console.log('🔍 Host application submission started')
   console.log('Current step:', currentStep.value)
   console.log('Terms agreed:', formData.agreeToTerms)
   console.log('Photos:', formData.photos?.length || 0)
   
-  // Only check terms on the final step (step 5)
+  // Only allow submission on the final step (step 5)
   if (currentStep.value !== TOTAL_STEPS) {
-    console.warn('⚠️ Submit called but not on final step, redirecting to final step')
-    currentStep.value = TOTAL_STEPS
-    scrollToForm()
+    console.warn('⚠️ Submit called but not on final step. Current step:', currentStep.value, 'Expected:', TOTAL_STEPS)
+    // Don't auto-advance - user must click Next button to proceed through steps
+    showToastError('Please complete all steps and click "Next" to proceed. You are currently on step ' + currentStep.value + ' of ' + TOTAL_STEPS + '.')
     return
   }
   
