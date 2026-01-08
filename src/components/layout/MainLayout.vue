@@ -92,11 +92,11 @@
               @change="currencyStore.setCurrency(currencyStore.currentCurrency)" 
               class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
             >
+              <option value="RWF">RWF</option>
               <option value="USD">$ USD</option>
               <option value="EUR">€ EUR</option>
               <option value="GBP">£ GBP</option>
               <option value="CNY">¥ CNY</option>
-              <option value="RWF">RWF</option>
             </select>
 
             <select v-model="languageStore.currentLanguage" @change="languageStore.setLanguage(languageStore.currentLanguage)" class="px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all">
@@ -271,11 +271,11 @@
                 class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full text-xs font-semibold text-text-secondary dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 bg-white cursor-pointer transition-all"
                 aria-label="Currency"
               >
+                <option value="RWF">RWF</option>
                 <option value="USD">$ USD</option>
                 <option value="EUR">€ EUR</option>
                 <option value="GBP">£ GBP</option>
                 <option value="CNY">¥ CNY</option>
-                <option value="RWF">RWF</option>
               </select>
 
               <select
@@ -441,11 +441,11 @@
                 @change="currencyStore.setCurrency(currencyStore.currentCurrency)"
                 class="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-500"
               >
+                <option value="RWF">RWF</option>
                 <option value="USD">$ USD</option>
                 <option value="EUR">€ EUR</option>
                 <option value="GBP">£ GBP</option>
                 <option value="CNY">¥ CNY</option>
-                <option value="RWF">RWF</option>
               </select>
 
               <select 

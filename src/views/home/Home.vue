@@ -765,9 +765,24 @@ onMounted(() => {
   }, 500)
   
   loadHomeProperties()
+  
+  // Handle page visibility changes to restore button functionality
+  const handlePageVisible = () => {
+    // Restore body scroll if no modal is open
+    if (!isMobileSearchOpen.value && !activePanel.value) {
+      document.body.style.overflow = ''
+    }
+    // Force reflow to ensure buttons are clickable
+    void document.body.offsetHeight
+  }
+  
+  window.addEventListener('pagevisible', handlePageVisible)
+  window.addEventListener('windowfocused', handlePageVisible)
 
   onBeforeUnmount(() => {
     window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('pagevisible', handlePageVisible)
+    window.removeEventListener('windowfocused', handlePageVisible)
   })
 })
 

@@ -35,8 +35,32 @@ export const useUserStore = defineStore('user', () => {
   const upcomingBookings = ref([])
   const pastBookings = ref([])
   
-  // Trip cart
+  // Trip cart - load from localStorage on init
+  const CART_STORAGE_KEY = 'merry360_tripCart'
+  const loadCartFromStorage = () => {
+    try {
+      const stored = localStorage.getItem(CART_STORAGE_KEY)
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        tripCart.value = Array.isArray(parsed) ? parsed : []
+      }
+    } catch (error) {
+      console.error('Error loading cart from storage:', error)
+      tripCart.value = []
+    }
+  }
+  
+  const saveCartToStorage = () => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(tripCart.value))
+    } catch (error) {
+      console.error('Error saving cart to storage:', error)
+    }
+  }
+  
+  // Initialize cart from localStorage
   const tripCart = ref([])
+  loadCartFromStorage()
   
   // Subscription
   const subscription = ref({
@@ -169,6 +193,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
+      localStorage.removeItem(CART_STORAGE_KEY) // Clear cart on logout
     } catch {
       // ignore
     }
@@ -253,15 +278,18 @@ export const useUserStore = defineStore('user', () => {
         ...item,
         addedAt: new Date().toISOString()
       })
+      saveCartToStorage()
     }
   }
   
   const removeFromCart = (id, type) => {
     tripCart.value = tripCart.value.filter(c => !(c.id === id && c.type === type))
+    saveCartToStorage()
   }
   
   const clearCart = () => {
     tripCart.value = []
+    saveCartToStorage()
   }
   
   const addLoyaltyPoints = async (points) => {

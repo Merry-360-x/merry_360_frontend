@@ -2,16 +2,17 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useCurrencyStore = defineStore('currency', () => {
-  // Exchange rates relative to USD
+  // Exchange rates relative to RWF (base currency - prices are stored in RWF)
+  // 1 RWF = X in other currencies
   const exchangeRates = ref({
-    USD: 1,
-    EUR: 0.92,
-    GBP: 0.79,
-    CNY: 7.24,
-    RWF: 1300
+    RWF: 1,        // Base currency
+    USD: 0.00077,  // 1 RWF = 0.00077 USD (1 USD = 1300 RWF)
+    EUR: 0.00071,  // 1 RWF = 0.00071 EUR
+    GBP: 0.00061,  // 1 RWF = 0.00061 GBP
+    CNY: 0.0055    // 1 RWF = 0.0055 CNY
   })
 
-  const currencies = ['USD', 'EUR', 'GBP', 'CNY', 'RWF']
+  const currencies = ['RWF', 'USD', 'EUR', 'GBP', 'CNY']
   const currencySymbols = {
     USD: '$',
     EUR: '€',
@@ -20,9 +21,9 @@ export const useCurrencyStore = defineStore('currency', () => {
     RWF: 'RWF'
   }
   
-  // Current currency - default to USD
+  // Current currency - default to RWF (Rwandan Francs)
   const storedCurrency = localStorage.getItem('merry360_currency')
-  const currentCurrency = ref(storedCurrency && currencies.includes(storedCurrency) ? storedCurrency : 'USD')
+  const currentCurrency = ref(storedCurrency && currencies.includes(storedCurrency) ? storedCurrency : 'RWF')
   
   // Set currency
   const setCurrency = (currency) => {
@@ -39,15 +40,20 @@ export const useCurrencyStore = defineStore('currency', () => {
     setCurrency(currencies[nextIndex])
   }
   
-  // Convert price based on current currency
-  const convertPrice = (priceInUSD) => {
+  // Convert price from RWF to current currency
+  // Prices are stored in RWF in the database
+  const convertPrice = (priceInRWF) => {
+    if (!priceInRWF || priceInRWF === 0) return 0
     const rate = exchangeRates.value[currentCurrency.value]
-    return priceInUSD * rate
+    return priceInRWF * rate
   }
   
   // Format price with proper currency symbol
-  const formatPrice = (priceInUSD) => {
-    const convertedPrice = convertPrice(priceInUSD)
+  // Prices are stored in RWF, so we convert from RWF to display currency
+  const formatPrice = (priceInRWF) => {
+    if (!priceInRWF || priceInRWF === 0) return '0 RWF'
+    
+    const convertedPrice = convertPrice(priceInRWF)
     const formatted = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: currentCurrency.value === 'RWF' ? 0 : 2,
       maximumFractionDigits: currentCurrency.value === 'RWF' ? 0 : 2
