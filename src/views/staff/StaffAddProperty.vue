@@ -479,8 +479,7 @@ async function handleSubmit() {
       status: error?.status,
       data: error?.data
     })
-    const errorMessage = error?.message || error?.error?.message || t('portal.addPropertyFailed')
-    showToast(errorMessage, 'error')
+    showToast(error || t('portal.addPropertyFailed'), 'error')
   } finally {
     isSubmitting.value = false
   }

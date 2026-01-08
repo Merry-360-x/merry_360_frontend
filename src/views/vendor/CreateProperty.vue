@@ -453,7 +453,7 @@ const handleSubmit = async () => {
     }, 2000)
   } catch (error) {
     console.error('Property creation error:', error)
-    showToast(error.message || t('vendor.createError'), 'error')
+    showToast(error || t('vendor.createError'), 'error')
   } finally {
     isSubmitting.value = false
   }

@@ -244,16 +244,51 @@ export const supabaseApiAdapter = {
       }
       console.log('✅ [Property Create] User authenticated:', user.email)
 
+      // Preflight: ensure the profile allows creating properties.
+      // This prevents confusing RLS failures and gives an actionable message.
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role, host_application_status')
+          .eq('id', user.id)
+          .single()
+
+        if (!profileError && profile) {
+          const role = String(profile.role || '').toLowerCase()
+          const hostStatus = String(profile.host_application_status || '').toLowerCase()
+
+          // If the DB tracks host application status, require approval unless admin.
+          if (hostStatus && hostStatus !== 'approved' && role !== 'admin') {
+            throw new Error(
+              `Your host application is ${hostStatus}. You can add properties after approval.`
+            )
+          }
+
+          // Role gate (defensive). Router guard should already do this.
+          if (role && !['host', 'staff', 'admin'].includes(role)) {
+            throw new Error('Your account does not have permission to add properties.')
+          }
+        }
+      } catch (preflightError) {
+        console.warn('⚠️ [Property Create] Preflight blocked:', preflightError)
+        throw preflightError
+      }
+
+      const pricePerNight = Number(propertyData.price_per_night ?? propertyData.price)
+      const bedrooms = Number(propertyData.beds ?? propertyData.bedrooms ?? 1)
+      const bathrooms = Number(propertyData.baths ?? propertyData.bathrooms ?? 1)
+      const maxGuests = Number(propertyData.max_guests ?? propertyData.maxGuests ?? 2)
+
       const insertRow = {
         host_id: user.id,
         name: propertyData.name,
         description: propertyData.description || null,
         property_type: normalizePropertyType(propertyData.type || propertyData.property_type),
         location: propertyData.location,
-        price_per_night: propertyData.price,
-        bedrooms: propertyData.beds ?? propertyData.bedrooms ?? 1,
-        bathrooms: propertyData.baths ?? propertyData.bathrooms ?? 1,
-        max_guests: propertyData.max_guests ?? propertyData.maxGuests ?? 2,
+        price_per_night: Number.isFinite(pricePerNight) ? pricePerNight : null,
+        bedrooms: Number.isFinite(bedrooms) ? bedrooms : 1,
+        bathrooms: Number.isFinite(bathrooms) ? bathrooms : 1,
+        max_guests: Number.isFinite(maxGuests) ? maxGuests : 2,
         amenities: propertyData.amenities || [],
         images: propertyData.images || (propertyData.image ? [propertyData.image] : []),
         main_image: propertyData.image || propertyData.main_image || null,
