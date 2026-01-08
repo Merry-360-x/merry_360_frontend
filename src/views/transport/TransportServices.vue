@@ -190,10 +190,11 @@
               <!-- Vehicle Image -->
               <div class="relative h-40 bg-gray-200 dark:bg-gray-700 overflow-hidden">
                 <img 
-                  :src="vehicle.main_image || (Array.isArray(vehicle.images) && vehicle.images.length > 0 ? vehicle.images[0] : null) || 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop'"
+                  :src="optimizeVehicleImage(vehicle.main_image || (Array.isArray(vehicle.images) && vehicle.images.length > 0 ? vehicle.images[0] : null))"
                   :alt="vehicle.name || 'Vehicle'"
                   class="w-full h-full object-cover"
                   loading="lazy"
+                  @error="handleVehicleImageError"
                 />
                 <div v-if="vehicle.driver_included" class="absolute top-2 right-2 px-2 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
                   Driver Included
@@ -281,6 +282,7 @@ import { useToast } from '../../composables/useToast'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import api from '@/services/api'
 import { subscribeToTable } from '@/services/supabase'
+import { optimizeImageUrl } from '@/services/imageOptimization'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -321,12 +323,30 @@ const buildSuggestionList = (rows, query) => {
   return results.slice(0, 6).map(r => r.value)
 }
 
-const popularRoutes = ref([
-  { id: 1, from: 'Kigali', to: 'Musanze', price: 15000, duration: '2.5 hrs', vehicle: 'shuttle' },
-  { id: 2, from: 'Kigali', to: 'Rubavu', price: 18000, duration: '3 hrs', vehicle: 'shuttle' },
-  { id: 3, from: 'Kigali', to: 'Huye', price: 12000, duration: '2 hrs', vehicle: 'taxi' },
-  { id: 6, from: 'Kigali', to: 'Rusizi', price: 22000, duration: '4 hrs', vehicle: 'taxi' }
-])
+const popularRoutes = ref([])
+
+const loadPopularRoutes = async () => {
+  try {
+    // Try to load routes from database if available
+    const res = await api.transport.getRoutes({ limit: 10 })
+    if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      popularRoutes.value = res.data.map(route => ({
+        id: route.id,
+        from: route.from || route.origin || 'Kigali',
+        to: route.to || route.destination || '',
+        price: Number(route.price) || 0,
+        duration: route.duration || route.estimated_duration || '',
+        vehicle: route.vehicle_type || route.vehicle || 'shuttle'
+      }))
+    } else {
+      // Fallback: empty array - routes will be loaded from vehicles if needed
+      popularRoutes.value = []
+    }
+  } catch (error) {
+    console.error('Failed to load popular routes:', error)
+    popularRoutes.value = []
+  }
+}
 
 const vehicles = ref([])
 const vehiclesLoading = ref(true)
@@ -443,7 +463,7 @@ const bookService = (type) => {
     service: type,
     name: serviceName,
     price: type === 'taxi' ? 5000 : type === 'shuttle' ? 3000 : 50000,
-    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&q=80'
+    image: null
   }
   userStore.addToCart(serviceItem)
   success(t('common.addedToCart', { item: serviceItem.name }))
@@ -453,15 +473,28 @@ const browseCars = () => {
   alert(t('transport.carRentalCatalogComingSoon'))
 }
 
+const optimizeVehicleImage = (url) => {
+  if (!url) return ''
+  return optimizeImageUrl(url, {
+    width: 400,
+    quality: 'auto:eco'
+  })
+}
+
+const handleVehicleImageError = (event) => {
+  // Set a default placeholder if image fails
+  event.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e7eb" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="16"%3EVehicle%3C/text%3E%3C/svg%3E'
+}
+
 const bookRoute = (route) => {
   const routeItem = {
-    id: Date.now(),
+    id: route.id || Date.now(),
     type: 'transport',
     service: 'route',
     name: `${route.from} → ${route.to}`,
     price: route.price,
     duration: route.duration,
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80'
+    image: null // Routes don't have images
   }
   userStore.addToCart(routeItem)
   success(t('common.addedToCart', { item: `${route.from} → ${route.to}` }))
@@ -474,8 +507,11 @@ const bookVehicle = (vehicle) => {
 let vehiclesRealtime = null
 let vehiclesRealtimeTimer = null
 
-onMounted(() => {
-  loadVehicles()
+onMounted(async () => {
+  await Promise.all([
+    loadVehicles(),
+    loadPopularRoutes()
+  ])
 
   vehiclesRealtime = subscribeToTable({
     table: 'vehicles',

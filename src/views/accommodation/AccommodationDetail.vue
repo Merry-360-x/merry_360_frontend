@@ -31,7 +31,7 @@
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
-                :src="accommodation.mainImage" 
+                :src="optimizeImage(accommodation.mainImage)" 
                 :alt="accommodation.name" 
                 @load="handleMainImageLoad"
                 @error="handleMainImageError"
@@ -57,7 +57,7 @@
               <img 
                 loading="lazy" 
                 decoding="async"
-                :src="img" 
+                :src="optimizeImage(img)" 
                 :alt="`Gallery ${index + 1}`" 
                 @load="() => handleGalleryLoad(index)"
                 @error="() => handleGalleryError(index)"
@@ -424,6 +424,7 @@ import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import CrossCategorySuggestions from '../../components/common/CrossCategorySuggestions.vue'
 import HostInfo from '../../components/common/HostInfo.vue'
+import { optimizeImageUrl } from '../../services/imageOptimization'
 
 const router = useRouter()
 const { success } = useToast()
@@ -532,12 +533,12 @@ const addToCart = () => {
 
 const addTransportToCart = (transport) => {
   const cartItem = {
-    id: Date.now(),
+    id: transport.id || Date.now(),
     type: 'transport',
     name: transport.name,
     description: transport.description,
-    price: transport.price,
-    image: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400'
+    price: transport.price_per_day || transport.price,
+    image: transport.main_image || (Array.isArray(transport.images) ? transport.images[0] : null)
   }
   userStore.addToCart(cartItem)
   success(`${transport.name} added to trip cart!`)
@@ -549,29 +550,35 @@ const addTransportToCart = (transport) => {
   }, 2000)
 }
 
-const transportOptions = ref([
-  {
-    id: 1,
-    name: 'Airport Transfer',
-    description: 'Direct transfer from Kigali Airport',
-    price: 25,
-    justAdded: false
-  },
-  {
-    id: 2,
-    name: 'Private Car Rental',
-    description: 'Luxury sedan with driver',
-    price: 50,
-    justAdded: false
-  },
-  {
-    id: 3,
-    name: 'Taxi Service',
-    description: 'On-demand city transportation',
-    price: 15,
-    justAdded: false
+const transportOptions = ref([])
+
+const loadTransportOptions = async () => {
+  try {
+    const res = await api.transport.getVehicles({ limit: 6 })
+    const vehicles = Array.isArray(res?.data) ? res.data.slice(0, 6) : []
+    transportOptions.value = vehicles.map(vehicle => ({
+      ...vehicle,
+      name: vehicle.name || 'Transport',
+      description: vehicle.description || vehicle.type || 'Transportation service',
+      price: vehicle.price_per_day || vehicle.price || 0,
+      price_per_day: vehicle.price_per_day || vehicle.price || 0,
+      main_image: vehicle.main_image || (Array.isArray(vehicle.images) ? vehicle.images[0] : null),
+      images: Array.isArray(vehicle.images) ? vehicle.images : [],
+      justAdded: false
+    }))
+  } catch (error) {
+    console.error('Failed to load transport options:', error)
+    transportOptions.value = []
   }
-])
+}
+
+const optimizeImage = (url) => {
+  if (!url) return ''
+  return optimizeImageUrl(url, {
+    width: 1200,
+    quality: 'auto:eco'
+  })
+}
 
 const formatPrice = (price) => {
   return currencyStore.formatPrice(price)
@@ -594,12 +601,8 @@ const accommodation = ref({
   rating: 4.8,
   reviews: 324,
   eco: true,
-  mainImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200',
-  gallery: [
-    'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400',
-    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400',
-    'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400'
-  ],
+  mainImage: null,
+  gallery: [],
   description: 'Experience luxury in the heart of Kigali at the Serena Hotel.',
   amenities: [],
   reviewsList: []
@@ -634,7 +637,8 @@ onMounted(async () => {
       price: Number(response.data.price) || 0, // Ensure price is a number
       mainImage: response.data.images[0] || response.data.image,
       gallery: response.data.images.slice(1) || [],
-      eco: response.data.ecoFriendly
+      eco: response.data.ecoFriendly,
+      host_id: response.data.host_id || null // Ensure host_id is preserved
     }
 
     console.log('✅ Accommodation loaded:', {
@@ -644,6 +648,9 @@ onMounted(async () => {
     })
 
     resetImageLoadingState()
+    
+    // Load transport options from database
+    await loadTransportOptions()
   } catch (error) {
     console.error('Failed to load accommodation:', error)
   }

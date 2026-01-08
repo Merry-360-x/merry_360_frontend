@@ -30,7 +30,7 @@
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
-                :src="vehicle.mainImage" 
+                :src="optimizeImage(vehicle.mainImage)" 
                 :alt="vehicle.name" 
                 @load="handleMainImageLoad"
                 @error="handleMainImageError"
@@ -50,7 +50,7 @@
               <img 
                 loading="lazy" 
                 decoding="async"
-                :src="img" 
+                :src="optimizeImage(img)" 
                 :alt="`Gallery ${index + 1}`" 
                 @load="() => handleGalleryLoad(index)"
                 @error="() => handleGalleryError(index)"
@@ -256,6 +256,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
+import { optimizeImageUrl } from '../../services/imageOptimization'
 
 const router = useRouter()
 const route = useRoute()
@@ -364,6 +365,14 @@ const addAccommodationToCart = (accommodation) => {
   }, 2000)
 }
 
+const optimizeImage = (url) => {
+  if (!url) return ''
+  return optimizeImageUrl(url, {
+    width: 1200,
+    quality: 'auto:eco'
+  })
+}
+
 const nearbyAccommodations = ref([])
 
 const loadNearbyAccommodations = async () => {
@@ -386,7 +395,7 @@ const vehicle = ref({
   type: 'Car',
   price_per_day: 50,
   capacity: 4,
-  mainImage: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200',
+  mainImage: null,
   gallery: [],
   description: '',
   features: [],
@@ -428,7 +437,7 @@ onMounted(async () => {
         price: Number(foundVehicle.price_per_day || foundVehicle.price || 0), // Also set price for consistency
         capacity: Number(foundVehicle.capacity || 0),
         luggage_bags: Number(foundVehicle.luggage_bags || 0),
-        mainImage: foundVehicle.main_image || (Array.isArray(foundVehicle.images) ? foundVehicle.images[0] : null) || 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200',
+        mainImage: foundVehicle.main_image || (Array.isArray(foundVehicle.images) ? foundVehicle.images[0] : null) || null,
         gallery: Array.isArray(foundVehicle.images) ? foundVehicle.images.slice(1) : [],
         description: foundVehicle.description || '',
         features: Array.isArray(foundVehicle.features) ? foundVehicle.features : [],

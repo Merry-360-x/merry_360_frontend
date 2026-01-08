@@ -370,11 +370,14 @@
         </div>
         <div class="order-first md:order-last">
           <div class="relative overflow-hidden rounded-xl shadow-xl">
-            <img 
-              src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80"
-              alt="Property"
-              class="w-full h-64 sm:h-80 md:h-96 object-cover transform transition-transform duration-500 hover:scale-105"
-            />
+            <div class="w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-brand-500 to-red-600 flex items-center justify-center">
+              <div class="text-center text-white">
+                <svg class="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <p class="text-sm font-semibold">Featured Property</p>
+              </div>
+            </div>
             <span class="absolute top-4 left-4 px-3 py-1 bg-primary text-white text-xs sm:text-sm font-medium rounded-full shadow-lg">Featured</span>
           </div>
         </div>

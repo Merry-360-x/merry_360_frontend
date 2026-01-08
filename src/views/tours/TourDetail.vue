@@ -30,7 +30,7 @@
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
-                :src="tour.mainImage" 
+                :src="optimizeImage(tour.mainImage)" 
                 :alt="tour.name" 
                 @load="handleMainImageLoad"
                 @error="handleMainImageError"
@@ -50,7 +50,7 @@
               <img 
                 loading="lazy" 
                 decoding="async"
-                :src="img" 
+                :src="optimizeImage(img)" 
                 :alt="`Gallery ${index + 1}`" 
                 @load="() => handleGalleryLoad(index)"
                 @error="() => handleGalleryError(index)"
@@ -327,6 +327,7 @@ import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Button from '../../components/common/Button.vue'
 import api from '../../services/api'
+import { optimizeImageUrl } from '../../services/imageOptimization'
 
 const router = useRouter()
 const route = useRoute()
@@ -447,6 +448,14 @@ const addTransportToCart = (transport) => {
   }, 2000)
 }
 
+const optimizeImage = (url) => {
+  if (!url) return ''
+  return optimizeImageUrl(url, {
+    width: 1200,
+    quality: 'auto:eco'
+  })
+}
+
 const nearbyAccommodations = ref([])
 const transportOptions = ref([])
 
@@ -486,7 +495,7 @@ const tour = ref({
   rating: 4.9,
   reviews: 128,
   duration: '3 Days 2 Nights',
-  mainImage: 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=1200',
+  mainImage: null,
   gallery: [],
   description: '',
   itinerary: '',
@@ -533,7 +542,7 @@ onMounted(async () => {
       rating: Number(tourData.rating) || 4.5,
       reviews: Number(tourData.reviews_count) || 0,
       duration: durationStr,
-      mainImage: tourData.main_image || (Array.isArray(tourData.images) ? tourData.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=1200',
+      mainImage: tourData.main_image || (Array.isArray(tourData.images) ? tourData.images[0] : null) || null,
       gallery: Array.isArray(tourData.images) ? tourData.images.slice(1) : [],
       description: tourData.description || '',
       itinerary: tourData.itinerary || '',

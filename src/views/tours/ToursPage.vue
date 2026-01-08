@@ -114,7 +114,7 @@
             @click="viewTour(tour)"
           >
             <div class="relative overflow-hidden h-56">
-              <img loading="lazy" :src="tour.image || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop'" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <img loading="lazy" :src="optimizeTourImage(tour.image)" :alt="tour.title" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" @error="handleTourImageError" />
               <span class="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-full">
                 {{ tour.category }}
               </span>
@@ -183,6 +183,7 @@ import { useToast } from '../../composables/useToast.js'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import { supabase } from '@/services/supabase'
 import { subscribeToTable } from '@/services/supabase'
+import { optimizeImageUrl } from '@/services/imageOptimization'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -259,7 +260,7 @@ const loadTours = async () => {
           rating: Number(t.rating) || 4.5,
           reviews: Number(t.reviews_count) || 0,
           category: t.category || 'Tour',
-          image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || 'https://images.unsplash.com/photo-1611348586804-61bf6c080437?w=400&h=300&fit=crop',
+          image: t.main_image || (Array.isArray(t.images) ? t.images[0] : null) || null,
           description: String(t.description || ''),
           difficulty: t.difficulty || 'moderate'
         }))
@@ -439,6 +440,21 @@ const addToCart = (tour) => {
     type: 'tour'
   })
   success(t('common.addedToCart', { item: tour.title }))
+}
+
+const optimizeTourImage = (url) => {
+  if (!url) {
+    // Return a data URI placeholder instead of external URL
+    return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e7eb" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="16"%3ETour%3C/text%3E%3C/svg%3E'
+  }
+  return optimizeImageUrl(url, {
+    width: 400,
+    quality: 'auto:eco'
+  })
+}
+
+const handleTourImageError = (event) => {
+  event.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e7eb" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="sans-serif" font-size="16"%3ETour%3C/text%3E%3C/svg%3E'
 }
 
 const viewTour = (tour) => {
