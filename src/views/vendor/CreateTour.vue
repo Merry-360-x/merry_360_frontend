@@ -343,14 +343,22 @@ const handleSubmit = async () => {
       throw new Error('Tour creation API is not available. Please contact support.')
     }
 
-    // Add timeout protection
-    const createTour = api.tours.create(tourData)
-    const timeout = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
-    )
+    // Add timeout protection with better error handling
+    try {
+      const createTourPromise = api.tours.create(tourData)
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+      )
 
-    const result = await Promise.race([createTour, timeout])
-    console.log('✅ [Tour Create] Tour created successfully!', result)
+      const result = await Promise.race([createTourPromise, timeoutPromise])
+      console.log('✅ [Tour Create] Tour created successfully!', result)
+    } catch (createError) {
+      // Re-throw with better error message
+      if (createError?.message?.includes('timeout')) {
+        throw new Error('The request is taking too long. Please check your internet connection and try again.')
+      }
+      throw createError
+    }
     
     showSuccess.value = true
     showToast('Tour created successfully!', 'success')

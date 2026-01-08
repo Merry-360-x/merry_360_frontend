@@ -427,28 +427,38 @@ export const supabaseApiAdapter = {
       }
 
       // Map form data to database columns (only include valid columns)
+      const imageArray = Array.isArray(tourData.images) 
+        ? tourData.images.filter(Boolean)
+        : (tourData.image ? [tourData.image] : (tourData.main_image ? [tourData.main_image] : []))
+      const mainImg = tourData.main_image || tourData.image || (imageArray.length > 0 ? imageArray[0] : null)
+      
       const insertData = {
         name: tourData.name || tourData.title || '',
         destination: tourData.destination || tourData.location || '',
         description: tourData.description || null,
         duration_days: tourData.duration_days || parseDurationDays(tourData.duration) || null,
         price: Number.isFinite(tourData.price) ? Number(tourData.price) : null,
-        category: tourData.category || tourData.difficulty || null,
-        main_image: tourData.main_image || tourData.image || null,
-        images: Array.isArray(tourData.images) ? tourData.images : (tourData.image ? [tourData.image] : []),
+        category: tourData.category || null,
+        main_image: mainImg,
+        images: imageArray.length > 0 ? imageArray : null,
         available: tourData.available !== undefined ? tourData.available : true
       }
       
-      // Remove null/undefined values to avoid schema errors
+      // Remove null/undefined/empty values to avoid schema errors, but keep images as JSONB array
       Object.keys(insertData).forEach(key => {
-        if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
+        if (key === 'images') {
+          // Keep images field - set to empty array if null (JSONB accepts empty array)
+          if (insertData[key] === null || (Array.isArray(insertData[key]) && insertData[key].length === 0)) {
+            insertData[key] = []
+          }
+        } else if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
           delete insertData[key]
         }
       })
       
       console.log('📤 [Tours Create] Inserting into database:', JSON.stringify(insertData, null, 2))
 
-      // Add timeout protection
+      // Add timeout protection with proper error handling
       const insertPromise = supabase
         .from('tours')
         .insert([insertData])
@@ -456,10 +466,22 @@ export const supabaseApiAdapter = {
         .single()
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 30000)
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
       )
 
-      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
+      let result
+      try {
+        result = await Promise.race([insertPromise, timeoutPromise])
+      } catch (raceError) {
+        // If it's a timeout, throw it directly
+        if (raceError.message.includes('timeout')) {
+          throw raceError
+        }
+        // Otherwise, it might be from the insert promise
+        throw raceError
+      }
+
+      const { data, error } = result
 
       if (error) {
         console.error('❌ [Tours Create] Database error:', {
