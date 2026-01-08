@@ -257,20 +257,30 @@ export const supabaseApiAdapter = {
           const role = String(profile.role || '').toLowerCase()
           const hostStatus = String(profile.host_application_status || '').toLowerCase()
 
-          // If the DB tracks host application status, require approval unless admin.
-          if (hostStatus && hostStatus !== 'approved' && role !== 'admin') {
+          // If the DB tracks host application status, require approval unless admin or host role.
+          // Auto-approve if user has host/staff/admin role but status is not set.
+          if (hostStatus && hostStatus === 'pending') {
             throw new Error(
-              `Your host application is ${hostStatus}. You can add properties after approval.`
+              `Your host application is pending review. You can add properties after approval.`
+            )
+          }
+          
+          if (hostStatus && hostStatus === 'rejected') {
+            throw new Error(
+              `Your host application was not approved. Please contact support.`
             )
           }
 
           // Role gate (defensive). Router guard should already do this.
+          // If user has proper role, allow property creation even if status not explicitly set.
           if (role && !['host', 'staff', 'admin'].includes(role)) {
             throw new Error('Your account does not have permission to add properties.')
           }
+          
+          console.log('✅ [Property Create] Preflight passed - Role:', role, 'Status:', hostStatus || 'not set')
         }
       } catch (preflightError) {
-        console.warn('⚠️ [Property Create] Preflight blocked:', preflightError)
+        console.error('❌ [Property Create] Preflight blocked:', preflightError)
         throw preflightError
       }
 
