@@ -413,6 +413,7 @@ const validateForm = () => {
 }
 
 const handleSubmit = async () => {
+  // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (!validateForm()) {
     showToast(t('vendor.fixErrors'), 'error')
     return

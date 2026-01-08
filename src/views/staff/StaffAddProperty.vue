@@ -362,6 +362,7 @@ async function handleSubmit() {
   console.log('Images uploading:', imagesUploading.value)
   console.log('Property images count:', propertyImages.value.length)
   
+  // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (imagesUploading.value) {
     showToast(t('portal.waitForUploads'), 'error')
     return
@@ -417,6 +418,7 @@ async function handleSubmit() {
     console.log('📷 Image URLs extracted:', imageUrls.length, imageUrls[0])
     
     if (!imageUrls.length) {
+      isSubmitting.value = false
       showToast(t('portal.uploadAtLeastOneImage'), 'error')
       return
     }

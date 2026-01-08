@@ -281,6 +281,7 @@ const validateForm = () => {
 }
 
 const handleSubmit = async () => {
+  // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (imagesUploading.value) {
     showToast('Please wait for image uploads to finish.', 'error')
     return
