@@ -251,11 +251,26 @@
 
         <!-- Listings -->
         <div class="col-span-1 lg:col-span-4">
-          <!-- Loading Spinner -->
-          <div v-if="loading && !accommodations.length" class="flex flex-col items-center justify-center py-20">
+          <!-- Loading Spinner (only on initial load) -->
+          <div v-if="loading && accommodations.length === 0" class="flex flex-col items-center justify-center py-20">
             <div class="w-16 h-16 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
             <h2 class="text-xl font-semibold text-text-primary mb-2">Loading Properties</h2>
             <p class="text-text-secondary">Finding the best accommodations for you...</p>
+          </div>
+
+          <!-- Empty State (no loading, no results) -->
+          <div v-else-if="!loading && filteredAccommodations.length === 0" class="flex flex-col items-center justify-center py-20">
+            <svg class="w-20 h-20 text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 class="text-xl font-semibold text-text-primary mb-2">No properties found</h3>
+            <p class="text-text-secondary mb-6">Try adjusting your search criteria or filters.</p>
+            <button 
+              @click="resetFilters"
+              class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors"
+            >
+              Reset Filters
+            </button>
           </div>
 
           <!-- Results Header -->
@@ -313,17 +328,6 @@
             </div>
           </div>
 
-          <!-- Empty State -->
-          <div v-if="filteredAccommodations.length === 0" class="text-center py-12 sm:py-16">
-            <svg class="w-20 h-20 sm:w-24 sm:h-24 text-text-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <h3 class="text-lg sm:text-xl font-semibold text-text-brand-600 mb-2">{{ t('accommodationList.noPropertiesFound') }}</h3>
-            <p class="text-text-secondary mb-4 text-sm sm:text-base">{{ t('accommodationList.adjustFilters') }}</p>
-            <button @click="resetFilters" class="px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 font-medium transform hover:scale-105">
-              {{ t('accommodationList.resetFilters') }}
-            </button>
-          </div>
           </div><!-- Close v-else -->
         </div>
       </div>

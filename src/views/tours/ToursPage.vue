@@ -263,6 +263,7 @@ const loadTours = async () => {
           description: String(t.description || ''),
           difficulty: t.difficulty || 'moderate'
         }))
+        // Stop loading immediately - even if we have results
         loading.value = false
         console.log('✅ Mapped tours:', tours.value.length)
         return
@@ -273,13 +274,7 @@ const loadTours = async () => {
     
     console.log('✅ Loaded tours from tours table:', data?.length || 0)
     
-    if (!data || data.length === 0) {
-      console.log('⚠️ No tours found in tours table')
-      tours.value = []
-      loading.value = false
-      return
-    }
-    
+    // Always set tours (even if empty) and stop loading immediately
     tours.value = (data || []).map(t => ({
       id: t.id,
       title: t.name || 'Tour',
@@ -295,13 +290,17 @@ const loadTours = async () => {
       difficulty: t.difficulty || 'moderate'
     }))
     
+    // Stop loading immediately - even if no results
+    loading.value = false
     console.log('✅ Mapped tours:', tours.value.length)
-    console.log('📊 Sample tour:', tours.value[0])
+    if (tours.value.length > 0) {
+      console.log('📊 Sample tour:', tours.value[0])
+    }
   } catch (err) {
     console.error('❌ Error loading tours:', err)
     toastError('Failed to load tours: ' + (err.message || 'Unknown error'))
     tours.value = []
-  } finally {
+    // Ensure loading is stopped even on error
     loading.value = false
   }
 }
