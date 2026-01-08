@@ -454,7 +454,8 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
-import { supabase, uploadFile } from '../../services/supabase'
+import { supabase } from '../../services/supabase'
+import { uploadToCloudinary } from '../../services/cloudinary'
 
 const router = useRouter()
 const formSection = ref(null)
@@ -557,39 +558,18 @@ const handleIdPhotoUpload = async (event) => {
     }
     reader.readAsDataURL(file)
 
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      alert('Please log in to upload photos')
-      return
-    }
+    // Upload to Cloudinary
+    const result = await uploadToCloudinary(file, {
+      folder: 'merry360x/host-applications'
+    })
 
-    // Upload to Supabase Storage
-    const timestamp = Date.now()
-    const fileName = `${user.id}_id_${timestamp}.${file.name.split('.').pop()}`
-    const filePath = `host-applications/${fileName}`
-
-    const { data, error } = await supabase.storage
-      .from('merry360x')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
-
-    if (error) throw error
-
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('merry360x')
-      .getPublicUrl(filePath)
-
-    formData.idPhotoUrl = publicUrl
-    console.log('✅ ID photo uploaded:', publicUrl)
+    formData.idPhotoUrl = result.secure_url
+    console.log('✅ ID photo uploaded:', result.secure_url)
     updateProgress()
 
   } catch (error) {
     console.error('ID photo upload error:', error)
-    alert('Failed to upload ID photo. Please try again.')
+    alert(error.message || 'Failed to upload ID photo. Please try again.')
     idPhotoPreview.value = ''
   } finally {
     uploadingIdPhoto.value = false
