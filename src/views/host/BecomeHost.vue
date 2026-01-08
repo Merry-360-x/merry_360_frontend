@@ -180,18 +180,28 @@
           </div>
 
           <!-- Progress Bar (only show after step 0) -->
-          <div v-if="currentStep > 0" class="mb-12">
+          <div v-if="currentStep > 0 || isSubmitting" class="mb-12">
             <div class="flex items-center justify-center gap-2 mb-4">
-              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Application Progress</span>
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">
+                {{ isSubmitting ? 'Submitting Application...' : 'Application Progress' }}
+              </span>
             </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden relative">
               <div 
-                class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-500 ease-out"
-                :style="{ width: `${progress}%` }"
-              ></div>
+                class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
+                :style="{ width: `${isSubmitting ? submissionProgress : progress}%` }"
+              >
+                <!-- Animated shimmer effect during submission -->
+                <div 
+                  v-if="isSubmitting && submissionProgress < 100"
+                  class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"
+                ></div>
+              </div>
             </div>
             <div class="text-center mt-2">
-              <span class="text-sm font-semibold text-brand-600 dark:text-brand-400">{{ progress }}% Complete</span>
+              <span class="text-sm font-semibold text-brand-600 dark:text-brand-400">
+                {{ isSubmitting ? `${submissionProgress}%` : `${progress}% Complete` }}
+              </span>
             </div>
           </div>
 
