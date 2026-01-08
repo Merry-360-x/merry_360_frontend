@@ -681,18 +681,26 @@
                       </div>
                       
                       <!-- Agreement Checkbox -->
-                      <div class="bg-white dark:bg-gray-900 rounded-lg p-4 border-2 border-brand-500">
+                      <div :class="[
+                        'bg-white dark:bg-gray-900 rounded-lg p-4 border-2 transition-all',
+                        formData.agreeToTerms 
+                          ? 'border-brand-500 shadow-md' 
+                          : 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20'
+                      ]">
                         <label class="flex items-start gap-3 cursor-pointer">
                           <input 
                             v-model="formData.agreeToTerms"
                             type="checkbox" 
                             required
-                            class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500 focus:ring-2"
+                            class="mt-1 w-5 h-5 text-brand-500 border-gray-300 rounded focus:ring-brand-500 focus:ring-2 cursor-pointer"
                           />
                           <span class="text-sm font-medium text-text-primary">
                             I have read and agree to Merry360's Terms and Conditions, Privacy Policy, and Host Guidelines. I understand that my application will be reviewed before approval. *
                           </span>
                         </label>
+                        <p v-if="!formData.agreeToTerms" class="mt-2 text-xs text-red-600 dark:text-red-400 font-medium">
+                          ⚠️ You must agree to the terms and conditions to submit your application.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -739,8 +747,15 @@
                   <button 
                     v-else
                     type="submit"
-                    :disabled="isSubmitting || photosUploading || !formData.agreeToTerms"
-                    class="group inline-flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl"
+                    :disabled="isSubmitting || photosUploading"
+                    @click="!formData.agreeToTerms && handleTermsClick()"
+                    :class="[
+                      'group inline-flex items-center gap-3 px-10 py-4 font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl',
+                      !formData.agreeToTerms 
+                        ? 'bg-gray-400 hover:bg-gray-500 cursor-not-allowed text-white' 
+                        : 'bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white',
+                      (isSubmitting || photosUploading) && 'disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed'
+                    ]"
                   >
                     <span v-if="isSubmitting" class="flex items-center gap-3">
                       <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
@@ -1254,6 +1269,21 @@ const uploadHostDocument = async (userId, kind, file) => {
   }
 }
 
+const handleTermsClick = () => {
+  // Scroll to checkbox and highlight it
+  const checkboxElement = document.querySelector('input[type="checkbox"][v-model*="agreeToTerms"]')
+  if (checkboxElement) {
+    checkboxElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    checkboxElement.focus()
+    // Add a brief highlight animation
+    checkboxElement.parentElement?.parentElement?.classList.add('animate-pulse')
+    setTimeout(() => {
+      checkboxElement.parentElement?.parentElement?.classList.remove('animate-pulse')
+    }, 2000)
+  }
+  showToastError('Please check the box above to agree to the Terms and Conditions before submitting.')
+}
+
 const handleSubmit = async () => {
   console.log('🔍 Host application submission started')
   console.log('Current step:', currentStep.value)
@@ -1271,7 +1301,7 @@ const handleSubmit = async () => {
   // Validate terms BEFORE setting isSubmitting to avoid button getting stuck
   // Only check this on the final step (step 5) where terms are shown
   if (!formData.agreeToTerms) {
-    showToastError('Please read and agree to the Terms and Conditions on this final step before submitting.')
+    handleTermsClick()
     return
   }
   
