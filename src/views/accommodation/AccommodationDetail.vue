@@ -12,24 +12,23 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- Image Gallery -->
+          <!-- Image Gallery - Show all available images -->
           <div class="grid grid-cols-4 gap-2 rounded-card overflow-hidden">
             <div class="col-span-4 row-span-2 h-96 relative bg-gray-200 dark:bg-gray-700">
-              <!-- Placeholder while main image loads (no external placeholder image) -->
+              <!-- Loading placeholder -->
               <div
                 v-if="!mainImageLoaded || mainImageError || !accommodation.mainImage"
-                class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-600 via-yellow-400 to-sky-600"
+                class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700"
               >
                 <div class="text-center animate-pulse">
-                  <div class="w-16 h-16 mx-auto rounded-full bg-white/30 backdrop-blur-sm mb-3 flex items-center justify-center">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                  </div>
-                  <p class="text-white font-semibold text-sm">Loading image...</p>
+                  <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Loading image...</p>
                 </div>
               </div>
               <img 
+                v-if="accommodation.mainImage"
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
@@ -38,36 +37,38 @@
                 @load="handleMainImageLoad"
                 @error="handleMainImageError"
                 class="w-full h-full object-cover"
-                v-show="mainImageLoaded && !mainImageError && accommodation.mainImage"
+                v-show="mainImageLoaded && !mainImageError"
               />
-              <button class="absolute bottom-4 right-4 bg-white px-3 py-1.5 rounded-button shadow-lg flex items-center gap-1.5 hover:bg-gray-50 transition-colors text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                View all photos
-              </button>
             </div>
-            <div v-for="(img, index) in accommodation.gallery" :key="index" class="h-32 bg-gray-200 dark:bg-gray-700 relative overflow-hidden">
+            <!-- Show all gallery images (up to 4 thumbnails) -->
+            <div v-for="(img, index) in accommodation.gallery.slice(0, 4)" :key="index" class="h-32 bg-gray-200 dark:bg-gray-700 relative overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
               <div
                 v-if="!galleryLoaded[index] || galleryError[index]"
-                class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-emerald-600 via-yellow-400 to-sky-600"
+                class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700"
               >
-                <div class="text-center animate-pulse">
-                  <svg class="w-6 h-6 mx-auto text-white/80 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                  </svg>
-                </div>
+                <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
               </div>
               <img 
+                v-if="img"
                 loading="lazy" 
                 decoding="async"
                 :src="optimizeImage(img)" 
-                :alt="`Gallery ${index + 1}`" 
+                :alt="`${accommodation.name} - Image ${index + 2}`" 
                 @load="() => handleGalleryLoad(index)"
                 @error="() => handleGalleryError(index)"
+                @click="accommodation.mainImage = img; resetImageLoadingState()"
                 class="w-full h-full object-cover"
                 v-show="galleryLoaded[index] && !galleryError[index]"
               />
+            </div>
+            <!-- Show count if more than 4 images -->
+            <div v-if="accommodation.gallery.length > 4" class="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+              <div class="text-center">
+                <p class="text-lg font-bold text-gray-700 dark:text-gray-300">+{{ accommodation.gallery.length - 4 }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">more photos</p>
+              </div>
             </div>
           </div>
 
@@ -195,36 +196,39 @@
           <Card padding="lg">
             <h2 class="text-xl font-bold mb-4">Transportation Options</h2>
             <p class="text-sm text-text-secondary mb-4">Get to and from this property with ease</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div v-if="transportOptions.length === 0" class="text-center py-8 text-text-secondary">
+              <p class="text-sm">No transportation options available</p>
+            </div>
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div v-for="transport in transportOptions" :key="transport.id" 
                 :class="[
-                  'border border-gray-200 rounded-lg p-3 hover:border-red-500 border-brand-400 hover:shadow-md transition-all cursor-pointer group relative',
-                  { 'animate-pulse-once bg-green-50': transport.justAdded }
+                  'border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-brand-500 hover:shadow-md transition-all cursor-pointer group relative overflow-hidden',
+                  { 'animate-pulse-once bg-green-50 dark:bg-green-900/20': transport.justAdded }
                 ]">
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-red-100 transition-colors">
-                    <svg v-if="!transport.justAdded" class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-start gap-3 min-w-0">
+                  <div class="w-10 h-10 bg-brand-50 dark:bg-brand-900/30 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 dark:group-hover:bg-brand-900/50 transition-colors">
+                    <svg v-if="!transport.justAdded" class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
                     <svg v-else class="w-5 h-5 text-green-500 animate-bounce-once" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                   </div>
-                  <div class="flex-1">
-                    <h3 class="text-sm font-semibold text-text-brand-600 mb-1">{{ transport.name }}</h3>
-                    <p class="text-xs text-text-secondary mb-2">{{ transport.description }}</p>
-                    <div class="flex items-center justify-between">
-                      <span class="text-base font-bold text-brand-600">{{ formatPrice(transport.price) }}</span>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold text-text-brand-600 dark:text-text-brand-400 mb-1 truncate">{{ transport.name }}</h3>
+                    <p class="text-xs text-text-secondary mb-2 line-clamp-2">{{ transport.description || 'Transportation service' }}</p>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-sm font-bold text-brand-600 dark:text-brand-400 whitespace-nowrap">{{ formatPrice(transport.price) }}</span>
                       <button 
-                        @click="addTransportToCart(transport)" 
+                        @click.stop="addTransportToCart(transport)" 
                         :disabled="transport.justAdded"
                         :class="[
-                          'text-xs font-semibold transition-all',
+                          'text-xs font-semibold transition-all whitespace-nowrap',
                           transport.justAdded 
                             ? 'text-green-500 cursor-not-allowed' 
-                            : 'text-brand-600 hover:text-brand-700 hover:scale-105'
+                            : 'text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300'
                         ]">
-                        <span v-if="!transport.justAdded">Add to Trip Cart</span>
+                        <span v-if="!transport.justAdded">Add to Cart</span>
                         <span v-else class="flex items-center gap-1">
                           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -508,9 +512,34 @@ const buildBookingQuery = () => {
 }
 
 const goToCheckout = () => {
+  if (!accommodation.value?.id) {
+    console.error('Accommodation ID is missing')
+    return
+  }
+  
+  // Ensure dates are set
+  if (!stay.value.checkIn || !stay.value.checkOut) {
+    const today = new Date()
+    const checkIn = new Date(today)
+    checkIn.setDate(today.getDate() + 7)
+    const checkOut = new Date(today)
+    checkOut.setDate(today.getDate() + 10)
+    
+    stay.value.checkIn = stay.value.checkIn || toDateInputValue(checkIn)
+    stay.value.checkOut = stay.value.checkOut || toDateInputValue(checkOut)
+  }
+  
+  const query = buildBookingQuery()
+  console.log('Navigating to checkout:', {
+    path: `/accommodation/${accommodation.value.id}/checkout`,
+    query
+  })
+  
   router.push({
     path: `/accommodation/${accommodation.value.id}/checkout`,
-    query: buildBookingQuery()
+    query
+  }).catch(err => {
+    console.error('Navigation error:', err)
   })
 }
 
@@ -636,14 +665,22 @@ onMounted(async () => {
 
   try {
     const response = await api.accommodations.getById(route.params.id)
+    const allImages = response.data.images || (response.data.image ? [response.data.image] : [])
+    
     accommodation.value = {
       ...response.data,
       price: Number(response.data.price) || 0, // Ensure price is a number
-      mainImage: response.data.images[0] || response.data.image,
-      gallery: response.data.images.slice(1) || [],
+      mainImage: allImages[0] || response.data.main_image || null,
+      gallery: allImages.length > 1 ? allImages.slice(1) : [], // Show all remaining images
       eco: response.data.ecoFriendly,
       host_id: response.data.host_id || null // Ensure host_id is preserved
     }
+    
+    console.log('✅ Accommodation images loaded:', {
+      mainImage: accommodation.value.mainImage,
+      galleryCount: accommodation.value.gallery.length,
+      totalImages: allImages.length
+    })
 
     console.log('✅ Accommodation loaded:', {
       id: accommodation.value.id,

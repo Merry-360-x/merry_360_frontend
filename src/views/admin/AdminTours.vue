@@ -65,10 +65,11 @@
               </td>
               <td class="py-4 px-4">
                 <div class="flex gap-2">
-                  <Button variant="outline" size="sm">Edit</Button>
+                  <Button variant="outline" size="sm" @click="editTour(tour)">Edit</Button>
                   <Button variant="outline" size="sm" @click="toggleStatus(tour)">
                     {{ tour.status === 'active' ? 'Deactivate' : 'Activate' }}
                   </Button>
+                  <Button variant="danger" size="sm" @click="deleteTour(tour.id)">Delete</Button>
                 </div>
               </td>
             </tr>
@@ -88,8 +89,12 @@ import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
 import { useCurrencyStore } from '@/stores/currency'
 import { useTranslation } from '@/composables/useTranslation'
+import { useRouter } from 'vue-router'
+import { confirmDialog } from '@/composables/useConfirm'
 
 const { showToast } = useToast()
+const router = useRouter()
+const { t } = useTranslation()
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
 const tours = ref([])
@@ -193,8 +198,6 @@ const toggleStatus = async (tour) => {
   try {
     const newStatus = tour.status === 'active' ? false : true
 
-    // Canonical: update tours.available
-    // If you're still using listings as a temporary data source, migrate those rows into tours.
     const { error } = await supabase
       .from('tours')
       .update({ available: newStatus })
@@ -204,9 +207,42 @@ const toggleStatus = async (tour) => {
     
     tour.status = newStatus ? 'active' : 'inactive'
     showToast(`Tour ${newStatus ? 'activated' : 'deactivated'} successfully`, 'success')
+    await loadTours()
   } catch (err) {
     console.error('Error updating tour:', err)
     showToast('Failed to update tour: ' + err.message, 'error')
+  }
+}
+
+const editTour = (tour) => {
+  router.push(`/vendor/create-tour?edit=${tour.id}`)
+}
+
+const deleteTour = async (id) => {
+  const confirmed = await confirmDialog(
+    'Are you sure you want to delete this tour? This action cannot be undone.',
+    {
+      title: 'Delete Tour',
+      confirmText: 'Delete',
+      cancelText: 'Cancel'
+    }
+  )
+  
+  if (!confirmed) return
+  
+  try {
+    const { error } = await supabase
+      .from('tours')
+      .delete()
+      .eq('id', id)
+    
+    if (error) throw error
+    
+    showToast('Tour deleted successfully', 'success')
+    await loadTours()
+  } catch (err) {
+    console.error('Error deleting tour:', err)
+    showToast('Failed to delete tour: ' + err.message, 'error')
   }
 }
 

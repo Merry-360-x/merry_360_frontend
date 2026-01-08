@@ -68,10 +68,11 @@
                           </div>
 
                           <div class="pt-2 flex gap-2">
-                            <Button variant="outline" size="sm" full-width>{{ t('common.edit') }}</Button>
+                            <Button variant="outline" size="sm" full-width @click="editProperty(property)">{{ t('common.edit') }}</Button>
                             <Button variant="outline" size="sm" full-width @click="toggleStatus(property)">
                               {{ property.status === 'active' ? t('status.inactive') : t('status.active') }}
                             </Button>
+                            <Button variant="danger" size="sm" full-width @click="deleteProperty(property.id)">{{ t('common.delete') }}</Button>
                           </div>
                         </div>
                       </div>
@@ -89,10 +90,11 @@
                   </td>
                   <td class="hidden md:table-cell py-4 px-4">
                     <div class="flex gap-2">
-                      <Button variant="outline" size="sm">{{ t('common.edit') }}</Button>
+                      <Button variant="outline" size="sm" @click="editProperty(property)">{{ t('common.edit') }}</Button>
                       <Button variant="outline" size="sm" @click="toggleStatus(property)">
                         {{ property.status === 'active' ? t('status.inactive') : t('status.active') }}
                       </Button>
+                      <Button variant="danger" size="sm" @click="deleteProperty(property.id)">{{ t('common.delete') }}</Button>
                     </div>
                   </td>
                 </tr>
@@ -113,10 +115,13 @@ import { useToast } from '@/composables/useToast'
 import { useCurrencyStore } from '@/stores/currency'
 import { useTranslation } from '@/composables/useTranslation'
 import { normalizePropertyType, getHostLabel } from '@/services/propertyMapper'
+import { useRouter } from 'vue-router'
+import { confirmDialog } from '@/composables/useConfirm'
 
 const { showToast } = useToast()
 const currencyStore = useCurrencyStore()
 const { t } = useTranslation()
+const router = useRouter()
 const properties = ref([])
 const loading = ref(true)
 
@@ -190,9 +195,42 @@ const toggleStatus = async (property) => {
     
     property.status = newStatus ? 'active' : 'inactive'
     showToast(`Property ${newStatus ? 'activated' : 'deactivated'} successfully`, 'success')
+    await loadProperties()
   } catch (err) {
     console.error('Error updating property:', err)
     showToast('Failed to update property: ' + err.message, 'error')
+  }
+}
+
+const editProperty = (property) => {
+  router.push(`/admin/edit-property/${property.id}`)
+}
+
+const deleteProperty = async (id) => {
+  const confirmed = await confirmDialog(
+    'Are you sure you want to delete this property? This action cannot be undone.',
+    {
+      title: 'Delete Property',
+      confirmText: 'Delete',
+      cancelText: 'Cancel'
+    }
+  )
+  
+  if (!confirmed) return
+  
+  try {
+    const { error } = await supabase
+      .from('properties')
+      .delete()
+      .eq('id', id)
+    
+    if (error) throw error
+    
+    showToast('Property deleted successfully', 'success')
+    await loadProperties()
+  } catch (err) {
+    console.error('Error deleting property:', err)
+    showToast('Failed to delete property: ' + err.message, 'error')
   }
 }
 

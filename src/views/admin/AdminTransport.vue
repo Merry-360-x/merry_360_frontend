@@ -66,8 +66,8 @@
               </td>
               <td class="py-4 px-4">
                 <div class="flex gap-2">
-                  <Button variant="outline" size="sm">Edit</Button>
-                  <Button variant="outline" size="sm">Remove</Button>
+                  <Button variant="outline" size="sm" @click="editVehicle(vehicle)">Edit</Button>
+                  <Button variant="danger" size="sm" @click="deleteVehicle(vehicle.id)">Delete</Button>
                 </div>
               </td>
             </tr>
@@ -86,9 +86,12 @@ import Button from '@/components/common/Button.vue'
 import { supabase } from '@/services/supabase'
 import { useToast } from '@/composables/useToast'
 import { useCurrencyStore } from '@/stores/currency'
+import { useRouter } from 'vue-router'
+import { confirmDialog } from '@/composables/useConfirm'
 
 const { showToast } = useToast()
 const currencyStore = useCurrencyStore()
+const router = useRouter()
 const vehicles = ref([])
 const loading = ref(true)
 
@@ -176,6 +179,38 @@ const stats = computed(() => ({
   activeBookings: vehicles.value.filter(v => v.status === 'in-use').length,
   drivers: new Set(vehicles.value.map(v => v.driver)).size
 }))
+
+const editVehicle = (vehicle) => {
+  router.push(`/vendor/create-transport?edit=${vehicle.id}`)
+}
+
+const deleteVehicle = async (id) => {
+  const confirmed = await confirmDialog(
+    'Are you sure you want to delete this vehicle? This action cannot be undone.',
+    {
+      title: 'Delete Vehicle',
+      confirmText: 'Delete',
+      cancelText: 'Cancel'
+    }
+  )
+  
+  if (!confirmed) return
+  
+  try {
+    const { error } = await supabase
+      .from('vehicles')
+      .delete()
+      .eq('id', id)
+    
+    if (error) throw error
+    
+    showToast('Vehicle deleted successfully', 'success')
+    await loadVehicles()
+  } catch (err) {
+    console.error('Error deleting vehicle:', err)
+    showToast('Failed to delete vehicle: ' + err.message, 'error')
+  }
+}
 
 onMounted(() => {
   loadVehicles()
