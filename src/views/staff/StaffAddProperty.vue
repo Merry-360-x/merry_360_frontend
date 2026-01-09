@@ -4,14 +4,14 @@
       <div class="container mx-auto px-4 lg:px-8">
         <!-- Header -->
         <div class="max-w-3xl mx-auto mb-6">
-          <router-link :to="dashboardPath" class="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-3">
+          <router-link :to="propertiesPath" class="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:text-brand-700 mb-3">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Back
+            Back to Properties
           </router-link>
-          <h1 class="text-lg font-semibold text-text-primary mb-0.5">Add Property</h1>
-          <p class="text-xs text-text-secondary">Fill in the required information</p>
+          <h1 class="text-lg font-semibold text-text-primary mb-0.5">{{ isEditMode ? 'Edit Property' : 'Add Property' }}</h1>
+          <p class="text-xs text-text-secondary">{{ isEditMode ? 'Update your property information' : 'Fill in the required information' }}</p>
         </div>
 
         <!-- Progress -->
@@ -35,7 +35,13 @@
         <!-- Form -->
         <div class="max-w-3xl mx-auto">
           <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-            <form @submit.prevent="handleNext">
+            <!-- Loading State for Edit Mode -->
+            <div v-if="loadingProperty" class="p-12 text-center">
+              <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-500 mx-auto mb-4"></div>
+              <p class="text-sm text-text-secondary">Loading property data...</p>
+            </div>
+            
+            <form v-else @submit.prevent="handleNext">
               <!-- Content -->
               <div class="p-6">
                 <!-- Step 1: Basic Info -->
@@ -252,7 +258,7 @@
               <!-- Progress Bar (shown during submission) -->
               <div v-if="isSubmitting" class="flex-1">
                 <div class="flex items-center justify-between mb-1">
-                  <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Publishing property...</span>
+                  <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ isEditMode ? 'Updating property...' : 'Publishing property...' }}</span>
                   <span class="text-xs font-bold text-brand-600 dark:text-brand-400">{{ submitProgress }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
@@ -276,8 +282,8 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                  <span v-if="isSubmitting">Publishing... {{ submitProgress }}%</span>
-                  <span v-else>Publish</span>
+                  <span v-if="isSubmitting">{{ isEditMode ? 'Updating' : 'Publishing' }}... {{ submitProgress }}%</span>
+                  <span v-else>{{ isEditMode ? 'Update' : 'Publish' }}</span>
               </button>
             </div>
           </form>
@@ -291,8 +297,13 @@
       <div v-if="showSuccessModal" class="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full overflow-hidden">
           <div class="p-6 text-center border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-base font-semibold text-text-primary mb-1">Published</h2>
-            <p class="text-xs text-text-secondary">Your property is now live</p>
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h2 class="text-base font-semibold text-text-primary mb-1">{{ isEditMode ? 'Updated!' : 'Published!' }}</h2>
+            <p class="text-xs text-text-secondary">{{ isEditMode ? 'Your property has been updated' : 'Your property is now live' }}</p>
           </div>
           <div class="p-4">
             <button
@@ -309,11 +320,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import api from '../../services/api'
+import { supabase } from '../../services/supabase'
 import { useUserStore } from '../../stores/userStore'
 import { useToast } from '../../composables/useToast'
 
@@ -331,6 +343,11 @@ const basePath = computed(() => {
 })
 const dashboardPath = computed(() => basePath.value)
 const propertiesPath = computed(() => `${basePath.value}/properties`)
+
+// Edit mode detection
+const propertyId = computed(() => route.params.id)
+const isEditMode = computed(() => !!propertyId.value)
+const loadingProperty = ref(false)
 
 const currentStep = ref(0)
 const isSubmitting = ref(false)
@@ -366,6 +383,62 @@ const form = ref({
 })
 
 const propertyImages = ref([])
+
+// Load property data when in edit mode
+onMounted(async () => {
+  if (isEditMode.value) {
+    await loadPropertyData()
+  }
+})
+
+async function loadPropertyData() {
+  loadingProperty.value = true
+  try {
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*')
+      .eq('id', propertyId.value)
+      .single()
+    
+    if (error) throw error
+    
+    if (data) {
+      // Populate form with existing data
+      form.value = {
+        title: data.name || '',
+        category: data.type?.toLowerCase() || '',
+        location: data.location || '',
+        description: data.description || '',
+        beds: data.bedrooms || 1,
+        baths: data.bathrooms || 1,
+        maxGuests: data.max_guests || 4,
+        price: data.price_per_night || null,
+        amenities: data.amenities || []
+      }
+      
+      // Load existing images
+      const allImages = []
+      if (data.main_image) {
+        allImages.push({ url: data.main_image, preview: data.main_image })
+      }
+      if (data.images && Array.isArray(data.images)) {
+        data.images.forEach((img, index) => {
+          // Skip if it's the same as main_image to avoid duplicates
+          if (img !== data.main_image) {
+            allImages.push({ url: img, preview: img })
+          }
+        })
+      }
+      propertyImages.value = allImages
+    }
+  } catch (error) {
+    console.error('Error loading property:', error)
+    showToastError('Failed to load property data')
+    router.push(propertiesPath.value)
+  } finally {
+    loadingProperty.value = false
+  }
+}
 
 const canProceed = computed(() => {
   if (currentStep.value === 0) {
@@ -517,8 +590,15 @@ async function handleSubmit() {
     // Step 3: Sending to database (50%)
     await animateProgress(50, 300)
 
-    // Direct API call - no timeout wrapper
-    const submitPromise = api.accommodations.create(propertyData)
+    let submitPromise
+    
+    if (isEditMode.value) {
+      // Update existing property
+      submitPromise = api.accommodations.update(propertyId.value, propertyData)
+    } else {
+      // Create new property
+      submitPromise = api.accommodations.create(propertyData)
+    }
     
     // Animate progress while waiting for API
     const progressPromise = (async () => {
@@ -532,7 +612,7 @@ async function handleSubmit() {
     await animateProgress(100, 300)
 
     showSuccessModal.value = true
-    showToastSuccess('Property published successfully!')
+    showToastSuccess(isEditMode.value ? 'Property updated successfully!' : 'Property published successfully!')
 
     setTimeout(() => {
       router.push(propertiesPath.value)
@@ -541,7 +621,7 @@ async function handleSubmit() {
   } catch (error) {
     console.error('❌ Error:', error)
     
-    let errorMessage = 'Failed to create property. Please try again.'
+    let errorMessage = isEditMode.value ? 'Failed to update property. Please try again.' : 'Failed to create property. Please try again.'
     
     if (error?.message) {
       errorMessage = error.message

@@ -359,8 +359,10 @@ export const supabaseApiAdapter = {
       if (propertyData.bedrooms !== undefined) updateData.bedrooms = Number(propertyData.bedrooms)
       if (propertyData.bathrooms !== undefined) updateData.bathrooms = Number(propertyData.bathrooms)
       if (propertyData.max_guests !== undefined) updateData.max_guests = Number(propertyData.max_guests)
+      if (propertyData.maxGuests !== undefined) updateData.max_guests = Number(propertyData.maxGuests)
       if (propertyData.amenities !== undefined) updateData.amenities = propertyData.amenities
       if (propertyData.images !== undefined) updateData.images = propertyData.images
+      if (propertyData.image !== undefined) updateData.main_image = propertyData.image
       if (propertyData.main_image !== undefined) updateData.main_image = propertyData.main_image
       if (propertyData.available !== undefined) updateData.available = propertyData.available
 
