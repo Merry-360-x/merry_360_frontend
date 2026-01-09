@@ -1,0 +1,1736 @@
+
+Running 149 tests using 4 workers
+
+  -    1 [chromium] › tests/e2e/admin.spec.js:84:3 › Admin panel › Dashboard loads
+  -    2 [chromium] › tests/e2e/admin.spec.js:90:3 › Admin panel › Users page loads and profile modal opens (if data exists)
+  -    3 [chromium] › tests/e2e/admin.spec.js:111:3 › Admin panel › Accommodations page loads
+  -    4 [chromium] › tests/e2e/admin.spec.js:117:3 › Admin panel › Properties page loads
+  -    5 [chromium] › tests/e2e/admin.spec.js:123:3 › Admin panel › Tours page loads
+  -    6 [chromium] › tests/e2e/admin.spec.js:129:3 › Admin panel › Transport page loads
+  -    7 [chromium] › tests/e2e/admin.spec.js:135:3 › Admin panel › Payments page loads and filter control exists
+  -    8 [chromium] › tests/e2e/admin.spec.js:145:3 › Admin panel › Analytics page loads
+  -    9 [chromium] › tests/e2e/admin.spec.js:154:3 › Admin panel › Host applications page loads and status filters exist
+  -   10 [chromium] › tests/e2e/admin.spec.js:164:3 › Admin panel › Live support page loads
+  -   11 [chromium] › tests/e2e/admin.spec.js:171:3 › Admin panel › Admin create tour page loads
+  -   12 [chromium] › tests/e2e/admin.spec.js:185:3 › Admin panel › Admin create transport page loads
+  -   13 [chromium] › tests/e2e/auth.spec.js:5:3 › Auth › sign in and sign out
+  -   15 [chromium] › tests/e2e/accommodation-booking.spec.js:15:3 › Accommodation › reserve accommodation with free booking (smoke)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:62860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+🔄 User Registration (5 iterations)
+  ✓   14 [chromium] › tests/e2e/become-host.spec.js:52:3 › Become Host › become host form has interactive elements (4.7s)
+  ✓   16 [chromium] › tests/e2e/become-host.spec.js:30:3 › Become Host › become host page loads and shows application form (4.5s)
+  ✓   17 [chromium] › tests/e2e/become-host.spec.js:67:3 › Become Host › become host form can be interacted with (3.9s)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:62861) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:62862) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:62859) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Images on / (5/5)
+✅ Images on /accommodations (5/5)
+
+🔄 Create Property (5 iterations)
+
+🔄 Create Transport (5 iterations)
+✅ Images on /tours (2/2)
+✅ Images on /transport (2/2)
+  ✓   21 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:406:3 › Complete 50+ Feature Test Suite › Feature 53+: Image Loading - All Pages (7.7s)
+✅ Login Form Validation
+✅ Signup Form Validation
+  ✓   22 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:433:3 › Complete 50+ Feature Test Suite › Feature 54+: Form Validation Tests (4.8s)
+
+🔄 Search Properties (5 iterations)
+✅ Search Properties (5/5)
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 9
+✅ Passed: 9
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✓   23 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:453:3 › Complete 50+ Feature Test Suite › Feature 55+: Search Functionality (5x) (18.1s)
+  ✓   24 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:6:3 › Comprehensive Feature Testing › homepage loads and displays main sections (3.1s)
+  ✓   25 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:24:3 › Comprehensive Feature Testing › accommodations page loads and displays listings (2.5s)
+  ✓   26 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:41:3 › Comprehensive Feature Testing › tours page loads and displays tours (2.6s)
+  ✓   27 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:56:3 › Comprehensive Feature Testing › transport page loads correctly (2.6s)
+  ✓   28 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:70:3 › Comprehensive Feature Testing › login page renders correctly (2.4s)
+  ✓   29 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:80:3 › Comprehensive Feature Testing › signup page renders correctly (2.4s)
+  ✓   30 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:93:3 › Comprehensive Feature Testing › about page loads (2.6s)
+  ✓   31 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:107:3 › Comprehensive Feature Testing › stories page loads (2.7s)
+  ✓   32 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:117:3 › Comprehensive Feature Testing › profile page redirects to login when not authenticated (2.7s)
+  ✓   33 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:136:3 › Comprehensive Feature Testing › admin page redirects to login when not authenticated (2.4s)
+  ❌ Iteration 1 failed: page.fill: Test timeout of 60000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 2
+✅ Passed: 2
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✘   18 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:93:3 › Complete 50+ Feature Test Suite › Feature 1-5: User Registration (5x) (1.0m)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:63651) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   34 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:148:3 › Comprehensive Feature Testing › become host page loads (2.7s)
+  ❌ Iteration 1 failed: page.fill: Test timeout of 60000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="title"], input[name="name"]')[22m
+
+  ❌ Iteration 1 failed: page.fill: Test timeout of 60000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="name"]')[22m
+
+  ✓   36 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:162:3 › Comprehensive Feature Testing › cart page is accessible (2.7s)
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 2
+✅ Passed: 2
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 2
+✅ Passed: 2
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✘   20 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:281:3 › Complete 50+ Feature Test Suite › Feature 41-45: Create Transport (5x) (1.0m)
+  ✘   19 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:196:3 › Complete 50+ Feature Test Suite › Feature 21-25: Create Property (5x) (1.0m)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:63728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:63727) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+🔄 View Tours (5 iterations)
+  ✓   37 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:176:3 › Comprehensive Feature Testing › wishlist page is accessible (2.6s)
+  ✓   40 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:190:3 › Comprehensive Feature Testing › services page loads (2.7s)
+  ✓   41 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:202:3 › Comprehensive Feature Testing › site is mobile responsive (2.5s)
+I18n support detected: [33mtrue[39m
+  ✓   42 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:217:3 › Comprehensive Feature Testing › page supports internationalization (2.7s)
+  ✓   43 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:234:3 › Comprehensive Feature Testing › main navigation links are clickable (2.8s)
+  ❌ Iteration 1 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="tour-card"], .tour-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="tour-card"], .tour-card, article').first()[22m
+
+Search elements found: [33m1[39m
+  ✓   44 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:246:3 › Comprehensive Feature Testing › search functionality exists (2.6s)
+Footer present: [33mtrue[39m
+  ✓   45 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:258:3 › Comprehensive Feature Testing › footer renders with links (2.7s)
+  ✓   46 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:271:3 › Comprehensive Feature Testing › homepage loads without critical console errors (2.7s)
+No accommodation listings found to test detail view
+  ✓   47 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:301:3 › User Flows › user can browse accommodations and view details (2.6s)
+  ❌ Iteration 2 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="tour-card"], .tour-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="tour-card"], .tour-card, article').first()[22m
+
+  ✓   48 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:319:3 › User Flows › user can navigate between main sections (5.1s)
+Login form submission test completed
+  ✓   49 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:343:3 › User Flows › login form can be submitted (2.4s)
+Signup form can be filled successfully
+  ✓   50 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:361:3 › User Flows › signup form can be filled (2.4s)
+Found 3 images on homepage
+  ✓   51 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:384:3 › UI/UX Features › images load properly (2.5s)
+  ❌ Iteration 3 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="tour-card"], .tour-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="tour-card"], .tour-card, article').first()[22m
+
+First button is enabled: [33mtrue[39m
+  ✓   52 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:401:3 › UI/UX Features › buttons are interactive (2.6s)
+Form validation test completed
+  ✓   53 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:416:3 › UI/UX Features › forms have proper validation (2.8s)
+
+🏠 Test 1: Homepage Verification
+✅ Navigation: Missing
+✅ Hero section: Missing
+✅ Footer: Missing
+  ✘   54 [chromium] › tests/e2e/comprehensive-production-test.spec.js:25:7 › Complete Production Test Suite - 100% Coverage › 1. Homepage - All Sections Visible (4.3s)
+
+🧭 Test 2: Navigation Links
+(node:64276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ❌ Iteration 4 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="tour-card"], .tour-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="tour-card"], .tour-card, article').first()[22m
+
+❌ Home link: Missing
+❌ Accommodations link: Missing
+❌ Tours link: Missing
+❌ Transport link: Missing
+❌ Login link: Missing
+  ✓   55 [chromium] › tests/e2e/comprehensive-production-test.spec.js:44:7 › Complete Production Test Suite - 100% Coverage › 2. All Navigation Links Work (1.8s)
+
+🔍 Test 3: Search
+⚠️ No search input found - may not exist on homepage
+  ✓   56 [chromium] › tests/e2e/comprehensive-production-test.spec.js:66:7 › Complete Production Test Suite - 100% Coverage › 3. Search Functionality (1.8s)
+
+🏘️ Test 4: Accommodations Page
+✅ Found 0 property elements
+  ✓   57 [chromium] › tests/e2e/comprehensive-production-test.spec.js:99:7 › Complete Production Test Suite - 100% Coverage › 4. Browse Accommodations (4.1s)
+
+🗺️ Test 5: Tours Page
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 2
+✅ Passed: 2
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✘   35 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:112:3 › Complete 50+ Feature Test Suite › Feature 6-10: User Login (5x) (1.0m)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:64413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Tours page loaded, contains tours content: true
+  ✓   58 [chromium] › tests/e2e/comprehensive-production-test.spec.js:126:7 › Complete Production Test Suite - 100% Coverage › 5. Browse Tours (4.0s)
+
+🚗 Test 6: Transport Page
+  ❌ Iteration 5 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="tour-card"], .tour-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="tour-card"], .tour-card, article').first()[22m
+
+❌ View Tours (0/5): Failed
+  ✓   39 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:232:3 › Complete 50+ Feature Test Suite › Feature 26-30: View Tours (5x) (58.3s)
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 2
+✅ Passed: 2
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✘   38 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:312:3 › Complete 50+ Feature Test Suite › Feature 46-50: Add to Cart and Checkout (5x) (1.0m)
+✅ Transport page loaded, contains transport content: true
+  ✓   60 [chromium] › tests/e2e/comprehensive-production-test.spec.js:139:7 › Complete Production Test Suite - 100% Coverage › 6. Browse Transport (4.2s)
+
+👤 Test 7: Signup
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:64487) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+🔄 Create Tour (5 iterations)
+✅ Buttons on / (7 clickable)
+✅ Buttons on /accommodations (9 clickable)
+✅ Buttons on /tours (9 clickable)
+✅ Buttons on /transport (6 clickable)
+✅ Buttons on /services (5 clickable)
+✅ Buttons on /stories (3 clickable)
+  ✓   62 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:350:3 › Complete 50+ Feature Test Suite › Feature 51+: Button Clickability - All Pages (22.9s)
+✅ Navigation to /
+✅ Navigation to /accommodations
+✅ Navigation to /tours
+✅ Navigation to /transport
+✅ Navigation to /services
+✅ Navigation to /stories
+✅ Navigation to /about
+✅ Navigation to /login
+✅ Navigation to /signup
+✅ Navigation to /become-host
+✅ Signup form filled with: fulltest1767989479192@merry360x.com
+✅ Navigation to /profile
+✅ Navigation to /trip-cart
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 20
+✅ Passed: 20
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✓   64 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:382:3 › Complete 50+ Feature Test Suite › Feature 52+: Navigation - All Routes (12.4s)
+
+🔐 Test 8: Login
+✅ Signup submitted, URL: https://www.merry360x.com/signup
+✅ Has error message: false
+  ✓   63 [chromium] › tests/e2e/comprehensive-production-test.spec.js:153:7 › Complete Production Test Suite - 100% Coverage › 7. Signup Flow - Create New Account (36.9s)
+
+🏠 Test 9: Property Details
+⚠️ No properties found to view
+  ✓   66 [chromium] › tests/e2e/comprehensive-production-test.spec.js:225:7 › Complete Production Test Suite - 100% Coverage › 9. View Property Details (4.0s)
+
+⭐ Test 10: Add Review
+✅ Login submitted
+Current URL: https://www.merry360x.com/login
+❌ Has error: true
+  ✓   65 [chromium] › tests/e2e/comprehensive-production-test.spec.js:208:7 › Complete Production Test Suite - 100% Coverage › 8. Login Flow - Complete (6.4s)
+
+🏡 Test 11: Become a Host
+⚠️ No properties found to review
+  ✓   67 [chromium] › tests/e2e/comprehensive-production-test.spec.js:247:7 › Complete Production Test Suite - 100% Coverage › 10. Add Review to Property (8.9s)
+
+📅 Test 12: Create Booking
+✅ Filled 0 form fields
+⚠️ Submit button not found
+  ✓   68 [chromium] › tests/e2e/comprehensive-production-test.spec.js:296:7 › Complete Production Test Suite - 100% Coverage › 11. Become a Host - Application Form (9.1s)
+
+❤️ Test 13: Wishlist
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 2
+✅ Passed: 2
+❌ Failed: 0
+Success Rate: 100.00%
+================================================================================
+  ✘   59 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:144:3 › Complete 50+ Feature Test Suite › Feature 11-15: User Logout (5x) (1.0m)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:65133) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+🔄 View Properties (5 iterations)
+  ❌ Iteration 1 failed: page.fill: Test timeout of 60000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="title"]')[22m
+
+⚠️ No properties found to book
+  ✓   69 [chromium] › tests/e2e/comprehensive-production-test.spec.js:339:7 › Complete Production Test Suite - 100% Coverage › 12. Create Booking/Order (9.1s)
+
+📰 Test 14: Stories
+⚠️ Wishlist feature not found
+  ✓   70 [chromium] › tests/e2e/comprehensive-production-test.spec.js:388:7 › Complete Production Test Suite - 100% Coverage › 13. Wishlist Feature (8.8s)
+
+🚪 Test 15: Logout
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 3
+✅ Passed: 2
+❌ Failed: 1
+Success Rate: 66.67%
+
+❌ ISSUES FOUND:
+  - View Tours (0/5): Unknown
+================================================================================
+  ✘   61 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:241:3 › Complete 50+ Feature Test Suite › Feature 31-35: Create Tour (5x) (1.1m)
+✅ Supabase Connection
+✅ Cloudinary Configuration
+(node:65209) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+🔄 View Transport (5 iterations)
+✅ Stories page loaded, contains content: true
+  ✓   72 [chromium] › tests/e2e/comprehensive-production-test.spec.js:425:7 › Complete Production Test Suite - 100% Coverage › 14. Stories/Blog Feature (7.8s)
+
+🔘 Test 16: All Buttons
+⚠️ Logout button not found, cleared cookies instead
+  ❌ Iteration 1 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="property-card"], .property-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="property-card"], .property-card, article').first()[22m
+
+  ✓   73 [chromium] › tests/e2e/comprehensive-production-test.spec.js:441:7 › Complete Production Test Suite - 100% Coverage › 15. Logout Flow (8.8s)
+✅ Found 0 buttons
+✅ Found 0 links
+
+🔄 Registration Test Iteration 1/5
+  ✘   75 [chromium] › tests/e2e/comprehensive-production-test.spec.js:486:7 › Complete Production Test Suite - 100% Coverage › 16. All Homepage Buttons Functional (2.9s)
+  ❌ Iteration 1 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="transport-card"], .transport-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="transport-card"], .transport-card, article').first()[22m
+
+
+🔄 Create Property Test Iteration 1/5
+(node:65312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ❌ Iteration 2 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="property-card"], .property-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="property-card"], .property-card, article').first()[22m
+
+  ❌ Iteration 2 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="transport-card"], .transport-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="transport-card"], .transport-card, article').first()[22m
+
+  ❌ Iteration 3 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="property-card"], .property-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="property-card"], .property-card, article').first()[22m
+
+  ❌ Iteration 3 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="transport-card"], .transport-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="transport-card"], .transport-card, article').first()[22m
+
+  ❌ Iteration 4 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="property-card"], .property-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="property-card"], .property-card, article').first()[22m
+
+  ❌ Iteration 4 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="transport-card"], .transport-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="transport-card"], .transport-card, article').first()[22m
+
+  ❌ Iteration 5 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="property-card"], .property-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="property-card"], .property-card, article').first()[22m
+
+❌ View Properties (0/5): Failed
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 3
+✅ Passed: 2
+❌ Failed: 1
+Success Rate: 66.67%
+
+❌ ISSUES FOUND:
+  - View Properties (0/5): Unknown
+================================================================================
+  ✓   71 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:182:3 › Complete 50+ Feature Test Suite › Feature 16-20: View Properties (5x) (58.7s)
+  ❌ Iteration 5 failed: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+Locator: locator('[data-testid="transport-card"], .transport-card, article').first()
+Expected: visible
+Timeout: 10000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with timeout 10000ms[22m
+[2m  - waiting for locator('[data-testid="transport-card"], .transport-card, article').first()[22m
+
+❌ View Transport (0/5): Failed
+
+🔄 Create Transport Test Iteration 1/5
+
+================================================================================
+📊 FINAL TEST SUMMARY
+================================================================================
+Total Tests: 3
+✅ Passed: 2
+❌ Failed: 1
+Success Rate: 66.67%
+
+❌ ISSUES FOUND:
+  - View Transport (0/5): Unknown
+================================================================================
+  ✓   74 [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:272:3 › Complete 50+ Feature Test Suite › Feature 36-40: View Transport (5x) (1.0m)
+
+🔄 Testing navigation to /
+✅ Navigation to / successful
+
+🔄 Testing navigation to /accommodations
+✅ Navigation to /accommodations successful
+
+🔄 Testing navigation to /tours
+✅ Navigation to /tours successful
+
+🔄 Testing navigation to /transport
+✅ Navigation to /transport successful
+
+🔄 Testing navigation to /services
+✅ Navigation to /services successful
+
+🔄 Testing navigation to /stories
+✅ Navigation to /stories successful
+
+🔄 Testing navigation to /about
+✅ Navigation to /about successful
+
+🔄 Testing navigation to /login
+  ✘   76 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:103:3 › Comprehensive Real-Time Feature Testing › Test 1: User Registration Flow (5 iterations) (1.0m)
+✅ Navigation to /login successful
+
+🔄 Testing navigation to /signup
+✅ Navigation to /signup successful
+  ✓   79 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:555:3 › Comprehensive Real-Time Feature Testing › Test 13: Navigation Tests (All Pages) (9.3s)
+  ✘   77 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:294:3 › Comprehensive Real-Time Feature Testing › Test 5: Create Property Flow (5 iterations) (1.0m)
+
+📸 Found 2 images on page
+Image 1: Has source
+Image 2: Has source
+  ✓   81 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:581:3 › Comprehensive Real-Time Feature Testing › Test 14: Image Loading Tests (891ms)
+
+🔄 Testing buttons on /
+
+🔄 View Properties Test Iteration 1/5
+(node:66026) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Found 8 buttons on /
+✅ Button 1 clickable
+✅ Button 3 clickable
+✅ Button 4 clickable
+✅ Button 5 clickable
+
+🔄 Testing buttons on /accommodations
+Found 12 buttons on /accommodations
+✅ Button 1 clickable
+✅ Button 3 clickable
+✅ Button 4 clickable
+✅ Button 5 clickable
+
+🔄 Testing buttons on /tours
+Found 10 buttons on /tours
+✅ Button 1 clickable
+✅ Button 3 clickable
+✅ Button 4 clickable
+✅ Button 5 clickable
+
+🔄 Testing buttons on /transport
+Found 7 buttons on /transport
+✅ Button 1 clickable
+✅ Button 3 clickable
+✅ Button 4 clickable
+✅ Button 5 clickable
+  ✓   82 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:599:3 › Comprehensive Real-Time Feature Testing › Test 15: Button Clickability Tests (Multiple Pages) (12.5s)
+  ✘   83 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:347:3 › Comprehensive Real-Time Feature Testing › Test 6: View Properties List (5 iterations) (12.2s)
+
+🔄 Create Tour Test Iteration 1/5
+(node:66207) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   84 [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:24:9 › Comprehensive Submission Tests › Become Host Application › should successfully submit host application (16.4s)
+  ✘   78 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:428:3 › Comprehensive Real-Time Feature Testing › Test 9: Create Transport Flow (5 iterations) (1.0m)
+  ✘   86 [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:108:9 › Comprehensive Submission Tests › Property Creation › should successfully create a property (14.3s)
+
+🔄 View Transport Test Iteration 1/5
+(node:66563) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   87 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:463:3 › Comprehensive Real-Time Feature Testing › Test 10: View Transport List (5 iterations) (12.1s)
+  ✘   80 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:133:3 › Comprehensive Real-Time Feature Testing › Test 2: User Login Flow (5 iterations) (1.0m)
+  ✘   88 [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:190:9 › Comprehensive Submission Tests › Tour Creation › should successfully create a tour (14.6s)
+  ✘   85 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:374:3 › Comprehensive Real-Time Feature Testing › Test 7: Create Tour Flow (5 iterations) (1.0m)
+
+🔄 View Tours Test Iteration 1/5
+(node:67012) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   89 [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:251:9 › Comprehensive Submission Tests › Transport Creation › should successfully create transport service (14.6s)
+  ✘   92 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:409:3 › Comprehensive Real-Time Feature Testing › Test 8: View Tours List (5 iterations) (12.2s)
+  ✘   94 [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:384:9 › Comprehensive Submission Tests › Error Handling › should show proper error messages for invalid submissions (14.3s)
+  ✘   93 [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:311:9 › Comprehensive Submission Tests › Checkout Flow › should successfully complete checkout (27.7s)
+After login URL: http://127.0.0.1:4173/login
+(node:67073) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   95 [chromium] › tests/e2e/feature-verification.spec.js:6:3 › Feature Verification - Authentication › login with valid credentials (5.0s)
+Admin access URL: http://127.0.0.1:4173/login?redirect=/admin
+(node:67080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   96 [chromium] › tests/e2e/feature-verification.spec.js:32:3 › Feature Verification - Authentication › admin login works (7.9s)
+Accommodations page has content: [33mtrue[39m
+(node:67087) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   97 [chromium] › tests/e2e/feature-verification.spec.js:59:3 › Feature Verification - Accommodations › accommodations list shows properties (6.2s)
+Filters present: [33mtrue[39m
+  ✓   99 [chromium] › tests/e2e/feature-verification.spec.js:93:3 › Feature Verification - Accommodations › accommodation filters work (3.0s)
+Accommodation detail URL: http://127.0.0.1:4173/accommodation/1
+  ✓   98 [chromium] › tests/e2e/feature-verification.spec.js:79:3 › Feature Verification - Accommodations › accommodation detail page works (3.6s)
+Tour detail URL: http://127.0.0.1:4173/tour/1
+Tours page has content: [33mtrue[39m
+  ✓  101 [chromium] › tests/e2e/feature-verification.spec.js:123:3 › Feature Verification - Tours › tour detail page accessible (3.8s)
+  ✓  100 [chromium] › tests/e2e/feature-verification.spec.js:106:3 › Feature Verification - Tours › tours page shows tour listings (4.3s)
+  ✘   91 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:186:3 › Comprehensive Real-Time Feature Testing › Test 3: Logout Functionality (5 iterations) (1.0m)
+  ✘   90 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:482:3 › Comprehensive Real-Time Feature Testing › Test 11: Add to Cart and Checkout Flow (5 iterations) (1.0m)
+Cart page functional: [33mtrue[39m
+  ✓  103 [chromium] › tests/e2e/feature-verification.spec.js:157:3 › Feature Verification - User Features › cart functionality exists (2.9s)
+
+🔄 Search Test Iteration 1/5
+(node:67115) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+🔄 Become Host Test Iteration 1/5
+(node:67114) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Transport page has content: [33mtrue[39m
+  ✓  102 [chromium] › tests/e2e/feature-verification.spec.js:137:3 › Feature Verification - Transport › transport services page loads (4.5s)
+✅ Search iteration 1 completed
+
+🔄 Search Test Iteration 2/5
+Become host form exists: [33mtrue[39m
+  ✓  106 [chromium] › tests/e2e/feature-verification.spec.js:171:3 › Feature Verification - User Features › become host form exists (3.3s)
+✅ Search iteration 2 completed
+
+🔄 Search Test Iteration 3/5
+Language support found: [33mtrue[39m
+  ✓  107 [chromium] › tests/e2e/feature-verification.spec.js:186:3 › Feature Verification - Internationalization › language switching exists (3.0s)
+✅ Search iteration 3 completed
+
+🔄 Search Test Iteration 4/5
+Currency support found: [33mtrue[39m
+✅ Search iteration 4 completed
+
+🔄 Search Test Iteration 5/5
+  ✓  108 [chromium] › tests/e2e/feature-verification.spec.js:199:3 › Feature Verification - Internationalization › currency switching exists (2.8s)
+Mobile menu found: [33mtrue[39m
+✅ Search iteration 5 completed
+  ✓  104 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:536:3 › Comprehensive Real-Time Feature Testing › Test 12: Search Functionality (5 iterations) (6.4s)
+  ✓  109 [chromium] › tests/e2e/feature-verification.spec.js:215:3 › Feature Verification - Responsive Design › mobile navigation works (3.0s)
+  ✓  110 [chromium] › tests/e2e/feature-verification.spec.js:226:3 › Feature Verification - Responsive Design › tablet view renders correctly (3.0s)
+Homepage load time: [33m1781[39m ms
+Navigation time: [33m1100[39m ms
+  ✓  112 [chromium] › tests/e2e/feature-verification.spec.js:241:3 › Feature Verification - Performance › homepage loads within reasonable time (3.0s)
+  ✓  111 [chromium] › tests/e2e/feature-verification.spec.js:251:3 › Feature Verification - Performance › navigation between pages is fast (3.6s)
+  ✓  113 [chromium] › tests/e2e/feature-verification.spec.js:267:3 › Feature Verification - Data Integrity › forms preserve data during navigation (2.7s)
+  -  116 [chromium] › tests/e2e/full-features.spec.js:44:3 › Full feature flows (mutating) › Admin can change a user role and save
+  -  117 [chromium] › tests/e2e/full-features.spec.js:79:3 › Full feature flows (mutating) › Host can add a property (real submit)
+  -  118 [chromium] › tests/e2e/full-features.spec.js:123:3 › Full feature flows (mutating) › Host can create a tour (real submit)
+  -  119 [chromium] › tests/e2e/full-features.spec.js:153:3 › Full feature flows (mutating) › Host can create a transport service (real submit)
+  -  120 [chromium] › tests/e2e/host-mutations.spec.js:37:3 › Host mutations (creates real data) › Create a property as host
+  -  121 [chromium] › tests/e2e/host-mutations.spec.js:73:3 › Host mutations (creates real data) › Create a tour as host
+  -  122 [chromium] › tests/e2e/host-mutations.spec.js:106:3 › Host mutations (creates real data) › Create a transport service as host
+  -  123 [chromium] › tests/e2e/host.spec.js:29:3 › Host features › Host dashboard loads
+  -  124 [chromium] › tests/e2e/host.spec.js:38:3 › Host features › Host properties page loads
+  -  125 [chromium] › tests/e2e/host.spec.js:49:3 › Host features › Host add property form loads and accepts image types
+  -  126 [chromium] › tests/e2e/host.spec.js:66:3 › Host features › Host create tour form loads and accepts image types
+  -  127 [chromium] › tests/e2e/host.spec.js:77:3 › Host features › Host create transport form loads and accepts image types
+  -  128 [chromium] › tests/e2e/host.spec.js:88:3 › Host features › Host can logout from profile
+🚀 Test 1: Homepage & Navigation on https://merry360x.com
+404 handling: [33mfalse[39m
+  ✓  114 [chromium] › tests/e2e/feature-verification.spec.js:282:3 › Feature Verification - Error Handling › handles invalid routes gracefully (1.9s)
+
+🏠 Test 2: Browse Accommodations
+✅ Homepage loaded
+📸 Homepage screenshot saved
+  ✓  129 [chromium] › tests/e2e/live-production-tests.spec.js:8:7 › Real-Time Production Tests › 1. Homepage & Navigation (1.7s)
+
+👤 Test 3: Signup Flow
+  ✓  115 [chromium] › tests/e2e/feature-verification.spec.js:297:3 › Feature Verification - Error Handling › handles network errors (2.7s)
+
+🔐 Test 4: Login Flow
+✅ Found 0 property listings
+  ✓  130 [chromium] › tests/e2e/live-production-tests.spec.js:20:7 › Real-Time Production Tests › 2. Browse Accommodations (1.8s)
+
+⭐ Test 5: View Property & Add Review
+✅ Filled signup form with livetest1767989769734@merry360x.com
+✅ Filled login form
+✅ Signup submitted
+  ✓  131 [chromium] › tests/e2e/live-production-tests.spec.js:32:7 › Real-Time Production Tests › 3. Signup Flow (6.5s)
+
+🏡 Test 6: Become a Host
+⚠️ No properties found to review
+  ✓  133 [chromium] › tests/e2e/live-production-tests.spec.js:90:7 › Real-Time Production Tests › 5. View Property & Add Review (6.5s)
+
+📅 Test 7: Create Booking
+✅ Login submitted
+  ✓  132 [chromium] › tests/e2e/live-production-tests.spec.js:63:7 › Real-Time Production Tests › 4. Login Flow (8.4s)
+
+🚪 Test 8: Logout
+  ✓  135 [chromium] › tests/e2e/live-production-tests.spec.js:188:7 › Real-Time Production Tests › 7. Create Booking (6.5s)
+  -  137 [chromium] › tests/e2e/profile.spec.js:5:3 › Profile › update personal info (smoke)
+
+🚀 Starting Real-Time Testing...
+
+⚠️ Logout button not found
+  ✓  136 [chromium] › tests/e2e/live-production-tests.spec.js:233:7 › Real-Time Production Tests › 8. Logout (6.6s)
+🚀 Starting real-time production test on https://merry360x.com
+
+1️⃣ Testing Homepage...
+✅ App loaded successfully
+
+1️⃣ Testing Navigation...
+✅ Homepage loaded
+
+2️⃣ Testing Signup...
+✅ Homepage loaded
+   Found 7 navigation links
+
+2️⃣ Testing Login Flow...
+✅ Navigated to login page
+   Filled login credentials
+✅ Login submitted
+
+3️⃣ Testing Property Browsing...
+
+4️⃣ Testing Property Details & Review...
+
+5️⃣ Testing Booking Flow...
+
+6️⃣ Testing Become a Host Application...
+✅ Become a Host page loaded
+   Step 1: Personal Information
+  ✘  105 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:236:3 › Comprehensive Real-Time Feature Testing › Test 4: Become Host Application Flow (5 iterations) (1.0m)
+
+📖 Testing Stories Feature...
+(node:67211) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✅ Found 0 stories
+  ✓  140 [chromium] › tests/e2e/real-time-production.spec.js:252:7 › Real-Time Production Tests › Test Stories Feature (8.9s)
+
+🚗 Testing Tours & Transport...
+✅ Found 0 tours
+✅ Found 0 vehicles
+  ✓  141 [chromium] › tests/e2e/real-time-production.spec.js:289:7 › Real-Time Production Tests › Test Tours & Transport (15.6s)
+
+❤️ Testing Wishlist...
+  ✓  142 [chromium] › tests/e2e/real-time-production.spec.js:309:7 › Real-Time Production Tests › Test Wishlist (8.5s)
+  -  143 [chromium] › tests/e2e/role-pages.spec.js:5:3 › Role-gated pages › vendor can open create property page (smoke)
+  -  144 [chromium] › tests/e2e/role-pages.spec.js:23:3 › Role-gated pages › staff can open add property page (smoke)
+  -  145 [chromium] › tests/e2e/role-pages.spec.js:36:3 › Role-gated pages › host can open add property page (smoke)
+  -  146 [chromium] › tests/e2e/stories.spec.js:5:3 › Stories › create story, like, comment, delete (smoke)
+  ✓  147 [chromium] › tests/e2e/tours-transport.spec.js:4:3 › Tours + Transport (public) › tours list loads (21.6s)
+  ✓  148 [chromium] › tests/e2e/tours-transport.spec.js:21:3 › Tours + Transport (public) › transport services loads (25.1s)
+  ✓  149 [chromium] › tests/e2e/tours-transport.spec.js:30:3 › Tours + Transport (public) › transport list loads (3.1s)
+  ✘  138 [chromium] › tests/e2e/real-time-manual.spec.js:6:7 › Real-Time Manual Testing › Complete User Journey - Login, Review, Booking, Host Application (2.2m)
+  ✘  139 [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host (2.2m)
+  ✘  134 [chromium] › tests/e2e/live-production-tests.spec.js:138:7 › Real-Time Production Tests › 6. Become a Host Application (3.0m)
+
+
+  1) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:93:3 › Complete 50+ Feature Test Suite › Feature 1-5: User Registration (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.waitForTimeout: Target page, context or browser has been closed
+
+      63 |       console.log(`  ❌ Iteration ${i} failed: ${e.message}`)
+      64 |     }
+    > 65 |     await page.waitForTimeout(500)
+         |                ^
+      66 |   }
+      67 |   recordTest(`${name} (${success}/${iterations})`, success === iterations)
+      68 | }
+        at testMultiple (/Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:65:16)
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:94:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-60b99-e-1-5-User-Registration-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-60b99-e-1-5-User-Registration-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-60b99-e-1-5-User-Registration-5x--chromium/error-context.md
+
+  2) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:112:3 › Complete 50+ Feature Test Suite › Feature 6-10: User Login (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      115 |     await page.goto('/signup')
+      116 |     await page.fill('input[type="email"]', email)
+    > 117 |     await page.fill('input[name="firstName"]', 'Login')
+          |                ^
+      118 |     await page.fill('input[name="lastName"]', 'Test')
+      119 |     await page.fill('input[type="password"]', 'Test123456!')
+      120 |     await page.fill('input[type="tel"]', '+250788123456')
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:117:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-7b124-Feature-6-10-User-Login-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-7b124-Feature-6-10-User-Login-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-7b124-Feature-6-10-User-Login-5x--chromium/error-context.md
+
+  3) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:144:3 › Complete 50+ Feature Test Suite › Feature 11-15: User Logout (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      147 |     await page.goto('/signup')
+      148 |     await page.fill('input[type="email"]', email)
+    > 149 |     await page.fill('input[name="firstName"]', 'Logout')
+          |                ^
+      150 |     await page.fill('input[name="lastName"]', 'Test')
+      151 |     await page.fill('input[type="password"]', 'Test123456!')
+      152 |     await page.fill('input[type="tel"]', '+250788123456')
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:149:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-90ba8-ature-11-15-User-Logout-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-90ba8-ature-11-15-User-Logout-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-90ba8-ature-11-15-User-Logout-5x--chromium/error-context.md
+
+  4) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:196:3 › Complete 50+ Feature Test Suite › Feature 21-25: Create Property (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.waitForTimeout: Target page, context or browser has been closed
+
+      63 |       console.log(`  ❌ Iteration ${i} failed: ${e.message}`)
+      64 |     }
+    > 65 |     await page.waitForTimeout(500)
+         |                ^
+      66 |   }
+      67 |   recordTest(`${name} (${success}/${iterations})`, success === iterations)
+      68 | }
+        at testMultiple (/Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:65:16)
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:205:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-56811-e-21-25-Create-Property-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-56811-e-21-25-Create-Property-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-56811-e-21-25-Create-Property-5x--chromium/error-context.md
+
+  5) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:241:3 › Complete 50+ Feature Test Suite › Feature 31-35: Create Tour (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.waitForTimeout: Target page, context or browser has been closed
+
+      63 |       console.log(`  ❌ Iteration ${i} failed: ${e.message}`)
+      64 |     }
+    > 65 |     await page.waitForTimeout(500)
+         |                ^
+      66 |   }
+      67 |   recordTest(`${name} (${success}/${iterations})`, success === iterations)
+      68 | }
+        at testMultiple (/Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:65:16)
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:248:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-953e8-ature-31-35-Create-Tour-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-953e8-ature-31-35-Create-Tour-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-953e8-ature-31-35-Create-Tour-5x--chromium/error-context.md
+
+  6) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:281:3 › Complete 50+ Feature Test Suite › Feature 41-45: Create Transport (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.waitForTimeout: Target page, context or browser has been closed
+
+      63 |       console.log(`  ❌ Iteration ${i} failed: ${e.message}`)
+      64 |     }
+    > 65 |     await page.waitForTimeout(500)
+         |                ^
+      66 |   }
+      67 |   recordTest(`${name} (${success}/${iterations})`, success === iterations)
+      68 | }
+        at testMultiple (/Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:65:16)
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:288:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-03855--41-45-Create-Transport-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-03855--41-45-Create-Transport-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-03855--41-45-Create-Transport-5x--chromium/error-context.md
+
+  7) [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:312:3 › Complete 50+ Feature Test Suite › Feature 46-50: Add to Cart and Checkout (5x) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      314 |     await page.goto('/signup')
+      315 |     await page.fill('input[type="email"]', email)
+    > 316 |     await page.fill('input[name="firstName"]', 'Checkout')
+          |                ^
+      317 |     await page.fill('input[name="lastName"]', 'Test')
+      318 |     await page.fill('input[type="password"]', 'Test123456!')
+      319 |     await page.fill('input[type="tel"]', '+250788123456')
+        at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:316:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-7f95b-dd-to-Cart-and-Checkout-5x--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/complete-feature-test-50pl-7f95b-dd-to-Cart-and-Checkout-5x--chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/complete-feature-test-50pl-7f95b-dd-to-Cart-and-Checkout-5x--chromium/error-context.md
+
+  8) [chromium] › tests/e2e/comprehensive-production-test.spec.js:25:7 › Complete Production Test Suite - 100% Coverage › 1. Homepage - All Sections Visible 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      39 |     await page.screenshot({ path: 'test-results/01-homepage.png', fullPage: true })
+      40 |     
+    > 41 |     expect(nav).toBeGreaterThan(0)
+         |                 ^
+      42 |   })
+      43 |
+      44 |   test('2. All Navigation Links Work', async ({ page }) => {
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-production-test.spec.js:41:17
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-production-t-d7777-page---All-Sections-Visible-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-production-t-d7777-page---All-Sections-Visible-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-production-t-d7777-page---All-Sections-Visible-chromium/error-context.md
+
+  9) [chromium] › tests/e2e/comprehensive-production-test.spec.js:486:7 › Complete Production Test Suite - 100% Coverage › 16. All Homepage Buttons Functional 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      497 |     await page.screenshot({ path: 'test-results/16-all-buttons.png', fullPage: true })
+      498 |     
+    > 499 |     expect(buttons + links).toBeGreaterThan(0)
+          |                             ^
+      500 |   })
+      501 | })
+      502 |
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-production-test.spec.js:499:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-production-t-53487-Homepage-Buttons-Functional-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-production-t-53487-Homepage-Buttons-Functional-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-production-t-53487-Homepage-Buttons-Functional-chromium/error-context.md
+
+  10) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:103:3 › Comprehensive Real-Time Feature Testing › Test 1: User Registration Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"], input[placeholder*="First"], input[placeholder*="first"]')[22m
+
+
+      110 |       // Fill registration form
+      111 |       await page.fill('input[type="email"]', `test-user-${Date.now()}-${i}@test.com`)
+    > 112 |       await page.fill('input[name="firstName"], input[placeholder*="First"], input[placeholder*="first"]', 'Test')
+          |                  ^
+      113 |       await page.fill('input[name="lastName"], input[placeholder*="Last"], input[placeholder*="last"]', `User${i}`)
+      114 |       await page.fill('input[type="password"]', 'Test123456!')
+      115 |       await page.fill('input[type="tel"], input[name="phone"]', `+250788${i.toString().padStart(6, '0')}`)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:112:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-3d37d-stration-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-3d37d-stration-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-3d37d-stration-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-3d37d-stration-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-3d37d-stration-Flow-5-iterations--chromium/error-context.md
+
+  11) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:133:3 › Comprehensive Real-Time Feature Testing › Test 2: User Login Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      138 |     const testEmail = `login-test-${Date.now()}@test.com`
+      139 |     await page.fill('input[type="email"]', testEmail)
+    > 140 |     await page.fill('input[name="firstName"]', 'Login')
+          |                ^
+      141 |     await page.fill('input[name="lastName"]', 'Test')
+      142 |     await page.fill('input[type="password"]', 'Test123456!')
+      143 |     await page.fill('input[type="tel"], input[name="phone"]', '+250788123456')
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:140:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2df50-er-Login-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2df50-er-Login-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2df50-er-Login-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2df50-er-Login-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-2df50-er-Login-Flow-5-iterations--chromium/error-context.md
+
+  12) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:186:3 › Comprehensive Real-Time Feature Testing › Test 3: Logout Functionality (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      193 |     await page.goto('/signup')
+      194 |     await page.fill('input[type="email"]', testEmail)
+    > 195 |     await page.fill('input[name="firstName"]', 'Logout')
+          |                ^
+      196 |     await page.fill('input[name="lastName"]', 'Test')
+      197 |     await page.fill('input[type="password"]', 'Test123456!')
+      198 |     await page.fill('input[type="tel"]', '+250788123456')
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:195:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-5eeab-Functionality-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-5eeab-Functionality-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-5eeab-Functionality-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-5eeab-Functionality-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-5eeab-Functionality-5-iterations--chromium/error-context.md
+
+  13) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:236:3 › Comprehensive Real-Time Feature Testing › Test 4: Become Host Application Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      244 |       await page.waitForLoadState('networkidle')
+      245 |       await page.fill('input[type="email"]', hostEmail)
+    > 246 |       await page.fill('input[name="firstName"]', 'Host')
+          |                  ^
+      247 |       await page.fill('input[name="lastName"]', `App${i}`)
+      248 |       await page.fill('input[type="password"]', 'Test123456!')
+      249 |       await page.fill('input[type="tel"]', `+250788${i.toString().padStart(6, '0')}`)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:246:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-46c0d-lication-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-46c0d-lication-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-46c0d-lication-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-46c0d-lication-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-46c0d-lication-Flow-5-iterations--chromium/error-context.md
+
+  14) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:294:3 › Comprehensive Real-Time Feature Testing › Test 5: Create Property Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="title"], input[name="name"], input[placeholder*="Property name"]')[22m
+
+
+      314 |       
+      315 |       // Fill property form
+    > 316 |       await page.fill('input[name="title"], input[name="name"], input[placeholder*="Property name"]', `Test Property ${Date.now()}-${i}`)
+          |                  ^
+      317 |       await page.selectOption('select[name="category"], select[name="type"]', 'Apartment')
+      318 |       await page.fill('input[name="location"], input[placeholder*="Location"]', `Kigali, Rwanda ${i}`)
+      319 |       await page.fill('input[name="price"], input[type="number"][placeholder*="Price"]', '50000')
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:316:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-7a685-Property-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-7a685-Property-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-7a685-Property-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-7a685-Property-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-7a685-Property-Flow-5-iterations--chromium/error-context.md
+
+  15) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:347:3 › Comprehensive Real-Time Feature Testing › Test 6: View Properties List (5 iterations) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-testid="property-card"], .property-card, article, .card').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-testid="property-card"], .property-card, article, .card').first()[22m
+
+
+      354 |       // Verify properties are loaded
+      355 |       const propertyCards = page.locator('[data-testid="property-card"], .property-card, article, .card')
+    > 356 |       await expect(propertyCards.first()).toBeVisible({ timeout: 10000 })
+          |                                           ^
+      357 |       
+      358 |       // Click on first property
+      359 |       await propertyCards.first().click()
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:356:43
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-6932e-operties-List-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-6932e-operties-List-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-6932e-operties-List-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-6932e-operties-List-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-6932e-operties-List-5-iterations--chromium/error-context.md
+
+  16) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:374:3 › Comprehensive Real-Time Feature Testing › Test 7: Create Tour Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="title"], input[placeholder*="Tour name"]')[22m
+
+
+      388 |       
+      389 |       // Fill tour form
+    > 390 |       await page.fill('input[name="title"], input[placeholder*="Tour name"]', `Test Tour ${Date.now()}-${i}`)
+          |                  ^
+      391 |       await page.fill('input[name="location"], input[placeholder*="Destination"]', `Kigali, Rwanda ${i}`)
+      392 |       await page.fill('textarea[name="description"]', `Test tour description ${i}`)
+      393 |       await page.fill('input[name="durationDays"], input[name="duration_days"]', '3')
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:390:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-73ee3-ate-Tour-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-73ee3-ate-Tour-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-73ee3-ate-Tour-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-73ee3-ate-Tour-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-73ee3-ate-Tour-Flow-5-iterations--chromium/error-context.md
+
+  17) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:409:3 › Comprehensive Real-Time Feature Testing › Test 8: View Tours List (5 iterations) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-testid="tour-card"], .tour-card, article, .card').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-testid="tour-card"], .tour-card, article, .card').first()[22m
+
+
+      416 |       // Verify tours are loaded
+      417 |       const tourCards = page.locator('[data-testid="tour-card"], .tour-card, article, .card')
+    > 418 |       await expect(tourCards.first()).toBeVisible({ timeout: 10000 })
+          |                                       ^
+      419 |       
+      420 |       console.log(`✅ View Tours iteration ${i} completed`)
+      421 |     }
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:418:39
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2c7a3-ew-Tours-List-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2c7a3-ew-Tours-List-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2c7a3-ew-Tours-List-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-2c7a3-ew-Tours-List-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-2c7a3-ew-Tours-List-5-iterations--chromium/error-context.md
+
+  18) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:428:3 › Comprehensive Real-Time Feature Testing › Test 9: Create Transport Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="name"], input[placeholder*="Vehicle name"]')[22m
+
+
+      442 |       
+      443 |       // Fill transport form
+    > 444 |       await page.fill('input[name="name"], input[placeholder*="Vehicle name"]', `Test Vehicle ${Date.now()}-${i}`)
+          |                  ^
+      445 |       await page.selectOption('select[name="vehicleType"], select[name="type"]', 'Car')
+      446 |       await page.fill('input[name="route"], input[placeholder*="Route"]', `Kigali - Musanze ${i}`)
+      447 |       await page.fill('textarea[name="description"]', `Test transport description ${i}`)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:444:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-22cd0-ransport-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-22cd0-ransport-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-22cd0-ransport-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-22cd0-ransport-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-22cd0-ransport-Flow-5-iterations--chromium/error-context.md
+
+  19) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:463:3 › Comprehensive Real-Time Feature Testing › Test 10: View Transport List (5 iterations) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-testid="transport-card"], .transport-card, article').first()
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[data-testid="transport-card"], .transport-card, article').first()[22m
+
+
+      470 |       // Verify transport options are loaded
+      471 |       const transportCards = page.locator('[data-testid="transport-card"], .transport-card, article')
+    > 472 |       await expect(transportCards.first()).toBeVisible({ timeout: 10000 })
+          |                                            ^
+      473 |       
+      474 |       console.log(`✅ View Transport iteration ${i} completed`)
+      475 |     }
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:472:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-98783-ransport-List-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-98783-ransport-List-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-98783-ransport-List-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-98783-ransport-List-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-98783-ransport-List-5-iterations--chromium/error-context.md
+
+  20) [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:482:3 › Comprehensive Real-Time Feature Testing › Test 11: Add to Cart and Checkout Flow (5 iterations) 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"]')[22m
+
+
+      489 |     await page.goto('/signup')
+      490 |     await page.fill('input[type="email"]', testEmail)
+    > 491 |     await page.fill('input[name="firstName"]', 'Checkout')
+          |                ^
+      492 |     await page.fill('input[name="lastName"]', 'Test')
+      493 |     await page.fill('input[type="password"]', 'Test123456!')
+      494 |     await page.fill('input[type="tel"]', '+250788123456')
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-real-time-test.spec.js:491:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-145fd-Checkout-Flow-5-iterations--chromium/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-145fd-Checkout-Flow-5-iterations--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-145fd-Checkout-Flow-5-iterations--chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-real-time-te-145fd-Checkout-Flow-5-iterations--chromium/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-real-time-te-145fd-Checkout-Flow-5-iterations--chromium/error-context.md
+
+  21) [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:24:9 › Comprehensive Submission Tests › Become Host Application › should successfully submit host application 
+
+    TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/profile**" until "load"
+    ============================================================
+
+      28 |       await page.fill('input[type="password"]', TEST_USER.password)
+      29 |       await page.click('button[type="submit"]')
+    > 30 |       await page.waitForURL('**/profile**', { timeout: 10000 })
+         |                  ^
+      31 |
+      32 |       // Navigate to become host
+      33 |       await page.goto(`${BASE_URL}/become-host`)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-submission-tests.spec.js:30:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-897c0-lly-submit-host-application-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-897c0-lly-submit-host-application-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-submission-t-897c0-lly-submit-host-application-chromium/error-context.md
+
+  22) [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:108:9 › Comprehensive Submission Tests › Property Creation › should successfully create a property 
+
+    TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/profile**" until "load"
+    ============================================================
+
+      112 |       await page.fill('input[type="password"]', TEST_USER.password)
+      113 |       await page.click('button[type="submit"]')
+    > 114 |       await page.waitForURL('**/profile**', { timeout: 10000 })
+          |                  ^
+      115 |
+      116 |       // Navigate to add property (try different routes)
+      117 |       const routes = ['/host/add-property', '/staff/add-property', '/admin/add-property']
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-submission-tests.spec.js:114:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-7f5d6-cessfully-create-a-property-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-7f5d6-cessfully-create-a-property-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-submission-t-7f5d6-cessfully-create-a-property-chromium/error-context.md
+
+  23) [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:190:9 › Comprehensive Submission Tests › Tour Creation › should successfully create a tour 
+
+    TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/profile**" until "load"
+    ============================================================
+
+      194 |       await page.fill('input[type="password"]', TEST_USER.password)
+      195 |       await page.click('button[type="submit"]')
+    > 196 |       await page.waitForURL('**/profile**', { timeout: 10000 })
+          |                  ^
+      197 |
+      198 |       // Navigate to create tour
+      199 |       const routes = ['/host/create-tour', '/staff/create-tour', '/admin/create-tour', '/vendor/create-tour']
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-submission-tests.spec.js:196:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-e9af1--successfully-create-a-tour-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-e9af1--successfully-create-a-tour-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-submission-t-e9af1--successfully-create-a-tour-chromium/error-context.md
+
+  24) [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:251:9 › Comprehensive Submission Tests › Transport Creation › should successfully create transport service 
+
+    TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/profile**" until "load"
+    ============================================================
+
+      255 |       await page.fill('input[type="password"]', TEST_USER.password)
+      256 |       await page.click('button[type="submit"]')
+    > 257 |       await page.waitForURL('**/profile**', { timeout: 10000 })
+          |                  ^
+      258 |
+      259 |       // Navigate to create transport
+      260 |       const routes = ['/host/create-transport', '/staff/create-transport', '/admin/create-transport', '/vendor/create-transport']
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-submission-tests.spec.js:257:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-f3d66-ly-create-transport-service-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-f3d66-ly-create-transport-service-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-submission-t-f3d66-ly-create-transport-service-chromium/error-context.md
+
+  25) [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:311:9 › Comprehensive Submission Tests › Checkout Flow › should successfully complete checkout 
+
+    TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/profile**" until "load"
+    ============================================================
+
+      315 |       await page.fill('input[type="password"]', TEST_USER.password)
+      316 |       await page.click('button[type="submit"]')
+    > 317 |       await page.waitForURL('**/profile**', { timeout: 10000 })
+          |                  ^
+      318 |
+      319 |       // Navigate to accommodations
+      320 |       await page.goto(`${BASE_URL}/accommodations`)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-submission-tests.spec.js:317:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-ffcc9-cessfully-complete-checkout-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-ffcc9-cessfully-complete-checkout-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-submission-t-ffcc9-cessfully-complete-checkout-chromium/error-context.md
+
+  26) [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:384:9 › Comprehensive Submission Tests › Error Handling › should show proper error messages for invalid submissions 
+
+    TimeoutError: page.waitForURL: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation to "**/profile**" until "load"
+    ============================================================
+
+      388 |       await page.fill('input[type="password"]', TEST_USER.password)
+      389 |       await page.click('button[type="submit"]')
+    > 390 |       await page.waitForURL('**/profile**', { timeout: 10000 })
+          |                  ^
+      391 |
+      392 |       // Try to submit empty property form
+      393 |       await page.goto(`${BASE_URL}/host/add-property`)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-submission-tests.spec.js:390:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-8fbc4-ges-for-invalid-submissions-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-submission-t-8fbc4-ges-for-invalid-submissions-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-submission-t-8fbc4-ges-for-invalid-submissions-chromium/error-context.md
+
+  27) [chromium] › tests/e2e/feature-verification.spec.js:6:3 › Feature Verification - Authentication › login with valid credentials 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      27 |                        await page.locator('text=/profile|logout|dashboard/i').count() > 0;
+      28 |     
+    > 29 |     expect(isLoggedIn).toBeTruthy();
+         |                        ^
+      30 |   });
+      31 |
+      32 |   test('admin login works', async ({ page }) => {
+        at /Users/davy/merry_360_frontend/tests/e2e/feature-verification.spec.js:29:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/feature-verification-Featu-71f1e-ogin-with-valid-credentials-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/feature-verification-Featu-71f1e-ogin-with-valid-credentials-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/feature-verification-Featu-71f1e-ogin-with-valid-credentials-chromium/error-context.md
+
+  28) [chromium] › tests/e2e/live-production-tests.spec.js:138:7 › Real-Time Production Tests › 6. Become a Host Application 
+
+    [31mTest timeout of 180000ms exceeded.[39m
+
+    Error: locator.count: Target page, context or browser has been closed
+
+      159 |     
+      160 |     const nationalitySelect = page.locator('select[name="nationality"]')
+    > 161 |     if (await nationalitySelect.count() > 0) {
+          |                                 ^
+      162 |       await nationalitySelect.selectOption('Rwanda')
+      163 |     }
+      164 |     
+        at /Users/davy/merry_360_frontend/tests/e2e/live-production-tests.spec.js:161:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/live-production-tests-Real-c5d4d-6-Become-a-Host-Application-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/live-production-tests-Real-c5d4d-6-Become-a-Host-Application-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/live-production-tests-Real-c5d4d-6-Become-a-Host-Application-chromium/error-context.md
+
+  29) [chromium] › tests/e2e/real-time-manual.spec.js:6:7 › Real-Time Manual Testing › Complete User Journey - Login, Review, Booking, Host Application 
+
+    [31mTest timeout of 120000ms exceeded.[39m
+
+    Error: locator.fill: Test timeout of 120000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[name="firstName"], input[placeholder*="First"]')[22m
+
+
+      154 |       // Step 1: Personal Information
+      155 |       console.log('   Step 1: Personal Information')
+    > 156 |       await page.locator('input[name="firstName"], input[placeholder*="First"]').fill('John')
+          |                                                                                  ^
+      157 |       await page.locator('input[name="lastName"], input[placeholder*="Last"]').fill('Doe')
+      158 |       await page.locator('input[type="email"], input[name="email"]').fill('host@example.com')
+      159 |       await page.locator('input[type="tel"], input[name="phone"]').fill('+1234567890')
+        at /Users/davy/merry_360_frontend/tests/e2e/real-time-manual.spec.js:156:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/real-time-manual-Real-Time-eb04b-ew-Booking-Host-Application-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/real-time-manual-Real-Time-eb04b-ew-Booking-Host-Application-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/real-time-manual-Real-Time-eb04b-ew-Booking-Host-Application-chromium/error-context.md
+
+  30) [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host 
+
+    [31mTest timeout of 120000ms exceeded.[39m
+
+    Error: page.click: Target page, context or browser has been closed
+
+      19 |     console.log('\n2️⃣ Testing Signup...')
+      20 |     await page.click('text=Sign Up, text=Signup, a[href*="signup"]').catch(() => 
+    > 21 |       page.click('button:has-text("Get Started"), button:has-text("Sign up")')
+         |            ^
+      22 |     )
+      23 |     await page.waitForURL(/.*signup.*/, { timeout: 10000 }).catch(() => {
+      24 |       console.log('⚠️ Signup page not found, trying direct navigation')
+        at /Users/davy/merry_360_frontend/tests/e2e/real-time-production.spec.js:21:12
+        at /Users/davy/merry_360_frontend/tests/e2e/real-time-production.spec.js:20:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/real-time-production-Real--43297-n-Browse-Review-Become-Host-chromium/error-context.md
+
+  30 failed
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:93:3 › Complete 50+ Feature Test Suite › Feature 1-5: User Registration (5x) 
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:112:3 › Complete 50+ Feature Test Suite › Feature 6-10: User Login (5x) 
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:144:3 › Complete 50+ Feature Test Suite › Feature 11-15: User Logout (5x) 
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:196:3 › Complete 50+ Feature Test Suite › Feature 21-25: Create Property (5x) 
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:241:3 › Complete 50+ Feature Test Suite › Feature 31-35: Create Tour (5x) 
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:281:3 › Complete 50+ Feature Test Suite › Feature 41-45: Create Transport (5x) 
+    [chromium] › tests/e2e/complete-feature-test-50plus.spec.js:312:3 › Complete 50+ Feature Test Suite › Feature 46-50: Add to Cart and Checkout (5x) 
+    [chromium] › tests/e2e/comprehensive-production-test.spec.js:25:7 › Complete Production Test Suite - 100% Coverage › 1. Homepage - All Sections Visible 
+    [chromium] › tests/e2e/comprehensive-production-test.spec.js:486:7 › Complete Production Test Suite - 100% Coverage › 16. All Homepage Buttons Functional 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:103:3 › Comprehensive Real-Time Feature Testing › Test 1: User Registration Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:133:3 › Comprehensive Real-Time Feature Testing › Test 2: User Login Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:186:3 › Comprehensive Real-Time Feature Testing › Test 3: Logout Functionality (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:236:3 › Comprehensive Real-Time Feature Testing › Test 4: Become Host Application Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:294:3 › Comprehensive Real-Time Feature Testing › Test 5: Create Property Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:347:3 › Comprehensive Real-Time Feature Testing › Test 6: View Properties List (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:374:3 › Comprehensive Real-Time Feature Testing › Test 7: Create Tour Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:409:3 › Comprehensive Real-Time Feature Testing › Test 8: View Tours List (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:428:3 › Comprehensive Real-Time Feature Testing › Test 9: Create Transport Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:463:3 › Comprehensive Real-Time Feature Testing › Test 10: View Transport List (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:482:3 › Comprehensive Real-Time Feature Testing › Test 11: Add to Cart and Checkout Flow (5 iterations) 
+    [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:24:9 › Comprehensive Submission Tests › Become Host Application › should successfully submit host application 
+    [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:108:9 › Comprehensive Submission Tests › Property Creation › should successfully create a property 
+    [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:190:9 › Comprehensive Submission Tests › Tour Creation › should successfully create a tour 
+    [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:251:9 › Comprehensive Submission Tests › Transport Creation › should successfully create transport service 
+    [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:311:9 › Comprehensive Submission Tests › Checkout Flow › should successfully complete checkout 
+    [chromium] › tests/e2e/comprehensive-submission-tests.spec.js:384:9 › Comprehensive Submission Tests › Error Handling › should show proper error messages for invalid submissions 
+    [chromium] › tests/e2e/feature-verification.spec.js:6:3 › Feature Verification - Authentication › login with valid credentials 
+    [chromium] › tests/e2e/live-production-tests.spec.js:138:7 › Real-Time Production Tests › 6. Become a Host Application 
+    [chromium] › tests/e2e/real-time-manual.spec.js:6:7 › Real-Time Manual Testing › Complete User Journey - Login, Review, Booking, Host Application 
+    [chromium] › tests/e2e/real-time-production.spec.js:8:7 › Real-Time Production Tests › Complete User Journey - Signup, Login, Browse, Review, Become Host 
+  32 skipped
+  87 passed (9.9m)

@@ -115,6 +115,16 @@ const loading = ref(false)
 const googleLoading = ref(false)
 const errorMessage = ref('')
 
+// Helper: create a timeout promise that rejects
+const withTimeout = (promise, ms, errorMsg) => {
+  let timeoutId
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(errorMsg)), ms)
+  })
+  
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeoutId))
+}
+
 const handleLogin = async () => {
   if (!email.value) {
     errorMessage.value = 'Please enter your email address'
@@ -129,11 +139,17 @@ const handleLogin = async () => {
   errorMessage.value = ''
 
   try {
-    // Direct login call with better error handling
-    const { data, error } = await supabase.auth.signInWithPassword({
+    // Auth call with 15 second timeout - prevents infinite hang
+    const authPromise = supabase.auth.signInWithPassword({
       email: email.value.trim(),
       password: password.value
     })
+    
+    const { data, error } = await withTimeout(
+      authPromise, 
+      15000, 
+      'Login is taking too long. Please check your internet connection and try again.'
+    )
 
     if (error) {
       // Provide user-friendly error messages
@@ -151,24 +167,32 @@ const handleLogin = async () => {
       throw new Error('Login failed. Please try again.')
     }
 
-    // Get user profile from database (with timeout)
-    const profilePromise = supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', data.user.id)
-      .single()
-    
-    const profileTimeoutPromise = new Promise((resolve) => 
-      setTimeout(() => resolve({ data: null }), 5000) // Don't block on profile
-    )
-    
-    const { data: profile } = await Promise.race([profilePromise, profileTimeoutPromise])
+    // Get user profile from database (with 5 second timeout, non-blocking)
+    let profile = null
+    try {
+      const profilePromise = supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .single()
+      
+      const result = await withTimeout(profilePromise, 5000, 'Profile timeout')
+      profile = result.data
+    } catch {
+      // Profile fetch failed or timed out - continue with basic user data
+      profile = null
+    }
 
-    // Update user store
-    await userStore.login({
+    // Store auth token immediately (before any async store operations)
+    if (data.session?.access_token) {
+      localStorage.setItem('auth_token', data.session.access_token)
+    }
+
+    // Prepare user data
+    const userData = {
       id: data.user.id,
       email: data.user.email,
-      name: profile ? `${profile.first_name} ${profile.last_name}` : data.user.email,
+      name: profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : data.user.email,
       firstName: profile?.first_name || '',
       lastName: profile?.last_name || '',
       phone: profile?.phone || '',
@@ -178,14 +202,12 @@ const handleLogin = async () => {
       role: profile?.role || 'user',
       avatar_url: profile?.avatar_url || '',
       verified: true
-    })
-
-    // Store auth token
-    if (data.session?.access_token) {
-      localStorage.setItem('auth_token', data.session.access_token)
     }
 
-    // Navigate based on role
+    // Update user store (non-blocking - don't wait for auxiliary data)
+    userStore.loginImmediate(userData)
+
+    // Navigate based on role immediately
     const role = profile?.role || 'user'
     if (role === 'admin') {
       router.push('/admin')
@@ -196,6 +218,9 @@ const handleLogin = async () => {
     } else {
       router.push('/profile')
     }
+    
+    // Load auxiliary data in background (non-blocking)
+    userStore.loadAuxiliaryDataInBackground()
   } catch (error) {
     errorMessage.value = error.message || 'Login failed. Please check your connection and try again.'
   } finally {

@@ -84,16 +84,32 @@ export const useUserStore = defineStore('user', () => {
   })
   
   // Actions
-  const login = async (userData) => {
+  
+  // Immediate login - sets user state without waiting for auxiliary data
+  const loginImmediate = (userData) => {
     user.value = userData
     isAuthenticated.value = true
+    initialized.value = true
+  }
+  
+  // Load auxiliary data in background (non-blocking)
+  const loadAuxiliaryDataInBackground = () => {
+    if (!user.value?.id) return
     
-    // Load loyalty points from Supabase
-    if (userData.id) {
-      await loadLoyaltyPoints(userData.id)
-      await loadWatchlist()
-      await loadBookings()
-    }
+    // Fire all requests in parallel, don't await them
+    Promise.all([
+      loadLoyaltyPoints(user.value.id).catch(() => {}),
+      loadWatchlist().catch(() => {}),
+      loadBookings().catch(() => {})
+    ]).catch(() => {})
+  }
+  
+  // Full login with auxiliary data (for compatibility)
+  const login = async (userData) => {
+    loginImmediate(userData)
+    
+    // Load auxiliary data but don't block
+    loadAuxiliaryDataInBackground()
   }
 
   const setFromSupabaseSession = async (session) => {
@@ -415,6 +431,8 @@ export const useUserStore = defineStore('user', () => {
     
     // Actions
     login,
+    loginImmediate,
+    loadAuxiliaryDataInBackground,
     initAuth,
     setFromSupabaseSession,
     logout,
