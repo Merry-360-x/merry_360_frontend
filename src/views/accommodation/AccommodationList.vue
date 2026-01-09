@@ -563,19 +563,12 @@ const performSearch = async () => {
   const inDate = String(checkIn.value || '').trim()
   const outDate = String(checkOut.value || '').trim()
 
-  const hasAnySearch = Boolean(
-    q ||
-    (Number.isFinite(guests) && guests > 0) ||
-    inDate ||
-    outDate
-  )
-
-  if (!hasAnySearch) return
-
+  // Update URL with search params (or clear if empty)
   router.replace({
     query: buildSearchQuery()
   })
 
+  // Always reload with current search criteria
   await loadAccommodations({
     q: q || undefined,
     guests: Number.isFinite(guests) && guests > 0 ? guests : undefined,
@@ -633,6 +626,9 @@ watch(
 
 // Load accommodations on mount
 onMounted(async () => {
+  // Clear cache to ensure fresh data with images
+  fastFetch.clearCache('properties')
+  
   const q = route.query.q != null ? String(route.query.q).trim() : ''
   const guests = route.query.guests != null && String(route.query.guests).trim()
     ? Number(route.query.guests)

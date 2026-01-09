@@ -154,17 +154,26 @@ const isFavorite = computed(() => {
 
 // Handle multiple images - use property.images array or fallback to single image
 const propertyImages = computed(() => {
-  if (props.property.images && Array.isArray(props.property.images)) {
-    return props.property.images
+  // First check if images array exists and has items
+  if (props.property.images && Array.isArray(props.property.images) && props.property.images.length > 0) {
+    // Filter out empty strings and null values
+    const validImages = props.property.images.filter(img => img && typeof img === 'string' && img.trim())
+    if (validImages.length > 0) return validImages
   }
-  // Fallback to single image or generate placeholder images
-  return props.property.image ? [
-    props.property.image,
-    props.property.image,
-    props.property.image,
-    props.property.image,
-    props.property.image
-  ] : []
+  
+  // Check additional_images field
+  if (props.property.additional_images && Array.isArray(props.property.additional_images) && props.property.additional_images.length > 0) {
+    const validImages = props.property.additional_images.filter(img => img && typeof img === 'string' && img.trim())
+    if (validImages.length > 0) return validImages
+  }
+  
+  // Fallback to single image
+  if (props.property.image && typeof props.property.image === 'string' && props.property.image.trim()) {
+    return [props.property.image]
+  }
+  
+  // Last resort - placeholder
+  return ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600']
 })
 
 const currentImage = computed(() => {

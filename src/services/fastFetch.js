@@ -28,6 +28,7 @@ const MAX_CONCURRENT_PREFETCH = 5
 
 /**
  * Ultra-minimal select for listing pages (maximum speed)
+ * Includes images for scrolling gallery feature
  */
 const MINIMAL_FIELDS = [
   'id',
@@ -39,6 +40,8 @@ const MINIMAL_FIELDS = [
   'bedrooms',
   'bathrooms',
   'main_image',
+  'images',
+  'additional_images',
   'rating',
   'reviews_count'
 ].join(',')
