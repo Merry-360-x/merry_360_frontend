@@ -43,28 +43,28 @@
                   <div class="mb-4">
                     <h2 class="text-base font-semibold text-text-primary">Basic Information</h2>
                   </div>
-
+              
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Property Name -->
                     <div class="md:col-span-2">
                       <label class="block text-xs font-medium text-text-secondary mb-1.5">Property Name *</label>
-                      <input 
-                        v-model="form.title"
-                        type="text" 
-                        required
+                  <input 
+                    v-model="form.title"
+                    type="text" 
+                    required
                         placeholder="e.g., Luxury Kigali Apartment"
                         class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
-                      />
-                    </div>
+                  />
+                </div>
 
                     <!-- Property Type -->
-                    <div>
+                <div>
                       <label class="block text-xs font-medium text-text-secondary mb-1.5">Type *</label>
-                      <select 
-                        v-model="form.category"
-                        required
+                  <select 
+                    v-model="form.category"
+                    required
                         class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
-                      >
+                  >
                         <option value="">Select type...</option>
                         <option value="hotel">Hotel</option>
                         <option value="villa">Villa</option>
@@ -72,33 +72,33 @@
                         <option value="resort">Resort</option>
                         <option value="lodge">Lodge</option>
                         <option value="guesthouse">Guesthouse</option>
-                      </select>
-                    </div>
+                  </select>
+                </div>
 
                     <!-- Location -->
-                    <div>
+                <div>
                       <label class="block text-xs font-medium text-text-secondary mb-1.5">Location *</label>
-                      <input 
-                        v-model="form.location"
-                        type="text" 
-                        required
+                  <input 
+                    v-model="form.location"
+                    type="text" 
+                    required
                         placeholder="e.g., Kigali, Rwanda"
                         class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
-                      />
-                    </div>
+                  />
+                </div>
 
                     <!-- Price -->
-                    <div>
+                <div>
                       <label class="block text-xs font-medium text-text-secondary mb-1.5">Price per Night (RWF) *</label>
                       <input 
                         v-model.number="form.price"
                         type="number" 
                         min="1"
-                        required
+                    required
                         placeholder="100000"
                         class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       />
-                    </div>
+                </div>
 
                     <!-- Max Guests -->
                     <div>
@@ -111,36 +111,36 @@
                         placeholder="4"
                         class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white dark:bg-gray-700 text-text-primary"
                       />
-                    </div>
+            </div>
 
                     <!-- Bedrooms & Bathrooms (Optional) -->
                     <div class="md:col-span-2">
                       <details class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3">
                         <summary class="cursor-pointer text-xs font-medium text-text-secondary">Optional: Beds & Baths</summary>
                         <div class="grid grid-cols-2 gap-4 mt-4">
-                          <div>
+                <div>
                             <label class="block text-sm font-medium text-text-secondary mb-2">Bedrooms</label>
-                            <input 
-                              v-model.number="form.beds"
-                              type="number" 
-                              min="0"
-                              placeholder="2"
+                  <input 
+                    v-model.number="form.beds"
+                    type="number" 
+                    min="0"
+                    placeholder="2"
                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-text-primary"
-                            />
-                          </div>
-                          <div>
+                  />
+                </div>
+                <div>
                             <label class="block text-sm font-medium text-text-secondary mb-2">Bathrooms</label>
-                            <input 
-                              v-model.number="form.baths"
-                              type="number" 
-                              min="0"
-                              placeholder="1"
+                  <input 
+                    v-model.number="form.baths"
+                    type="number" 
+                    min="0"
+                    placeholder="1"
                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-text-primary"
-                            />
-                          </div>
-                        </div>
+                  />
+                </div>
+              </div>
                       </details>
-                    </div>
+            </div>
 
                     <!-- Description -->
                     <div class="md:col-span-2">
@@ -169,9 +169,9 @@
                           {{ amenity.label }}
                         </button>
                       </div>
-                    </div>
-                  </div>
                 </div>
+              </div>
+            </div>
 
                 <!-- Step 2: Photos -->
                 <div v-if="currentStep === 1" class="space-y-4">
@@ -180,16 +180,16 @@
                     <p class="text-xs text-text-secondary mt-1">Upload at least 3 photos</p>
                   </div>
 
-                  <PhotoUploader
-                    v-model="propertyImages"
-                    v-model:uploading="imagesUploading"
-                    title="Property Images"
+              <PhotoUploader
+                v-model="propertyImages"
+                v-model:uploading="imagesUploading"
+                title="Property Images"
                     subtitle="Minimum 3 photos"
                     :min-photos="3"
-                    :max-photos="15"
-                    folder="merry360x/properties"
-                  />
-                </div>
+                :max-photos="15"
+                folder="merry360x/properties"
+              />
+            </div>
 
                 <!-- Step 3: Done -->
                 <div v-if="currentStep === 2" class="space-y-4">
@@ -207,20 +207,20 @@
                       <div>
                         <p class="text-xs text-text-muted">Type</p>
                         <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.category }}</p>
-                      </div>
+                </div>
                       <div>
                         <p class="text-xs text-text-muted">Location</p>
                         <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.location }}</p>
-                      </div>
-                      <div>
+              </div>
+                  <div>
                         <p class="text-xs text-text-muted">Price</p>
                         <p class="text-sm font-medium text-brand-600 mt-0.5">RWF {{ form.price?.toLocaleString() }}</p>
-                      </div>
-                      <div>
+                  </div>
+                  <div>
                         <p class="text-xs text-text-muted">Guests</p>
                         <p class="text-sm font-medium text-text-primary mt-0.5">{{ form.maxGuests }}</p>
-                      </div>
-                      <div>
+                  </div>
+                  <div>
                         <p class="text-xs text-text-muted">Photos</p>
                         <p class="text-sm font-medium text-text-primary mt-0.5">{{ propertyImages.length }}</p>
                       </div>
@@ -252,22 +252,22 @@
                   Next
                 </button>
 
-                <button
+              <button 
                   v-else
                   type="button"
                   @click="handleSubmit"
-                  :disabled="isSubmitting || imagesUploading"
+                :disabled="isSubmitting || imagesUploading"
                   class="px-5 py-2 text-sm bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
+              >
                   <svg v-if="isSubmitting" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
                   <span v-if="isSubmitting">Publishing...</span>
                   <span v-else>Publish</span>
-                </button>
-              </div>
-            </form>
+              </button>
+            </div>
+          </form>
           </div>
         </div>
       </div>

@@ -1,0 +1,106 @@
+
+Running 27 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:6:3 › Comprehensive Feature Testing › homepage loads and displays main sections (3.5s)
+  ✓   2 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:24:3 › Comprehensive Feature Testing › accommodations page loads and displays listings (2.4s)
+  ✓   3 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:41:3 › Comprehensive Feature Testing › tours page loads and displays tours (3.0s)
+  ✓   4 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:56:3 › Comprehensive Feature Testing › transport page loads correctly (2.5s)
+  ✓   5 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:70:3 › Comprehensive Feature Testing › login page renders correctly (2.4s)
+  ✘   6 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:80:3 › Comprehensive Feature Testing › signup page renders correctly (2.3s)
+  ✓   7 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:92:3 › Comprehensive Feature Testing › about page loads (2.5s)
+  ✓   8 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:106:3 › Comprehensive Feature Testing › stories page loads (2.4s)
+  ✘   9 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:116:3 › Comprehensive Feature Testing › profile page redirects to login when not authenticated (2.9s)
+  ✓  10 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:132:3 › Comprehensive Feature Testing › admin page redirects to login when not authenticated (2.8s)
+  ✓  11 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:144:3 › Comprehensive Feature Testing › become host page loads (2.9s)
+  ✓  12 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:158:3 › Comprehensive Feature Testing › cart page is accessible (2.4s)
+  ✓  13 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:172:3 › Comprehensive Feature Testing › wishlist page is accessible (2.9s)
+  ✓  14 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:186:3 › Comprehensive Feature Testing › services page loads (2.5s)
+  ✓  15 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:198:3 › Comprehensive Feature Testing › site is mobile responsive (2.5s)
+I18n support detected: [33mtrue[39m
+(node:7782) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:213:3 › Comprehensive Feature Testing › page supports internationalization (3.3s)
+  ✓  17 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:230:3 › Comprehensive Feature Testing › main navigation links are clickable (2.5s)
+Search elements found: [33m1[39m
+  ✓  18 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:242:3 › Comprehensive Feature Testing › search functionality exists (2.4s)
+Footer present: [33mtrue[39m
+  ✓  19 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:254:3 › Comprehensive Feature Testing › footer renders with links (2.4s)
+  ✓  20 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:267:3 › Comprehensive Feature Testing › homepage loads without critical console errors (2.5s)
+No accommodation listings found to test detail view
+  ✓  21 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:297:3 › User Flows › user can browse accommodations and view details (3.4s)
+  ✓  22 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:315:3 › User Flows › user can navigate between main sections (5.5s)
+Login form submission test completed
+  ✓  23 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:339:3 › User Flows › login form can be submitted (3.1s)
+Signup form can be filled successfully
+  ✓  24 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:357:3 › User Flows › signup form can be filled (2.4s)
+Found 3 images on homepage
+  ✓  25 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:380:3 › UI/UX Features › images load properly (2.4s)
+First button is enabled: [33mtrue[39m
+  ✓  26 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:397:3 › UI/UX Features › buttons are interactive (2.4s)
+Form validation test completed
+  ✓  27 [chromium] › tests/e2e/comprehensive-feature-test.spec.js:412:3 › UI/UX Features › forms have proper validation (2.6s)
+
+
+  1) [chromium] › tests/e2e/comprehensive-feature-test.spec.js:80:3 › Comprehensive Feature Testing › signup page renders correctly 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('input[type="password"]')
+    Expected: visible
+    Error: strict mode violation: locator('input[type="password"]') resolved to 2 elements:
+        1) <input required="" type="password" placeholder="At least 6 characters" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"/> aka getByRole('textbox', { name: 'At least 6 characters' })
+        2) <input required="" type="password" placeholder="Re-enter your password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"/> aka getByRole('textbox', { name: 'Re-enter your password' })
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('input[type="password"]')[22m
+
+
+      86 |     
+      87 |     const passwordInput = page.locator('input[type="password"]');
+    > 88 |     await expect(passwordInput).toBeVisible();
+         |                                 ^
+      89 |   });
+      90 |
+      91 |   // Test 7: About Page
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-feature-test.spec.js:88:33
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-feature-test-f779a-gnup-page-renders-correctly-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-feature-test-f779a-gnup-page-renders-correctly-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-feature-test-f779a-gnup-page-renders-correctly-chromium/error-context.md
+
+  2) [chromium] › tests/e2e/comprehensive-feature-test.spec.js:116:3 › Comprehensive Feature Testing › profile page redirects to login when not authenticated 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
+
+    Received: [31mfalse[39m
+
+      126 |     const hasLoginForm = await page.locator('input[type="email"], input[type="password"]').count() > 0;
+      127 |     
+    > 128 |     expect(isAuthProtected || hasLoginForm).toBeTruthy();
+          |                                             ^
+      129 |   });
+      130 |
+      131 |   // Test 10: Admin Page (requires admin auth)
+        at /Users/davy/merry_360_frontend/tests/e2e/comprehensive-feature-test.spec.js:128:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/comprehensive-feature-test-7cf81-ogin-when-not-authenticated-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/comprehensive-feature-test-7cf81-ogin-when-not-authenticated-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/comprehensive-feature-test-7cf81-ogin-when-not-authenticated-chromium/error-context.md
+
+  2 failed
+    [chromium] › tests/e2e/comprehensive-feature-test.spec.js:80:3 › Comprehensive Feature Testing › signup page renders correctly 
+    [chromium] › tests/e2e/comprehensive-feature-test.spec.js:116:3 › Comprehensive Feature Testing › profile page redirects to login when not authenticated 
+  25 passed (1.3m)

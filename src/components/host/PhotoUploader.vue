@@ -210,11 +210,11 @@
                 class="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700"
               >
                 <div class="relative aspect-video bg-gray-100 dark:bg-gray-800">
-                  <img
-                    :src="photo.preview"
-                    :alt="`Photo ${index + 1}`"
-                    class="w-full h-full object-cover"
-                  />
+                <img
+                  :src="photo.preview"
+                  :alt="`Photo ${index + 1}`"
+                  class="w-full h-full object-cover"
+                />
                   <!-- Upload Progress Overlay -->
                   <div 
                     v-if="uploading && individualProgress.has(photo.id)"
@@ -251,15 +251,15 @@
                   >
                     <div class="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
                   </div>
-                  <button
+                <button
                     v-if="!uploading"
-                    @click="removePendingPhoto(index)"
+                  @click="removePendingPhoto(index)"
                     class="absolute top-2 right-2 w-8 h-8 bg-gray-900/80 hover:bg-gray-900 rounded-full flex items-center justify-center text-white transition-all"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                  </svg>
+                </button>
                 </div>
               </div>
             </div>

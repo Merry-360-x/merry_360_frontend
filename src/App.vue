@@ -14,9 +14,9 @@
   </div>
   
   <div v-else>
-    <router-view />
-    <ToastNotification />
-    <ConfirmDialog />
+  <router-view />
+  <ToastNotification />
+  <ConfirmDialog />
   </div>
 </template>
 

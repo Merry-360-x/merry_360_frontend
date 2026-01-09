@@ -38,10 +38,6 @@ const useFlutterwave = computed(() => {
   return !!(k && k.length > 10)
 })
 
-import { useToast } from '@/composables/useToast'
-
-const { showToast } = useToast()
-
 async function handlePay() {
   try {
     const { response } = await startFlutterwavePayment({

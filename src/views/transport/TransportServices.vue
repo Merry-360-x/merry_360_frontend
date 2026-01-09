@@ -202,27 +202,27 @@
               </div>
               
               <div class="p-6">
-                <div class="flex items-start justify-between mb-3">
-                  <div class="flex-1">
-                    <p class="font-semibold text-text-brand-600">{{ vehicle.name }}</p>
-                    <p class="text-sm text-text-secondary">{{ vehicle.type || 'Vehicle' }}</p>
-                  </div>
-                  <div class="text-right">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex-1">
+                  <p class="font-semibold text-text-brand-600">{{ vehicle.name }}</p>
+                  <p class="text-sm text-text-secondary">{{ vehicle.type || 'Vehicle' }}</p>
+                </div>
+                <div class="text-right">
                     <div class="text-2xl font-bold text-brand-600">{{ currencyStore.formatPrice(vehicle.price_per_day || vehicle.price || 0) }}</div>
-                    <div class="text-xs text-text-muted">/ day</div>
-                  </div>
+                  <div class="text-xs text-text-muted">/ day</div>
                 </div>
+              </div>
 
-                <div class="flex items-center justify-between text-sm text-text-secondary mb-4">
-                  <span>{{ Number(vehicle.capacity || 0) > 0 ? `${vehicle.capacity} seats` : '—' }}</span>
-                </div>
+              <div class="flex items-center justify-between text-sm text-text-secondary mb-4">
+                <span>{{ Number(vehicle.capacity || 0) > 0 ? `${vehicle.capacity} seats` : '—' }}</span>
+              </div>
 
-                <button
-                  @click="bookVehicle(vehicle)"
-                  class="w-full px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition-colors"
-                >
-                  {{ t('accommodation.addToCart') }}
-                </button>
+              <button
+                @click="bookVehicle(vehicle)"
+                class="w-full px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium transition-colors"
+              >
+                {{ t('accommodation.addToCart') }}
+              </button>
               </div>
             </div>
           </div>

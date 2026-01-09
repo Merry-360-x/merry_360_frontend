@@ -1,0 +1,12 @@
+
+> merry-360-frontend@0.1.0 test:e2e
+> playwright test tests/e2e/comprehensive-real-time-test.spec.js --workers=1 --timeout=120000 --reporter=list
+
+
+Running 15 tests using 1 worker
+
+
+🔄 Registration Test Iteration 1/5
+(node:4436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:103:3 › Comprehensive Real-Time Feature Testing › Test 1: User Registration Flow (5 iterations) (2.0m)

@@ -1,0 +1,49 @@
+
+> merry-360-frontend@0.1.0 test:e2e
+> playwright test tests/e2e/comprehensive-real-time-test.spec.js --workers=1 --timeout=120000
+
+
+Running 15 tests using 1 worker
+
+
+🔄 Registration Test Iteration 1/5
+(node:83044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:103:3 › Comprehensive Real-Time Feature Testing › Test 1: User Registration Flow (5 iterations) (2.0m)
+  ✘   2 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:133:3 › Comprehensive Real-Time Feature Testing › Test 2: User Login Flow (5 iterations) (2.0m)
+  ✘   3 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:186:3 › Comprehensive Real-Time Feature Testing › Test 3: Logout Functionality (5 iterations) (2.0m)
+
+🔄 Become Host Test Iteration 1/5
+(node:87310) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:236:3 › Comprehensive Real-Time Feature Testing › Test 4: Become Host Application Flow (5 iterations) (2.0m)
+
+🔄 Create Property Test Iteration 1/5
+(node:88667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:294:3 › Comprehensive Real-Time Feature Testing › Test 5: Create Property Flow (5 iterations) (2.0m)
+
+🔄 View Properties Test Iteration 1/5
+(node:90033) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   6 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:347:3 › Comprehensive Real-Time Feature Testing › Test 6: View Properties List (5 iterations) (14.8s)
+
+🔄 Create Tour Test Iteration 1/5
+(node:90225) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   7 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:374:3 › Comprehensive Real-Time Feature Testing › Test 7: Create Tour Flow (5 iterations) (2.0m)
+
+🔄 View Tours Test Iteration 1/5
+(node:91577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   8 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:409:3 › Comprehensive Real-Time Feature Testing › Test 8: View Tours List (5 iterations) (13.4s)
+
+🔄 Create Transport Test Iteration 1/5
+(node:91760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:428:3 › Comprehensive Real-Time Feature Testing › Test 9: Create Transport Flow (5 iterations) (2.0m)
+
+🔄 View Transport Test Iteration 1/5
+(node:93258) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  10 [chromium] › tests/e2e/comprehensive-real-time-test.spec.js:463:3 › Comprehensive Real-Time Feature Testing › Test 10: View Transport List (5 iterations) (13.7s)

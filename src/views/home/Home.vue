@@ -18,7 +18,7 @@
           autoplay 
           muted 
           loop 
-          playsinline
+          playsinline 
           preload="none"
           @canplay="videoLoaded = true"
           class="w-full h-full object-cover"

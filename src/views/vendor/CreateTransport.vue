@@ -232,10 +232,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useToast } from '../../composables/useToast'
-import { useUserStore } from '../../stores/userStore'
+import { useDashboardPath } from '../../composables/useDashboardPath'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
 import Input from '../../components/common/Input.vue'
@@ -244,17 +244,8 @@ import PhotoUploader from '../../components/host/PhotoUploader.vue'
 import api from '../../services/api'
 
 const router = useRouter()
-const route = useRoute()
 const { showToast } = useToast()
-const userStore = useUserStore()
-
-// Determine dashboard path based on user role and current route
-const dashboardPath = computed(() => {
-  if (route.path.startsWith('/admin')) return '/admin'
-  if (route.path.startsWith('/staff')) return '/staff'
-  if (route.path.startsWith('/host')) return '/host'
-  return '/vendor'
-})
+const { dashboardPath } = useDashboardPath()
 
 const form = ref({
   name: '',

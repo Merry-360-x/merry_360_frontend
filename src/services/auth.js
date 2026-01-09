@@ -21,14 +21,28 @@ async function bestEffort(promise, { timeoutMs = 2500, label = 'operation' } = {
 }
 
 export async function signIn(credentials) {
-  // Check if admin email
-  const isAdmin = credentials.email === 'admin@merry360x.com' || credentials.email === 'bebisdavy@gmail.com'
-  
   if (USE_SUPABASE) {
     const { data, error } = await supabaseService.signInWithEmail(credentials.email, credentials.password)
     if (error) {
       throw error
     }
+    
+    // Fetch role from database profile (SECURE - not client-side email check)
+    let userRole = 'user'
+    try {
+      const { data: profile } = await supabaseService.supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single()
+      
+      if (profile?.role) {
+        userRole = profile.role
+      }
+    } catch (profileErr) {
+      // Profile might not exist yet, default to user role
+    }
+    
     const token = data.session?.access_token
     return {
       user: {
@@ -36,7 +50,7 @@ export async function signIn(credentials) {
         email: data.user.email,
         firstName: data.user.user_metadata?.firstName || '',
         lastName: data.user.user_metadata?.lastName || '',
-        role: isAdmin ? 'admin' : (data.user.user_metadata?.role || 'user')
+        role: userRole
       },
       token
     }
@@ -44,10 +58,6 @@ export async function signIn(credentials) {
 
   // Fallback to API
   const response = await api.auth.login(credentials)
-  // Override role for admin emails
-  if (isAdmin && response.user) {
-    response.user.role = 'admin'
-  }
   return response
 }
 

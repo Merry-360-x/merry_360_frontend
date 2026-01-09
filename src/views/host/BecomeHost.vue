@@ -56,7 +56,7 @@
           <button 
               @click="showForm = true"
               class="group inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-bold rounded-2xl text-lg transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
-            >
+          >
               Get Started
               <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -195,7 +195,7 @@
                 <div 
                   v-if="isSubmitting && submissionProgress < 100"
                   class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"
-                ></div>
+              ></div>
               </div>
             </div>
             <div class="text-center mt-2">
@@ -451,7 +451,7 @@
                             @click="formData.hostingType = 'transport'"
                             class="p-4 border-2 rounded-xl transition-all"
                             :class="formData.hostingType === 'transport' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-brand-300'"
-                          >
+                        >
                             <div class="text-center">
                               <div class="font-semibold text-sm text-text-primary">{{ t('hostApplication.options.hostingTransport') }}</div>
                             </div>
@@ -1413,7 +1413,7 @@ const handleSubmit = async (event) => {
       
       if (!formData.password || formData.password.length < 6) {
         showToastError('Please create a password (minimum 6 characters) to create your account.')
-        isSubmitting.value = false
+      isSubmitting.value = false
         return
       }
       
@@ -1433,13 +1433,13 @@ const handleSubmit = async (event) => {
       if (signUpError) {
         if (signUpError.message.includes('already registered')) {
           showToastError('An account with this email already exists. Please log in first, then apply to become a host.')
-          router.push('/login')
+      router.push('/login')
         } else {
           showToastError('Failed to create account: ' + signUpError.message)
         }
         isSubmitting.value = false
-        return
-      }
+      return
+    }
     
       if (!authData.user) {
         showToastError('Account creation failed. Please try again.')
@@ -1543,8 +1543,8 @@ const handleSubmit = async (event) => {
     let result
     try {
       const upsertPromise = supabase
-        .from('profiles')
-        .upsert(profilePayload, { onConflict: 'id' })
+      .from('profiles')
+      .upsert(profilePayload, { onConflict: 'id' })
         .select()
       
       result = await Promise.race([upsertPromise, timeoutPromise])

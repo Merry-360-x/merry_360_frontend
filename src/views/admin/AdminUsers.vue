@@ -175,7 +175,7 @@
               <td class="py-4 px-4 text-gray-700 dark:text-gray-300">{{ formatDate(user.created_at) }}</td>
               <td class="py-4 px-4">
                 <div class="flex items-center gap-2">
-                  <Button variant="outline" size="sm" @click="viewProfile(user)">View Profile</Button>
+                <Button variant="outline" size="sm" @click="viewProfile(user)">View Profile</Button>
                   <button 
                     @click="confirmDeleteUser(user)"
                     :disabled="user.role === 'admin'"

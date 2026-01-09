@@ -4,10 +4,10 @@
       <!-- Back Button -->
       <button @click="router.back()" class="flex items-center text-sm text-text-secondary hover:text-brand-600 dark:text-brand-400 mb-6 transition-colors">
         <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-        </svg>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
         Back to tours
-      </button>
+            </button>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
@@ -165,13 +165,13 @@
                       </button>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
+          </div>
+        </div>
+      </div>
           </Card>
 
           <!-- Transportation Options -->
-          <Card padding="lg">
+      <Card padding="lg">
             <h2 class="text-xl font-bold mb-4">Transportation Options</h2>
             <p class="text-sm text-text-secondary mb-4">Get to and from this tour with ease</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -216,7 +216,7 @@
                 </div>
               </div>
             </div>
-          </Card>
+      </Card>
 
           <!-- Location Map -->
           <Card padding="lg">

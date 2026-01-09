@@ -522,11 +522,11 @@ const loadAccommodations = async (params = {}) => {
     const list = result.data || []
     
     // Always apply results (even if empty) and stop loading immediately
-    applyLoadedAccommodations(list, term)
-    
+      applyLoadedAccommodations(list, term)
+      
     // Prefetch next batch in background only if we have results
-    if (list.length >= 20) {
-      setTimeout(() => fastFetch.prefetchNextPage(params), 500)
+      if (list.length >= 20) {
+        setTimeout(() => fastFetch.prefetchNextPage(params), 500)
     }
     
     // Stop loading immediately - even if no results

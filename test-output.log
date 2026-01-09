@@ -1,0 +1,20 @@
+
+> merry-360-frontend@0.1.0 test:e2e
+> playwright test tests/e2e/complete-feature-test-50plus.spec.js --workers=1
+
+ReferenceError: require is not defined
+
+   at complete-feature-test-50plus.spec.js:3
+
+  1 | /**
+  2 |  * COMPREHENSIVE 50+ FEATURE TEST SUITE
+> 3 |  * Tests every feature 5+ times with real Supabase and Cloudinary
+    |             ^
+  4 |  * 
+  5 |  * Features tested:
+  6 |  * 1. Authentication (signup, login, logout) - 5x each
+    at /Users/davy/merry_360_frontend/tests/e2e/complete-feature-test-50plus.spec.js:3:13
+Error: No tests found.
+Make sure that arguments are regular expressions matching test files.
+You may need to escape symbols like "$" or "*" and quote the arguments.
+

@@ -13,8 +13,9 @@
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-6">
           <!-- Image Gallery - Show all available images -->
-          <div class="grid grid-cols-4 gap-2 rounded-card overflow-hidden">
-            <div class="col-span-4 row-span-2 h-96 relative bg-gray-200 dark:bg-gray-700">
+          <div class="space-y-4">
+            <!-- Main Image -->
+            <div class="relative h-96 bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden">
               <!-- Loading placeholder -->
               <div
                 v-if="!mainImageLoaded || mainImageError || !accommodation.mainImage"
@@ -36,62 +37,147 @@
                 :alt="accommodation.name" 
                 @load="handleMainImageLoad"
                 @error="handleMainImageError"
-                class="w-full h-full object-cover"
+                @click="openGalleryModal(0)"
+                class="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
                 v-show="mainImageLoaded && !mainImageError"
               />
+              <!-- View all photos button -->
+              <button 
+                v-if="allImages.length > 1"
+                @click="openGalleryModal(0)"
+                class="absolute bottom-4 right-4 px-4 py-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg text-sm font-semibold text-gray-900 dark:text-white hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-lg flex items-center gap-2"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                </svg>
+                View all {{ allImages.length }} photos
+              </button>
             </div>
-            <!-- Show all gallery images (up to 4 thumbnails) -->
-            <template v-if="accommodation.gallery && accommodation.gallery.length > 0">
-              <div v-for="(img, index) in accommodation.gallery.slice(0, 4)" :key="`gallery-${index}`" class="h-32 bg-gray-200 dark:bg-gray-700 relative overflow-hidden cursor-pointer hover:opacity-90 transition-opacity rounded-lg">
-                <!-- Loading placeholder (only show while loading and no error) -->
+
+            <!-- Thumbnail Gallery - Show ALL images -->
+            <div v-if="allImages.length > 1" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+              <div 
+                v-for="(img, index) in allImages" 
+                :key="`thumb-${index}`" 
+                @click="setMainImage(img, index)"
+                class="aspect-square bg-gray-200 dark:bg-gray-700 relative overflow-hidden cursor-pointer rounded-lg group"
+                :class="{ 'ring-2 ring-brand-500 ring-offset-2': img === accommodation.mainImage }"
+              >
+                <!-- Loading placeholder -->
                 <div
                   v-if="!galleryLoaded[index] && !galleryError[index]"
                   class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700"
                 >
-                  <svg class="w-6 h-6 text-gray-400 dark:text-gray-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                 </div>
-                <!-- Error placeholder (only show if error) -->
+                <!-- Error placeholder -->
                 <div
                   v-if="galleryError[index]"
                   class="absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700"
                 >
-                  <svg class="w-6 h-6 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  <svg class="w-5 h-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                 </div>
-                <!-- Actual image (show if loaded or if no error yet) -->
+                <!-- Actual image -->
                 <img 
                   v-if="img"
                   loading="lazy" 
                   decoding="async"
-                  :src="optimizeImage(img, { width: 400, height: 300 })" 
-                  :alt="`${accommodation.name} - Image ${index + 2}`" 
+                  :src="optimizeImage(img, { width: 200, height: 200 })" 
+                  :alt="`${accommodation.name} - Photo ${index + 1}`" 
                   @load="() => handleGalleryLoad(index)"
                   @error="() => handleGalleryError(index)"
-                  @click="accommodation.mainImage = img; resetImageLoadingState()"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   :class="{ 'opacity-0': !galleryLoaded[index] && !galleryError[index] }"
                 />
+                <!-- Hover overlay -->
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
               </div>
-              <!-- Show count if more than 4 images -->
-              <div v-if="accommodation.gallery.length > 4" class="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                <div class="text-center">
-                  <p class="text-lg font-bold text-gray-700 dark:text-gray-300">+{{ accommodation.gallery.length - 4 }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">more photos</p>
-                </div>
-              </div>
-            </template>
-            <!-- Show placeholder if no gallery images -->
-            <template v-else>
-              <div v-for="i in 4" :key="`placeholder-${i}`" class="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+            </div>
+
+            <!-- No images placeholder -->
+            <div v-if="allImages.length === 0" class="grid grid-cols-4 gap-2">
+              <div v-for="i in 4" :key="`placeholder-${i}`" class="aspect-square bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
                 <svg class="w-8 h-8 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
               </div>
-            </template>
+            </div>
           </div>
+
+          <!-- Full Screen Gallery Modal -->
+          <Teleport to="body">
+            <div 
+              v-if="showGalleryModal" 
+              class="fixed inset-0 z-50 bg-black/95 flex flex-col"
+              @keydown.esc="closeGalleryModal"
+              tabindex="0"
+              ref="galleryModalRef"
+            >
+              <!-- Header -->
+              <div class="flex items-center justify-between p-4 text-white">
+                <span class="text-sm font-medium">{{ currentImageIndex + 1 }} / {{ allImages.length }}</span>
+                <button @click="closeGalleryModal" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Main Image -->
+              <div class="flex-1 flex items-center justify-center px-4 relative">
+                <!-- Previous button -->
+                <button 
+                  v-if="allImages.length > 1"
+                  @click="prevImage" 
+                  class="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+                >
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+
+                <img 
+                  :src="optimizeImage(allImages[currentImageIndex], { width: 1600, height: 1200 })" 
+                  :alt="`${accommodation.name} - Photo ${currentImageIndex + 1}`"
+                  class="max-w-full max-h-[70vh] object-contain rounded-lg"
+                />
+
+                <!-- Next button -->
+                <button 
+                  v-if="allImages.length > 1"
+                  @click="nextImage" 
+                  class="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+                >
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Thumbnails -->
+              <div class="p-4 overflow-x-auto">
+                <div class="flex gap-2 justify-center">
+                  <div 
+                    v-for="(img, index) in allImages" 
+                    :key="`modal-thumb-${index}`"
+                    @click="currentImageIndex = index"
+                    class="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all"
+                    :class="index === currentImageIndex ? 'ring-2 ring-white opacity-100' : 'opacity-50 hover:opacity-75'"
+                  >
+                    <img 
+                      :src="optimizeImage(img, { width: 100, height: 100 })" 
+                      :alt="`Thumbnail ${index + 1}`"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Teleport>
 
           <!-- Header Info -->
           <Card padding="lg">
@@ -466,15 +552,66 @@ const mainImageError = ref(false)
 const mainImageLoaded = ref(false)
 const galleryLoaded = ref([])
 const galleryError = ref([])
+const showGalleryModal = ref(false)
+const currentImageIndex = ref(0)
+const galleryModalRef = ref(null)
+
+// Computed: All images (mainImage + gallery combined)
+const allImages = computed(() => {
+  const images = []
+  if (accommodation.value?.mainImage) {
+    images.push(accommodation.value.mainImage)
+  }
+  if (Array.isArray(accommodation.value?.gallery)) {
+    accommodation.value.gallery.forEach(img => {
+      if (img && !images.includes(img)) {
+        images.push(img)
+      }
+    })
+  }
+  return images
+})
 
 const resetImageLoadingState = () => {
   mainImageError.value = false
   mainImageLoaded.value = false
 
-  const gallery = Array.isArray(accommodation.value?.gallery) ? accommodation.value.gallery : []
+  const totalImages = allImages.value.length || 4
   // Initialize arrays with correct length
-  galleryLoaded.value = new Array(Math.max(gallery.length, 4)).fill(false)
-  galleryError.value = new Array(Math.max(gallery.length, 4)).fill(false)
+  galleryLoaded.value = new Array(totalImages).fill(false)
+  galleryError.value = new Array(totalImages).fill(false)
+}
+
+// Gallery modal functions
+const openGalleryModal = (index = 0) => {
+  currentImageIndex.value = index
+  showGalleryModal.value = true
+  // Focus the modal for keyboard navigation
+  setTimeout(() => {
+    if (galleryModalRef.value) {
+      galleryModalRef.value.focus()
+    }
+  }, 100)
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden'
+}
+
+const closeGalleryModal = () => {
+  showGalleryModal.value = false
+  document.body.style.overflow = ''
+}
+
+const nextImage = () => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % allImages.value.length
+}
+
+const prevImage = () => {
+  currentImageIndex.value = (currentImageIndex.value - 1 + allImages.value.length) % allImages.value.length
+}
+
+const setMainImage = (img, index) => {
+  accommodation.value.mainImage = img
+  resetImageLoadingState()
 }
 
 const handleMainImageLoad = () => {
@@ -614,7 +751,7 @@ const loadTransportOptions = async () => {
       price_per_day: vehicle.price_per_day || vehicle.price || 0,
       main_image: vehicle.main_image || (Array.isArray(vehicle.images) ? vehicle.images[0] : null),
       images: Array.isArray(vehicle.images) ? vehicle.images : [],
-      justAdded: false
+    justAdded: false
     }))
   } catch (error) {
     transportOptions.value = []
