@@ -326,6 +326,22 @@
               </label>
             </div>
 
+            <!-- Progress Bar (shown during submission) -->
+            <div v-if="isSubmitting" class="mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Publishing property...</span>
+                <span class="text-sm font-bold text-brand-600 dark:text-brand-400">{{ submitProgress }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                <div 
+                  class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
+                  :style="{ width: `${submitProgress}%` }"
+                >
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                </div>
+              </div>
+            </div>
+
             <!-- Submit Buttons -->
             <div class="flex gap-4">
               <Button type="submit" variant="primary" :disabled="isSubmitting">
@@ -333,9 +349,9 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isSubmitting ? t('common.loading') : t('vendor.createListing') }}
+                {{ isSubmitting ? `Creating... ${submitProgress}%` : t('vendor.createListing') }}
               </Button>
-              <Button type="button" variant="secondary" @click="$router.push('/vendor')">
+              <Button type="button" variant="secondary" @click="$router.push('/vendor')" :disabled="isSubmitting">
                 {{ t('common.cancel') }}
               </Button>
             </div>
@@ -385,6 +401,7 @@ const form = ref({
 
 const errors = ref({})
 const isSubmitting = ref(false)
+const submitProgress = ref(0)
 const showSuccess = ref(false)
 
 const availableAmenities = [
@@ -416,6 +433,28 @@ const validateForm = () => {
   return Object.keys(errors.value).length === 0
 }
 
+// Progress animation helper
+const animateProgress = (targetProgress, duration = 500) => {
+  return new Promise(resolve => {
+    const start = submitProgress.value
+    const diff = targetProgress - start
+    const startTime = Date.now()
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      submitProgress.value = Math.round(start + diff * progress)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        resolve()
+      }
+    }
+    animate()
+  })
+}
+
 const handleSubmit = async () => {
   // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (!validateForm()) {
@@ -424,8 +463,15 @@ const handleSubmit = async () => {
   }
 
   isSubmitting.value = true
+  submitProgress.value = 0
 
   try {
+    // Step 1: Validating data (10%)
+    await animateProgress(10, 200)
+
+    // Step 2: Preparing data (30%)
+    await animateProgress(30, 300)
+
     // Create property in database via Supabase
     const propertyData = {
       name: form.value.name,
@@ -447,17 +493,33 @@ const handleSubmit = async () => {
       longitude: form.value.longitude || null
     }
     
-    await api.accommodations.create(propertyData)
+    // Step 3: Sending to database (50%)
+    await animateProgress(50, 300)
+
+    // Direct API call
+    const submitPromise = api.accommodations.create(propertyData)
+    
+    // Animate progress while waiting for API
+    const progressPromise = (async () => {
+      await animateProgress(70, 1000)
+      await animateProgress(85, 1500)
+    })()
+    
+    await Promise.all([submitPromise, progressPromise])
+    
+    // Step 4: Finalizing (100%)
+    await animateProgress(100, 300)
     
     showSuccess.value = true
     showToast(t('vendor.listingCreatedSuccess'), 'success')
     
     setTimeout(() => {
       router.push('/vendor')
-    }, 2000)
+    }, 1500)
   } catch (error) {
     console.error('Property creation error:', error)
     showToast(error || t('vendor.createError'), 'error')
+    submitProgress.value = 0
   } finally {
     isSubmitting.value = false
   }

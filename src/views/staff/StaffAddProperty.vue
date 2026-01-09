@@ -249,6 +249,22 @@
                   Next
                 </button>
 
+              <!-- Progress Bar (shown during submission) -->
+              <div v-if="isSubmitting" class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Publishing property...</span>
+                  <span class="text-xs font-bold text-brand-600 dark:text-brand-400">{{ submitProgress }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                  <div 
+                    class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
+                    :style="{ width: `${submitProgress}%` }"
+                  >
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                  </div>
+                </div>
+              </div>
+
               <button 
                   v-else
                   type="button"
@@ -260,7 +276,7 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                  <span v-if="isSubmitting">Publishing...</span>
+                  <span v-if="isSubmitting">Publishing... {{ submitProgress }}%</span>
                   <span v-else>Publish</span>
               </button>
             </div>
@@ -318,6 +334,7 @@ const propertiesPath = computed(() => `${basePath.value}/properties`)
 
 const currentStep = ref(0)
 const isSubmitting = ref(false)
+const submitProgress = ref(0)
 const imagesUploading = ref(false)
 const showSuccessModal = ref(false)
 
@@ -398,6 +415,28 @@ function normalizePropertyType(rawType) {
   return map[String(rawType || '').toLowerCase()] || 'Accommodation'
 }
 
+// Progress animation helper
+const animateProgress = (targetProgress, duration = 500) => {
+  return new Promise(resolve => {
+    const start = submitProgress.value
+    const diff = targetProgress - start
+    const startTime = Date.now()
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      submitProgress.value = Math.round(start + diff * progress)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        resolve()
+      }
+    }
+    animate()
+  })
+}
+
 async function handleSubmit() {
   if (!userStore.user?.id) {
     showToastError('Please login to add properties')
@@ -442,12 +481,19 @@ async function handleSubmit() {
   }
 
   isSubmitting.value = true
+  submitProgress.value = 0
 
   try {
+    // Step 1: Validating data (10%)
+    await animateProgress(10, 200)
+
     // Add default amenities if none selected
     if (form.value.amenities.length === 0) {
       form.value.amenities = ['WiFi', 'Parking']
     }
+
+    // Step 2: Preparing data (30%)
+    await animateProgress(30, 300)
 
     const propertyData = {
       name: form.value.title.trim(),
@@ -468,15 +514,29 @@ async function handleSubmit() {
       longitude: null
     }
 
+    // Step 3: Sending to database (50%)
+    await animateProgress(50, 300)
+
     // Direct API call - no timeout wrapper
-    await api.accommodations.create(propertyData)
+    const submitPromise = api.accommodations.create(propertyData)
+    
+    // Animate progress while waiting for API
+    const progressPromise = (async () => {
+      await animateProgress(70, 1000)
+      await animateProgress(85, 1500)
+    })()
+    
+    await Promise.all([submitPromise, progressPromise])
+
+    // Step 4: Finalizing (100%)
+    await animateProgress(100, 300)
 
     showSuccessModal.value = true
     showToastSuccess('Property published successfully!')
 
     setTimeout(() => {
       router.push(propertiesPath.value)
-    }, 2000)
+    }, 1500)
 
   } catch (error) {
     console.error('❌ Error:', error)
@@ -494,6 +554,7 @@ async function handleSubmit() {
     }
 
     showToastError(errorMessage)
+    submitProgress.value = 0
   } finally {
     isSubmitting.value = false
   }

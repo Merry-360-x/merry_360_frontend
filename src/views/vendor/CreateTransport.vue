@@ -211,6 +211,22 @@
               </div>
             </div>
 
+            <!-- Progress Bar (shown during submission) -->
+            <div v-if="isSubmitting" class="mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Creating transport service...</span>
+                <span class="text-sm font-bold text-brand-600 dark:text-brand-400">{{ submitProgress }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                <div 
+                  class="h-full bg-gradient-to-r from-brand-500 to-brand-600 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
+                  :style="{ width: `${submitProgress}%` }"
+                >
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                </div>
+              </div>
+            </div>
+
             <!-- Submit Buttons -->
             <div class="flex gap-4">
               <Button type="submit" variant="primary" :disabled="isSubmitting || imagesUploading">
@@ -218,9 +234,9 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isSubmitting ? t('common.creating') : (imagesUploading ? t('common.uploading') : t('transport.createService')) }}
+                {{ isSubmitting ? `Creating... ${submitProgress}%` : (imagesUploading ? t('common.uploading') : t('transport.createService')) }}
               </Button>
-              <Button type="button" variant="secondary" @click="handleCancel">
+              <Button type="button" variant="secondary" @click="handleCancel" :disabled="isSubmitting">
                 {{ t('common.cancel') }}
               </Button>
             </div>
@@ -269,6 +285,7 @@ const form = ref({
 
 const errors = ref({})
 const isSubmitting = ref(false)
+const submitProgress = ref(0)
 const showSuccess = ref(false)
 const transportImages = ref([])
 const imagesUploading = ref(false)
@@ -297,6 +314,28 @@ const handleCancel = () => {
   router.push(dashboardPath.value)
 }
 
+// Progress animation helper
+const animateProgress = (targetProgress, duration = 500) => {
+  return new Promise(resolve => {
+    const start = submitProgress.value
+    const diff = targetProgress - start
+    const startTime = Date.now()
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      submitProgress.value = Math.round(start + diff * progress)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        resolve()
+      }
+    }
+    animate()
+  })
+}
+
 const handleSubmit = async () => {
   if (imagesUploading.value) {
     showToast(t('common.waitForUpload'), 'error')
@@ -308,13 +347,20 @@ const handleSubmit = async () => {
   }
 
   isSubmitting.value = true
+  submitProgress.value = 0
 
   try {
+    // Step 1: Validating data (10%)
+    await animateProgress(10, 200)
+    
     const imageUrls = transportImages.value.map((img) => img.url || img.preview).filter(Boolean)
 
     if (imageUrls.length === 0) {
       throw new Error(t('validation.uploadAtLeastOneImage'))
     }
+
+    // Step 2: Preparing data (30%)
+    await animateProgress(30, 300)
 
     const durationString = form.value.durationDays > 0 
       ? `${form.value.durationDays} ${form.value.durationDays === 1 ? 'day' : 'days'}${form.value.durationHours > 0 ? ` ${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}` : ''}`
@@ -344,19 +390,34 @@ const handleSubmit = async () => {
       available: true
     }
 
+    // Step 3: Sending to database (50%)
+    await animateProgress(50, 300)
+
     // Direct API call - no timeout wrapper needed
-    await api.transport.create(transportData)
+    const submitPromise = api.transport.create(transportData)
+    
+    // Animate progress while waiting for API
+    const progressPromise = (async () => {
+      await animateProgress(70, 1000)
+      await animateProgress(85, 1500)
+    })()
+    
+    await Promise.all([submitPromise, progressPromise])
+    
+    // Step 4: Finalizing (100%)
+    await animateProgress(100, 300)
     
     showSuccess.value = true
     showToast(t('transport.createSuccess'), 'success')
     
     setTimeout(() => {
       router.push(dashboardPath.value)
-    }, 2000)
+    }, 1500)
   } catch (error) {
     let errorMessage = t('transport.createError')
     if (error?.message) errorMessage = error.message
     showToast(errorMessage, 'error')
+    submitProgress.value = 0
   } finally {
     isSubmitting.value = false
   }
