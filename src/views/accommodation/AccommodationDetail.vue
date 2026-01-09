@@ -33,7 +33,7 @@
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
-                :src="optimizeImage(accommodation.mainImage)" 
+                :src="optimizeImage(accommodation.mainImage, { width: 800 })" 
                 :alt="accommodation.name" 
                 @load="handleMainImageLoad"
                 @error="handleMainImageError"
@@ -759,11 +759,14 @@ const loadTransportOptions = async () => {
   }
 }
 
-const optimizeImage = (url) => {
+const optimizeImage = (url, options = {}) => {
   if (!url) return ''
+  // For thumbnails use smaller size
+  const defaultWidth = options.thumbnail ? 200 : 800
   return optimizeImageUrl(url, {
-    width: 1200,
-    quality: 'auto:eco'
+    width: options.width || defaultWidth,
+    quality: 'auto:low', // Use low quality for faster loading
+    ...options
   })
 }
 

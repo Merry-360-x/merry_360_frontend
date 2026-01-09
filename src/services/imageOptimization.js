@@ -8,14 +8,18 @@
  */
 export function optimizeImageUrl(url, options = {}) {
   const {
-    width = 800,
-    quality = 'auto:eco', // Changed from 'auto:best' to 'auto:eco' for 10x compression
+    width = 600,
+    height = null,
+    quality = 'auto:low', // Use low quality for faster loading
     format = 'auto',
     blur = null,
     progressive = true
   } = options
 
-  if (!url || !url.includes('cloudinary.com')) {
+  if (!url) return ''
+  
+  // If not Cloudinary, return as-is
+  if (!url.includes('cloudinary.com')) {
     return url
   }
 
@@ -24,13 +28,19 @@ export function optimizeImageUrl(url, options = {}) {
   
   if (width) {
     transformations.push(`w_${width}`)
+  }
+  
+  if (height) {
+    transformations.push(`h_${height}`)
+    transformations.push('c_fill') // Crop to fill
+  } else {
     transformations.push('c_limit') // Limit dimensions, don't upscale
   }
   
-  // Use aggressive quality reduction (eco mode = ~60-70% quality, 10x smaller)
+  // Use aggressive quality reduction for faster loading
   transformations.push(`q_${quality}`)
   
-  // Auto format selection (WebP for modern browsers, optimized JPEG for others)
+  // Auto format selection (WebP for modern browsers)
   transformations.push(`f_${format}`)
   
   if (blur) {
@@ -41,10 +51,9 @@ export function optimizeImageUrl(url, options = {}) {
     transformations.push('fl_progressive')
   }
 
-  // Add aggressive compression flags
+  // Add compression flags
   transformations.push('fl_lossy') // Lossy compression
   transformations.push('fl_strip_profile') // Remove metadata
-  transformations.push('dpr_auto') // Auto device pixel ratio
   
   // Insert transformations into URL
   const transformString = transformations.join(',')
