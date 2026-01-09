@@ -1,11 +1,11 @@
 <template>
   <div 
-    class="bg-white dark:bg-gray-800 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden cursor-pointer group transform hover:-translate-y-1 border border-transparent dark:border-gray-700"
+    class="cursor-pointer group"
     @click="goToDetail"
   >
-    <!-- Image Gallery -->
+    <!-- Image -->
     <div 
-      class="relative aspect-square overflow-hidden bg-gray-200 dark:bg-gray-700"
+      class="relative aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800"
       @mouseenter="startAutoScroll"
       @mouseleave="stopAutoScroll"
     >
@@ -25,68 +25,50 @@
             :src="optimizeImage(image)" 
             :alt="`${property.title} - Image ${index + 1}`"
             @error="handleImageError"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
       </div>
       
       <!-- Placeholder when image fails to load -->
-      <div v-if="imageError && propertyImages.length === 0" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
-        <div class="text-center">
-          <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-          <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ property.title }}</p>
-        </div>
+      <div v-if="imageError && propertyImages.length === 0" class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+        <svg class="w-12 h-12 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
       </div>
       
       <!-- Image Navigation Dots -->
-      <div v-if="propertyImages.length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+      <div v-if="propertyImages.length > 1" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
         <button
-          v-for="(img, index) in propertyImages"
+          v-for="(img, index) in Math.min(propertyImages.length, 5)"
           :key="index"
           @click.stop="jumpToImage(index)"
-          class="transition-all duration-300"
-          :class="currentImageIndex === index ? 'w-6 h-1.5 bg-white rounded-full' : 'w-1.5 h-1.5 bg-white/60 hover:bg-white/80 rounded-full'"
+          class="w-1.5 h-1.5 rounded-full transition-all"
+          :class="currentImageIndex === index ? 'bg-white' : 'bg-white/50'"
         ></button>
       </div>
-      
-      <!-- Badge -->
-      <span 
-        v-if="property.badge"
-        class="absolute top-3 left-3 px-2.5 py-1 text-white text-xs font-semibold rounded-full shadow-lg"
-        :class="badgeClass"
-      >
-        {{ property.badge }}
-      </span>
 
       <!-- Favorite Icon -->
       <button 
         @click.stop="toggleFavorite"
-        class="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md hover:scale-110"
+        class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center transition-transform hover:scale-110"
       >
-        <svg class="w-4 h-4 sm:w-5 sm:h-5" :class="isFavorite ? 'text-brand-500 fill-current' : 'text-gray-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        <svg 
+          class="w-6 h-6 drop-shadow-md" 
+          :class="isFavorite ? 'text-red-500 fill-red-500' : 'text-white fill-white/30 stroke-white'"
+          :fill="isFavorite ? 'currentColor' : 'currentColor'" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
         </svg>
       </button>
 
-      <!-- Add Button (Mobile Overlay) -->
-      <button
-        @click.stop="addToCart"
-        class="sm:hidden absolute bottom-2 right-2 h-8 w-8 rounded-full bg-brand-500 text-white flex items-center justify-center shadow-md hover:bg-brand-600 transition-colors !min-h-0 !min-w-0"
-        title="Add to Trip"
-        aria-label="Add to Trip"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-      </button>
-
-      <!-- Image Navigation Arrows -->
+      <!-- Image Navigation Arrows (show on hover) -->
       <button
         v-if="propertyImages.length > 1"
         @click.stop="previousImage"
-        class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md opacity-0 group-hover:opacity-100"
+        class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:scale-105"
       >
         <svg class="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -95,7 +77,7 @@
       <button
         v-if="propertyImages.length > 1"
         @click.stop="nextImage"
-        class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-md opacity-0 group-hover:opacity-100"
+        class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:scale-105"
       >
         <svg class="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -103,61 +85,37 @@
       </button>
     </div>
 
-    <!-- Content -->
-    <div class="p-2 sm:p-3">
-      <!-- Title -->
-      <h3 class="font-semibold text-xs sm:text-lg text-text-primary mb-1 sm:mb-2 line-clamp-1 group-hover:text-brand-600 transition-colors">
-        {{ property.title }}
-      </h3>
-
-      <!-- Location -->
-      <p class="hidden sm:flex items-center text-text-secondary text-xs sm:text-sm mb-3 sm:mb-4">
-        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
-        <span class="line-clamp-1">{{ property.location }}</span>
+    <!-- Content - Clean & Minimal -->
+    <div class="pt-2">
+      <!-- Location & Title -->
+      <div class="flex items-start justify-between gap-1">
+        <h3 class="font-medium text-sm text-gray-900 dark:text-white line-clamp-1">
+          {{ property.location || property.title }}
+        </h3>
+        <!-- Rating -->
+        <div v-if="property.rating" class="flex items-center gap-0.5 flex-shrink-0">
+          <svg class="w-3 h-3 text-gray-900 dark:text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+          </svg>
+          <span class="text-xs text-gray-900 dark:text-white">{{ property.rating }}</span>
+        </div>
+      </div>
+      
+      <!-- Property Type or Title -->
+      <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+        {{ property.title !== property.location ? property.title : (property.type || 'Entire place') }}
       </p>
-
-      <!-- Details -->
-      <div class="hidden sm:flex items-center justify-between text-xs sm:text-sm text-text-secondary mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100 dark:border-gray-700">
-        <div class="flex items-center">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-          </svg>
-          <span class="whitespace-nowrap">{{ property.beds }} Beds</span>
-        </div>
-        <div class="flex items-center">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
-          </svg>
-          <span class="whitespace-nowrap">{{ property.baths }} Baths</span>
-        </div>
-        <div class="flex items-center">
-          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
-          </svg>
-          <span class="whitespace-nowrap">{{ property.area }} sqft</span>
-        </div>
-      </div>
-
+      
+      <!-- Details Row -->
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        {{ property.beds || 1 }} bed{{ property.beds !== 1 ? 's' : '' }} · {{ property.baths || 1 }} bath{{ property.baths !== 1 ? 's' : '' }}
+      </p>
+      
       <!-- Price -->
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-baseline gap-1">
-          <span class="text-xs sm:text-base font-bold text-brand-600">{{ formatPrice(property.price) }}</span>
-          <span class="text-text-secondary text-xs whitespace-nowrap">/night</span>
-        </div>
-        <button 
-          @click.stop="addToCart"
-          class="hidden sm:inline-flex px-2.5 py-1.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-all duration-200 items-center gap-1 shadow-sm"
-          title="Add to Trip"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8l2 2 4-4"></path>
-          </svg>
-          <span class="text-xs font-medium">Add</span>
-        </button>
-      </div>
+      <p class="mt-1">
+        <span class="font-semibold text-sm text-gray-900 dark:text-white">{{ formatPrice(property.price) }}</span>
+        <span class="text-xs text-gray-500 dark:text-gray-400"> night</span>
+      </p>
     </div>
   </div>
 </template>
