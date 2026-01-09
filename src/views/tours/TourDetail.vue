@@ -493,18 +493,18 @@ const loadTransportOptions = async () => {
 
 const tour = ref({
   id: route.params.id,
-  name: 'Gorilla Trekking Adventure',
-  destination: 'Volcanoes National Park',
-  price: 1500,
-  rating: 4.9,
-  reviews: 128,
-  duration: '3 Days 2 Nights',
+  name: '',
+  destination: '',
+  price: 0,
+  rating: 0,
+  reviews: 0,
+  duration: '',
   mainImage: null,
   gallery: [],
   description: '',
   itinerary: '',
   inclusions: [],
-  category: 'Wildlife'
+  category: ''
 })
 
 onMounted(async () => {

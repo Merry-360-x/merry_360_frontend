@@ -395,10 +395,10 @@ const loadNearbyAccommodations = async () => {
 
 const vehicle = ref({
   id: route.params.id,
-  name: 'Luxury Sedan',
-  type: 'Car',
-  price_per_day: 50,
-  capacity: 4,
+  name: '',
+  type: '',
+  price_per_day: 0,
+  capacity: 0,
   mainImage: null,
   gallery: [],
   description: '',

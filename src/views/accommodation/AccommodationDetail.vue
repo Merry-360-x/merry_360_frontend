@@ -490,8 +490,8 @@
               <Button variant="outline" size="sm" @click="addToCart">
                 Add to Trip Cart
               </Button>
-              <Button variant="primary" size="sm" @click="goToCheckout">
-                Reserve Now
+              <Button variant="primary" size="sm" @click="goToCheckout" :disabled="isLoading || !accommodation.id">
+                {{ isLoading ? 'Loading...' : 'Reserve Now' }}
               </Button>
             </div>
             <p class="text-xs text-center text-text-secondary">You won't be charged yet</p>
@@ -555,6 +555,7 @@ const galleryError = ref([])
 const showGalleryModal = ref(false)
 const currentImageIndex = ref(0)
 const galleryModalRef = ref(null)
+const isLoading = ref(true)
 
 // Computed: All images (mainImage + gallery combined)
 const allImages = computed(() => {
@@ -781,15 +782,15 @@ const getYouTubeEmbedUrl = (url) => {
 
 const accommodation = ref({
   id: route.params.id,
-  name: 'Kigali Serena Hotel',
-  location: 'Kigali, Rwanda',
-  price: 150,
-  rating: 4.8,
-  reviews: 324,
-  eco: true,
+  name: '',
+  location: '',
+  price: 0,
+  rating: 0,
+  reviews: 0,
+  eco: false,
   mainImage: null,
   gallery: [],
-  description: 'Experience luxury in the heart of Kigali at the Serena Hotel.',
+  description: '',
   amenities: [],
   reviewsList: []
 })
@@ -816,6 +817,7 @@ onMounted(async () => {
     stay.value.checkOut = stay.value.checkOut || toDateInputValue(checkOut)
   }
 
+  isLoading.value = true
   try {
     const response = await api.accommodations.getById(route.params.id)
     
@@ -850,6 +852,8 @@ onMounted(async () => {
     await loadTransportOptions()
   } catch (error) {
     // Silently handle loading errors
+  } finally {
+    isLoading.value = false
   }
 })
 
