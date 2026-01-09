@@ -29,6 +29,7 @@ const MAX_CONCURRENT_PREFETCH = 5
 /**
  * Ultra-minimal select for listing pages (maximum speed)
  * Includes images for scrolling gallery feature
+ * Note: location/city/address are used for search but NOT displayed to users
  */
 const MINIMAL_FIELDS = [
   'id',
@@ -36,6 +37,9 @@ const MINIMAL_FIELDS = [
   'property_type',
   'location',
   'city',
+  'address',
+  'neighborhood',
+  'description',
   'price_per_night',
   'bedrooms',
   'bathrooms',
@@ -127,6 +131,33 @@ export const fastFetchAccommodations = async (params = {}) => {
 }
 
 /**
+ * Build smart search filter for multiple terms
+ * Searches: name, location, city, address, description, neighborhood
+ * Supports multiple terms (e.g., "Kigali Gallery" matches either "Kigali" OR "Gallery")
+ */
+const buildSearchFilter = (searchTerm) => {
+  if (!searchTerm) return null
+  
+  // Clean and split search terms
+  const cleanTerm = searchTerm.replace(/,/g, ' ').trim()
+  const terms = cleanTerm.split(/\s+/).filter(t => t.length >= 2)
+  
+  if (terms.length === 0) return null
+  
+  // Build OR conditions for each term across all searchable fields
+  const conditions = []
+  const searchFields = ['name', 'location', 'city', 'address', 'description', 'neighborhood']
+  
+  for (const term of terms) {
+    for (const field of searchFields) {
+      conditions.push(`${field}.ilike.%${term}%`)
+    }
+  }
+  
+  return conditions.join(',')
+}
+
+/**
  * Execute the actual Supabase query (optimized)
  */
 const executeAccommodationQuery = async (params, minimal = true) => {
@@ -149,15 +180,12 @@ const executeAccommodationQuery = async (params, minimal = true) => {
     query = query.or('available.is.null,available.eq.true')
   } catch (e) {
     // If available column doesn't exist, continue without filter
-    console.warn('Available column filter skipped:', e.message)
   }
   
-  // Apply filters
-  if (term) {
-    // Use separate filter conditions to avoid comma parsing issues in search terms
-    // Replace commas with spaces for the OR query
-    const safeTerm = term.replace(/,/g, ' ')
-    query = query.or(`name.ilike.%${safeTerm}%,location.ilike.%${safeTerm}%,city.ilike.%${safeTerm}%`)
+  // Apply smart search filter
+  const searchFilter = buildSearchFilter(term)
+  if (searchFilter) {
+    query = query.or(searchFilter)
   }
   
   if (guestsCount && guestsCount > 0) {
@@ -175,11 +203,8 @@ const executeAccommodationQuery = async (params, minimal = true) => {
         .order('created_at', { ascending: false })
         .limit(limit)
       
-      if (term) {
-        // Use separate filter conditions to avoid comma parsing issues in search terms
-        // Replace commas with spaces for the OR query
-        const safeTerm = term.replace(/,/g, ' ')
-        query = query.or(`name.ilike.%${safeTerm}%,location.ilike.%${safeTerm}%,city.ilike.%${safeTerm}%`)
+      if (searchFilter) {
+        query = query.or(searchFilter)
       }
       
       const retry = await query

@@ -363,7 +363,8 @@ const buildSuggestionList = (rows, query, fields) => {
 }
 
 const searchSuggestions = computed(() => {
-  return buildSuggestionList(accommodations.value || [], searchQuery.value, ['name', 'location', 'type'])
+  // Build suggestions from name and type (NOT location - hidden until booking)
+  return buildSuggestionList(accommodations.value || [], searchQuery.value, ['name', 'type'])
 })
 
 const onSearchFocus = () => {
@@ -439,20 +440,33 @@ const computeMatchScore = (acc, term) => {
   const q = String(term || '').trim().toLowerCase()
   if (!q) return 0
 
-  const haystack = [acc?.name, acc?.location, acc?.type]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase()
+  // All searchable fields (location used for matching but NOT displayed)
+  const haystack = [
+    acc?.name,
+    acc?.location,
+    acc?.city,
+    acc?.address,
+    acc?.neighborhood,
+    acc?.type,
+    acc?.description
+  ].filter(Boolean).join(' ').toLowerCase()
 
   if (!haystack) return 0
 
-  // Lightweight ranking: phrase match > token match
+  // Smart ranking: exact phrase > multiple terms > single term
   let score = 0
-  if (haystack.includes(q)) score += 50
+  
+  // Full phrase match gets highest score
+  if (haystack.includes(q)) score += 100
 
-  const tokens = q.split(/\s+/).filter(Boolean)
+  // Individual term matches
+  const tokens = q.split(/\s+/).filter(t => t.length >= 2)
   for (const token of tokens) {
-    if (token.length < 2) continue
+    // Exact word match in name gets bonus
+    if (acc?.name?.toLowerCase().includes(token)) score += 30
+    // Location/city match gets points
+    if (acc?.location?.toLowerCase().includes(token) || acc?.city?.toLowerCase().includes(token)) score += 20
+    // Any field match
     if (haystack.includes(token)) score += 10
   }
 
@@ -666,18 +680,27 @@ const filteredAccommodations = computed(() => {
       if (maxGuests < guestCount.value) return false
     }
     
-    // Location filter (from search params)
+    // Smart search filter - matches ANY of the search terms across multiple fields
+    // (Location is used for search but NOT shown to users until booking confirmed)
     if (searchQuery.value) {
-      const query = searchQuery.value.toLowerCase()
-      const location = String(acc.location || '').toLowerCase()
-      const name = String(acc.name || '').toLowerCase()
-      const city = String(acc.city || '').toLowerCase()
+      const searchTerms = searchQuery.value.toLowerCase().split(/\s+/).filter(t => t.length >= 2)
       
-      const matchesLocation = location.includes(query) || 
-                             name.includes(query) || 
-                             city.includes(query)
-      
-      if (!matchesLocation) return false
+      if (searchTerms.length > 0) {
+        // Combine all searchable fields
+        const searchableText = [
+          acc.location,
+          acc.name,
+          acc.city,
+          acc.address,
+          acc.neighborhood,
+          acc.description
+        ].filter(Boolean).join(' ').toLowerCase()
+        
+        // Match if ANY search term is found in the searchable text
+        const matchesAnyTerm = searchTerms.some(term => searchableText.includes(term))
+        
+        if (!matchesAnyTerm) return false
+      }
     }
     
     return true
