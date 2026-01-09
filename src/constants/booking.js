@@ -126,7 +126,7 @@ export const USER_ROLES = {
 
 // Image limits
 export const IMAGE_LIMITS = {
-  MAX_SIZE_MB: 2,             // 2MB for images
+  MAX_SIZE_MB: 10,            // 10MB for images (Cloudinary compresses them)
   MAX_VIDEO_SIZE_MB: 100,     // 100MB for videos
   MAX_PROPERTY_IMAGES: 20,    // Max images per property
   MAX_TOUR_IMAGES: 15,        // Max images per tour

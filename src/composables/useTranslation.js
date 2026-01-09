@@ -44,7 +44,7 @@ const translations = {
     'imageValidator.sizeWarningTitle': 'Image Size Warning',
     'imageValidator.sizeExceeded': 'Image size ({size}MB) exceeds the maximum allowed size of {maxSize}MB',
     'imageValidator.sizeLarge': 'This image ({size}MB) is quite large and may cause slow loading',
-    'imageValidator.defaultWarning': 'Large images can slow down your website. Please keep images under 2MB.',
+    'imageValidator.defaultWarning': 'Images up to 10MB are allowed. They will be compressed automatically for fast loading.',
     'imageValidator.guidelinesTitle': 'Image Upload Guidelines',
 
     'accommodationList.title': 'Find Your Perfect Stay',

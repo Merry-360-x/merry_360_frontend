@@ -459,7 +459,7 @@ const confirmUpload = async () => {
       // Set initial progress
       individualProgress.value.set(item.id, 0)
 
-      // Optimize to keep under 2MB before upload.
+      // Optimize image before upload - Cloudinary will further compress on server.
       individualProgress.value.set(item.id, 20) // 20% for optimization
       const optimized = await optimizeImageFile(file, { maxWidth: 1600, maxHeight: 1600, quality: 0.82 })
       const finalSizeError = getFinalImageSizeError(optimized, IMAGE_UPLOAD_RULES)

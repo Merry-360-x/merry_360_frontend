@@ -28,10 +28,10 @@
             {{ t('imageValidator.guidelinesTitle') }}
           </h3>
           <ul class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-            <li>✓ Maximum file size: <strong>2MB</strong></li>
-            <li>✓ Recommended dimensions: <strong>1200x900px</strong> or smaller</li>
+            <li>✓ Maximum file size: <strong>10MB</strong></li>
+            <li>✓ Recommended dimensions: <strong>1920x1080px</strong> or smaller</li>
             <li>✓ Supported formats: <strong>JPEG, PNG, WebP</strong></li>
-            <li>✓ Images are automatically compressed by 90% for fast loading</li>
+            <li>✓ Images are automatically compressed for fast loading</li>
           </ul>
         </div>
       </div>
@@ -63,7 +63,7 @@ const props = defineProps({
   },
   maxSize: {
     type: Number,
-    default: 2 * 1024 * 1024 // 2MB default
+    default: 10 * 1024 * 1024 // 10MB default (Cloudinary compresses)
   },
   showWarning: {
     type: Boolean,

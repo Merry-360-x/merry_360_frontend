@@ -1,12 +1,13 @@
 // Centralized image upload validation rules.
-// Keep images small to avoid slow uploads and sluggish UX.
+// Allow larger images - Cloudinary compresses them server-side for fast delivery.
 
 export const IMAGE_UPLOAD_RULES = {
   // Hard limit for the final image we upload/store.
-  maxBytes: 2 * 1024 * 1024, // 2MB
+  // Cloudinary will compress large images automatically.
+  maxBytes: 10 * 1024 * 1024, // 10MB
 
   // If a user selects something enormous, fail fast.
-  maxInputBytes: 2 * 1024 * 1024, // 2MB
+  maxInputBytes: 10 * 1024 * 1024, // 10MB
 
   // Only allow common web-safe formats.
   allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp']

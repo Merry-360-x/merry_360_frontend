@@ -855,7 +855,7 @@ const handleVRUpload = async (event) => {
   }
   if (!files.length) return
 
-  // Enforce image-only here (2MB JPG/PNG/WebP) to match global rule.
+  // Enforce image-only here (10MB JPG/PNG/WebP) - Cloudinary compresses server-side.
   const invalid = files
     .map((f) => ({ file: f, err: getImageValidationError(f) }))
     .filter((x) => x.err)

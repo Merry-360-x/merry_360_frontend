@@ -71,22 +71,24 @@ export async function uploadToCloudinary(file, options = {}) {
   }
   
   // Validate file size - different limits for images vs videos
-  // Images are kept small to avoid slow uploads and laggy pages.
-  const maxSize = isVideo ? 100 * 1024 * 1024 : 2 * 1024 * 1024 // 100MB for video, 2MB for images
+  // Allow larger images (up to 10MB) - Cloudinary will compress them server-side
+  const maxSize = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024 // 100MB for video, 10MB for images
   if (file.size > maxSize) {
     const sizeMB = (file.size / (1024 * 1024)).toFixed(2)
-    const maxMB = isVideo ? '100MB' : '2MB'
-    throw new Error(`File size (${sizeMB}MB) exceeds maximum allowed size (${maxMB}). Please compress before uploading.`)
+    const maxMB = isVideo ? '100MB' : '10MB'
+    throw new Error(`File size (${sizeMB}MB) exceeds maximum allowed size (${maxMB}).`)
   }
 
   const formData = new FormData()
   formData.append('file', file)
   formData.append('upload_preset', uploadPreset)
 
-  // Apply compression transformations
+  // Apply compression transformations for images
+  // Cloudinary will compress large images server-side for fast delivery
   if (!isVideo) {
-    formData.append('quality', 'auto:eco') // Eco quality for images
-    formData.append('fetch_format', 'auto') // Auto format (WebP when supported)
+    // Eager transformation: compress on upload for faster subsequent access
+    formData.append('eager', 'q_auto:eco,f_auto,w_1920,c_limit')
+    formData.append('eager_async', 'true')
   }
   
   if (options.folder) {
