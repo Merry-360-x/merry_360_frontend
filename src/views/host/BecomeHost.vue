@@ -344,12 +344,49 @@
                   </svg>
                 </button>
 
-                <button v-else type="submit" :disabled="isSubmitting || !formData.agreeToTerms" class="px-8 py-3 bg-brand-500 hover:bg-brand-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center gap-2">
-                  <span v-if="isSubmitting">Submitting...</span>
-                  <span v-else>Submit Application</span>
-                  <svg v-if="!isSubmitting" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
+                <!-- Luxury Submit Button with Progress -->
+                <button 
+                  v-else 
+                  type="submit" 
+                  :disabled="isSubmitting || !formData.agreeToTerms" 
+                  class="relative px-8 py-3 min-w-[200px] overflow-hidden rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                  :class="isSubmitting 
+                    ? 'bg-gradient-to-r from-brand-600 to-brand-700 text-white cursor-wait' 
+                    : formData.agreeToTerms 
+                      ? 'bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]' 
+                      : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'"
+                >
+                  <!-- Progress Bar Background -->
+                  <div 
+                    v-if="isSubmitting"
+                    class="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 transition-all duration-100 ease-out"
+                    :style="{ width: `${submissionProgress}%` }"
+                  >
+                    <!-- Shimmer effect -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                  </div>
+                  
+                  <!-- Button Content -->
+                  <span class="relative z-10 flex items-center gap-2">
+                    <template v-if="isSubmitting">
+                      <svg v-if="submissionProgress < 100" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <svg v-else class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span class="font-bold tabular-nums">{{ submissionProgress }}%</span>
+                      <span v-if="submissionProgress < 100">Submitting...</span>
+                      <span v-else>Complete!</span>
+                    </template>
+                    <template v-else>
+                      Submit Application
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </template>
+                  </span>
                 </button>
               </div>
             </form>
@@ -377,6 +414,7 @@ const TOTAL_STEPS = 3
 const showForm = ref(false)
 const currentStep = ref(0)
 const isSubmitting = ref(false)
+const submissionProgress = ref(0)
 const hasPendingApplication = ref(false)
 const formSection = ref(null)
 
@@ -517,6 +555,30 @@ const uploadDocumentToCloudinary = async (file, folder) => {
   }
 }
 
+// Smooth progress animation helper
+const animateProgress = (targetPercent, duration = 500) => {
+  return new Promise((resolve) => {
+    const startPercent = submissionProgress.value
+    const diff = targetPercent - startPercent
+    const startTime = Date.now()
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      // Ease out cubic for smooth deceleration
+      const eased = 1 - Math.pow(1 - progress, 3)
+      submissionProgress.value = Math.round(startPercent + diff * eased)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        resolve()
+      }
+    }
+    animate()
+  })
+}
+
 const handleSubmit = async (event) => {
   if (event) event.preventDefault()
   
@@ -528,12 +590,18 @@ const handleSubmit = async (event) => {
   if (!validateCurrentStep()) return
   
   isSubmitting.value = true
+  submissionProgress.value = 0
   
   try {
+    // Start progress animation (0% -> 15%)
+    await animateProgress(15, 300)
+    
     let userId = userStore.user?.id
     
-    // Create account if not authenticated
+    // Create account if not authenticated (15% -> 30%)
     if (!isAuthenticated.value) {
+      await animateProgress(20, 200)
+      
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -549,6 +617,8 @@ const handleSubmit = async (event) => {
       if (authError) throw authError
       userId = authData.user?.id
       
+      await animateProgress(30, 200)
+      
       // Create profile
       await supabase.from('profiles').upsert({
         id: userId,
@@ -562,24 +632,36 @@ const handleSubmit = async (event) => {
       })
     }
     
-    // Upload documents to Cloudinary
+    await animateProgress(35, 200)
+    
+    // Upload documents to Cloudinary (35% -> 65%)
     let idPhotoUrl = null
     let businessCertUrl = null
     
     if (idPhotoFile.value) {
+      await animateProgress(45, 300)
       idPhotoUrl = await uploadDocumentToCloudinary(idPhotoFile.value, 'merry360x/host-documents/id-photos')
+      await animateProgress(55, 200)
+    } else {
+      await animateProgress(55, 300)
     }
     
     if (businessCertFile.value) {
+      await animateProgress(60, 200)
       businessCertUrl = await uploadDocumentToCloudinary(businessCertFile.value, 'merry360x/host-documents/business-certs')
+      await animateProgress(70, 200)
+    } else {
+      await animateProgress(70, 300)
     }
     
-    // Prepare payment details
+    // Prepare payment details (70% -> 80%)
+    await animateProgress(80, 200)
+    
     const paymentDetails = formData.paymentMethod === 'mobile_money' 
       ? { method: 'mobile_money', provider: formData.mobileProvider, number: formData.mobileNumber }
       : { method: 'bank', bank_name: formData.bankName, account_number: formData.bankAccountNumber, account_name: formData.bankAccountName }
     
-    // Insert host application
+    // Insert host application (80% -> 95%)
     const applicationData = {
       user_id: userId,
       applicant_type: formData.applicantType,
@@ -598,6 +680,8 @@ const handleSubmit = async (event) => {
       created_at: new Date().toISOString()
     }
     
+    await animateProgress(90, 200)
+    
     const { error: insertError } = await supabase
       .from('host_applications')
       .insert(applicationData)
@@ -614,6 +698,12 @@ const handleSubmit = async (event) => {
         .eq('id', userId)
     }
     
+    // Complete! (95% -> 100%)
+    await animateProgress(100, 400)
+    
+    // Brief pause to show 100%
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
     // Update local state
     hasPendingApplication.value = true
     showSuccess('Your application has been submitted successfully!')
@@ -624,6 +714,7 @@ const handleSubmit = async (event) => {
   } catch (error) {
     console.error('Submission error:', error)
     showError(error.message || 'Failed to submit application. Please try again.')
+    submissionProgress.value = 0
   } finally {
     isSubmitting.value = false
   }
@@ -685,5 +776,24 @@ onMounted(async () => {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Luxury shimmer effect for progress bar */
+.animate-shimmer {
+  animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Tabular numbers for consistent width during counting */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 </style>
