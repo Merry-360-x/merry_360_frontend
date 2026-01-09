@@ -125,19 +125,46 @@ const handleLogin = async () => {
   errorMessage.value = ''
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    // Add timeout to prevent hanging
+    const loginPromise = supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value
     })
+    
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Login request timed out. Please check your connection.')), 15000)
+    )
+    
+    const { data, error } = await Promise.race([loginPromise, timeoutPromise])
 
-    if (error) throw error
+    if (error) {
+      // Provide user-friendly error messages
+      if (error.message?.includes('Invalid login credentials')) {
+        throw new Error('Invalid email or password. Please try again.')
+      } else if (error.message?.includes('Email not confirmed')) {
+        throw new Error('Please verify your email before signing in.')
+      } else if (error.message?.includes('rate')) {
+        throw new Error('Too many login attempts. Please try again later.')
+      }
+      throw error
+    }
 
-    // Get user profile from database
-    const { data: profile } = await supabase
+    if (!data?.user) {
+      throw new Error('Login failed. Please try again.')
+    }
+
+    // Get user profile from database (with timeout)
+    const profilePromise = supabase
       .from('profiles')
       .select('*')
       .eq('id', data.user.id)
       .single()
+    
+    const profileTimeoutPromise = new Promise((resolve) => 
+      setTimeout(() => resolve({ data: null }), 5000) // Don't block on profile
+    )
+    
+    const { data: profile } = await Promise.race([profilePromise, profileTimeoutPromise])
 
     // Update user store
     await userStore.login({
@@ -160,9 +187,6 @@ const handleLogin = async () => {
       localStorage.setItem('auth_token', data.session.access_token)
     }
 
-    console.log('✅ Login successful, user store updated')
-    console.log('User data:', userStore.user)
-
     // Navigate based on role
     const role = profile?.role || 'user'
     if (role === 'admin') {
@@ -176,7 +200,7 @@ const handleLogin = async () => {
     }
   } catch (error) {
     console.error('Login error:', error)
-    errorMessage.value = error.message || 'Invalid email or password. Please try again.'
+    errorMessage.value = error.message || 'Login failed. Please check your connection and try again.'
   } finally {
     loading.value = false
   }

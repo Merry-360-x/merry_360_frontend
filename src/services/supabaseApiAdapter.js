@@ -246,57 +246,14 @@ export const supabaseApiAdapter = {
     },
 
     create: async (propertyData) => {
-      console.log('🔍 [Property Create] Starting property creation...')
-      console.log('📝 [Property Create] Property data:', JSON.stringify(propertyData, null, 2))
-      
+      // Get user auth - fast, cached operation
       const { data: auth } = await supabase.auth.getUser()
       const user = auth?.user
       if (!user) {
-        console.error('❌ [Property Create] User not authenticated')
         throw new Error('Not authenticated')
       }
-      console.log('✅ [Property Create] User authenticated:', user.email)
 
-      // Preflight: ensure the profile allows creating properties.
-      // This prevents confusing RLS failures and gives an actionable message.
-      try {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role, host_application_status')
-          .eq('id', user.id)
-          .single()
-
-        if (!profileError && profile) {
-          const role = String(profile.role || '').toLowerCase()
-          const hostStatus = String(profile.host_application_status || '').toLowerCase()
-
-          // If the DB tracks host application status, require approval unless admin or host role.
-          // Auto-approve if user has host/staff/admin role but status is not set.
-          if (hostStatus && hostStatus === 'pending') {
-            throw new Error(
-              `Your host application is pending review. You can add properties after approval.`
-            )
-          }
-          
-          if (hostStatus && hostStatus === 'rejected') {
-            throw new Error(
-              `Your host application was not approved. Please contact support.`
-            )
-          }
-
-          // Role gate (defensive). Router guard should already do this.
-          // If user has proper role, allow property creation even if status not explicitly set.
-          if (role && !['host', 'staff', 'admin'].includes(role)) {
-            throw new Error('Your account does not have permission to add properties.')
-          }
-          
-          console.log('✅ [Property Create] Preflight passed - Role:', role, 'Status:', hostStatus || 'not set')
-        }
-      } catch (preflightError) {
-        console.error('❌ [Property Create] Preflight blocked:', preflightError)
-        throw preflightError
-      }
-
+      // Prepare data immediately (no async here)
       const pricePerNight = Number(propertyData.price_per_night ?? propertyData.price)
       const bedrooms = Number(propertyData.beds ?? propertyData.bedrooms ?? 1)
       const bathrooms = Number(propertyData.baths ?? propertyData.bathrooms ?? 1)
@@ -322,74 +279,40 @@ export const supabaseApiAdapter = {
         longitude: propertyData.longitude || null,
         available: true
       }
-      
-      console.log('📤 [Property Create] Inserting into database:', JSON.stringify(insertRow, null, 2))
 
-      // Add timeout protection
+      // Insert directly with shorter timeout (15s instead of 30s)
       const insertPromise = supabase
         .from('properties')
         .insert([insertRow])
-        .select('*')
+        .select('id, name')
         .single()
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 15000)
       )
 
-      // Use Promise.race with proper error handling
-      let result
-      try {
-        result = await Promise.race([insertPromise, timeoutPromise])
-      } catch (raceError) {
-        // If it's a timeout, throw it directly
-        if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
-          console.error('⏱️ [Property Create] Request timed out after 30 seconds')
-          throw new Error('Request timeout - please try again')
-        }
-        // If it's a Supabase error, it will have error property
-        if (raceError?.error) {
-          throw raceError
-        }
-        // Otherwise, re-throw the error
-        throw raceError
-      }
-
-      const { data, error } = result || {}
+      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
 
       if (error) {
-        console.error('❌ [Property Create] Database error:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        })
-        
         // Provide user-friendly error messages
         let errorMessage = error.message || 'Failed to create property'
         if (error.code === '23505') {
           errorMessage = 'A property with this name already exists'
-        } else if (error.code === '23503') {
-          errorMessage = 'Invalid reference - please check your data'
-        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('denied') || error.message?.includes('RLS') || error.message?.includes('row-level security')) {
-          errorMessage = 'You do not have permission to create properties. Please contact admin.'
-        } else if (error.message?.includes('column') && error.message?.includes('does not exist')) {
-          errorMessage = 'Database schema error - please contact support'
-        } else if (error.message?.includes('null value') && error.message?.includes('violates')) {
+        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('denied') || error.message?.includes('RLS')) {
+          errorMessage = 'Permission denied. Contact admin to get host access.'
+        } else if (error.message?.includes('null value')) {
           errorMessage = 'Please fill in all required fields'
         }
-        
         throw new Error(errorMessage)
       }
 
       if (!data) {
-        console.error('❌ [Property Create] No data returned from insert')
-        throw new Error('Property creation failed - no data returned. Please try again.')
+        throw new Error('Property creation failed. Please try again.')
       }
 
-      console.log('✅ [Property Create] Property created successfully!', data.id)
-      // New listings should appear immediately on public pages.
+      // Clear cache asynchronously (don't wait)
       clearAccommodationCache()
-      return { data: mapPropertyRowToAccommodation(data) }
+      return { data: { id: data.id, name: data.name } }
     }
   },
 
@@ -454,16 +377,11 @@ export const supabaseApiAdapter = {
     },
 
     create: async (tourData) => {
-      console.log('🔍 [Tours Create] Starting tour creation...')
-      console.log('📝 [Tours Create] Tour data:', JSON.stringify(tourData, null, 2))
-      
       const { data: auth } = await supabase.auth.getUser()
       const user = auth?.user
       if (!user) {
-        console.error('❌ [Tours Create] User not authenticated')
         throw new Error('Not authenticated')
       }
-      console.log('✅ [Tours Create] User authenticated:', user.email)
 
       // Parse duration from string like "3 Days 2 Nights" to extract number of days
       const parseDurationDays = (duration) => {
@@ -519,70 +437,33 @@ export const supabaseApiAdapter = {
         }
       })
       
-      console.log('📤 [Tours Create] Inserting into database:', JSON.stringify(insertData, null, 2))
-
-      // Add timeout protection with proper error handling
+      // Insert with 15s timeout
       const insertPromise = supabase
         .from('tours')
         .insert([insertData])
-        .select('*')
+        .select('id, name')
         .single()
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 15000)
       )
 
-      // Use Promise.race with proper error handling
-      let result
-      try {
-        result = await Promise.race([insertPromise, timeoutPromise])
-      } catch (raceError) {
-        // If it's a timeout, throw it directly
-        if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
-          console.error('⏱️ [Tours Create] Request timed out after 30 seconds')
-          throw new Error('Request timeout - please try again')
-        }
-        // If it's a Supabase error, it will have error property
-        if (raceError?.error) {
-          throw raceError
-        }
-        // Otherwise, re-throw the error
-        throw raceError
-      }
-
-      const { data, error } = result || {}
+      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
 
       if (error) {
-        console.error('❌ [Tours Create] Database error:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        })
-        
-        // Provide user-friendly error messages
         let errorMessage = error.message || 'Failed to create tour'
         if (error.code === '23505') {
           errorMessage = 'A tour with this name already exists'
-        } else if (error.code === '23503') {
-          errorMessage = 'Invalid reference - please check your data'
-        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('denied') || error.message?.includes('RLS') || error.message?.includes('row-level security')) {
-          errorMessage = 'You do not have permission to create tours. Please contact admin.'
-        } else if (error.message?.includes('column') && error.message?.includes('does not exist')) {
-          errorMessage = 'Database schema error - please contact support'
-        } else if (error.message?.includes('null value') && error.message?.includes('violates')) {
-          errorMessage = 'Please fill in all required fields'
+        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('RLS')) {
+          errorMessage = 'Permission denied. Contact admin for access.'
         }
-        
         throw new Error(errorMessage)
       }
       
       if (!data) {
-        console.error('❌ [Tours Create] No data returned from insert')
-        throw new Error('Tour creation failed - no data returned. Please try again.')
+        throw new Error('Tour creation failed. Please try again.')
       }
       
-      console.log('✅ [Tours Create] Tour created successfully!', data.id)
       return { data }
     },
 
@@ -639,27 +520,14 @@ export const supabaseApiAdapter = {
       const { data: auth } = await supabase.auth.getUser()
       const user = auth?.user
       if (!user) {
-        console.error('❌ [Transport Create] User not authenticated')
         throw new Error('Not authenticated')
       }
-      console.log('✅ [Transport Create] User authenticated:', user.email)
 
-      // Map form data to database columns (only include valid columns for vehicles table)
+      // Map form data to database columns
       const imageArray = Array.isArray(transportData.images) 
         ? transportData.images.filter(Boolean)
         : (transportData.image ? [transportData.image] : [])
       const mainImg = transportData.main_image || transportData.image || (imageArray.length > 0 ? imageArray[0] : null)
-      
-      // Map duration and luggage fields from form
-      const durationDays = transportData.duration_days !== undefined && transportData.duration_days !== null
-        ? Number(transportData.duration_days)
-        : 0
-      const durationHours = transportData.duration_hours !== undefined && transportData.duration_hours !== null
-        ? Number(transportData.duration_hours)
-        : 0
-      const luggageBags = transportData.luggage_bags !== undefined && transportData.luggage_bags !== null
-        ? Number(transportData.luggage_bags)
-        : null
       
       const insertData = {
         name: transportData.name || '',
@@ -669,90 +537,48 @@ export const supabaseApiAdapter = {
         price_per_day: Number.isFinite(transportData.price) ? Number(transportData.price) : null,
         license_plate: transportData.license_plate || null,
         driver_included: transportData.professional_driver || transportData.driver_included || false,
-        duration_days: durationDays,
-        duration_hours: durationHours,
-        luggage_bags: luggageBags,
+        duration_days: transportData.duration_days ? Number(transportData.duration_days) : 0,
+        duration_hours: transportData.duration_hours ? Number(transportData.duration_hours) : 0,
+        luggage_bags: transportData.luggage_bags ? Number(transportData.luggage_bags) : null,
         main_image: mainImg,
-        images: imageArray.length > 0 ? imageArray : null,
+        images: imageArray.length > 0 ? imageArray : [],
         available: transportData.available !== undefined ? transportData.available : true
       }
       
-      // Remove null/undefined/empty values to avoid schema errors, but keep images as JSONB array
+      // Remove null/undefined values
       Object.keys(insertData).forEach(key => {
-        if (key === 'images') {
-          // Keep images field - set to empty array if null (JSONB accepts empty array)
-          if (insertData[key] === null || (Array.isArray(insertData[key]) && insertData[key].length === 0)) {
-            insertData[key] = []
-          }
-        } else if (insertData[key] === null || insertData[key] === undefined || insertData[key] === '') {
+        if (key !== 'images' && (insertData[key] === null || insertData[key] === undefined || insertData[key] === '')) {
           delete insertData[key]
         }
       })
-      
-      console.log('📤 [Transport Create] Inserting into database:', JSON.stringify(insertData, null, 2))
 
-      // Add timeout protection with proper error handling
+      // Insert with 15s timeout
       const insertPromise = supabase
         .from('vehicles')
         .insert([insertData])
-        .select('*')
+        .select('id, name')
         .single()
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 15000)
       )
 
-      // Use Promise.race with proper error handling
-      let result
-      try {
-        result = await Promise.race([insertPromise, timeoutPromise])
-      } catch (raceError) {
-        // If it's a timeout, throw it directly
-        if (raceError?.message?.includes('timeout') || raceError?.message?.includes('Request timeout')) {
-          console.error('⏱️ [Transport Create] Request timed out after 30 seconds')
-          throw new Error('Request timeout - please try again')
-        }
-        // If it's a Supabase error, it will have error property
-        if (raceError?.error) {
-          throw raceError
-        }
-        // Otherwise, re-throw the error
-        throw raceError
-      }
-
-      const { data, error } = result || {}
+      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
 
       if (error) {
-        console.error('❌ [Transport Create] Database error:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        })
-        
-        // Provide user-friendly error messages
         let errorMessage = error.message || 'Failed to create transport service'
         if (error.code === '23505') {
           errorMessage = 'A transport service with this name already exists'
-        } else if (error.code === '23503') {
-          errorMessage = 'Invalid reference - please check your data'
-        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('denied') || error.message?.includes('RLS') || error.message?.includes('row-level security')) {
-          errorMessage = 'You do not have permission to create transport services. Please contact admin.'
-        } else if (error.message?.includes('column') && error.message?.includes('does not exist')) {
-          errorMessage = 'Database schema error - please contact support'
-        } else if (error.message?.includes('null value') && error.message?.includes('violates')) {
-          errorMessage = 'Please fill in all required fields'
+        } else if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('RLS')) {
+          errorMessage = 'Permission denied. Contact admin for access.'
         }
-        
         throw new Error(errorMessage)
       }
       
       if (!data) {
-        console.error('❌ [Transport Create] No data returned from insert')
-        throw new Error('Transport service creation failed - no data returned. Please try again.')
+        throw new Error('Transport creation failed. Please try again.')
       }
       
-      console.log('✅ [Transport Create] Transport created successfully!', data.id)
       return { data }
     },
 
