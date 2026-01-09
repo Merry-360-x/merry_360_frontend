@@ -282,13 +282,13 @@ const availableFeatures = [
 const validateForm = () => {
   errors.value = {}
   
-  if (!form.value.name) errors.value.name = t('validation.required')
-  if (!form.value.vehicleType) errors.value.vehicleType = t('validation.required')
-  if (!form.value.route) errors.value.route = t('validation.required')
-  if (!form.value.description) errors.value.description = t('validation.required')
-  if (!form.value.capacity || form.value.capacity <= 0) errors.value.capacity = t('validation.validCapacityRequired')
-  if (!form.value.price || form.value.price <= 0) errors.value.price = t('validation.validPriceRequired')
-  if (transportImages.value.length === 0) errors.value.image = t('validation.imageRequired')
+  if (!form.value.name?.trim()) errors.value.name = 'Please enter a service name'
+  if (!form.value.vehicleType) errors.value.vehicleType = 'Please select a vehicle type'
+  if (!form.value.route?.trim()) errors.value.route = 'Please enter a route'
+  if (!form.value.description?.trim()) errors.value.description = 'Please enter a description'
+  if (!form.value.capacity || form.value.capacity <= 0) errors.value.capacity = 'Please enter passenger capacity'
+  if (!form.value.price || form.value.price <= 0) errors.value.price = 'Please enter a valid price'
+  if (transportImages.value.length === 0) errors.value.image = 'Please upload at least one image'
   
   return Object.keys(errors.value).length === 0
 }
@@ -344,12 +344,8 @@ const handleSubmit = async () => {
       available: true
     }
 
-    const createTransportPromise = api.transport.create(transportData)
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Request timeout')), 30000)
-    )
-
-    await Promise.race([createTransportPromise, timeoutPromise])
+    // Direct API call - no timeout wrapper needed
+    await api.transport.create(transportData)
     
     showSuccess.value = true
     showToast(t('transport.createSuccess'), 'success')

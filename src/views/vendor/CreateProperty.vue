@@ -404,12 +404,14 @@ const removeImage = (index) => {
 const validateForm = () => {
   errors.value = {}
   
-  if (!form.value.name) errors.value.name = t('vendor.nameRequired')
-  if (!form.value.type) errors.value.type = t('vendor.typeRequired')
-  if (!form.value.location) errors.value.location = t('vendor.locationRequired')
-  if (!form.value.description) errors.value.description = t('vendor.descriptionRequired')
-  if (!form.value.price || form.value.price <= 0) errors.value.price = t('vendor.priceRequired')
-  if (!form.value.image) errors.value.image = t('vendor.imageRequired')
+  if (!form.value.name?.trim()) errors.value.name = 'Please enter a property name'
+  if (!form.value.type) errors.value.type = 'Please select a property type'
+  if (!form.value.location?.trim()) errors.value.location = 'Please enter a location'
+  if (!form.value.description?.trim()) errors.value.description = 'Please enter a description'
+  if (!form.value.price || form.value.price <= 0) errors.value.price = 'Please enter a valid price'
+  if (!form.value.beds || form.value.beds <= 0) errors.value.beds = 'Please enter number of bedrooms'
+  if (!form.value.baths || form.value.baths <= 0) errors.value.baths = 'Please enter number of bathrooms'
+  if (!form.value.image) errors.value.image = 'Please upload at least one image'
   
   return Object.keys(errors.value).length === 0
 }

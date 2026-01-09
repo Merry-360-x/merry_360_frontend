@@ -116,8 +116,12 @@ const googleLoading = ref(false)
 const errorMessage = ref('')
 
 const handleLogin = async () => {
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Please enter email and password'
+  if (!email.value) {
+    errorMessage.value = 'Please enter your email address'
+    return
+  }
+  if (!password.value) {
+    errorMessage.value = 'Please enter your password'
     return
   }
 
@@ -125,17 +129,11 @@ const handleLogin = async () => {
   errorMessage.value = ''
 
   try {
-    // Add timeout to prevent hanging
-    const loginPromise = supabase.auth.signInWithPassword({
-      email: email.value,
+    // Direct login call with better error handling
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.value.trim(),
       password: password.value
     })
-    
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Login request timed out. Please check your connection.')), 15000)
-    )
-    
-    const { data, error } = await Promise.race([loginPromise, timeoutPromise])
 
     if (error) {
       // Provide user-friendly error messages

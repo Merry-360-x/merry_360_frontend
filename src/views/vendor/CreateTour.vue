@@ -262,16 +262,16 @@ const availableInclusions = [
 const validateForm = () => {
   errors.value = {}
   
-  if (!form.value.title) errors.value.title = t('validation.required')
-  if (!form.value.location) errors.value.location = t('validation.required')
-  if (!form.value.description) errors.value.description = t('validation.required')
-  if (!form.value.category) errors.value.category = t('validation.required')
-  if (form.value.durationDays === null || form.value.durationDays < 0) errors.value.durationDays = t('validation.required')
-  if (form.value.durationDays === 0 && form.value.durationHours === 0) errors.value.durationDays = t('validation.durationRequired')
-  if (!form.value.difficulty) errors.value.difficulty = t('validation.required')
-  if (!form.value.price || form.value.price <= 0) errors.value.price = t('validation.validPriceRequired')
-  if (!form.value.groupSize || form.value.groupSize <= 0) errors.value.groupSize = t('validation.required')
-  if (tourImages.value.length === 0) errors.value.image = t('validation.imageRequired')
+  if (!form.value.title?.trim()) errors.value.title = 'Please enter a tour title'
+  if (!form.value.location?.trim()) errors.value.location = 'Please enter a location'
+  if (!form.value.description?.trim()) errors.value.description = 'Please enter a description'
+  if (!form.value.category) errors.value.category = 'Please select a category'
+  if (form.value.durationDays === null || form.value.durationDays < 0) errors.value.durationDays = 'Please enter number of days'
+  if (form.value.durationDays === 0 && form.value.durationHours === 0) errors.value.durationDays = 'Duration must be at least 1 hour or 1 day'
+  if (!form.value.difficulty) errors.value.difficulty = 'Please select difficulty level'
+  if (!form.value.price || form.value.price <= 0) errors.value.price = 'Please enter a valid price'
+  if (!form.value.groupSize || form.value.groupSize <= 0) errors.value.groupSize = 'Please enter group size'
+  if (tourImages.value.length === 0) errors.value.image = 'Please upload at least one image'
   
   return Object.keys(errors.value).length === 0
 }
@@ -325,12 +325,8 @@ const handleSubmit = async () => {
       available: true
     }
 
-    const createTourPromise = api.tours.create(tourData)
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Request timeout')), 30000)
-    )
-
-    await Promise.race([createTourPromise, timeoutPromise])
+    // Direct API call - no timeout wrapper needed
+    await api.tours.create(tourData)
     
     showSuccess.value = true
     showToast(t('tour.createSuccess'), 'success')

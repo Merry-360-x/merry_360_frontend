@@ -405,15 +405,45 @@ async function handleSubmit() {
     return
   }
 
+  // Validate required fields with clear messages
+  if (!form.value.title?.trim()) {
+    showToastError('Please enter a property name')
+    return
+  }
+  if (!form.value.category) {
+    showToastError('Please select a property type')
+    return
+  }
+  if (!form.value.location?.trim()) {
+    showToastError('Please enter a location')
+    return
+  }
+  if (!form.value.price || Number(form.value.price) <= 0) {
+    showToastError('Please enter a valid price')
+    return
+  }
+  if (!form.value.beds || Number(form.value.beds) <= 0) {
+    showToastError('Please enter number of bedrooms')
+    return
+  }
+  if (!form.value.baths || Number(form.value.baths) <= 0) {
+    showToastError('Please enter number of bathrooms')
+    return
+  }
+  if (!form.value.description?.trim()) {
+    showToastError('Please enter a description')
+    return
+  }
+
+  const imageUrls = propertyImages.value.map((img) => img.url || img.preview).filter(Boolean)
+  if (imageUrls.length < 3) {
+    showToastError('Please upload at least 3 images')
+    return
+  }
+
   isSubmitting.value = true
 
   try {
-    const imageUrls = propertyImages.value.map((img) => img.url || img.preview).filter(Boolean)
-
-    if (imageUrls.length < 3) {
-      throw new Error('Please upload at least 3 images')
-    }
-
     // Add default amenities if none selected
     if (form.value.amenities.length === 0) {
       form.value.amenities = ['WiFi', 'Parking']
@@ -438,18 +468,8 @@ async function handleSubmit() {
       longitude: null
     }
 
-    // Verify API
-    if (!api.accommodations || typeof api.accommodations.create !== 'function') {
-      throw new Error('API is not available. Please contact support.')
-    }
-
-    // Add timeout
-    const createProperty = api.accommodations.create(propertyData)
-    const timeout = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
-    )
-
-    await Promise.race([createProperty, timeout])
+    // Direct API call - no timeout wrapper
+    await api.accommodations.create(propertyData)
 
     showSuccessModal.value = true
     showToastSuccess('Property published successfully!')
