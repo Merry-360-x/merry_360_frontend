@@ -1,25 +1,25 @@
 <template>
   <MainLayout>
-    <div class="min-h-screen bg-gray-50 py-8">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
         <div class="mb-8">
-          <router-link :to="dashboardPath" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
+          <router-link :to="dashboardPath" class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex items-center gap-2 mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Back to Dashboard
+            {{ t('common.backToDashboard') }}
           </router-link>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Tour</h1>
-          <p class="text-gray-600">Create a new tour experience for travelers</p>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ t('tour.createTitle') }}</h1>
+          <p class="text-gray-600 dark:text-gray-400">{{ t('tour.createSubtitle') }}</p>
         </div>
 
         <!-- Success Message -->
-        <div v-if="showSuccess" class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-          <div class="flex items-center gap-2 text-green-800">
+        <div v-if="showSuccess" class="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <div class="flex items-center gap-2 text-green-800 dark:text-green-300">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <span class="font-medium">Tour created successfully!</span>
+            <span class="font-medium">{{ t('tour.createSuccess') }}</span>
           </div>
         </div>
 
@@ -28,50 +28,50 @@
           <form @submit.prevent="handleSubmit">
             <!-- Basic Information -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('common.basicInfo') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Tour Title *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.tourTitle') }} *</label>
                   <Input 
                     v-model="form.title" 
-                    placeholder="E.g., Gorilla Trekking Adventure"
+                    :placeholder="t('tour.tourTitlePlaceholder')"
                     :class="errors.title ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.title" class="mt-1 text-sm text-red-600">{{ errors.title }}</p>
+                  <p v-if="errors.title" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.title }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Location *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('common.location') }} *</label>
                   <Input 
                     v-model="form.location" 
-                    placeholder="E.g., Volcanoes National Park"
+                    :placeholder="t('tour.locationPlaceholder')"
                     :class="errors.location ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.location" class="mt-1 text-sm text-red-600">{{ errors.location }}</p>
+                  <p v-if="errors.location" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.location }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('common.description') }} *</label>
                   <textarea 
                     v-model="form.description"
                     rows="4"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
-                    placeholder="Describe your tour experience..."
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    :placeholder="t('tour.descriptionPlaceholder')"
                     :class="errors.description ? 'border-red-500' : ''"
                   ></textarea>
-                  <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
+                  <p v-if="errors.description" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.description }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Tour Details -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Tour Details</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('tour.tourDetails') }}</h2>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Days *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.durationDays') }} *</label>
                   <Input 
                     v-model.number="form.durationDays" 
                     type="number"
@@ -79,11 +79,11 @@
                     min="0"
                     :class="errors.durationDays ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.durationDays" class="mt-1 text-sm text-red-600">{{ errors.durationDays }}</p>
+                  <p v-if="errors.durationDays" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.durationDays }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Hours</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.durationHours') }}</label>
                   <Input 
                     v-model.number="form.durationHours" 
                     type="number"
@@ -91,45 +91,45 @@
                     min="0"
                     max="23"
                   />
-                  <p class="mt-1 text-xs text-gray-500">Leave as 0 if no hours</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('common.leaveAsZeroIfNoHours') }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Tour Category *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.category') }} *</label>
                   <select 
                     v-model="form.category"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     :class="errors.category ? 'border-red-500' : ''"
                   >
-                    <option value="">Select category</option>
-                    <option value="Nature">Nature</option>
-                    <option value="Adventure">Adventure</option>
-                    <option value="Cultural">Cultural</option>
-                    <option value="Wildlife">Wildlife</option>
-                    <option value="Historical">Historical</option>
+                    <option value="">{{ t('tour.selectCategory') }}</option>
+                    <option value="Nature">{{ t('tour.categories.nature') }}</option>
+                    <option value="Adventure">{{ t('tour.categories.adventure') }}</option>
+                    <option value="Cultural">{{ t('tour.categories.cultural') }}</option>
+                    <option value="Wildlife">{{ t('tour.categories.wildlife') }}</option>
+                    <option value="Historical">{{ t('tour.categories.historical') }}</option>
                   </select>
-                  <p v-if="errors.category" class="mt-1 text-sm text-red-600">{{ errors.category }}</p>
-                  <p class="mt-1 text-xs text-gray-500">Choose the main category for this tour</p>
+                  <p v-if="errors.category" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.category }}</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('tour.categoryHint') }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Difficulty Level *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.difficulty') }} *</label>
                   <select 
                     v-model="form.difficulty"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     :class="errors.difficulty ? 'border-red-500' : ''"
                   >
-                    <option value="">Select difficulty</option>
-                    <option value="Easy">Easy</option>
-                    <option value="Moderate">Moderate</option>
-                    <option value="Challenging">Challenging</option>
-                    <option value="Extreme">Extreme</option>
+                    <option value="">{{ t('tour.selectDifficulty') }}</option>
+                    <option value="Easy">{{ t('tour.difficulties.easy') }}</option>
+                    <option value="Moderate">{{ t('tour.difficulties.moderate') }}</option>
+                    <option value="Challenging">{{ t('tour.difficulties.challenging') }}</option>
+                    <option value="Extreme">{{ t('tour.difficulties.extreme') }}</option>
                   </select>
-                  <p v-if="errors.difficulty" class="mt-1 text-sm text-red-600">{{ errors.difficulty }}</p>
+                  <p v-if="errors.difficulty" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.difficulty }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Price per Person (RWF) *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.pricePerPerson') }} (RWF) *</label>
                   <Input 
                     v-model.number="form.price" 
                     type="number"
@@ -137,19 +137,19 @@
                     min="0"
                     :class="errors.price ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.price" class="mt-1 text-sm text-red-600">{{ errors.price }}</p>
-                  <p class="mt-1 text-xs text-gray-500">Enter price in Rwandan Francs</p>
+                  <p v-if="errors.price" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.price }}</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('common.enterPriceRWF') }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Group Size (max) *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('tour.groupSize') }} *</label>
                   <Input 
                     v-model.number="form.groupSize" 
                     type="number"
                     placeholder="8"
                     :class="errors.groupSize ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.groupSize" class="mt-1 text-sm text-red-600">{{ errors.groupSize }}</p>
+                  <p v-if="errors.groupSize" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.groupSize }}</p>
                 </div>
               </div>
             </div>
@@ -159,8 +159,8 @@
               <PhotoUploader
                 v-model="tourImages"
                 v-model:uploading="imagesUploading"
-                title="Tour Images"
-                subtitle="Add photos to showcase your tour experience"
+                :title="t('tour.tourImages')"
+                :subtitle="t('tour.tourImagesSubtitle')"
                 :min-photos="1"
                 :max-photos="15"
                 folder="merry360x/tours"
@@ -169,29 +169,29 @@
 
             <!-- Inclusions -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">What's Included</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('tour.whatsIncluded') }}</h2>
               
               <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <label v-for="inclusion in availableInclusions" :key="inclusion" class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label v-for="inclusion in availableInclusions" :key="inclusion" class="flex items-center gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors">
                   <input 
                     type="checkbox" 
                     :value="inclusion" 
                     v-model="form.inclusions"
-                    class="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                    class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500"
                   />
-                  <span class="text-sm text-gray-700">{{ inclusion }}</span>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ inclusion }}</span>
                 </label>
               </div>
             </div>
 
             <!-- Itinerary -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Itinerary (optional)</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('tour.itinerary') }}</h2>
               <textarea 
                 v-model="form.itinerary"
                 rows="6"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
-                placeholder="Day 1: Arrival and briefing&#10;Day 2: Trek to see gorillas&#10;Day 3: Return journey"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                :placeholder="t('tour.itineraryPlaceholder')"
               ></textarea>
             </div>
 
@@ -202,10 +202,10 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isSubmitting ? 'Creating...' : (imagesUploading ? 'Uploading...' : 'Create Tour') }}
+                {{ isSubmitting ? t('common.creating') : (imagesUploading ? t('common.uploading') : t('tour.createTour')) }}
               </Button>
               <Button type="button" variant="secondary" @click="handleCancel">
-                Cancel
+                {{ t('common.cancel') }}
               </Button>
             </div>
           </form>
@@ -219,6 +219,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from '../../composables/useToast'
+import { useTranslation } from '../../composables/useTranslation'
 import { useDashboardPath } from '../../composables/useDashboardPath'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
@@ -229,6 +230,7 @@ import api from '../../services/api'
 
 const router = useRouter()
 const { showToast } = useToast()
+const { t } = useTranslation()
 const { dashboardPath } = useDashboardPath()
 
 const form = ref({
@@ -251,8 +253,6 @@ const showSuccess = ref(false)
 const tourImages = ref([])
 const imagesUploading = ref(false)
 
-
-
 const availableInclusions = [
   'Accommodation', 'Meals', 'Transport', 'Guide', 
   'Park Fees', 'Equipment', 'Insurance', 'Water',
@@ -262,17 +262,16 @@ const availableInclusions = [
 const validateForm = () => {
   errors.value = {}
   
-  if (!form.value.title) errors.value.title = 'Title is required'
-  if (!form.value.location) errors.value.location = 'Location is required'
-  if (!form.value.description) errors.value.description = 'Description is required'
-  if (!form.value.category) errors.value.category = 'Tour category is required'
-  if (form.value.durationDays === null || form.value.durationDays < 0) errors.value.durationDays = 'Days is required (enter 0 if less than a day)'
-  if (form.value.durationHours === null || form.value.durationHours < 0 || form.value.durationHours > 23) errors.value.durationHours = 'Hours must be between 0 and 23'
-  if (form.value.durationDays === 0 && form.value.durationHours === 0) errors.value.durationDays = 'Duration must be at least 1 hour'
-  if (!form.value.difficulty) errors.value.difficulty = 'Difficulty level is required'
-  if (!form.value.price || form.value.price <= 0) errors.value.price = 'Valid price is required'
-  if (!form.value.groupSize || form.value.groupSize <= 0) errors.value.groupSize = 'Group size is required'
-  if (tourImages.value.length === 0) errors.value.image = 'At least one image is required'
+  if (!form.value.title) errors.value.title = t('validation.required')
+  if (!form.value.location) errors.value.location = t('validation.required')
+  if (!form.value.description) errors.value.description = t('validation.required')
+  if (!form.value.category) errors.value.category = t('validation.required')
+  if (form.value.durationDays === null || form.value.durationDays < 0) errors.value.durationDays = t('validation.required')
+  if (form.value.durationDays === 0 && form.value.durationHours === 0) errors.value.durationDays = t('validation.durationRequired')
+  if (!form.value.difficulty) errors.value.difficulty = t('validation.required')
+  if (!form.value.price || form.value.price <= 0) errors.value.price = t('validation.validPriceRequired')
+  if (!form.value.groupSize || form.value.groupSize <= 0) errors.value.groupSize = t('validation.required')
+  if (tourImages.value.length === 0) errors.value.image = t('validation.imageRequired')
   
   return Object.keys(errors.value).length === 0
 }
@@ -282,15 +281,12 @@ const handleCancel = () => {
 }
 
 const handleSubmit = async () => {
-  console.log('🔍 [Tour Create] Starting submission...')
-  
-  // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (imagesUploading.value) {
-    showToast('Please wait for image uploads to finish.', 'error')
+    showToast(t('common.waitForUpload'), 'error')
     return
   }
   if (!validateForm()) {
-    showToast('Please fix all errors', 'error')
+    showToast(t('validation.fixErrors'), 'error')
     return
   }
 
@@ -298,13 +294,11 @@ const handleSubmit = async () => {
 
   try {
     const imageUrls = tourImages.value.map((img) => img.url || img.preview).filter(Boolean)
-    console.log('📷 [Tour Create] Image URLs:', imageUrls.length)
 
     if (imageUrls.length === 0) {
-      throw new Error('Please upload at least one image')
+      throw new Error(t('validation.uploadAtLeastOneImage'))
     }
 
-    // Send duration_days and duration_hours separately (not calculated total)
     const durationString = form.value.durationDays > 0 
       ? `${form.value.durationDays} ${form.value.durationDays === 1 ? 'day' : 'days'}${form.value.durationHours > 0 ? ` ${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}` : ''}`
       : `${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}`
@@ -318,7 +312,7 @@ const handleSubmit = async () => {
       category: form.value.category,
       duration_days: Number(form.value.durationDays) || 0,
       duration_hours: Number(form.value.durationHours) || 0,
-      duration: durationString, // Keep for backward compatibility
+      duration: durationString,
       difficulty: form.value.difficulty,
       price: Number(form.value.price),
       group_size: form.value.groupSize,
@@ -330,63 +324,23 @@ const handleSubmit = async () => {
       itinerary: form.value.itinerary || '',
       available: true
     }
-    
-    console.log('📤 [Tour Create] Submitting tour data:', tourData)
-    
-    // Verify API method exists
-    if (!api.tours || typeof api.tours.create !== 'function') {
-      throw new Error('Tour creation API is not available. Please contact support.')
-    }
 
-    // Add timeout protection with better error handling
     const createTourPromise = api.tours.create(tourData)
     const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+      setTimeout(() => reject(new Error('Request timeout')), 30000)
     )
 
-    let result
-    try {
-      result = await Promise.race([createTourPromise, timeoutPromise])
-      console.log('✅ [Tour Create] Tour created successfully!', result)
-    } catch (createError) {
-      // Re-throw with better error message
-      if (createError?.message?.includes('timeout')) {
-        throw new Error('The request is taking too long. Please check your internet connection and try again.')
-      }
-      throw createError
-    }
-    
-    // Verify result has data
-    if (!result || !result.data) {
-      console.warn('⚠️ [Tour Create] No data returned, but no error. Checking if tour was created...')
-      // Tour might have been created but response is empty - continue anyway
-    }
+    await Promise.race([createTourPromise, timeoutPromise])
     
     showSuccess.value = true
-    showToast('Tour created successfully!', 'success')
+    showToast(t('tour.createSuccess'), 'success')
     
     setTimeout(() => {
       router.push(dashboardPath.value)
     }, 2000)
   } catch (error) {
-    console.error('❌ [Tour Create] Error:', error)
-    
-    let errorMessage = 'Failed to create tour. Please try again.'
-    
-    if (error?.message) {
-      errorMessage = error.message
-    } else if (error?.error?.message) {
-      errorMessage = error.error.message
-    } else if (typeof error === 'string') {
-      errorMessage = error
-    }
-
-    if (errorMessage.includes('timeout')) {
-      errorMessage = 'The request is taking too long. Please check your internet and try again.'
-    } else if (errorMessage.includes('permission') || errorMessage.includes('denied')) {
-      errorMessage = 'You don\'t have permission to create tours. Please contact admin.'
-    }
-
+    let errorMessage = t('tour.createError')
+    if (error?.message) errorMessage = error.message
     showToast(errorMessage, 'error')
   } finally {
     isSubmitting.value = false

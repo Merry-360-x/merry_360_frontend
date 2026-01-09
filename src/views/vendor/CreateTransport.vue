@@ -1,25 +1,25 @@
 <template>
   <MainLayout>
-    <div class="min-h-screen bg-gray-50 py-8">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div class="container mx-auto px-4 lg:px-8 max-w-4xl">
         <div class="mb-8">
-          <router-link :to="dashboardPath" class="text-brand-600 hover:text-brand-700 flex items-center gap-2 mb-4">
+          <router-link :to="dashboardPath" class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 flex items-center gap-2 mb-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Back to Dashboard
+            {{ t('common.backToDashboard') }}
           </router-link>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Transport Service</h1>
-          <p class="text-gray-600">Offer transportation services to travelers</p>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ t('transport.createTitle') }}</h1>
+          <p class="text-gray-600 dark:text-gray-400">{{ t('transport.createSubtitle') }}</p>
         </div>
 
         <!-- Success Message -->
-        <div v-if="showSuccess" class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-          <div class="flex items-center gap-2 text-green-800">
+        <div v-if="showSuccess" class="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <div class="flex items-center gap-2 text-green-800 dark:text-green-300">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <span class="font-medium">Transport service created successfully!</span>
+            <span class="font-medium">{{ t('transport.createSuccess') }}</span>
           </div>
         </div>
 
@@ -28,90 +28,90 @@
           <form @submit.prevent="handleSubmit">
             <!-- Basic Information -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Basic Information</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('common.basicInfo') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Service Name *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.serviceName') }} *</label>
                   <Input 
                     v-model="form.name" 
-                    placeholder="E.g., Kigali Airport Transfer"
+                    :placeholder="t('transport.serviceNamePlaceholder')"
                     :class="errors.name ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
+                  <p v-if="errors.name" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.name }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Vehicle Type *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.vehicleType') }} *</label>
                   <select 
                     v-model="form.vehicleType"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     :class="errors.vehicleType ? 'border-red-500' : ''"
                   >
-                    <option value="">Select vehicle type</option>
-                    <option value="Car">Car</option>
-                    <option value="SUV">SUV</option>
-                    <option value="Van">Van</option>
-                    <option value="Bus">Bus</option>
-                    <option value="Minibus">Minibus</option>
-                    <option value="Luxury">Luxury Vehicle</option>
+                    <option value="">{{ t('transport.selectVehicleType') }}</option>
+                    <option value="Car">{{ t('transport.types.car') }}</option>
+                    <option value="SUV">{{ t('transport.types.suv') }}</option>
+                    <option value="Van">{{ t('transport.types.van') }}</option>
+                    <option value="Bus">{{ t('transport.types.bus') }}</option>
+                    <option value="Minibus">{{ t('transport.types.minibus') }}</option>
+                    <option value="Luxury">{{ t('transport.types.luxury') }}</option>
                   </select>
-                  <p v-if="errors.vehicleType" class="mt-1 text-sm text-red-600">{{ errors.vehicleType }}</p>
+                  <p v-if="errors.vehicleType" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.vehicleType }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Route *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.route') }} *</label>
                   <Input 
                     v-model="form.route" 
-                    placeholder="E.g., Kigali Airport → City Center"
+                    :placeholder="t('transport.routePlaceholder')"
                     :class="errors.route ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.route" class="mt-1 text-sm text-red-600">{{ errors.route }}</p>
+                  <p v-if="errors.route" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.route }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('common.description') }} *</label>
                   <textarea 
                     v-model="form.description"
                     rows="4"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white text-gray-900"
-                    placeholder="Describe your transport service..."
+                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    :placeholder="t('transport.descriptionPlaceholder')"
                     :class="errors.description ? 'border-red-500' : ''"
                   ></textarea>
-                  <p v-if="errors.description" class="mt-1 text-sm text-red-600">{{ errors.description }}</p>
+                  <p v-if="errors.description" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.description }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Vehicle Details -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Vehicle Details</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('transport.vehicleDetails') }}</h2>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Capacity (passengers) *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.capacity') }} *</label>
                   <Input 
                     v-model.number="form.capacity" 
                     type="number"
                     placeholder="4"
                     :class="errors.capacity ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.capacity" class="mt-1 text-sm text-red-600">{{ errors.capacity }}</p>
+                  <p v-if="errors.capacity" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.capacity }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Luggage - Number of Bags</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.luggageBags') }}</label>
                   <Input 
                     v-model.number="form.luggageBags" 
                     type="number"
                     placeholder="0"
                     min="0"
                   />
-                  <p class="mt-1 text-xs text-gray-500">How many bags can fit?</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('transport.luggageBagsHint') }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Price per Day (RWF) *</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.pricePerDay') }} (RWF) *</label>
                   <Input 
                     v-model.number="form.price" 
                     type="number"
@@ -119,12 +119,12 @@
                     min="0"
                     :class="errors.price ? 'border-red-500' : ''"
                   />
-                  <p v-if="errors.price" class="mt-1 text-sm text-red-600">{{ errors.price }}</p>
-                  <p class="mt-1 text-xs text-gray-500">Enter price in Rwandan Francs</p>
+                  <p v-if="errors.price" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.price }}</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('common.enterPriceRWF') }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Days</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.durationDays') }}</label>
                   <Input 
                     v-model.number="form.durationDays" 
                     type="number"
@@ -134,7 +134,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Duration - Hours</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.durationHours') }}</label>
                   <Input 
                     v-model.number="form.durationHours" 
                     type="number"
@@ -142,7 +142,7 @@
                     min="0"
                     max="23"
                   />
-                  <p class="mt-1 text-xs text-gray-500">Leave as 0 if no hours</p>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ t('common.leaveAsZeroIfNoHours') }}</p>
                 </div>
               </div>
             </div>
@@ -152,8 +152,8 @@
               <PhotoUploader
                 v-model="transportImages"
                 v-model:uploading="imagesUploading"
-                title="Vehicle Images"
-                subtitle="Add photos of your vehicle"
+                :title="t('transport.vehicleImages')"
+                :subtitle="t('transport.vehicleImagesSubtitle')"
                 :min-photos="1"
                 :max-photos="10"
                 folder="merry360x/transport"
@@ -162,39 +162,39 @@
 
             <!-- Features & Amenities -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Features & Amenities</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('transport.featuresAmenities') }}</h2>
               
               <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <label v-for="feature in availableFeatures" :key="feature" class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                <label v-for="feature in availableFeatures" :key="feature" class="flex items-center gap-2 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors">
                   <input 
                     type="checkbox" 
                     :value="feature" 
                     v-model="form.features"
-                    class="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                    class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500"
                   />
-                  <span class="text-sm text-gray-700">{{ feature }}</span>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">{{ feature }}</span>
                 </label>
               </div>
             </div>
 
             <!-- Driver Information -->
             <div class="mb-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-4">Driver Information (optional)</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ t('transport.driverInfo') }}</h2>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Driver Name</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.driverName') }}</label>
                   <Input 
                     v-model="form.driverName" 
-                    placeholder="E.g., John Doe"
+                    :placeholder="t('transport.driverNamePlaceholder')"
                   />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Driver Experience</label>
+                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('transport.driverExperience') }}</label>
                   <Input 
                     v-model="form.driverExperience" 
-                    placeholder="E.g., 10 years"
+                    :placeholder="t('transport.driverExperiencePlaceholder')"
                   />
                 </div>
 
@@ -203,9 +203,9 @@
                     <input 
                       type="checkbox" 
                       v-model="form.professionalDriver"
-                      class="rounded border-gray-300 text-brand-600 focus:ring-brand-500"
+                      class="rounded border-gray-300 dark:border-gray-600 text-brand-600 focus:ring-brand-500"
                     />
-                    <span class="text-sm text-gray-700">Professional licensed driver</span>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ t('transport.professionalDriver') }}</span>
                   </label>
                 </div>
               </div>
@@ -218,10 +218,10 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isSubmitting ? 'Creating...' : (imagesUploading ? 'Uploading...' : 'Create Service') }}
+                {{ isSubmitting ? t('common.creating') : (imagesUploading ? t('common.uploading') : t('transport.createService')) }}
               </Button>
               <Button type="button" variant="secondary" @click="handleCancel">
-                Cancel
+                {{ t('common.cancel') }}
               </Button>
             </div>
           </form>
@@ -235,6 +235,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from '../../composables/useToast'
+import { useTranslation } from '../../composables/useTranslation'
 import { useDashboardPath } from '../../composables/useDashboardPath'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
@@ -245,6 +246,7 @@ import api from '../../services/api'
 
 const router = useRouter()
 const { showToast } = useToast()
+const { t } = useTranslation()
 const { dashboardPath } = useDashboardPath()
 
 const form = ref({
@@ -280,13 +282,13 @@ const availableFeatures = [
 const validateForm = () => {
   errors.value = {}
   
-  if (!form.value.name) errors.value.name = 'Service name is required'
-  if (!form.value.vehicleType) errors.value.vehicleType = 'Vehicle type is required'
-  if (!form.value.route) errors.value.route = 'Route is required'
-  if (!form.value.description) errors.value.description = 'Description is required'
-  if (!form.value.capacity || form.value.capacity <= 0) errors.value.capacity = 'Valid capacity is required'
-  if (!form.value.price || form.value.price <= 0) errors.value.price = 'Valid price is required'
-  if (transportImages.value.length === 0) errors.value.image = 'At least one vehicle image is required'
+  if (!form.value.name) errors.value.name = t('validation.required')
+  if (!form.value.vehicleType) errors.value.vehicleType = t('validation.required')
+  if (!form.value.route) errors.value.route = t('validation.required')
+  if (!form.value.description) errors.value.description = t('validation.required')
+  if (!form.value.capacity || form.value.capacity <= 0) errors.value.capacity = t('validation.validCapacityRequired')
+  if (!form.value.price || form.value.price <= 0) errors.value.price = t('validation.validPriceRequired')
+  if (transportImages.value.length === 0) errors.value.image = t('validation.imageRequired')
   
   return Object.keys(errors.value).length === 0
 }
@@ -296,15 +298,12 @@ const handleCancel = () => {
 }
 
 const handleSubmit = async () => {
-  console.log('🔍 [Transport Create] Starting submission...')
-  
-  // Validate BEFORE setting isSubmitting to avoid button getting stuck
   if (imagesUploading.value) {
-    showToast('Please wait for image uploads to finish.', 'error')
+    showToast(t('common.waitForUpload'), 'error')
     return
   }
   if (!validateForm()) {
-    showToast('Please fix all errors', 'error')
+    showToast(t('validation.fixErrors'), 'error')
     return
   }
 
@@ -312,13 +311,11 @@ const handleSubmit = async () => {
 
   try {
     const imageUrls = transportImages.value.map((img) => img.url || img.preview).filter(Boolean)
-    console.log('📷 [Transport Create] Image URLs:', imageUrls.length)
 
     if (imageUrls.length === 0) {
-      throw new Error('Please upload at least one image')
+      throw new Error(t('validation.uploadAtLeastOneImage'))
     }
 
-    // Calculate duration string
     const durationString = form.value.durationDays > 0 
       ? `${form.value.durationDays} ${form.value.durationDays === 1 ? 'day' : 'days'}${form.value.durationHours > 0 ? ` ${form.value.durationHours} ${form.value.durationHours === 1 ? 'hour' : 'hours'}` : ''}`
       : form.value.durationHours > 0 
@@ -336,7 +333,7 @@ const handleSubmit = async () => {
       price: Number(form.value.price),
       duration_days: Number(form.value.durationDays) || 0,
       duration_hours: Number(form.value.durationHours) || 0,
-      duration: durationString, // Keep for backward compatibility
+      duration: durationString,
       main_image: imageUrls[0],
       image: imageUrls[0],
       images: imageUrls,
@@ -346,62 +343,23 @@ const handleSubmit = async () => {
       professional_driver: form.value.professionalDriver || false,
       available: true
     }
-    
-    console.log('📤 [Transport Create] Submitting transport data:', transportData)
-    
-    // Verify API method exists
-    if (!api.transport || typeof api.transport.create !== 'function') {
-      throw new Error('Transport creation API is not available. Please contact support.')
-    }
 
-    // Add timeout protection
     const createTransportPromise = api.transport.create(transportData)
     const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
+      setTimeout(() => reject(new Error('Request timeout')), 30000)
     )
 
-    let result
-    try {
-      result = await Promise.race([createTransportPromise, timeoutPromise])
-      console.log('✅ [Transport Create] Transport created successfully!', result)
-    } catch (createError) {
-      if (createError?.message?.includes('timeout')) {
-        throw new Error('The request is taking too long. Please check your internet connection and try again.')
-      }
-      throw createError
-    }
-    
-    // Verify result has data
-    if (!result || !result.data) {
-      console.warn('⚠️ [Transport Create] No data returned, but no error. Checking if transport was created...')
-      // Transport might have been created but response is empty - continue anyway
-    }
+    await Promise.race([createTransportPromise, timeoutPromise])
     
     showSuccess.value = true
-    showToast('Transport service created successfully!', 'success')
+    showToast(t('transport.createSuccess'), 'success')
     
     setTimeout(() => {
       router.push(dashboardPath.value)
     }, 2000)
   } catch (error) {
-    console.error('❌ [Transport Create] Error:', error)
-    
-    let errorMessage = 'Failed to create transport service. Please try again.'
-    
-    if (error?.message) {
-      errorMessage = error.message
-    } else if (error?.error?.message) {
-      errorMessage = error.error.message
-    } else if (typeof error === 'string') {
-      errorMessage = error
-    }
-
-    if (errorMessage.includes('timeout')) {
-      errorMessage = 'The request is taking too long. Please check your internet and try again.'
-    } else if (errorMessage.includes('permission') || errorMessage.includes('denied')) {
-      errorMessage = 'You don\'t have permission to create transport services. Please contact admin.'
-    }
-
+    let errorMessage = t('transport.createError')
+    if (error?.message) errorMessage = error.message
     showToast(errorMessage, 'error')
   } finally {
     isSubmitting.value = false
