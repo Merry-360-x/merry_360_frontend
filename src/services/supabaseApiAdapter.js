@@ -13,6 +13,27 @@ import { markAsFetched, wasFetchedThisSession } from './memoryCache'
 
 const inflightAccommodationGetAll = new Map()
 
+// Helper: Get user with role from profile
+async function getUserWithRole() {
+  const { data: auth } = await supabase.auth.getUser()
+  const user = auth?.user
+  if (!user) return { user: null, role: null }
+  
+  // Get role from profile
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+  
+  return { user, role: profile?.role || 'user' }
+}
+
+// Helper: Check if user can create listings (admin, staff, host, vendor)
+function canCreateListings(role) {
+  return ['admin', 'staff', 'host', 'vendor'].includes(role)
+}
+
 // Minimal select for home page - ultra fast loading
 const PROPERTIES_HOME_SELECT = [
   'id',
@@ -246,11 +267,15 @@ export const supabaseApiAdapter = {
     },
 
     create: async (propertyData) => {
-      // Get user auth - fast, cached operation
-      const { data: auth } = await supabase.auth.getUser()
-      const user = auth?.user
+      // Get user with role
+      const { user, role } = await getUserWithRole()
       if (!user) {
-        throw new Error('Not authenticated')
+        throw new Error('Please login to create a property')
+      }
+      
+      // Check if user has permission to create listings
+      if (!canCreateListings(role)) {
+        throw new Error('You need host privileges to create properties. Please apply to become a host.')
       }
 
       // Prepare data immediately (no async here)
@@ -313,6 +338,73 @@ export const supabaseApiAdapter = {
       // Clear cache asynchronously (don't wait)
       clearAccommodationCache()
       return { data: { id: data.id, name: data.name } }
+    },
+
+    // Update property (for hosts to edit their own listings)
+    update: async (id, propertyData) => {
+      const { user, role } = await getUserWithRole()
+      if (!user) {
+        throw new Error('Please login to update a property')
+      }
+
+      // Build update object
+      const updateData = {}
+      if (propertyData.name !== undefined) updateData.name = propertyData.name
+      if (propertyData.description !== undefined) updateData.description = propertyData.description
+      if (propertyData.property_type !== undefined) updateData.property_type = normalizePropertyType(propertyData.property_type)
+      if (propertyData.type !== undefined) updateData.property_type = normalizePropertyType(propertyData.type)
+      if (propertyData.location !== undefined) updateData.location = propertyData.location
+      if (propertyData.price !== undefined) updateData.price_per_night = Number(propertyData.price)
+      if (propertyData.price_per_night !== undefined) updateData.price_per_night = Number(propertyData.price_per_night)
+      if (propertyData.bedrooms !== undefined) updateData.bedrooms = Number(propertyData.bedrooms)
+      if (propertyData.bathrooms !== undefined) updateData.bathrooms = Number(propertyData.bathrooms)
+      if (propertyData.max_guests !== undefined) updateData.max_guests = Number(propertyData.max_guests)
+      if (propertyData.amenities !== undefined) updateData.amenities = propertyData.amenities
+      if (propertyData.images !== undefined) updateData.images = propertyData.images
+      if (propertyData.main_image !== undefined) updateData.main_image = propertyData.main_image
+      if (propertyData.available !== undefined) updateData.available = propertyData.available
+
+      // Admin can update any property, others can only update their own
+      let query = supabase.from('properties').update(updateData).eq('id', id)
+      
+      if (role !== 'admin') {
+        query = query.eq('host_id', user.id)
+      }
+
+      const { data, error } = await query.select('id, name').single()
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          throw new Error('Property not found or you do not have permission to edit it')
+        }
+        throw new Error(error.message || 'Failed to update property')
+      }
+
+      clearAccommodationCache()
+      return { data }
+    },
+
+    // Delete property
+    delete: async (id) => {
+      const { user, role } = await getUserWithRole()
+      if (!user) {
+        throw new Error('Please login to delete a property')
+      }
+
+      let query = supabase.from('properties').delete().eq('id', id)
+      
+      if (role !== 'admin') {
+        query = query.eq('host_id', user.id)
+      }
+
+      const { error } = await query
+
+      if (error) {
+        throw new Error(error.message || 'Failed to delete property')
+      }
+
+      clearAccommodationCache()
+      return { ok: true }
     }
   },
 
@@ -377,10 +469,15 @@ export const supabaseApiAdapter = {
     },
 
     create: async (tourData) => {
-      const { data: auth } = await supabase.auth.getUser()
-      const user = auth?.user
+      // Get user with role
+      const { user, role } = await getUserWithRole()
       if (!user) {
-        throw new Error('Not authenticated')
+        throw new Error('Please login to create a tour')
+      }
+      
+      // Check if user has permission to create listings
+      if (!canCreateListings(role)) {
+        throw new Error('You need host privileges to create tours. Please apply to become a host.')
       }
 
       // Parse duration from string like "3 Days 2 Nights" to extract number of days
@@ -470,6 +567,58 @@ export const supabaseApiAdapter = {
     book: async (tourId, data) => {
       // Booking tours not implemented in DB adapter yet.
       return { data: { tourId, ...data } }
+    },
+
+    // Update tour (for hosts to edit their own listings)
+    update: async (id, tourData) => {
+      const { user, role } = await getUserWithRole()
+      if (!user) {
+        throw new Error('Please login to update a tour')
+      }
+
+      const updateData = {}
+      if (tourData.name !== undefined) updateData.name = tourData.name
+      if (tourData.title !== undefined) updateData.name = tourData.title
+      if (tourData.description !== undefined) updateData.description = tourData.description
+      if (tourData.destination !== undefined) updateData.destination = tourData.destination
+      if (tourData.location !== undefined) updateData.destination = tourData.location
+      if (tourData.price !== undefined) updateData.price = Number(tourData.price)
+      if (tourData.duration_days !== undefined) updateData.duration_days = Number(tourData.duration_days)
+      if (tourData.duration_hours !== undefined) updateData.duration_hours = Number(tourData.duration_hours)
+      if (tourData.category !== undefined) updateData.category = tourData.category
+      if (tourData.images !== undefined) updateData.images = tourData.images
+      if (tourData.main_image !== undefined) updateData.main_image = tourData.main_image
+      if (tourData.available !== undefined) updateData.available = tourData.available
+
+      // Admin can update any tour, others need host_id check (if column exists)
+      let query = supabase.from('tours').update(updateData).eq('id', id)
+
+      const { data, error } = await query.select('id, name').single()
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          throw new Error('Tour not found or you do not have permission to edit it')
+        }
+        throw new Error(error.message || 'Failed to update tour')
+      }
+
+      return { data }
+    },
+
+    // Delete tour
+    delete: async (id) => {
+      const { user, role } = await getUserWithRole()
+      if (!user) {
+        throw new Error('Please login to delete a tour')
+      }
+
+      const { error } = await supabase.from('tours').delete().eq('id', id)
+
+      if (error) {
+        throw new Error(error.message || 'Failed to delete tour')
+      }
+
+      return { ok: true }
     }
   },
 
@@ -514,13 +663,15 @@ export const supabaseApiAdapter = {
     },
 
     create: async (transportData) => {
-      console.log('🔍 [Transport Create] Starting transport creation...')
-      console.log('📝 [Transport Create] Transport data:', JSON.stringify(transportData, null, 2))
-      
-      const { data: auth } = await supabase.auth.getUser()
-      const user = auth?.user
+      // Get user with role
+      const { user, role } = await getUserWithRole()
       if (!user) {
-        throw new Error('Not authenticated')
+        throw new Error('Please login to create a transport service')
+      }
+      
+      // Check if user has permission to create listings
+      if (!canCreateListings(role)) {
+        throw new Error('You need host privileges to create transport services. Please apply to become a host.')
       }
 
       // Map form data to database columns
@@ -584,6 +735,58 @@ export const supabaseApiAdapter = {
 
     book: async (data) => {
       return { data }
+    },
+
+    // Update transport (for hosts to edit their own listings)
+    update: async (id, transportData) => {
+      const { user, role } = await getUserWithRole()
+      if (!user) {
+        throw new Error('Please login to update a transport service')
+      }
+
+      const updateData = {}
+      if (transportData.name !== undefined) updateData.name = transportData.name
+      if (transportData.description !== undefined) updateData.description = transportData.description
+      if (transportData.type !== undefined) updateData.type = transportData.type
+      if (transportData.vehicle_type !== undefined) updateData.type = transportData.vehicle_type
+      if (transportData.capacity !== undefined) updateData.capacity = Number(transportData.capacity)
+      if (transportData.price !== undefined) updateData.price_per_day = Number(transportData.price)
+      if (transportData.price_per_day !== undefined) updateData.price_per_day = Number(transportData.price_per_day)
+      if (transportData.images !== undefined) updateData.images = transportData.images
+      if (transportData.main_image !== undefined) updateData.main_image = transportData.main_image
+      if (transportData.available !== undefined) updateData.available = transportData.available
+
+      const { data, error } = await supabase
+        .from('vehicles')
+        .update(updateData)
+        .eq('id', id)
+        .select('id, name')
+        .single()
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          throw new Error('Transport service not found or you do not have permission to edit it')
+        }
+        throw new Error(error.message || 'Failed to update transport service')
+      }
+
+      return { data }
+    },
+
+    // Delete transport
+    delete: async (id) => {
+      const { user, role } = await getUserWithRole()
+      if (!user) {
+        throw new Error('Please login to delete a transport service')
+      }
+
+      const { error } = await supabase.from('vehicles').delete().eq('id', id)
+
+      if (error) {
+        throw new Error(error.message || 'Failed to delete transport service')
+      }
+
+      return { ok: true }
     }
   },
 
