@@ -228,7 +228,7 @@ const handleSignup = async () => {
           created_at: new Date().toISOString()
         })
 
-      if (profileError) console.error('Profile creation error:', profileError)
+      // Profile created
 
       // Update user store with loyalty points
       await userStore.login({
@@ -258,7 +258,6 @@ const handleSignup = async () => {
       }, 2000)
     }
   } catch (error) {
-    console.error('Signup error:', error)
     errorMessage.value = error.message || 'Failed to create account. Please try again.'
   } finally {
     loading.value = false
@@ -270,13 +269,7 @@ const handleGoogleSignUp = async () => {
   errorMessage.value = ''
 
   try {
-    console.log('🔵 Google sign-up initiated')
-    
-    // Always redirect back to the current site origin.
-    // This avoids auth getting "stuck" when the app is deployed under a different Vercel/custom domain.
     const redirectUrl = `${window.location.origin}/auth/callback`
-    
-    console.log('Redirect URL:', redirectUrl)
     
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -285,22 +278,14 @@ const handleGoogleSignUp = async () => {
       }
     })
 
-    if (error) {
-      console.error('❌ OAuth error:', error)
-      throw error
-    }
+    if (error) throw error
 
-    console.log('✅ OAuth data received:', data)
-
-    // Redirect to Google
     if (data?.url) {
-      console.log('🔗 Redirecting to:', data.url)
       window.location.href = data.url
     } else {
       throw new Error('No OAuth URL returned from Supabase')
     }
   } catch (error) {
-    console.error('❌ Google sign-up error:', error)
     errorMessage.value = error.message || 'Failed to sign up with Google. Please check your internet connection and try again.'
     googleLoading.value = false
   }

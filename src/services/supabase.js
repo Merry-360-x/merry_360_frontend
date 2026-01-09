@@ -169,17 +169,10 @@ const sanitizeEnv = (value) => String(value || '')
 const supabaseUrl = sanitizeEnv(import.meta.env.VITE_SUPABASE_URL)
 const supabaseAnonKey = sanitizeEnv(import.meta.env.VITE_SUPABASE_ANON_KEY)
 
-// Validate configuration
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ Supabase configuration missing!')
-  console.error('VITE_SUPABASE_URL:', supabaseUrl)
-  console.error('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Set' : 'Missing')
-}
-
-// Initialize Supabase client (or a safe stub when env is missing).
+// Initialize Supabase client (or a safe stub when env is missing)
 export const supabase = (supabaseUrl && supabaseAnonKey)
-  ? (console.log('✅ Supabase initialized:', supabaseUrl), createClient(supabaseUrl, supabaseAnonKey))
-  : (console.warn('⚠️ Supabase disabled: missing env vars; app will run in limited mode.'), createSupabaseStubClient())
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : createSupabaseStubClient()
 
 // ============ Auth ============
 export async function signUpWithEmail(email, password, metadata = {}) {
@@ -223,9 +216,8 @@ export async function signOutUser() {
   try {
     // Clear session globally (includes server-side invalidation)
     await supabase.auth.signOut({ scope: 'global' })
-  } catch (err) {
-    // If global fails (e.g., network issue), try local as fallback
-    console.warn('Global signout failed, trying local:', err)
+  } catch {
+    // If global fails, try local as fallback
     await supabase.auth.signOut({ scope: 'local' })
   }
   

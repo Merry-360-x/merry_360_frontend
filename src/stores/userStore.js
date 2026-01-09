@@ -44,8 +44,7 @@ export const useUserStore = defineStore('user', () => {
         const parsed = JSON.parse(stored)
         tripCart.value = Array.isArray(parsed) ? parsed : []
       }
-    } catch (error) {
-      console.error('Error loading cart from storage:', error)
+    } catch {
       tripCart.value = []
     }
   }
@@ -53,8 +52,8 @@ export const useUserStore = defineStore('user', () => {
   const saveCartToStorage = () => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(tripCart.value))
-    } catch (error) {
-      console.error('Error saving cart to storage:', error)
+    } catch {
+      // Silent fail for storage errors
     }
   }
   
@@ -110,7 +109,6 @@ export const useUserStore = defineStore('user', () => {
       .single()
 
     if (error) {
-      console.warn('Profile load warning:', error)
       await login({
         id: session.user.id,
         email: session.user.email,
@@ -174,8 +172,7 @@ export const useUserStore = defineStore('user', () => {
         loyaltyPoints.value = 0
         loyaltyTier.value = 'bronze'
       }
-    } catch (error) {
-      console.error('Error loading loyalty points:', error)
+    } catch {
       loyaltyPoints.value = 0
       loyaltyTier.value = 'bronze'
     }
@@ -230,8 +227,8 @@ export const useUserStore = defineStore('user', () => {
               listing_id: item.id,
               notes: item.notes || ''
             }, { onConflict: 'user_id,listing_id' })
-        } catch (error) {
-          console.error('Error saving to wishlist:', error)
+        } catch {
+          // Silent fail
         }
       }
     }
@@ -248,8 +245,8 @@ export const useUserStore = defineStore('user', () => {
           .delete()
           .eq('user_id', user.value.id)
           .eq('listing_id', id)
-      } catch (error) {
-        console.error('Error removing from wishlist:', error)
+      } catch {
+        // Silent fail
       }
     }
   }
@@ -279,8 +276,8 @@ export const useUserStore = defineStore('user', () => {
         savedAt: item.created_at,
         notes: item.notes
       }))
-    } catch (error) {
-      console.error('Error loading wishlist:', error)
+    } catch {
+      // Silent fail
     }
   }
   
@@ -319,8 +316,8 @@ export const useUserStore = defineStore('user', () => {
             loyalty_tier: loyaltyTier.value 
           })
           .eq('id', user.value.id)
-      } catch (error) {
-        console.error('Error saving loyalty points:', error)
+      } catch {
+        // Silent fail
       }
     }
   }
@@ -340,8 +337,8 @@ export const useUserStore = defineStore('user', () => {
               loyalty_tier: loyaltyTier.value 
             })
             .eq('id', user.value.id)
-        } catch (error) {
-          console.error('Error redeeming loyalty points:', error)
+        } catch {
+          // Silent fail
         }
       }
       return true
@@ -387,8 +384,8 @@ export const useUserStore = defineStore('user', () => {
       const now = new Date()
       upcomingBookings.value = data.filter(b => new Date(b.check_in) >= now)
       pastBookings.value = data.filter(b => new Date(b.check_in) < now)
-    } catch (error) {
-      console.error('Error loading bookings:', error)
+    } catch {
+      // Silent fail
     }
   }
   

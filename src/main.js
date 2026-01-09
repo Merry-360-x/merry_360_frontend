@@ -13,11 +13,10 @@ window.scrollTo(0, 0)
 // Replace blocking alert() popups with toast notifications globally
 initAlertToToast()
 
-// Block closing/reloading while uploads are in progress.
+// Block closing/reloading while uploads are in progress
 window.addEventListener('beforeunload', (e) => {
   if (!isGlobalUploading.value) return
   e.preventDefault()
-  // Most browsers ignore custom text; setting returnValue triggers the prompt.
   e.returnValue = ''
 })
 
@@ -27,43 +26,20 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 
-// Initialize Firebase auth listener if configured
-import { onAuthChanged } from './services/auth'
+// Initialize stores
 import { useUserStore } from './stores/userStore'
-
-if (import.meta.env.VITE_USE_FIREBASE === 'true') {
-  const store = useUserStore()
-  onAuthChanged((user) => {
-    if (user) {
-      // If a firebase user object, create normalized structure
-      const normalized = {
-        id: user.uid || user.id,
-        email: user.email,
-        firstName: user.displayName || user.firstName || '',
-        lastName: user.lastName || '',
-        phone: user.phone || ''
-      }
-      store.login(normalized)
-    } else {
-      // not signed in
-      store.logout()
-    }
-  })
-}
 
 // Initialize Supabase auth listener
 const initSupabaseAuth = async () => {
   const store = useUserStore()
 
-  // Hydrate state from existing session (no custom localStorage)
+  // Hydrate state from existing session
   await store.initAuth()
   
   // Check for existing session on app load
   const { data: { session } } = await supabase.auth.getSession()
   
   if (session?.user) {
-    console.log('✅ Existing session found:', session.user.email)
-    
     // Load user profile from database
     const { data: profile } = await supabase
       .from('profiles')
@@ -91,11 +67,7 @@ const initSupabaseAuth = async () => {
   
   // Listen for auth state changes
   supabase.auth.onAuthStateChange(async (event, session) => {
-    console.log('🔔 Auth state changed:', event)
-    
     if (event === 'SIGNED_IN' && session?.user) {
-      console.log('✅ User signed in:', session.user.email)
-      
       // Load user profile
       const { data: profile } = await supabase
         .from('profiles')
@@ -120,7 +92,6 @@ const initSupabaseAuth = async () => {
         })
       }
     } else if (event === 'SIGNED_OUT') {
-      console.log('👋 User signed out')
       store.logout()
     }
   })
@@ -129,7 +100,7 @@ const initSupabaseAuth = async () => {
 // Initialize Supabase auth
 initSupabaseAuth()
 
-// Aggressively pre-load critical data for instant page loads
+// Pre-load critical data for faster page loads
 import { preloadCriticalData } from './services/preloadData'
 preloadCriticalData()
 

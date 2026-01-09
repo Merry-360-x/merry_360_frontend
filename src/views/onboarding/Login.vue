@@ -197,7 +197,6 @@ const handleLogin = async () => {
       router.push('/profile')
     }
   } catch (error) {
-    console.error('Login error:', error)
     errorMessage.value = error.message || 'Login failed. Please check your connection and try again.'
   } finally {
     loading.value = false
@@ -209,13 +208,7 @@ const handleGoogleSignIn = async () => {
   errorMessage.value = ''
 
   try {
-    console.log('🔵 Google sign-in initiated')
-    
-    // Always redirect back to the current site origin.
-    // This avoids auth getting "stuck" when the app is deployed under a different Vercel/custom domain.
     const redirectUrl = `${window.location.origin}/auth/callback`
-    
-    console.log('Redirect URL:', redirectUrl)
     
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -224,22 +217,14 @@ const handleGoogleSignIn = async () => {
       }
     })
 
-    if (error) {
-      console.error('❌ OAuth error:', error)
-      throw error
-    }
+    if (error) throw error
 
-    console.log('✅ OAuth data received:', data)
-
-    // Redirect to Google
     if (data?.url) {
-      console.log('🔗 Redirecting to:', data.url)
       window.location.href = data.url
     } else {
       throw new Error('No OAuth URL returned from Supabase')
     }
   } catch (error) {
-    console.error('❌ Google sign-in error:', error)
     errorMessage.value = error.message || 'Failed to sign in with Google. Please check your internet connection and try again.'
     googleLoading.value = false
   }
