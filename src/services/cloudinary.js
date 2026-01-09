@@ -82,14 +82,9 @@ export async function uploadToCloudinary(file, options = {}) {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('upload_preset', uploadPreset)
-
-  // Apply compression transformations for images
-  // Cloudinary will compress large images server-side for fast delivery
-  if (!isVideo) {
-    // Eager transformation: compress on upload for faster subsequent access
-    formData.append('eager', 'q_auto:eco,f_auto,w_1920,c_limit')
-    formData.append('eager_async', 'true')
-  }
+  
+  // Note: Eager transformations not allowed with unsigned uploads.
+  // Images are compressed on-the-fly when accessed via optimized URLs.
   
   if (options.folder) {
     formData.append('folder', options.folder)
