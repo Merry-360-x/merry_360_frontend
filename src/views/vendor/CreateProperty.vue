@@ -101,24 +101,26 @@
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-text-secondary mb-2">
-                    {{ t('vendor.beds') }}
+                    {{ t('vendor.beds') }} *
                   </label>
                   <Input 
                     v-model.number="form.beds" 
                     type="number"
                     min="1"
+                    required
                     :placeholder="t('vendor.bedsPlaceholder')"
                   />
                 </div>
 
                 <div>
                   <label class="block text-sm font-medium text-text-secondary mb-2">
-                    {{ t('vendor.baths') }}
+                    {{ t('vendor.baths') }} *
                   </label>
                   <Input 
                     v-model.number="form.baths" 
                     type="number"
                     min="1"
+                    required
                     :placeholder="t('vendor.bathsPlaceholder')"
                   />
                 </div>
