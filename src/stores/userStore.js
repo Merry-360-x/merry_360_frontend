@@ -188,14 +188,24 @@ export const useUserStore = defineStore('user', () => {
     tripCart.value = []
     loyaltyPoints.value = 0
     loyaltyTier.value = 'bronze'
+    initialized.value = false // Reset initialized so auth can be re-checked
+    initPromise = null
 
-    // Best-effort cleanup for any legacy/mock persistence.
+    // Clear all auth-related storage
     try {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
-      localStorage.removeItem(CART_STORAGE_KEY) // Clear cart on logout
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem(CART_STORAGE_KEY)
+      
+      // Clear Supabase storage keys to ensure full logout
+      const storageKeys = Object.keys(localStorage).filter(key => 
+        key.startsWith('sb-') || 
+        key.includes('supabase')
+      )
+      storageKeys.forEach(key => localStorage.removeItem(key))
     } catch {
-      // ignore
+      // ignore storage errors
     }
   }
   

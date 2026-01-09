@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useUserStore } from './stores/userStore'
 import ToastNotification from './components/common/ToastNotification.vue'
 import ConfirmDialog from './components/common/ConfirmDialog.vue'
@@ -39,6 +39,28 @@ useButtonClickability()
 
 // Listen for page visibility events to restore UI state
 let handlePageVisible = null
+let handleVisibilityChange = null
+
+// Force re-render and fix all UI state
+const refreshUIState = async () => {
+  // Ensure body scroll is not locked when page becomes visible
+  const body = document.body
+  const hasOpenModal = document.querySelector('.modal-open, .dialog-open, [data-modal-open="true"]')
+  
+  if (!hasOpenModal && body.style.overflow === 'hidden') {
+    body.style.overflow = ''
+    document.documentElement.style.overflow = ''
+  }
+  
+  // Force a reflow to ensure buttons are clickable
+  void body.offsetHeight
+  
+  // Wait for Vue to update
+  await nextTick()
+  
+  // Re-attach click handlers by triggering a resize event
+  window.dispatchEvent(new Event('resize'))
+}
 
 onMounted(async () => {
   // Show loading spinner immediately
@@ -62,28 +84,32 @@ onMounted(async () => {
   }
   
   // Handle page visibility changes to restore UI state
-  handlePageVisible = () => {
-    // Ensure body scroll is not locked when page becomes visible
-    const body = document.body
-    const hasOpenModal = document.querySelector('.modal-open, .dialog-open, [data-modal-open="true"]')
-    
-    if (!hasOpenModal && body.style.overflow === 'hidden') {
-      body.style.overflow = ''
-      document.documentElement.style.overflow = ''
+  handlePageVisible = refreshUIState
+  
+  // Direct visibility change handler for tab switching
+  handleVisibilityChange = async () => {
+    if (document.visibilityState === 'visible') {
+      // Multiple refresh attempts to ensure UI is responsive
+      await refreshUIState()
+      setTimeout(refreshUIState, 100)
+      setTimeout(refreshUIState, 300)
     }
-    
-    // Force a reflow to ensure buttons are clickable
-    void body.offsetHeight
   }
   
   window.addEventListener('pagevisible', handlePageVisible)
   window.addEventListener('windowfocused', handlePageVisible)
+  window.addEventListener('focus', handlePageVisible)
+  document.addEventListener('visibilitychange', handleVisibilityChange)
 })
 
 onBeforeUnmount(() => {
   if (handlePageVisible) {
     window.removeEventListener('pagevisible', handlePageVisible)
     window.removeEventListener('windowfocused', handlePageVisible)
+    window.removeEventListener('focus', handlePageVisible)
+  }
+  if (handleVisibilityChange) {
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
   }
 })
 </script>

@@ -218,10 +218,29 @@ export async function googleSignIn() {
 }
 
 export async function signOutUser() {
-  // Prefer a local-only sign out so logout works even if the network is flaky.
-  // This prevents the common “logout only after refresh” UX.
-  const { error } = await supabase.auth.signOut({ scope: 'local' })
-  if (error) throw error
+  // Use global scope to fully clear the session from Supabase storage
+  // This ensures the user stays logged out even after page refresh
+  try {
+    // Clear session globally (includes server-side invalidation)
+    await supabase.auth.signOut({ scope: 'global' })
+  } catch (err) {
+    // If global fails (e.g., network issue), try local as fallback
+    console.warn('Global signout failed, trying local:', err)
+    await supabase.auth.signOut({ scope: 'local' })
+  }
+  
+  // Also clear any cached auth data from localStorage
+  try {
+    // Clear Supabase storage keys
+    const storageKeys = Object.keys(localStorage).filter(key => 
+      key.startsWith('sb-') || 
+      key.includes('supabase') ||
+      key === 'auth_token'
+    )
+    storageKeys.forEach(key => localStorage.removeItem(key))
+  } catch (e) {
+    // Ignore storage errors
+  }
 }
 
 export function onAuthStateChange(callback) {
