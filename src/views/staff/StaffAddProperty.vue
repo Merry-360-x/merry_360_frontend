@@ -404,9 +404,21 @@ async function loadPropertyData() {
     
     if (data) {
       // Populate form with existing data
+      // Map property_type back to form category (lowercase)
+      const typeMapping = {
+        'Hotel': 'hotel',
+        'Villa': 'villa',
+        'Apartment': 'apartment',
+        'Resort': 'resort',
+        'Lodge': 'lodge',
+        'Guesthouse': 'guesthouse',
+        'Accommodation': 'hotel'
+      }
+      const category = typeMapping[data.property_type] || data.property_type?.toLowerCase() || ''
+      
       form.value = {
         title: data.name || '',
-        category: data.type?.toLowerCase() || '',
+        category: category,
         location: data.location || '',
         description: data.description || '',
         beds: data.bedrooms || 1,
@@ -416,16 +428,26 @@ async function loadPropertyData() {
         amenities: data.amenities || []
       }
       
-      // Load existing images
+      // Load existing images with unique IDs for PhotoUploader
       const allImages = []
+      let imageIdCounter = Date.now() // Use timestamp as base for unique IDs
+      
       if (data.main_image) {
-        allImages.push({ url: data.main_image, preview: data.main_image })
+        allImages.push({ 
+          id: imageIdCounter++, 
+          url: data.main_image, 
+          preview: data.main_image 
+        })
       }
       if (data.images && Array.isArray(data.images)) {
-        data.images.forEach((img, index) => {
+        data.images.forEach((img) => {
           // Skip if it's the same as main_image to avoid duplicates
           if (img !== data.main_image) {
-            allImages.push({ url: img, preview: img })
+            allImages.push({ 
+              id: imageIdCounter++, 
+              url: img, 
+              preview: img 
+            })
           }
         })
       }
