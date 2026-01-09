@@ -94,6 +94,8 @@ onMounted(async () => {
           const avatarUrl = session.user.user_metadata?.picture || 
                            session.user.user_metadata?.avatar_url || ''
           
+          const WELCOME_BONUS_POINTS = 10
+          
           const { error: profileError } = await supabase
             .from('profiles')
             .insert({
@@ -102,14 +104,14 @@ onMounted(async () => {
               first_name: firstName,
               last_name: lastName,
               avatar_url: avatarUrl,
-              loyalty_points: 0,
+              loyalty_points: WELCOME_BONUS_POINTS, // 10 welcome bonus points
               loyalty_tier: 'bronze'
             })
           
           if (profileError) {
             console.error('Profile creation error:', profileError)
           } else {
-            console.log('✅ Profile created successfully')
+            console.log(`✅ Profile created with ${WELCOME_BONUS_POINTS} welcome bonus points`)
           }
         }
       } catch (profileCheckError) {
