@@ -110,54 +110,48 @@
             </router-link>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <div 
               v-for="property in properties" 
               :key="property.id"
-              class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row transition-colors duration-200"
+              class="group cursor-pointer"
+              @click="editProperty(property)"
             >
-              <img 
-                :src="property.main_image || property.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400'"
-                :alt="property.name"
-                class="w-full md:w-64 h-48 md:h-auto object-cover"
-              />
-              <div class="flex-1 p-6">
-                <div class="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 class="text-xl font-bold text-text-primary">{{ property.name }}</h3>
-                    <p class="text-text-secondary">{{ property.location }}</p>
-                  </div>
-                  <span 
-                    class="px-3 py-1 text-sm rounded-full"
-                    :class="property.available ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-600 text-text-secondary'"
-                  >
-                    {{ t(property.available ? 'status.active' : 'status.inactive') }}
-                  </span>
-                </div>
-                <p class="text-text-secondary mb-4 line-clamp-2">{{ property.description }}</p>
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-4">
-                    <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">
-                      {{ currencyStore.formatPrice(property.price_per_night || 0) }}
-                      <span class="font-normal">/{{ t('accommodation.perNight') }}</span>
-                    </span>
-                    <span class="text-text-muted">{{ property.bedrooms }} {{ t('common.beds') }} • {{ property.bathrooms }} {{ t('common.baths') }}</span>
-                  </div>
-                  <div class="flex gap-2">
-                    <button 
-                      @click="editProperty(property)"
-                      class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-text-secondary rounded-lg transition-colors"
-                    >
-                      {{ t('common.edit') }}
-                    </button>
-                    <button 
-                      @click="confirmDelete(property)"
-                      class="px-4 py-2 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 text-red-700 dark:text-red-300 rounded-lg transition-colors"
-                    >
-                      {{ t('common.delete') }}
-                    </button>
-                  </div>
-                </div>
+              <!-- Image -->
+              <div class="relative aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 mb-2">
+                <img 
+                  :src="property.main_image || property.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400'"
+                  :alt="property.name"
+                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <!-- Status Badge -->
+                <span 
+                  class="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium rounded-full"
+                  :class="property.available ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'"
+                >
+                  {{ property.available ? 'Active' : 'Inactive' }}
+                </span>
+                <!-- Delete Button -->
+                <button 
+                  @click.stop="confirmDelete(property)"
+                  class="absolute top-2 right-2 w-7 h-7 bg-white/90 hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+              <!-- Content -->
+              <div>
+                <h3 class="font-medium text-sm text-gray-900 dark:text-white line-clamp-1">{{ property.name }}</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{{ property.location }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  {{ property.bedrooms || 1 }} bed{{ (property.bedrooms || 1) !== 1 ? 's' : '' }} · {{ property.bathrooms || 1 }} bath{{ (property.bathrooms || 1) !== 1 ? 's' : '' }}
+                </p>
+                <p class="mt-1">
+                  <span class="font-semibold text-sm text-gray-900 dark:text-white">{{ currencyStore.formatPrice(property.price_per_night || 0) }}</span>
+                  <span class="text-xs text-gray-500"> night</span>
+                </p>
               </div>
             </div>
           </div>

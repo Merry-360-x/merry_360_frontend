@@ -233,34 +233,38 @@
               </router-link>
             </div>
 
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div 
+            <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              <router-link 
                 v-for="property in properties.slice(0, 6)" 
                 :key="property.id"
-                class="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                :to="`${basePath}/edit-property/${property.id}`"
+                class="group cursor-pointer"
               >
-                <img 
-                  :src="property.image || property.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400'"
-                  :alt="property.title"
-                  class="w-full h-40 object-cover"
-                />
-                <div class="p-4">
-                  <h3 class="font-semibold text-text-primary mb-1">{{ property.title }}</h3>
-                  <p class="text-sm text-text-secondary mb-2">{{ property.location }}</p>
-                  <div class="flex items-center justify-between">
-                    <span class="text-brand-600 dark:text-brand-400 font-bold">
-                      {{ currencyStore.formatPrice(parsePrice(property.price)) }}
-                      <span class="font-normal">/{{ t('accommodation.perNight') }}</span>
-                    </span>
-                    <span 
-                      class="px-2 py-1 text-xs rounded-full"
-                      :class="property.status === 'active' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-600 text-text-secondary'"
-                    >
-                      {{ t(statusKey(property.status || 'active')) }}
-                    </span>
-                  </div>
+                <!-- Image -->
+                <div class="relative aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800 mb-2">
+                  <img 
+                    :src="property.image || property.images?.[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400'"
+                    :alt="property.title"
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <!-- Status Badge -->
+                  <span 
+                    class="absolute top-2 left-2 px-2 py-0.5 text-xs font-medium rounded-full"
+                    :class="property.status === 'active' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'"
+                  >
+                    {{ property.status === 'active' ? 'Active' : 'Inactive' }}
+                  </span>
                 </div>
-              </div>
+                <!-- Content -->
+                <div>
+                  <h3 class="font-medium text-sm text-gray-900 dark:text-white line-clamp-1">{{ property.title }}</h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{{ property.location }}</p>
+                  <p class="mt-1">
+                    <span class="font-semibold text-sm text-gray-900 dark:text-white">{{ currencyStore.formatPrice(parsePrice(property.price)) }}</span>
+                    <span class="text-xs text-gray-500"> night</span>
+                  </p>
+                </div>
+              </router-link>
             </div>
           </div>
         </main>
