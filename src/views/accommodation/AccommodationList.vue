@@ -116,29 +116,6 @@
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4 sm:p-6 sticky top-24">
             <h3 class="font-semibold text-base sm:text-lg mb-4 text-text-primary">{{ t('accommodationList.filters') }}</h3>
             
-            <!-- View Toggle -->
-            <div class="mb-4 sm:mb-6">
-              <div class="flex gap-2">
-                <button 
-                  @click="viewMode = 'list'"
-                  :class="viewMode === 'list' ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
-                  class="flex-1 py-2 rounded-lg transition-all duration-200 transform hover:scale-105"
-                >
-                  <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                  </svg>
-                </button>
-                <button 
-                  @click="viewMode = 'map'"
-                  :class="viewMode === 'map' ? 'bg-brand-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'"
-                  class="flex-1 py-2 rounded-button transition-colors"
-                >
-                  <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
 
             <!-- Price Range -->
             <div class="mb-4 sm:mb-6">
@@ -299,19 +276,8 @@
             <span v-if="checkOut" class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">{{ t('accommodationList.checkOutLabel') }} {{ checkOut }}</span>
           </div>
 
-          <!-- Map View -->
-          <div v-if="viewMode === 'map'" class="mb-6">
-            <MapView 
-              :properties="filteredAccommodations"
-              :selectedPropertyId="selectedMapPropertyId"
-              @selectProperty="handleMapSelect"
-              @openDetails="handleMapOpenDetails"
-              @locationSearch="handleLocationSearch"
-            />
-          </div>
-
-          <!-- Grid View (2 rows x 5 columns) -->
-          <div v-if="viewMode === 'list'">
+          <!-- Grid View -->
+          <div>
             <!-- Loading State -->
             <div v-if="loading" class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
               <PropertyCardSkeleton v-for="n in 10" :key="`skeleton-${n}`" />
@@ -344,7 +310,6 @@ import { useTranslation } from '../../composables/useTranslation'
 import { useToast } from '../../composables/useToast.js'
 import MainLayout from '../../components/layout/MainLayout.vue'
 import Card from '../../components/common/Card.vue'
-import MapView from '../../components/common/MapView.vue'
 import PropertyCard from '@/components/common/PropertyCard.vue'
 import PropertyCardSkeleton from '@/components/common/PropertyCardSkeleton.vue'
 import api from '../../services/api'
@@ -359,13 +324,11 @@ const currencyStore = useCurrencyStore()
 const userStore = useUserStore()
 const { t } = useTranslation()
 
-const viewMode = ref('list')
 const sortBy = ref('recommended')
 const searchQuery = ref('')
 const loading = ref(true)
 const guestCount = ref(null)
 const checkIn = ref('')
-const selectedMapPropertyId = ref(null)
 const checkOut = ref('')
 
 const isSearchFocused = ref(false)
@@ -795,33 +758,6 @@ const toggleFavorite = (id) => {
   }
 }
 
-const handleMapSelect = (property) => {
-  selectedMapPropertyId.value = property?.id ?? null
-}
-
-const handleMapOpenDetails = (property) => {
-  if (!property?.id) return
-  goToDetails(property.id)
-}
-
-const handleLocationSearch = (location) => {
-  console.log('Searching for location:', location)
-  // Implement location-based search filtering here
-}
-
-watch(viewMode, (mode) => {
-  if (mode !== 'map') selectedMapPropertyId.value = null
-})
-
-watch(
-  () => filteredAccommodations.value,
-  (list) => {
-    if (!selectedMapPropertyId.value) return
-    const stillExists = list.some((p) => String(p?.id) === String(selectedMapPropertyId.value))
-    if (!stillExists) selectedMapPropertyId.value = null
-  },
-  { deep: true }
-)
 
 const addToCart = (accommodation) => {
   const cartItem = {

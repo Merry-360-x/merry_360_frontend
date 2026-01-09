@@ -185,16 +185,6 @@
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
                   <h1 class="text-2xl font-bold text-text-brand-600">{{ accommodation.name }}</h1>
-                  <button 
-                    @click="openDirections"
-                    class="inline-flex items-center px-2.5 py-1 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-full transition-colors shadow-sm"
-                    :title="t('accommodation.getDirections')"
-                  >
-                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-                    </svg>
-                    {{ t('accommodation.getDirections') }}
-                  </button>
                   <span v-if="accommodation.eco" class="inline-flex items-center px-3 py-1 bg-success bg-opacity-10 text-success text-sm font-medium rounded-full">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
@@ -203,13 +193,6 @@
                   </span>
                 </div>
                 <div class="flex items-center gap-4 text-sm text-text-secondary">
-                  <span class="flex items-center">
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    {{ accommodation.location }}
-                  </span>
                   <span class="flex items-center font-semibold text-text-brand-600">
                     {{ accommodation.rating }}
                     <svg class="w-4 h-4 ml-1 text-yellow-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -412,43 +395,18 @@
             </Button>
           </Card>
 
-          <!-- Location Map -->
+          <!-- Location Notice - Full address shown after booking -->
           <Card padding="lg">
-            <h2 class="text-xl font-bold mb-4">Location</h2>
-            <div class="space-y-4">
-              <!-- Map Container -->
-              <div class="relative w-full h-80 bg-gray-100 rounded-xl overflow-hidden">
-                <iframe
-                  :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(accommodation.location + ', Rwanda')}&zoom=14`"
-                  width="100%"
-                  height="100%"
-                  style="border:0;"
-                  allowfullscreen=""
-                  loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"
-                  class="absolute inset-0"
-                ></iframe>
-              </div>
-              
-              <!-- Location Details -->
-              <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
-                <svg class="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+              <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
-                <div class="flex-1">
-                  <p class="font-semibold text-gray-900 mb-1">{{ accommodation.location }}</p>
-                  <p class="text-sm text-gray-600">Rwanda</p>
-                </div>
-                <button
-                  @click="openDirections"
-                  class="px-4 py-2 bg-brand-500 text-white rounded-lg text-sm font-semibold hover:bg-brand-600 transition-colors flex items-center gap-1.5"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-                  </svg>
-                  Directions
-                </button>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-900 dark:text-white">Exact location provided after booking</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">You'll receive the full address and directions once your reservation is confirmed</p>
               </div>
             </div>
           </Card>
@@ -698,20 +656,12 @@ const goToCheckout = () => {
   })
 }
 
-const openDirections = () => {
-  // Get the property location and open in Google Maps
-  const location = encodeURIComponent(accommodation.value.location + ', ' + accommodation.value.name)
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${location}`
-  window.open(mapsUrl, '_blank')
-}
-
 const addToCart = () => {
-  // Add accommodation to cart
+  // Add accommodation to cart (location hidden until booking confirmed)
   const cartItem = {
     id: Date.now(),
     type: 'accommodation',
     name: accommodation.value.name,
-    location: accommodation.value.location,
     price: accommodation.value.price,
     image: accommodation.value.mainImage
   }

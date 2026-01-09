@@ -87,10 +87,10 @@
 
     <!-- Content - Clean & Minimal -->
     <div class="pt-2">
-      <!-- Location & Title -->
+      <!-- Title & Rating -->
       <div class="flex items-start justify-between gap-1">
         <h3 class="font-medium text-sm text-gray-900 dark:text-white line-clamp-1">
-          {{ property.location || property.title }}
+          {{ property.title || property.name }}
         </h3>
         <!-- Rating -->
         <div v-if="property.rating" class="flex items-center gap-0.5 flex-shrink-0">
@@ -101,9 +101,9 @@
         </div>
       </div>
       
-      <!-- Property Type or Title -->
+      <!-- Property Type -->
       <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
-        {{ property.title !== property.location ? property.title : (property.type || 'Entire place') }}
+        {{ property.type || 'Entire place' }}
       </p>
       
       <!-- Details Row -->
